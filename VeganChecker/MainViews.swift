@@ -486,7 +486,7 @@ private struct VeganBannerView: View {
         switch analysis.status {
         case .vegan:
             return VeganBannerSpec(
-                headline: "SÍ · PRODUCTO VEGANO",
+                headline: "SÍ · PRODUCTO APTO PARA VEGANOS",
                 subtitle: "No se han detectado ingredientes de origen animal ni dudoso.",
                 background: Color(red: 0.18, green: 0.49, blue: 0.20),
                 foreground: .white,
@@ -494,7 +494,7 @@ private struct VeganBannerView: View {
             )
         case .notVegan:
             return VeganBannerSpec(
-                headline: "NO · PRODUCTO NO VEGANO",
+                headline: "NO · PRODUCTO NO APTO PARA VEGANOS",
                 subtitle: "Open Food Facts indica ingredientes de origen animal.",
                 background: Color(red: 0.76, green: 0.16, blue: 0.16),
                 foreground: .white,
