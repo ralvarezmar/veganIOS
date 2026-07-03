@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 import SwiftData
 import AVFoundation
@@ -188,9 +189,9 @@ struct ResultView: View {
         case .loading:
             ProgressView("Cargando producto…")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-        case .notFound:
+        case .notFound(let consultedSources):
             ErrorStateView(
-                title: "Producto no encontrado en Open Food Facts",
+                title: consultedSourcesMessage(consultedSources),
                 message: "Prueba a reintentar o vuelve al escáner.",
                 retryTitle: "Reintentar",
                 onRetry: { retrySeed = UUID() },
@@ -279,8 +280,8 @@ struct ResultView: View {
         case .success(let fetched):
             saveToHistory(product: fetched.product)
             loadState = .success(fetched.product, fetched.source)
-        case .notFound:
-            loadState = .notFound
+        case .notFound(let consultedSources):
+            loadState = .notFound(consultedSources)
         case .error(let message):
             loadState = .networkError(message)
         }
@@ -319,11 +320,22 @@ struct ResultView: View {
         let trimmed = product.productName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         return trimmed.isEmpty ? barcode : trimmed
     }
+
+    private func consultedSourcesMessage(_ consultedSources: [ProductSource]) -> String {
+        var seen = Set<String>()
+        let names = consultedSources
+            .map(\.displayName)
+            .filter { seen.insert($0).inserted }
+        guard !names.isEmpty else {
+            return "Producto no encontrado en Open Food Facts"
+        }
+        return "No se ha encontrado información suficiente en ninguna de las bases consultadas: \(names.joined(separator: \", \"))."
+    }
 }
 
 enum LoadState {
     case loading
-    case notFound
+    case notFound([ProductSource])
     case networkError(String)
     case success(Product, ProductSource)
 }

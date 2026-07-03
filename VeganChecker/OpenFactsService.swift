@@ -7,7 +7,7 @@ struct FetchedProduct {
 
 enum OpenFactsFetchResult {
     case success(FetchedProduct)
-    case notFound
+    case notFound([ProductSource])
     case error(String)
 }
 
@@ -24,6 +24,7 @@ final class OpenFactsService {
     func fetchProduct(barcode: String) async -> OpenFactsFetchResult {
         var sawCleanNoData = false
         var sawFailure = false
+        var consultedSources: [ProductSource] = []
 
         for source in ProductSource.allCases {
             switch await fetchFromSource(source, barcode: barcode) {
@@ -31,20 +32,22 @@ final class OpenFactsService {
                 return .success(FetchedProduct(product: product, source: source))
             case .cleanNoData:
                 sawCleanNoData = true
+                consultedSources.append(source)
             case .notFound:
                 sawCleanNoData = true
+                consultedSources.append(source)
             case .failure:
                 sawFailure = true
             }
         }
 
         if sawCleanNoData {
-            return .notFound
+            return .notFound(consultedSources)
         }
         if sawFailure {
             return .error("Sin conexión / error de red")
         }
-        return .notFound
+        return .notFound(consultedSources)
     }
 
     private enum SourceFetchResult {
