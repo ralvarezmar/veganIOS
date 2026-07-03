@@ -72,8 +72,12 @@ final class OpenFactsService {
         do {
             let (data, response) = try await session.data(for: request)
             guard let httpResponse = response as? HTTPURLResponse,
-                  (200..<300).contains(httpResponse.statusCode) else {
+                  (200..<300).contains(httpResponse.statusCode) || httpResponse.statusCode == 404 else {
                 return .failure
+            }
+
+            if httpResponse.statusCode == 404 {
+                return .notFound
             }
 
             let decoded = try JSONDecoder().decode(OpenFactsResponse.self, from: data)
