@@ -1,0 +1,36 @@
+name: VeganChecker
+options:
+  bundleIdPrefix: com.ralvarezmar
+settings:
+  base:
+    DEVELOPMENT_TEAM: ""
+    GENERATE_INFOPLIST_FILE: YES
+    INFOPLIST_KEY_CFBundleDisplayName: VeganChecker
+    INFOPLIST_KEY_NSCameraUsageDescription: Necesitamos la cámara para escanear códigos de barras.
+    INFOPLIST_KEY_UILaunchScreen_Generation: YES
+    PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.veganchecker
+    SWIFT_VERSION: 5.9
+    IPHONEOS_DEPLOYMENT_TARGET: 17.0
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    ENABLE_PREVIEWS: YES
+targets:
+  VeganChecker:
+    type: application
+    platform: iOS
+    deploymentTarget: 17.0
+    sources:
+      - path: VeganChecker
+    resources:
+      - path: Assets.xcassets
+    settings:
+      base:
+        PRODUCT_NAME: VeganChecker
+        PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.veganchecker
+        SWIFT_VERSION: 5.9
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: VeganChecker
+        INFOPLIST_KEY_NSCameraUsageDescription: Necesitamos la cámara para escanear códigos de barras.
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_PREVIEWS: YES
