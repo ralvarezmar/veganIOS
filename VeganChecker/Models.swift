@@ -72,6 +72,7 @@ enum ProductSource: String, CaseIterable, Codable {
     case openFoodFacts
     case openBeautyFacts
     case openProductFacts
+    case openPetFoodFacts
 
     var baseURL: URL {
         switch self {
@@ -81,6 +82,8 @@ enum ProductSource: String, CaseIterable, Codable {
             return URL(string: "https://world.openbeautyfacts.org")!
         case .openProductFacts:
             return URL(string: "https://world.openproductfacts.org")!
+        case .openPetFoodFacts:
+            return URL(string: "https://world.openpetfoodfacts.org")!
         }
     }
 
@@ -92,6 +95,8 @@ enum ProductSource: String, CaseIterable, Codable {
             return "Open Beauty Facts"
         case .openProductFacts:
             return "Open Product Facts"
+        case .openPetFoodFacts:
+            return "Open Pet Food Facts"
         }
     }
 }
