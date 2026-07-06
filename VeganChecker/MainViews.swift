@@ -720,11 +720,16 @@ private struct IngredientsCard: View {
 
     var body: some View {
         SimpleSectionCard(title: "Ingredientes") {
-            if let ingredients = product.ingredients, !ingredients.isEmpty {
-                VStack(alignment: .leading, spacing: 10) {
-                    ForEach(Array(ingredients.enumerated()), id: \.offset) { _, ingredient in
-                        IngredientRow(ingredient: ingredient)
-                    }
+            if let paragraph = ingredientParagraph(for: product.ingredients) {
+                VStack(alignment: .leading, spacing: 8) {
+                    paragraph
+                        .font(.body)
+                        .foregroundStyle(.primary)
+
+                    Text("Rojo = no apto para veganos · Naranja = dudoso")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .minimumScaleFactor(0.85)
                 }
             } else {
                 Text(product.ingredientsText?.isEmpty == false ? product.ingredientsText! : "—")
@@ -733,36 +738,33 @@ private struct IngredientsCard: View {
     }
 }
 
-private struct IngredientRow: View {
-    let ingredient: OffIngredient
-
-    var body: some View {
+private func ingredientParagraph(for ingredients: [OffIngredient]?) -> Text? {
+    let items = (ingredients ?? []).compactMap { ingredient -> (String, IngredientKind)? in
+        guard let label = cleanFoodFactsLabel(ingredient.text), !label.isEmpty else { return nil }
         let kind = IngredientKind(rawValue: ingredient.vegan?.lowercased() ?? "") ?? .unknown
-        let spec = kind.spec
-        let label = cleanFoodFactsLabel(ingredient.text) ?? "Ingrediente desconocido"
-
-        HStack(alignment: .top, spacing: 12) {
-            Circle()
-                .fill(spec.accent)
-                .frame(width: 10, height: 10)
-                .padding(.top, 6)
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(label)
-                    .font(.body)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.primary)
-
-                CapsuleChip(text: spec.label, tint: spec.accent)
-            }
-
-            Spacer(minLength: 8)
-        }
-        .padding(12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(spec.rowBackground)
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        return (label, kind)
     }
+
+    guard !items.isEmpty else { return nil }
+
+    var paragraph = Text("")
+    for (index, item) in items.enumerated() {
+        if index > 0 {
+            paragraph = paragraph + Text(", ")
+        }
+
+        let segment = Text(item.0)
+        switch item.1 {
+        case .animal:
+            paragraph = paragraph + segment.foregroundColor(.red).bold()
+        case .doubtful:
+            paragraph = paragraph + segment.foregroundColor(.orange).bold()
+        case .vegan, .unknown:
+            paragraph = paragraph + segment
+        }
+    }
+
+    return paragraph
 }
 
 private struct SimpleSectionCard<Content: View>: View {
