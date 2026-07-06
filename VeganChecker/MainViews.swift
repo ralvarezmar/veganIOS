@@ -8,20 +8,21 @@ struct ScannerView: View {
     @Binding var isScannerRunning: Bool
     let onDetectedBarcode: (String) -> Void
 
-    @Environment(\.scenePhase) private var scenePhase
     @State private var authorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
     @State private var isRequestingAccess = false
+    @State private var detectedBarcode: String?
+    @State private var showingDetectionConfirmation = false
+    @State private var pendingNavigationTask: Task<Void, Never>?
 
     var body: some View {
         ZStack {
             if authorizationStatus == .authorized {
                 BarcodeScannerView(isRunning: $isScannerRunning) { barcode in
-                    isScannerRunning = false
-                    onDetectedBarcode(barcode)
+                    handleDetection(barcode)
                 }
                 .ignoresSafeArea()
 
-                ScannerOverlayView()
+                ScannerOverlayView(showingDetectionConfirmation: showingDetectionConfirmation)
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
             } else {
@@ -37,13 +38,41 @@ struct ScannerView: View {
         .onAppear {
             updateAuthorizationState()
         }
-        .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .active {
-                updateAuthorizationState()
+        .onChange(of: isScannerRunning) { _, newValue in
+            if newValue {
+                detectedBarcode = nil
+                showingDetectionConfirmation = false
+                pendingNavigationTask?.cancel()
             }
         }
         .onChange(of: authorizationStatus) { _, newValue in
             isScannerRunning = newValue == .authorized
+        }
+        .onDisappear {
+            pendingNavigationTask?.cancel()
+        }
+    }
+
+    private func handleDetection(_ barcode: String) {
+        guard detectedBarcode == nil else { return }
+        detectedBarcode = barcode
+        isScannerRunning = false
+        withAnimation(.easeInOut(duration: 0.2)) {
+            showingDetectionConfirmation = true
+        }
+
+        let notification = UINotificationFeedbackGenerator()
+        notification.notificationOccurred(.success)
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+
+        pendingNavigationTask?.cancel()
+        pendingNavigationTask = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(320))
+            guard !Task.isCancelled else { return }
+            withAnimation(.easeInOut(duration: 0.2)) {
+                showingDetectionConfirmation = false
+            }
+            onDetectedBarcode(barcode)
         }
     }
 
@@ -78,24 +107,88 @@ struct ScannerView: View {
 }
 
 private struct ScannerOverlayView: View {
-    var body: some View {
-        VStack {
-            Spacer()
+    let showingDetectionConfirmation: Bool
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Apunta la cámara al código de barras del producto.")
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                Text("Se admiten códigos EAN y UPC.")
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.9))
+    var body: some View {
+        GeometryReader { proxy in
+            let frameWidth = min(proxy.size.width * 0.82, 320)
+            let frameHeight = frameWidth * 0.62
+            let frameRect = CGRect(
+                x: (proxy.size.width - frameWidth) / 2,
+                y: (proxy.size.height - frameHeight) / 2,
+                width: frameWidth,
+                height: frameHeight
+            )
+
+            ZStack {
+                Path { path in
+                    path.addRect(CGRect(origin: .zero, size: proxy.size))
+                    path.addRoundedRect(in: frameRect, cornerSize: CGSize(width: 28, height: 28))
+                }
+                .fill(Color.black.opacity(0.54), style: FillStyle(eoFill: true))
+
+                RoundedRectangle(cornerRadius: 28, style: .continuous)
+                    .strokeBorder(Color.white.opacity(0.9), lineWidth: 3)
+                    .frame(width: frameWidth, height: frameHeight)
+                    .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
+
+                VStack {
+                    Spacer()
+
+                    if showingDetectionConfirmation {
+                        DetectionConfirmationView()
+                            .padding(.bottom, 24)
+                    }
+
+                    HelperCardView()
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 20)
+                }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(16)
-            .background(.black.opacity(0.45))
-            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .padding()
         }
+    }
+}
+
+private struct HelperCardView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Apunta al código de barras")
+                .font(.headline)
+                .fontWeight(.semibold)
+            Text("Se admiten códigos EAN y UPC.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(.regularMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(Color.secondary.opacity(0.14), lineWidth: 1)
+        )
+    }
+}
+
+private struct DetectionConfirmationView: View {
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.title3.weight(.semibold))
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Código detectado")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                Text("Abriendo el resultado…")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: 6)
     }
 }
 
@@ -109,39 +202,49 @@ private struct CameraPermissionView: View {
         VStack(spacing: 20) {
             Spacer()
 
-            Image(systemName: "camera.fill")
-                .font(.system(size: 48, weight: .semibold))
-                .foregroundStyle(Color(red: 0.18, green: 0.49, blue: 0.20))
+            VStack(spacing: 18) {
+                Image(systemName: "camera.viewfinder")
+                    .font(.system(size: 48, weight: .semibold))
+                    .foregroundStyle(Color.green)
 
-            Text("Permiso de cámara necesario")
-                .font(.title2.bold())
-                .multilineTextAlignment(.center)
+                Text("Permiso de cámara necesario")
+                    .font(.title2.bold())
+                    .multilineTextAlignment(.center)
 
-            Text(statusMessage)
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .foregroundStyle(.secondary)
+                Text(statusMessage)
+                    .font(.body)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.secondary)
 
-            if status == .notDetermined {
-                Button {
-                    onRequestAccess()
-                } label: {
-                    Label(isRequestingAccess ? "Solicitando…" : "Conceder permiso", systemImage: "camera.on.rectangle")
-                        .frame(maxWidth: .infinity)
+                if status == .notDetermined {
+                    Button {
+                        onRequestAccess()
+                    } label: {
+                        Label(isRequestingAccess ? "Solicitando…" : "Conceder permiso", systemImage: "camera.on.rectangle")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.green)
+                    .disabled(isRequestingAccess)
+                } else {
+                    Button {
+                        onOpenSettings()
+                    } label: {
+                        Label("Abrir ajustes", systemImage: "gearshape")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.green)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(Color(red: 0.18, green: 0.49, blue: 0.20))
-                .disabled(isRequestingAccess)
-            } else {
-                Button {
-                    onOpenSettings()
-                } label: {
-                    Label("Abrir ajustes", systemImage: "gearshape")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(Color(red: 0.18, green: 0.49, blue: 0.20))
             }
+            .padding(24)
+            .frame(maxWidth: .infinity)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 28, style: .continuous)
+                    .strokeBorder(Color.secondary.opacity(0.10), lineWidth: 1)
+            )
 
             Spacer()
         }
@@ -185,89 +288,81 @@ struct ResultView: View {
 
     @ViewBuilder
     private var content: some View {
-        switch loadState {
-        case .loading:
-            ProgressView("Cargando producto…")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        case .notFound(let consultedSources):
-            ErrorStateView(
-                title: consultedSourcesMessage(consultedSources),
-                message: "Prueba a reintentar o vuelve al escáner.",
-                retryTitle: "Reintentar",
-                onRetry: { retrySeed = UUID() },
-                onBack: onBack
-            )
-        case .networkError(let message):
-            ErrorStateView(
-                title: message,
-                message: "Revisa tu conexión e inténtalo de nuevo.",
-                retryTitle: "Reintentar",
-                onRetry: { retrySeed = UUID() },
-                onBack: onBack
-            )
-        case .success(let product, let source):
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    VeganBannerView(analysis: analyzeVegan(product))
+        ZStack {
+            Color(.systemBackground).ignoresSafeArea()
 
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(displayName(for: product))
-                            .font(.title.bold())
-                        if let brands = product.brands, !brands.isEmpty {
-                            Text("Marca: \(brands)")
-                                .font(.headline)
-                                .foregroundStyle(.secondary)
+            switch loadState {
+            case .loading:
+                LoadingStateView()
+            case .notFound(let consultedSources):
+                EmptyResultStateView(
+                    icon: "magnifyingglass",
+                    title: "Sin datos suficientes",
+                    message: consultedSourcesMessage(consultedSources),
+                    actionTitle: "Reintentar",
+                    action: { retrySeed = UUID() }
+                )
+            case .networkError(let message):
+                ErrorStateView(
+                    icon: "wifi.exclamationmark",
+                    title: "No hemos podido consultar las bases de datos",
+                    message: message,
+                    actionTitle: "Reintentar",
+                    action: { retrySeed = UUID() }
+                )
+            case .success(let product, let source):
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 16) {
+                        VeganBannerView(analysis: analyzeVegan(product), source: source)
+
+                        ProductHeaderCard(product: product, barcode: barcode)
+
+                        if let imageURLString = product.imageUrl, let url = URL(string: imageURLString) {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .empty:
+                                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                                        .fill(.quaternary)
+                                        .overlay {
+                                            ProgressView()
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 220)
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(maxWidth: .infinity)
+                                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                                case .failure:
+                                    EmptyView()
+                                @unknown default:
+                                    EmptyView()
+                                }
+                            }
                         }
-                        Text("Fuente: \(source.displayName)")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
 
-                    if let imageURLString = product.imageUrl, let url = URL(string: imageURLString) {
-                        AsyncImage(url: url) { phase in
-                            switch phase {
-                            case .empty:
-                                ProgressView()
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 220)
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(maxWidth: .infinity)
-                                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                            case .failure:
-                                EmptyView()
-                            @unknown default:
-                                EmptyView()
+                        IngredientsCard(product: product)
+                        SimpleSectionCard(title: "Aditivos") {
+                            Text(cleanTags(product.additivesTags))
+                        }
+                        SimpleSectionCard(title: "Alérgenos") {
+                            Text(cleanTags(product.allergensTags))
+                        }
+                        SimpleSectionCard(title: "Nutrición básica por 100 g") {
+                            NutritionGrid(nutriments: product.nutriments)
+                        }
+
+                        if let grade = product.nutriscoreGrade, !grade.isEmpty {
+                            SimpleSectionCard(title: "Nutri-Score") {
+                                Text(grade.uppercased())
+                                    .font(.headline.bold())
                             }
                         }
                     }
-
-                    SectionBlock(title: "Ingredientes") {
-                        Text(product.ingredientsText?.isEmpty == false ? product.ingredientsText! : "—")
-                    }
-
-                    SectionBlock(title: "Aditivos") {
-                        Text(cleanTags(product.additivesTags))
-                    }
-
-                    SectionBlock(title: "Alérgenos") {
-                        Text(cleanTags(product.allergensTags))
-                    }
-
-                    SectionBlock(title: "Nutrición básica por 100 g") {
-                        NutritionGrid(nutriments: product.nutriments)
-                    }
-
-                    if let grade = product.nutriscoreGrade, !grade.isEmpty {
-                        SectionBlock(title: "Nutri-Score") {
-                            Text(grade.uppercased())
-                                .font(.headline.bold())
-                        }
-                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 16)
                 }
-                .padding()
             }
         }
     }
@@ -316,20 +411,16 @@ struct ResultView: View {
         return cleaned.isEmpty ? "—" : cleaned.joined(separator: ", ")
     }
 
-    private func displayName(for product: Product) -> String {
-        let trimmed = product.productName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        return trimmed.isEmpty ? barcode : trimmed
-    }
-
     private func consultedSourcesMessage(_ consultedSources: [ProductSource]) -> String {
         var seen = Set<String>()
         let names = consultedSources
             .map(\.displayName)
             .filter { seen.insert($0).inserted }
+
         guard !names.isEmpty else {
             return "Producto no encontrado en Open Food Facts"
         }
-        return "No se ha encontrado información suficiente en ninguna de las bases consultadas: \(names.joined(separator: \", \"))."
+        return "No se ha encontrado información suficiente en ninguna de las bases consultadas: \(names.joined(separator: ", "))."
     }
 }
 
@@ -348,19 +439,39 @@ struct HistoryView: View {
     let onSelectBarcode: (String) -> Void
 
     var body: some View {
-        List {
-            if records.isEmpty {
-                ContentUnavailableView("No hay escaneos recientes.", systemImage: "clock.arrow.circlepath")
-            } else {
-                ForEach(records, id: \.barcode) { record in
-                    Button {
-                        onSelectBarcode(record.barcode)
-                    } label: {
-                        HistoryRow(record: record)
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                if records.isEmpty {
+                    VStack(spacing: 14) {
+                        Image(systemName: "clock.arrow.circlepath")
+                            .font(.system(size: 42, weight: .semibold))
+                            .foregroundStyle(.green)
+
+                        Text("Historial vacío")
+                            .font(.title2.bold())
+
+                        Text("Escanea un producto para ver aquí tus consultas recientes.")
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
                     }
-                    .buttonStyle(.plain)
+                    .padding(28)
+                    .frame(maxWidth: .infinity)
+                    .background(Color(.secondarySystemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                    .padding(.top, 64)
+                } else {
+                    ForEach(records, id: \.barcode) { record in
+                        Button {
+                            onSelectBarcode(record.barcode)
+                        } label: {
+                            HistoryRow(record: record)
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
             }
+            .padding()
         }
         .navigationTitle("Historial")
         .navigationBarTitleDisplayMode(.inline)
@@ -395,91 +506,129 @@ private struct HistoryRow: View {
     let record: ScanRecord
 
     var body: some View {
-        HStack(spacing: 12) {
-            if let imageURLString = record.imageURL, let url = URL(string: imageURLString) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.green.opacity(0.15))
-                            .frame(width: 56, height: 56)
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 56, height: 56)
-                            .clipped()
-                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    case .failure:
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.green.opacity(0.15))
-                            .frame(width: 56, height: 56)
-                    @unknown default:
-                        EmptyView()
-                    }
-                }
-            }
+        HStack(spacing: 14) {
+            HistoryThumbnail(imageURLString: record.imageURL)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 5) {
                 Text(record.productName?.isEmpty == false ? record.productName! : record.barcode)
                     .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.primary)
+
                 if let brand = record.brand, !brand.isEmpty {
                     Text(brand)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
+
                 Text(record.timestamp.formatted(date: .abbreviated, time: .shortened))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+
+            Spacer(minLength: 8)
+
+            CapsuleChip(text: "Ver veredicto", tint: .green)
         }
-        .padding(.vertical, 6)
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .strokeBorder(Color.secondary.opacity(0.10), lineWidth: 1)
+        )
+    }
+}
+
+private struct HistoryThumbnail: View {
+    let imageURLString: String?
+
+    var body: some View {
+        Group {
+            if let imageURLString, let url = URL(string: imageURLString) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty:
+                        placeholder
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    case .failure:
+                        placeholder
+                    @unknown default:
+                        placeholder
+                    }
+                }
+            } else {
+                placeholder
+            }
+        }
+        .frame(width: 64, height: 64)
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+
+    private var placeholder: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(.quaternary)
+            Image(systemName: "photo")
+                .font(.title3)
+                .foregroundStyle(.secondary)
+        }
     }
 }
 
 private struct VeganBannerView: View {
     let analysis: VeganAnalysis
+    let source: ProductSource
 
     var body: some View {
         let spec = bannerSpec
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .center, spacing: 12) {
+
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 14) {
                 Image(systemName: spec.symbol)
-                    .font(.system(size: 28, weight: .semibold))
-                Text(spec.headline)
-                    .font(.title2.bold())
-                    .minimumScaleFactor(0.8)
-                    .lineLimit(2)
+                    .font(.system(size: 34, weight: .semibold))
+                    .foregroundStyle(spec.foreground)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(spec.headline)
+                        .font(.title2.bold())
+                        .foregroundStyle(spec.foreground)
+                        .minimumScaleFactor(0.8)
+                        .lineLimit(2)
+
+                    Text(spec.subtitle)
+                        .font(.subheadline)
+                        .foregroundStyle(spec.foreground.opacity(0.96))
+                }
             }
 
-            Text(spec.subtitle)
-                .font(.subheadline)
-                .opacity(0.95)
+            SourceCapsule(text: "Fuente: \(source.displayName)", foreground: spec.foreground)
 
             if !analysis.nonVeganIngredients.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Ingredientes de origen animal:")
-                        .font(.caption.bold())
-                    Text(analysis.nonVeganIngredients.joined(separator: ", "))
-                        .font(.body)
-                }
+                SummaryBlock(
+                    title: "Ingredientes de origen animal:",
+                    values: analysis.nonVeganIngredients,
+                    foreground: spec.foreground
+                )
             }
 
             if !analysis.doubtfulIngredients.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Ingredientes de procedencia dudosa:")
-                        .font(.caption.bold())
-                    Text(analysis.doubtfulIngredients.joined(separator: ", "))
-                        .font(.body)
-                }
+                SummaryBlock(
+                    title: "Ingredientes de procedencia dudosa:",
+                    values: analysis.doubtfulIngredients,
+                    foreground: spec.foreground
+                )
             }
         }
-        .foregroundStyle(spec.foreground)
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(spec.background)
-        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .shadow(color: spec.background.opacity(0.28), radius: 10, x: 0, y: 6)
+        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .shadow(color: spec.background.opacity(0.24), radius: 12, x: 0, y: 8)
     }
 
     private var bannerSpec: VeganBannerSpec {
@@ -488,14 +637,14 @@ private struct VeganBannerView: View {
             return VeganBannerSpec(
                 headline: "SÍ · PRODUCTO APTO PARA VEGANOS",
                 subtitle: "No se han detectado ingredientes de origen animal ni dudoso.",
-                background: Color(red: 0.18, green: 0.49, blue: 0.20),
+                background: Color.green,
                 foreground: .white,
                 symbol: "checkmark.circle.fill"
             )
         case .notVegan:
             return VeganBannerSpec(
                 headline: "NO · PRODUCTO NO APTO PARA VEGANOS",
-                subtitle: "Open Food Facts indica ingredientes de origen animal.",
+                subtitle: "Open Facts indica ingredientes de origen animal.",
                 background: Color(red: 0.76, green: 0.16, blue: 0.16),
                 foreground: .white,
                 symbol: "xmark.circle.fill"
@@ -503,7 +652,7 @@ private struct VeganBannerView: View {
         case .maybe:
             return VeganBannerSpec(
                 headline: "DUDOSO · ORIGEN INCIERTO",
-                subtitle: "Open Food Facts marca ingredientes con origen dudoso.",
+                subtitle: "Open Facts marca ingredientes con origen dudoso.",
                 background: Color(red: 0.85, green: 0.56, blue: 0.06),
                 foreground: .white,
                 symbol: "exclamationmark.triangle.fill"
@@ -511,7 +660,7 @@ private struct VeganBannerView: View {
         case .unknown:
             return VeganBannerSpec(
                 headline: "SIN DATOS SUFICIENTES",
-                subtitle: "Open Food Facts no aporta análisis vegano suficiente para este producto.",
+                subtitle: "Open Facts no aporta análisis vegano suficiente para este producto.",
                 background: Color(red: 0.45, green: 0.47, blue: 0.50),
                 foreground: .white,
                 symbol: "questionmark.circle.fill"
@@ -528,7 +677,95 @@ private struct VeganBannerSpec {
     let symbol: String
 }
 
-private struct SectionBlock<Content: View>: View {
+private struct ProductHeaderCard: View {
+    let product: Product
+    let barcode: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(displayName)
+                .font(.title.bold())
+                .foregroundStyle(.primary)
+
+            if let brands = product.brands, !brands.isEmpty {
+                Text("Marca: \(brands)")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+            }
+
+            if let quantity = product.quantity, !quantity.isEmpty {
+                Text("Cantidad: \(quantity)")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .strokeBorder(Color.secondary.opacity(0.10), lineWidth: 1)
+        )
+    }
+
+    private var displayName: String {
+        let trimmed = product.productName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return trimmed.isEmpty ? barcode : trimmed
+    }
+}
+
+private struct IngredientsCard: View {
+    let product: Product
+
+    var body: some View {
+        SimpleSectionCard(title: "Ingredientes") {
+            if let ingredients = product.ingredients, !ingredients.isEmpty {
+                VStack(alignment: .leading, spacing: 10) {
+                    ForEach(Array(ingredients.enumerated()), id: \.offset) { _, ingredient in
+                        IngredientRow(ingredient: ingredient)
+                    }
+                }
+            } else {
+                Text(product.ingredientsText?.isEmpty == false ? product.ingredientsText! : "—")
+            }
+        }
+    }
+}
+
+private struct IngredientRow: View {
+    let ingredient: OffIngredient
+
+    var body: some View {
+        let kind = IngredientKind(rawValue: ingredient.vegan?.lowercased() ?? "") ?? .unknown
+        let spec = kind.spec
+        let label = cleanFoodFactsLabel(ingredient.text) ?? "Ingrediente desconocido"
+
+        HStack(alignment: .top, spacing: 12) {
+            Circle()
+                .fill(spec.accent)
+                .frame(width: 10, height: 10)
+                .padding(.top, 6)
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text(label)
+                    .font(.body)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.primary)
+
+                CapsuleChip(text: spec.label, tint: spec.accent)
+            }
+
+            Spacer(minLength: 8)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(spec.rowBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+}
+
+private struct SimpleSectionCard<Content: View>: View {
     let title: String
     @ViewBuilder let content: Content
 
@@ -536,15 +773,201 @@ private struct SectionBlock<Content: View>: View {
         VStack(alignment: .leading, spacing: 12) {
             Text(title)
                 .font(.headline)
+                .fontWeight(.semibold)
+                .foregroundStyle(.primary)
+
             content
                 .font(.body)
                 .foregroundStyle(.primary)
         }
-        .padding()
+        .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .strokeBorder(Color.secondary.opacity(0.10), lineWidth: 1)
+        )
     }
+}
+
+private struct SourceCapsule: View {
+    let text: String
+    let foreground: Color
+
+    var body: some View {
+        Text(text)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(foreground)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 7)
+            .background(foreground.opacity(0.14))
+            .clipShape(Capsule())
+    }
+}
+
+private struct CapsuleChip: View {
+    let text: String
+    let tint: Color
+
+    var body: some View {
+        Text(text)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(tint)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(tint.opacity(0.14))
+            .clipShape(Capsule())
+    }
+}
+
+private struct SummaryBlock: View {
+    let title: String
+    let values: [String]
+    let foreground: Color
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.caption.bold())
+                .foregroundStyle(foreground)
+            Text(values.joined(separator: ", "))
+                .font(.body)
+                .foregroundStyle(foreground)
+        }
+    }
+}
+
+private struct LoadingStateView: View {
+    var body: some View {
+        VStack {
+            Spacer()
+
+            VStack(spacing: 16) {
+                ProgressView()
+                Text("Consultando bases de datos…")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(28)
+            .frame(maxWidth: .infinity)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .padding()
+
+            Spacer()
+        }
+    }
+}
+
+private struct EmptyResultStateView: View {
+    let icon: String
+    let title: String
+    let message: String
+    let actionTitle: String
+    let action: () -> Void
+
+    var body: some View {
+        VStack(spacing: 14) {
+            Image(systemName: icon)
+                .font(.system(size: 42, weight: .semibold))
+                .foregroundStyle(.green)
+
+            Text(title)
+                .font(.title2.bold())
+                .multilineTextAlignment(.center)
+
+            Text(message)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            Button(actionTitle, action: action)
+                .buttonStyle(.borderedProminent)
+                .tint(.green)
+        }
+        .padding(28)
+        .frame(maxWidth: .infinity)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .padding()
+    }
+}
+
+private struct ErrorStateView: View {
+    let icon: String
+    let title: String
+    let message: String
+    let actionTitle: String
+    let action: () -> Void
+
+    var body: some View {
+        VStack(spacing: 14) {
+            Image(systemName: icon)
+                .font(.system(size: 42, weight: .semibold))
+                .foregroundStyle(.red)
+
+            Text(title)
+                .font(.title2.bold())
+                .multilineTextAlignment(.center)
+
+            Text(message)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            Button(actionTitle, action: action)
+                .buttonStyle(.borderedProminent)
+                .tint(.green)
+        }
+        .padding(28)
+        .frame(maxWidth: .infinity)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .padding()
+    }
+}
+
+private enum IngredientKind: String {
+    case vegan = "yes"
+    case animal = "no"
+    case doubtful = "maybe"
+    case unknown
+
+    var spec: IngredientKindSpec {
+        switch self {
+        case .vegan:
+            return IngredientKindSpec(
+                label: "Vegano",
+                accent: .green,
+                rowBackground: Color.green.opacity(0.10)
+            )
+        case .animal:
+            return IngredientKindSpec(
+                label: "Origen animal",
+                accent: Color(red: 0.76, green: 0.16, blue: 0.16),
+                rowBackground: Color(red: 0.76, green: 0.16, blue: 0.16).opacity(0.10)
+            )
+        case .doubtful:
+            return IngredientKindSpec(
+                label: "Dudoso",
+                accent: Color(red: 0.85, green: 0.56, blue: 0.06),
+                rowBackground: Color(red: 0.85, green: 0.56, blue: 0.06).opacity(0.10)
+            )
+        case .unknown:
+            return IngredientKindSpec(
+                label: "Sin dato",
+                accent: .secondary,
+                rowBackground: Color.secondary.opacity(0.10)
+            )
+        }
+    }
+}
+
+private struct IngredientKindSpec {
+    let label: String
+    let accent: Color
+    let rowBackground: Color
 }
 
 private struct NutritionGrid: View {
@@ -581,33 +1004,5 @@ private struct NutritionRow: View {
             Text(value)
                 .fontWeight(.semibold)
         }
-    }
-}
-
-private struct ErrorStateView: View {
-    let title: String
-    let message: String
-    let retryTitle: String
-    let onRetry: () -> Void
-    let onBack: () -> Void
-
-    var body: some View {
-        VStack(spacing: 18) {
-            Spacer()
-            Text(title)
-                .font(.title2.bold())
-                .multilineTextAlignment(.center)
-            Text(message)
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-            Button(retryTitle, action: onRetry)
-                .buttonStyle(.borderedProminent)
-                .tint(Color(red: 0.18, green: 0.49, blue: 0.20))
-            Button("Volver", action: onBack)
-                .buttonStyle(.bordered)
-            Spacer()
-        }
-        .padding()
     }
 }
