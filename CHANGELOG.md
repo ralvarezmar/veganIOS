@@ -15,10 +15,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 - Estados vacíos y de error más claros, con botón "Reintentar" ante fallos de red.
 - Historial en tarjetas con miniatura del producto.
 - Mejor soporte de modo oscuro con colores y materiales del sistema.
+- Política de privacidad (`PRIVACY.md` y página en `/docs` para GitHub Pages).
 
 ### Cambiado
 - Renombrada la app a **VeganCheck** (antes VeganChecker).
 - Rediseño general de la interfaz: banner de veredicto con subtítulo e indicador de fuente.
+- Lista de ingredientes como texto corrido; solo se resaltan los dudosos y los no aptos.
+- Limpieza más robusta de los nombres de ingredientes (entidades HTML, marcadores y espacios).
 - La búsqueda sigue consultando el resto de bases cuando una fuente no aporta datos veganos; "Sin datos suficientes" solo se muestra si ninguna los aporta.
 
 ## [2026-07-03]

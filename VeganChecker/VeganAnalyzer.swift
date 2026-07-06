@@ -59,18 +59,26 @@ func analyzeVegan(ingredientsAnalysisTags: [String]?, ingredients: [OffIngredien
 }
 
 func cleanFoodFactsLabel(_ raw: String?) -> String? {
-    guard var normalized = raw?.trimmingCharacters(in: .whitespacesAndNewlines), !normalized.isEmpty else {
+    guard let raw = raw?.trimmingCharacters(in: .whitespacesAndNewlines), !raw.isEmpty else {
         return nil
     }
 
+    let decoded = htmlDecoded(raw).trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !decoded.isEmpty else { return nil }
+
+    var normalized = decoded
     if let colonIndex = normalized.firstIndex(of: ":") {
         normalized = String(normalized[normalized.index(after: colonIndex)...])
     }
 
     normalized = normalized
-        .replacingOccurrences(of: "_", with: " ")
-        .replacingOccurrences(of: "-", with: " ")
+        .replacingOccurrences(of: "_", with: "")
+        .replacingOccurrences(of: "*", with: "")
+        .map { $0.isWhitespace ? " " : String($0) }
+        .joined()
+        .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
         .trimmingCharacters(in: .whitespacesAndNewlines)
+        .trimmingCharacters(in: CharacterSet.whitespacesAndNewlines.union(CharacterSet(charactersIn: ".,;:\"'“”‘’«»()[]{}!?")))
 
     guard !normalized.isEmpty else { return nil }
 
@@ -78,6 +86,26 @@ func cleanFoodFactsLabel(_ raw: String?) -> String? {
         .split(whereSeparator: { $0.isWhitespace })
         .map { $0.lowercased().capitalized }
         .joined(separator: " ")
+}
+
+private func htmlDecoded(_ raw: String) -> String {
+    guard raw.contains("&") else { return raw }
+
+    let entities: [(String, String)] = [
+        ("&nbsp;", " "),
+        ("&quot;", "\""),
+        ("&apos;", "'"),
+        ("&#39;", "'"),
+        ("&lt;", "<"),
+        ("&gt;", ">"),
+        ("&amp;", "&")
+    ]
+
+    var result = raw
+    for (entity, replacement) in entities {
+        result = result.replacingOccurrences(of: entity, with: replacement)
+    }
+    return result
 }
 
 private extension Array where Element == String {
