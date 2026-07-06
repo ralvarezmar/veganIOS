@@ -25,11 +25,18 @@ final class OpenFactsService {
         var sawCleanNoData = false
         var sawFailure = false
         var consultedSources: [ProductSource] = []
+        var fallbackCandidate: FetchedProduct?
 
         for source in ProductSource.allCases {
             switch await fetchFromSource(source, barcode: barcode) {
             case .success(let product):
-                return .success(FetchedProduct(product: product, source: source))
+                if product.hasVeganData {
+                    return .success(FetchedProduct(product: product, source: source))
+                }
+                if fallbackCandidate == nil {
+                    fallbackCandidate = FetchedProduct(product: product, source: source)
+                }
+                consultedSources.append(source)
             case .cleanNoData:
                 sawCleanNoData = true
                 consultedSources.append(source)
@@ -41,6 +48,9 @@ final class OpenFactsService {
             }
         }
 
+        if let fallbackCandidate {
+            return .success(fallbackCandidate)
+        }
         if sawCleanNoData {
             return .notFound(consultedSources)
         }

@@ -66,6 +66,11 @@ extension Product {
         !(ingredientsAnalysisTags?.isEmpty ?? true) ||
         nutriments != nil
     }
+
+    var hasVeganData: Bool {
+        !(ingredientsAnalysisTags?.isEmpty ?? true) ||
+        (ingredients?.contains(where: { !($0.vegan?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true) }) ?? false)
+    }
 }
 
 enum ProductSource: String, CaseIterable, Codable {
