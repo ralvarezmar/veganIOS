@@ -1,4 +1,4 @@
-# VeganCheck
+# VCheck
 
 iOS SwiftUI app para escanear códigos de barras EAN/UPC, consultar Open Food Facts con fallback a Open Beauty Facts, Open Product Facts y Open Pet Food Facts, mostrar un veredicto vegano prominente y guardar historial local con SwiftData.
 
@@ -14,9 +14,9 @@ iOS SwiftUI app para escanear códigos de barras EAN/UPC, consultar Open Food Fa
 
 **Descripción completa:**
 
-VeganCheck es tu asistente de compra vegana. Apunta la cámara al código de barras de cualquier producto alimentario o cosmético y descubre en segundos si es **apto para veganos**, junto con su lista completa de ingredientes, aditivos, alérgenos e información nutricional.
+VCheck es tu asistente de compra vegana. Apunta la cámara al código de barras de cualquier producto alimentario o cosmético y descubre en segundos si es **apto para veganos**, junto con su lista completa de ingredientes, aditivos, alérgenos e información nutricional.
 
-Olvídate de leer etiquetas interminables o de buscar ingredientes de origen animal uno a uno. VeganCheck analiza la composición del producto y te muestra un veredicto claro y con color:
+Olvídate de leer etiquetas interminables o de buscar ingredientes de origen animal uno a uno. VCheck analiza la composición del producto y te muestra un veredicto claro y con color:
 
 • Apto para veganos — sin ingredientes de origen animal ni dudoso.
 • No apto para veganos — contiene ingredientes de origen animal (te los enumera).
@@ -32,9 +32,9 @@ Funciones principales:
 • Historial local de tus escaneos recientes para volver a consultarlos cuando quieras.
 • Interfaz nativa SwiftUI con soporte de modo oscuro.
 
-Privacidad: VeganCheck solo usa la cámara para leer códigos de barras y se conecta a Internet para consultar la información pública de los productos. No requiere registro ni recopila datos personales; el historial se guarda únicamente en tu dispositivo.
+Privacidad: VCheck solo usa la cámara para leer códigos de barras y se conecta a Internet para consultar la información pública de los productos. No requiere registro ni recopila datos personales; el historial se guarda únicamente en tu dispositivo.
 
-La información de los productos procede de las bases colaborativas y abiertas de Open Food Facts y sus proyectos hermanos. VeganCheck no está afiliada a dichos proyectos.
+La información de los productos procede de las bases colaborativas y abiertas de Open Food Facts y sus proyectos hermanos. VCheck no está afiliada a dichos proyectos.
 
 *Nota: el veredicto vegano se basa en los datos disponibles en las bases consultadas y puede estar incompleto o desactualizado. Ante cualquier duda, consulta siempre el etiquetado oficial del producto.*
 

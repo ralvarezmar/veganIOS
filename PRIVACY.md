@@ -1,15 +1,15 @@
-# Política de Privacidad de VeganCheck
+# Política de Privacidad de VCheck
 
 **Última actualización:** 3 de julio de 2026
 
-VeganCheck ("la aplicación") es una app que escanea el código de barras de un
+VCheck ("la aplicación") es una app que escanea el código de barras de un
 producto y te indica si es apto para veganos, mostrando sus ingredientes,
 aditivos, alérgenos e información nutricional. Esta política explica qué datos
 trata la aplicación y cómo.
 
 ## Resumen
 
-**VeganCheck no recopila, almacena en servidores ni comparte datos personales.**
+**VCheck no recopila, almacena en servidores ni comparte datos personales.**
 No necesitas crear una cuenta ni registrarte para usarla.
 
 ## Cámara

@@ -45,6 +45,7 @@ struct Nutriments: Codable {
     let fat100g: Double?
     let saturatedFat100g: Double?
     let sugars100g: Double?
+    let carbohydrates100g: Double?
     let salt100g: Double?
     let proteins100g: Double?
 
@@ -53,6 +54,7 @@ struct Nutriments: Codable {
         case fat100g = "fat_100g"
         case saturatedFat100g = "saturated-fat_100g"
         case sugars100g = "sugars_100g"
+        case carbohydrates100g = "carbohydrates_100g"
         case salt100g = "salt_100g"
         case proteins100g = "proteins_100g"
     }
@@ -95,13 +97,13 @@ enum ProductSource: String, CaseIterable, Codable {
     var displayName: String {
         switch self {
         case .openFoodFacts:
-            return "Open Food Facts"
+            return L("product_source_open_food_facts")
         case .openBeautyFacts:
-            return "Open Beauty Facts"
+            return L("product_source_open_beauty_facts")
         case .openProductFacts:
-            return "Open Product Facts"
+            return L("product_source_open_product_facts")
         case .openPetFoodFacts:
-            return "Open Pet Food Facts"
+            return L("product_source_open_pet_food_facts")
         }
     }
 }

@@ -152,10 +152,10 @@ private struct ScannerOverlayView: View {
 private struct HelperCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Apunta al código de barras")
+            Text(L("scan_instruction"))
                 .font(.headline)
                 .fontWeight(.semibold)
-            Text("Se admiten códigos EAN y UPC.")
+            Text(L("scan_formats_hint"))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
@@ -176,10 +176,10 @@ private struct DetectionConfirmationView: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.title3.weight(.semibold))
             VStack(alignment: .leading, spacing: 2) {
-                Text("Código detectado")
+                Text(L("scanner_confirmation"))
                     .font(.headline)
                     .fontWeight(.semibold)
-                Text("Abriendo el resultado…")
+                Text(L("scanner_confirmation_subtitle"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -207,7 +207,7 @@ private struct CameraPermissionView: View {
                     .font(.system(size: 48, weight: .semibold))
                     .foregroundStyle(Color.green)
 
-                Text("Permiso de cámara necesario")
+                Text(L("permission_title"))
                     .font(.title2.bold())
                     .multilineTextAlignment(.center)
 
@@ -220,7 +220,7 @@ private struct CameraPermissionView: View {
                     Button {
                         onRequestAccess()
                     } label: {
-                        Label(isRequestingAccess ? "Solicitando…" : "Conceder permiso", systemImage: "camera.on.rectangle")
+                        Label(isRequestingAccess ? L("permission_requesting") : L("permission_grant"), systemImage: "camera.on.rectangle")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
@@ -230,7 +230,7 @@ private struct CameraPermissionView: View {
                     Button {
                         onOpenSettings()
                     } label: {
-                        Label("Abrir ajustes", systemImage: "gearshape")
+                        Label(L("permission_settings"), systemImage: "gearshape")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
@@ -254,15 +254,15 @@ private struct CameraPermissionView: View {
     private var statusMessage: String {
         switch status {
         case .notDetermined:
-            return "Necesitamos la cámara para escanear códigos de barras."
+            return L("permission_message")
         case .denied:
-            return "La cámara está desactivada para esta app. Puedes habilitarla en Ajustes."
+            return L("permission_denied_message")
         case .restricted:
-            return "El acceso a la cámara está restringido en este dispositivo."
+            return L("permission_restricted_message")
         case .authorized:
             return ""
         @unknown default:
-            return "No se pudo determinar el estado de la cámara."
+            return L("permission_unknown_message")
         }
     }
 }
@@ -279,7 +279,7 @@ struct ResultView: View {
 
     var body: some View {
         content
-            .navigationTitle("Resultado")
+            .navigationTitle(L("result_title"))
             .navigationBarTitleDisplayMode(.inline)
             .task(id: retrySeed) {
                 await loadProduct()
@@ -297,17 +297,17 @@ struct ResultView: View {
             case .notFound(let consultedSources):
                 EmptyResultStateView(
                     icon: "magnifyingglass",
-                    title: "Sin datos suficientes",
+                    title: L("result_not_found_title"),
                     message: consultedSourcesMessage(consultedSources),
-                    actionTitle: "Reintentar",
+                    actionTitle: L("retry"),
                     action: { retrySeed = UUID() }
                 )
             case .networkError(let message):
                 ErrorStateView(
                     icon: "wifi.exclamationmark",
-                    title: "No hemos podido consultar las bases de datos",
+                    title: L("network_error_title"),
                     message: message,
-                    actionTitle: "Reintentar",
+                    actionTitle: L("retry"),
                     action: { retrySeed = UUID() }
                 )
             case .success(let product, let source):
@@ -343,20 +343,25 @@ struct ResultView: View {
                         }
 
                         IngredientsCard(product: product)
-                        SimpleSectionCard(title: "Aditivos") {
+                        SimpleSectionCard(title: L("additives_title")) {
                             Text(cleanTags(product.additivesTags))
                         }
-                        SimpleSectionCard(title: "Alérgenos") {
+                        SimpleSectionCard(title: L("allergens_title")) {
                             Text(cleanTags(product.allergensTags))
                         }
-                        SimpleSectionCard(title: "Nutrición básica por 100 g") {
+                        SimpleSectionCard(title: L("nutrition_title")) {
                             NutritionGrid(nutriments: product.nutriments)
                         }
 
+                        if let distribution = MacroDistribution(nutriments: product.nutriments) {
+                            SimpleSectionCard(title: L("macro_distribution_title")) {
+                                MacroDistributionView(distribution: distribution)
+                            }
+                        }
+
                         if let grade = product.nutriscoreGrade, !grade.isEmpty {
-                            SimpleSectionCard(title: "Nutri-Score") {
-                                Text(grade.uppercased())
-                                    .font(.headline.bold())
+                            SimpleSectionCard(title: L("nutriscore_badge_title")) {
+                                NutriScoreBadgeView(grade: grade.uppercased())
                             }
                         }
                     }
@@ -408,7 +413,7 @@ struct ResultView: View {
 
     private func cleanTags(_ tags: [String]?) -> String {
         let cleaned = (tags ?? []).compactMap(cleanFoodFactsLabel)
-        return cleaned.isEmpty ? "—" : cleaned.joined(separator: ", ")
+        return cleaned.isEmpty ? L("not_available") : cleaned.joined(separator: ", ")
     }
 
     private func consultedSourcesMessage(_ consultedSources: [ProductSource]) -> String {
@@ -418,9 +423,9 @@ struct ResultView: View {
             .filter { seen.insert($0).inserted }
 
         guard !names.isEmpty else {
-            return "Producto no encontrado en Open Food Facts"
+            return L("product_not_found")
         }
-        return "No se ha encontrado información suficiente en ninguna de las bases consultadas: \(names.joined(separator: ", "))."
+        return LF("product_not_found_sources", names.joined(separator: ", "))
     }
 }
 
@@ -447,10 +452,10 @@ struct HistoryView: View {
                             .font(.system(size: 42, weight: .semibold))
                             .foregroundStyle(.green)
 
-                        Text("Historial vacío")
+                        Text(L("history_empty_title"))
                             .font(.title2.bold())
 
-                        Text("Escanea un producto para ver aquí tus consultas recientes.")
+                        Text(L("history_empty_message"))
                             .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -473,7 +478,7 @@ struct HistoryView: View {
             }
             .padding()
         }
-        .navigationTitle("Historial")
+        .navigationTitle(L("history_title"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -485,11 +490,11 @@ struct HistoryView: View {
                 .disabled(records.isEmpty)
             }
         }
-        .confirmationDialog("¿Limpiar historial?", isPresented: $showingClearConfirmation, titleVisibility: .visible) {
-            Button("Limpiar historial", role: .destructive) {
+        .confirmationDialog(L("clear_history_confirmation"), isPresented: $showingClearConfirmation, titleVisibility: .visible) {
+            Button(L("clear_history"), role: .destructive) {
                 clearHistory()
             }
-            Button("Cancelar", role: .cancel) {}
+            Button(L("cancel"), role: .cancel) {}
         }
     }
 
@@ -528,7 +533,7 @@ private struct HistoryRow: View {
 
             Spacer(minLength: 8)
 
-            CapsuleChip(text: "Ver veredicto", tint: .green)
+            CapsuleChip(text: L("history_chip_open_result"), tint: .green)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -606,11 +611,15 @@ private struct VeganBannerView: View {
                 }
             }
 
-            SourceCapsule(text: "Fuente: \(source.displayName)", foreground: spec.foreground)
+            SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
+
+            Text(L("open_food_facts_attribution"))
+                .font(.caption2)
+                .foregroundStyle(spec.foreground.opacity(0.9))
 
             if !analysis.nonVeganIngredients.isEmpty {
                 SummaryBlock(
-                    title: "Ingredientes de origen animal:",
+                    title: L("vegan_non_vegan_label"),
                     values: analysis.nonVeganIngredients,
                     foreground: spec.foreground
                 )
@@ -618,7 +627,7 @@ private struct VeganBannerView: View {
 
             if !analysis.doubtfulIngredients.isEmpty {
                 SummaryBlock(
-                    title: "Ingredientes de procedencia dudosa:",
+                    title: L("vegan_doubtful_label"),
                     values: analysis.doubtfulIngredients,
                     foreground: spec.foreground
                 )
@@ -635,32 +644,32 @@ private struct VeganBannerView: View {
         switch analysis.status {
         case .vegan:
             return VeganBannerSpec(
-                headline: "SÍ · PRODUCTO APTO PARA VEGANOS",
-                subtitle: "No se han detectado ingredientes de origen animal ni dudoso.",
+                headline: L("vegan_headline_vegan"),
+                subtitle: L("vegan_verdict_vegan_subtitle"),
                 background: Color.green,
                 foreground: .white,
                 symbol: "checkmark.circle.fill"
             )
         case .notVegan:
             return VeganBannerSpec(
-                headline: "NO · PRODUCTO NO APTO PARA VEGANOS",
-                subtitle: "Open Facts indica ingredientes de origen animal.",
+                headline: L("vegan_headline_not_vegan"),
+                subtitle: L("vegan_verdict_not_vegan_subtitle"),
                 background: Color(red: 0.76, green: 0.16, blue: 0.16),
                 foreground: .white,
                 symbol: "xmark.circle.fill"
             )
         case .maybe:
             return VeganBannerSpec(
-                headline: "DUDOSO · ORIGEN INCIERTO",
-                subtitle: "Open Facts marca ingredientes con origen dudoso.",
+                headline: L("vegan_headline_maybe"),
+                subtitle: L("vegan_verdict_maybe_subtitle"),
                 background: Color(red: 0.85, green: 0.56, blue: 0.06),
                 foreground: .white,
                 symbol: "exclamationmark.triangle.fill"
             )
         case .unknown:
             return VeganBannerSpec(
-                headline: "SIN DATOS SUFICIENTES",
-                subtitle: "Open Facts no aporta análisis vegano suficiente para este producto.",
+                headline: L("vegan_headline_unknown"),
+                subtitle: L("vegan_verdict_unknown_subtitle"),
                 background: Color(red: 0.45, green: 0.47, blue: 0.50),
                 foreground: .white,
                 symbol: "questionmark.circle.fill"
@@ -688,13 +697,13 @@ private struct ProductHeaderCard: View {
                 .foregroundStyle(.primary)
 
             if let brands = product.brands, !brands.isEmpty {
-                Text("Marca: \(brands)")
+                Text(String(format: L("brand_prefix"), brands))
                     .font(.headline)
                     .foregroundStyle(.secondary)
             }
 
             if let quantity = product.quantity, !quantity.isEmpty {
-                Text("Cantidad: \(quantity)")
+                Text(String(format: L("quantity_prefix"), quantity))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -719,32 +728,38 @@ private struct IngredientsCard: View {
     let product: Product
 
     var body: some View {
-        SimpleSectionCard(title: "Ingredientes") {
-            if let paragraph = ingredientParagraph(for: product.ingredients) {
+        SimpleSectionCard(title: L("ingredients_title")) {
+            let items = ingredientItems(for: product.ingredients)
+            if let paragraph = ingredientParagraph(for: items) {
                 VStack(alignment: .leading, spacing: 8) {
                     paragraph
                         .font(.body)
                         .foregroundStyle(.primary)
+                        .accessibilityLabel(ingredientAccessibilityLabel(for: items))
 
-                    Text("Rojo = no apto para veganos · Naranja = dudoso")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .minimumScaleFactor(0.85)
+                    if items.contains(where: { $0.1 == .animal || $0.1 == .doubtful }) {
+                        Text(L("ingredients_legend"))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .minimumScaleFactor(0.85)
+                    }
                 }
             } else {
-                Text(product.ingredientsText?.isEmpty == false ? product.ingredientsText! : "—")
+                Text(product.ingredientsText?.isEmpty == false ? product.ingredientsText! : L("not_available"))
             }
         }
     }
 }
 
-private func ingredientParagraph(for ingredients: [OffIngredient]?) -> Text? {
-    let items = (ingredients ?? []).compactMap { ingredient -> (String, IngredientKind)? in
+private func ingredientItems(for ingredients: [OffIngredient]?) -> [(String, IngredientKind)] {
+    return (ingredients ?? []).compactMap { ingredient -> (String, IngredientKind)? in
         guard let label = cleanFoodFactsLabel(ingredient.text), !label.isEmpty else { return nil }
         let kind = IngredientKind(rawValue: ingredient.vegan?.lowercased() ?? "") ?? .unknown
         return (label, kind)
     }
+}
 
+private func ingredientParagraph(for items: [(String, IngredientKind)]) -> Text? {
     guard !items.isEmpty else { return nil }
 
     var paragraph = Text("")
@@ -756,15 +771,30 @@ private func ingredientParagraph(for ingredients: [OffIngredient]?) -> Text? {
         let segment = Text(item.0)
         switch item.1 {
         case .animal:
-            paragraph = paragraph + segment.foregroundColor(.red).bold()
+            paragraph = paragraph + segment.foregroundColor(.red).bold().underline(true, color: .red)
         case .doubtful:
-            paragraph = paragraph + segment.foregroundColor(.orange).bold()
+            paragraph = paragraph + segment.foregroundColor(.orange).bold().underline(true, color: .orange)
         case .vegan, .unknown:
             paragraph = paragraph + segment
         }
     }
 
     return paragraph
+}
+
+private func ingredientAccessibilityLabel(for items: [(String, IngredientKind)]) -> String {
+    items.map { label, kind in
+        switch kind {
+        case .animal:
+            return "\(label), \(L("ingredient_status_animal"))"
+        case .doubtful:
+            return "\(label), \(L("ingredient_status_doubtful"))"
+        case .vegan:
+            return "\(label), \(L("ingredient_status_vegan"))"
+        case .unknown:
+            return "\(label), \(L("ingredient_status_unknown"))"
+        }
+    }.joined(separator: ", ")
 }
 
 private struct SimpleSectionCard<Content: View>: View {
@@ -847,7 +877,7 @@ private struct LoadingStateView: View {
 
             VStack(spacing: 16) {
                 ProgressView()
-                Text("Consultando bases de datos…")
+                Text(L("loading_product"))
                     .font(.headline)
                     .foregroundStyle(.secondary)
             }
@@ -940,25 +970,25 @@ private enum IngredientKind: String {
         switch self {
         case .vegan:
             return IngredientKindSpec(
-                label: "Vegano",
+                label: L("ingredient_status_vegan"),
                 accent: .green,
                 rowBackground: Color.green.opacity(0.10)
             )
         case .animal:
             return IngredientKindSpec(
-                label: "Origen animal",
+                label: L("ingredient_status_animal"),
                 accent: Color(red: 0.76, green: 0.16, blue: 0.16),
                 rowBackground: Color(red: 0.76, green: 0.16, blue: 0.16).opacity(0.10)
             )
         case .doubtful:
             return IngredientKindSpec(
-                label: "Dudoso",
+                label: L("ingredient_status_doubtful"),
                 accent: Color(red: 0.85, green: 0.56, blue: 0.06),
                 rowBackground: Color(red: 0.85, green: 0.56, blue: 0.06).opacity(0.10)
             )
         case .unknown:
             return IngredientKindSpec(
-                label: "Sin dato",
+                label: L("ingredient_status_unknown"),
                 accent: .secondary,
                 rowBackground: Color.secondary.opacity(0.10)
             )
@@ -977,22 +1007,208 @@ private struct NutritionGrid: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            NutritionRow(label: "Energía", value: format(nutriments?.energyKcal100g, unit: "kcal"))
-            NutritionRow(label: "Grasas", value: format(nutriments?.fat100g, unit: "g"))
-            NutritionRow(label: "Grasas saturadas", value: format(nutriments?.saturatedFat100g, unit: "g"))
-            NutritionRow(label: "Azúcares", value: format(nutriments?.sugars100g, unit: "g"))
-            NutritionRow(label: "Sal", value: format(nutriments?.salt100g, unit: "g"))
-            NutritionRow(label: "Proteínas", value: format(nutriments?.proteins100g, unit: "g"))
+            NutritionRow(label: L("nutrition_energy"), value: format(nutriments?.energyKcal100g, unit: "kcal"))
+            NutritionRow(label: L("nutrition_fat"), value: format(nutriments?.fat100g, unit: "g"))
+            NutritionRow(label: L("nutrition_saturated_fat"), value: format(nutriments?.saturatedFat100g, unit: "g"))
+            NutritionRow(label: L("nutrition_sugars"), value: format(nutriments?.sugars100g, unit: "g"))
+            NutritionRow(label: L("nutrition_salt"), value: format(nutriments?.salt100g, unit: "g"))
+            NutritionRow(label: L("nutrition_proteins"), value: format(nutriments?.proteins100g, unit: "g"))
         }
     }
 
     private func format(_ value: Double?, unit: String) -> String {
-        guard let value else { return "—" }
+        guard let value else { return L("not_available") }
         if value.rounded() == value {
             return "\(Int(value)) \(unit)"
         }
         return String(format: "%.1f %@", value, unit)
     }
+}
+
+private struct MacroDistribution {
+    let proteins: Double
+    let fats: Double
+    let carbohydrates: Double
+    let total: Double
+
+    init?(nutriments: Nutriments?) {
+        guard
+            let proteins = nutriments?.proteins100g,
+            let fats = nutriments?.fat100g,
+            let carbohydrates = nutriments?.carbohydrates100g
+        else {
+            return nil
+        }
+
+        let safeProteins = max(proteins, 0)
+        let safeFats = max(fats, 0)
+        let safeCarbohydrates = max(carbohydrates, 0)
+        let total = safeProteins + safeFats + safeCarbohydrates
+        guard total > 0 else { return nil }
+
+        self.proteins = safeProteins
+        self.fats = safeFats
+        self.carbohydrates = safeCarbohydrates
+        self.total = total
+    }
+
+    var segments: [MacroSegment] {
+        [
+            MacroSegment(
+                label: L("macro_proteins_label"),
+                grams: proteins,
+                share: proteins / total,
+                color: Color(red: 0.18, green: 0.49, blue: 0.20),
+                foreground: .white
+            ),
+            MacroSegment(
+                label: L("macro_fat_label"),
+                grams: fats,
+                share: fats / total,
+                color: Color(red: 0.96, green: 0.66, blue: 0.00),
+                foreground: Color(red: 0.15, green: 0.18, blue: 0.20)
+            ),
+            MacroSegment(
+                label: L("macro_carbohydrates_label"),
+                grams: carbohydrates,
+                share: carbohydrates / total,
+                color: Color(red: 0.08, green: 0.39, blue: 0.74),
+                foreground: .white
+            ),
+        ]
+    }
+}
+
+private struct MacroSegment: Identifiable {
+    let label: String
+    let grams: Double
+    let share: Double
+    let color: Color
+    let foreground: Color
+
+    var id: String { label }
+}
+
+private struct MacroDistributionView: View {
+    let distribution: MacroDistribution
+
+    var body: some View {
+        let segments = distribution.segments
+        VStack(alignment: .leading, spacing: 10) {
+            GeometryReader { geometry in
+                HStack(spacing: 0) {
+                    ForEach(segments) { segment in
+                        ZStack {
+                            segment.color
+                            Text(segment.label)
+                                .font(.caption2.bold())
+                                .foregroundStyle(segment.foreground)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.55)
+                                .padding(.horizontal, 4)
+                        }
+                        .frame(width: geometry.size.width * segment.share)
+                    }
+                }
+            }
+            .frame(height: 34)
+            .clipShape(RoundedRectangle(cornerRadius: 999, style: .continuous))
+            .accessibilityLabel(
+                LF(
+                    "macro_chart_content_description",
+                    formatMacroValue(distribution.proteins),
+                    formatMacroPercent(segments[0].share),
+                    formatMacroValue(distribution.fats),
+                    formatMacroPercent(segments[1].share),
+                    formatMacroValue(distribution.carbohydrates),
+                    formatMacroPercent(segments[2].share)
+                )
+            )
+
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(segments) { segment in
+                    MacroLegendRow(segment: segment)
+                }
+            }
+        }
+    }
+}
+
+private struct MacroLegendRow: View {
+    let segment: MacroSegment
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 10) {
+            RoundedRectangle(cornerRadius: 3, style: .continuous)
+                .fill(segment.color)
+                .frame(width: 12, height: 12)
+                .padding(.top, 4)
+
+            Text(
+                LF(
+                    "macro_legend_format",
+                    segment.label,
+                    formatMacroValue(segment.grams),
+                    formatMacroPercent(segment.share)
+                )
+            )
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+
+            Spacer(minLength: 0)
+        }
+    }
+}
+
+private struct NutriScoreBadgeView: View {
+    let grade: String
+
+    var body: some View {
+        let colors = nutriScoreColors(grade)
+        Text(grade)
+            .font(.title3.bold())
+            .foregroundStyle(colors.foreground)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(colors.background)
+            )
+            .accessibilityLabel(LF("nutriscore_badge_content_description", grade))
+    }
+}
+
+private struct NutriScoreColors {
+    let background: Color
+    let foreground: Color
+}
+
+private func nutriScoreColors(_ grade: String) -> NutriScoreColors {
+    switch grade.uppercased() {
+    case "A":
+        return NutriScoreColors(background: Color(red: 0.18, green: 0.49, blue: 0.20), foreground: .white)
+    case "B":
+        return NutriScoreColors(background: Color(red: 0.49, green: 0.70, blue: 0.20), foreground: Color(red: 0.15, green: 0.18, blue: 0.20))
+    case "C":
+        return NutriScoreColors(background: Color(red: 0.99, green: 0.85, blue: 0.16), foreground: Color(red: 0.15, green: 0.18, blue: 0.20))
+    case "D":
+        return NutriScoreColors(background: Color(red: 0.96, green: 0.49, blue: 0.00), foreground: .white)
+    case "E":
+        return NutriScoreColors(background: Color(red: 0.76, green: 0.16, blue: 0.16), foreground: .white)
+    default:
+        return NutriScoreColors(background: Color.secondary.opacity(0.2), foreground: .primary)
+    }
+}
+
+private func formatMacroValue(_ value: Double) -> String {
+    if value.rounded() == value {
+        return String(format: "%.0f", value)
+    }
+    return String(format: "%.1f", value)
+}
+
+private func formatMacroPercent(_ value: Double) -> String {
+    String(format: "%.0f", value * 100)
 }
 
 private struct NutritionRow: View {

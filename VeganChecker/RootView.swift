@@ -14,11 +14,11 @@ struct RootView: View {
                     path.append(Route.result(barcode))
                 }
             )
-            .navigationTitle("VeganCheck")
+            .navigationTitle(L("app_name"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Historial") {
+                    Button(L("history_action")) {
                         path.append(Route.history)
                     }
                 }
