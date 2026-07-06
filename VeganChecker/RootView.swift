@@ -14,7 +14,7 @@ struct RootView: View {
                     path.append(Route.result(barcode))
                 }
             )
-            .navigationTitle("VeganChecker")
+            .navigationTitle("VeganCheck")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

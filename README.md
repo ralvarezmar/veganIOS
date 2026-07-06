@@ -1,4 +1,4 @@
-# VeganChecker
+# VeganCheck
 
 iOS SwiftUI app para escanear códigos de barras EAN/UPC, consultar Open Food Facts con fallback a Open Beauty Facts y Open Product Facts, mostrar un veredicto vegano prominente y guardar historial local con SwiftData.
 
