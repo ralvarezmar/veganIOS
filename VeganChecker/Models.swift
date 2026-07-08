@@ -6,6 +6,24 @@ struct OpenFactsResponse: Decodable {
     let product: Product?
 }
 
+struct OpenFoodFactsSearchResponse: Codable {
+    let products: [OpenFoodFactsSearchProduct]?
+}
+
+struct OpenFoodFactsSearchProduct: Codable {
+    let code: String?
+    let productName: String?
+    let brands: String?
+    let imageUrl: String?
+
+    enum CodingKeys: String, CodingKey {
+        case code
+        case productName = "product_name"
+        case brands
+        case imageUrl = "image_url"
+    }
+}
+
 struct Product: Codable {
     let productName: String?
     let brands: String?
@@ -141,6 +159,23 @@ final class CachedProduct {
         self.productData = productData
         self.sourceName = sourceName
         self.cachedAt = cachedAt
+    }
+}
+
+@Model
+final class FavoriteProduct {
+    @Attribute(.unique) var barcode: String
+    var productName: String?
+    var brand: String?
+    var imageURL: String?
+    var addedAt: Date
+
+    init(barcode: String, productName: String?, brand: String?, imageURL: String?, addedAt: Date = Date()) {
+        self.barcode = barcode
+        self.productName = productName
+        self.brand = brand
+        self.imageURL = imageURL
+        self.addedAt = addedAt
     }
 }
 

@@ -26,6 +26,22 @@ struct RootView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
+                        path.append(Route.favorites)
+                    } label: {
+                        Image(systemName: "star")
+                    }
+                    .accessibilityLabel(L("favorites_action"))
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        path.append(Route.search)
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                    }
+                    .accessibilityLabel(L("search_action"))
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
                         path.append(Route.profile)
                     } label: {
                         Image(systemName: "person.circle")
@@ -45,6 +61,14 @@ struct RootView: View {
                 switch route {
                 case .history:
                     HistoryView { barcode in
+                        path.append(Route.result(barcode))
+                    }
+                case .favorites:
+                    FavoritesScreen { barcode in
+                        path.append(Route.result(barcode))
+                    }
+                case .search:
+                    SearchScreen { barcode in
                         path.append(Route.result(barcode))
                     }
                 case .profile:
@@ -75,6 +99,8 @@ struct RootView: View {
 
 private enum Route: Hashable {
     case history
+    case favorites
+    case search
     case profile
     case result(String)
 }

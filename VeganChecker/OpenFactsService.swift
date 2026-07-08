@@ -11,6 +11,12 @@ enum OpenFactsFetchResult {
     case error(String)
 }
 
+enum SearchByNameResult {
+    case success([OpenFoodFactsSearchProduct])
+    case empty
+    case error(String)
+}
+
 final class OpenFactsService {
     private let session: URLSession
     private let userAgent = "VeganLens-iOS/1.0"
@@ -58,6 +64,53 @@ final class OpenFactsService {
             return .error(L("network_error"))
         }
         return .notFound(consultedSources)
+    }
+
+    func searchByName(query: String) async -> SearchByNameResult {
+        let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedQuery.isEmpty else {
+            return .empty
+        }
+
+        guard let url = searchURL(for: trimmedQuery) else {
+            return .error(L("network_error"))
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+
+        do {
+            let (data, response) = try await session.data(for: request)
+            guard let httpResponse = response as? HTTPURLResponse else {
+                return .error(L("network_error"))
+            }
+
+            if httpResponse.statusCode == 404 {
+                return .empty
+            }
+
+            guard (200..<300).contains(httpResponse.statusCode) else {
+                return .error(L("network_error"))
+            }
+
+            let decoded = try JSONDecoder().decode(OpenFoodFactsSearchResponse.self, from: data)
+            let products = (decoded.products ?? []).compactMap { product in
+                let code = product.code?.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard let code, !code.isEmpty else {
+                    return nil
+                }
+                return OpenFoodFactsSearchProduct(
+                    code: code,
+                    productName: product.productName?.trimmingCharacters(in: .whitespacesAndNewlines).takeIfNotEmpty,
+                    brands: product.brands?.trimmingCharacters(in: .whitespacesAndNewlines).takeIfNotEmpty,
+                    imageUrl: product.imageUrl?.trimmingCharacters(in: .whitespacesAndNewlines).takeIfNotEmpty
+                )
+            }
+
+            return products.isEmpty ? .empty : .success(products)
+        } catch {
+            return .error(L("network_error"))
+        }
     }
 
     private enum SourceFetchResult {
@@ -108,5 +161,31 @@ final class OpenFactsService {
         } catch {
             return .failure
         }
+    }
+
+    private func searchURL(for query: String) -> URL? {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "world.openfoodfacts.org"
+        components.path = "/cgi/search.pl"
+        components.queryItems = [
+            URLQueryItem(name: "search_terms", value: query),
+            URLQueryItem(name: "search_simple", value: "1"),
+            URLQueryItem(name: "action", value: "process"),
+            URLQueryItem(name: "json", value: "1"),
+            URLQueryItem(name: "page_size", value: "20"),
+            URLQueryItem(name: "fields", value: "code,product_name,brands,image_url")
+        ]
+        return components.url
+    }
+}
+
+private extension Optional where Wrapped == String {
+    var takeIfNotEmpty: String? {
+        guard let value = self?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !value.isEmpty else {
+            return nil
+        }
+        return value
     }
 }

@@ -463,6 +463,7 @@ struct ResultView: View {
     let onBack: () -> Void
 
     @Environment(\.modelContext) private var modelContext
+    @Query private var favoriteProducts: [FavoriteProduct]
     @AppStorage(AllergenPreferences.selectedKeysKey) private var selectedAllergenStorage = ""
     @AppStorage(AllergenPreferences.strictModeKey) private var strictMode = false
     @State private var loadState: LoadState = .loading
@@ -471,8 +472,24 @@ struct ResultView: View {
 
     private let service = OpenFactsService()
 
+    init(barcode: String, onBack: @escaping () -> Void) {
+        self.barcode = barcode
+        self.onBack = onBack
+        _favoriteProducts = Query(filter: #Predicate<FavoriteProduct> { favorite in
+            favorite.barcode == barcode
+        })
+    }
+
     private var selectedAllergenKeys: Set<String> {
         AllergenPreferences.decodeSelectedKeys(selectedAllergenStorage)
+    }
+
+    private var favoriteProduct: FavoriteProduct? {
+        favoriteProducts.first
+    }
+
+    private var isFavorite: Bool {
+        favoriteProduct != nil
     }
 
     var body: some View {
@@ -483,6 +500,16 @@ struct ResultView: View {
                 await loadProduct()
             }
             .toolbar {
+                if case .success = loadState {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            toggleFavorite()
+                        } label: {
+                            Image(systemName: isFavorite ? "star.fill" : "star")
+                        }
+                        .accessibilityLabel(isFavorite ? L("favorite_remove_action") : L("favorite_add_action"))
+                    }
+                }
                 if let shareText {
                     ToolbarItem(placement: .topBarTrailing) {
                         ShareLink(item: shareText) {
@@ -712,6 +739,30 @@ struct ResultView: View {
             return
         }
         UIApplication.shared.open(url)
+    }
+
+    @MainActor
+    private func toggleFavorite() {
+        guard case .success(let product, _, _) = loadState else {
+            return
+        }
+
+        do {
+            if let favoriteProduct {
+                modelContext.delete(favoriteProduct)
+            } else {
+                modelContext.insert(FavoriteProduct(
+                    barcode: barcode,
+                    productName: product.productName,
+                    brand: product.brands,
+                    imageURL: product.imageUrl,
+                    addedAt: Date()
+                ))
+            }
+            try modelContext.save()
+        } catch {
+            print("No se pudo actualizar favoritos: \(error)")
+        }
     }
 
     private var shareText: String? {

@@ -4,7 +4,7 @@ import SwiftData
 @main
 struct VeganCheckerApp: App {
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([ScanRecord.self, CachedProduct.self])
+        let schema = Schema([ScanRecord.self, CachedProduct.self, FavoriteProduct.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
