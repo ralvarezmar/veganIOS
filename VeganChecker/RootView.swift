@@ -24,6 +24,14 @@ struct RootView: View {
                         path.append(Route.history)
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        path.append(Route.profile)
+                    } label: {
+                        Image(systemName: "person.circle")
+                    }
+                    .accessibilityLabel(L("profile_action"))
+                }
             }
             .sheet(isPresented: $showingOnboarding, onDismiss: {
                 onboardingSeen = true
@@ -39,6 +47,8 @@ struct RootView: View {
                     HistoryView { barcode in
                         path.append(Route.result(barcode))
                     }
+                case .profile:
+                    ProfileScreen()
                 case .result(let barcode):
                     ResultView(
                         barcode: barcode,
@@ -65,5 +75,6 @@ struct RootView: View {
 
 private enum Route: Hashable {
     case history
+    case profile
     case result(String)
 }

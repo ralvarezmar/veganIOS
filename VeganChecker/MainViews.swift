@@ -463,11 +463,17 @@ struct ResultView: View {
     let onBack: () -> Void
 
     @Environment(\.modelContext) private var modelContext
+    @AppStorage(AllergenPreferences.selectedKeysKey) private var selectedAllergenStorage = ""
+    @AppStorage(AllergenPreferences.strictModeKey) private var strictMode = false
     @State private var loadState: LoadState = .loading
     @State private var retrySeed = UUID()
     @State private var selectedAdditive: AdditiveEntry?
 
     private let service = OpenFactsService()
+
+    private var selectedAllergenKeys: Set<String> {
+        AllergenPreferences.decodeSelectedKeys(selectedAllergenStorage)
+    }
 
     var body: some View {
         content
@@ -518,6 +524,12 @@ struct ResultView: View {
                     action: { retrySeed = UUID() }
                 )
             case .success(let product, let source, let fromCache):
+                let allergenItems = buildAllergenDisplayItems(tags: product.allergensTags ?? [])
+                let allergenMatches = buildProfileAllergenMatches(
+                    product: product,
+                    selectedKeys: selectedAllergenKeys,
+                    strictMode: strictMode
+                )
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 16) {
                         VeganBannerView(
@@ -527,6 +539,10 @@ struct ResultView: View {
                         )
 
                         ProductHeaderCard(product: product, barcode: barcode)
+
+                        if !allergenMatches.isEmpty {
+                            AllergenWarningCard(matches: allergenMatches)
+                        }
 
                         Button {
                             openProductOnOpenFoodFacts()
@@ -568,9 +584,11 @@ struct ResultView: View {
                             product: product,
                             onAdditiveTap: { selectedAdditive = $0 }
                         )
-                        SimpleSectionCard(title: L("allergens_title")) {
-                            Text(cleanTags(product.allergensTags))
-                        }
+                        AllergensCard(
+                            title: L("allergens_title"),
+                            values: allergenItems,
+                            highlightedKeys: Set(allergenMatches.compactMap(\.key))
+                        )
                         SimpleSectionCard(title: L("nutrition_title")) {
                             NutritionGrid(nutriments: product.nutriments)
                         }
@@ -1134,6 +1152,51 @@ private struct SimpleSectionCard<Content: View>: View {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .strokeBorder(Color.secondary.opacity(0.10), lineWidth: 1)
         )
+    }
+}
+
+private struct AllergenWarningCard: View {
+    let matches: [AllergenDisplayItem]
+
+    var body: some View {
+        let labels = matches.map(\.label).joined(separator: ", ")
+
+        VStack(alignment: .leading, spacing: 10) {
+            Text(L("allergen_warning_title"))
+                .font(.headline.bold())
+                .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
+
+            Text(String(format: L("allergen_warning_message"), labels))
+                .font(.body)
+                .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(red: 1.0, green: 0.92, blue: 0.93))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+    }
+}
+
+private struct AllergensCard: View {
+    let title: String
+    let values: [AllergenDisplayItem]
+    let highlightedKeys: Set<String>
+
+    var body: some View {
+        SimpleSectionCard(title: title) {
+            if values.isEmpty {
+                Text(L("not_available"))
+            } else {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(values) { item in
+                        CapsuleChip(
+                            text: item.label,
+                            tint: highlightedKeys.contains(item.key ?? "") ? .red : .secondary
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
