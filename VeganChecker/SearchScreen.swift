@@ -74,16 +74,10 @@ struct SearchScreen: View {
                 ScrollView {
                     LazyVStack(spacing: 12) {
                         ForEach(products.indices, id: \.self) { index in
-                            let product = products[index]
-                            Button {
-                                if let code = product.code {
-                                    onSelectBarcode(code)
-                                }
-                            } label: {
-                                SearchResultCard(product: product)
-                            }
-                            .buttonStyle(.plain)
-                            .disabled(product.code == nil)
+                            SearchResultRow(
+                                product: products[index],
+                                onSelectBarcode: onSelectBarcode
+                            )
                         }
                     }
                     .padding(.bottom, 12)
@@ -245,6 +239,23 @@ private struct SearchResultCard: View {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .strokeBorder(Color.secondary.opacity(0.10), lineWidth: 1)
         )
+    }
+}
+
+private struct SearchResultRow: View {
+    let product: OpenFoodFactsSearchProduct
+    let onSelectBarcode: (String) -> Void
+
+    var body: some View {
+        Button {
+            if let code = product.code {
+                onSelectBarcode(code)
+            }
+        } label: {
+            SearchResultCard(product: product)
+        }
+        .buttonStyle(.plain)
+        .disabled(product.code == nil)
     }
 }
 
