@@ -19,5 +19,32 @@ jobs:
       - name: Generate Xcode project
         run: xcodegen generate
 
+      - name: Pick iOS simulator
+        id: simulator
+        run: |
+          SIMULATOR_NAME=$(python3 - <<'PY'
+          import json
+          import subprocess
+
+          devices = json.loads(subprocess.check_output([
+              "xcrun",
+              "simctl",
+              "list",
+              "devices",
+              "available",
+              "-j",
+          ]))["devices"]
+
+          for runtime_devices in devices.values():
+              for device in runtime_devices:
+                  if device.get("isAvailable") and device.get("name", "").startswith("iPhone "):
+                      print(device["name"])
+                      raise SystemExit
+
+          raise SystemExit("No available iPhone simulator found")
+          PY
+          )
+          echo "name=$SIMULATOR_NAME" >> "$GITHUB_OUTPUT"
+
       - name: Run iOS unit tests
-        run: xcodebuild test -scheme VeganChecker -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' -derivedDataPath build
+        run: xcodebuild test -scheme VeganChecker -destination "platform=iOS Simulator,name=${{ steps.simulator.outputs.name }},OS=latest" -derivedDataPath build
