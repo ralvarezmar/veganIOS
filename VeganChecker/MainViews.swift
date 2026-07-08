@@ -274,6 +274,7 @@ struct ResultView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var loadState: LoadState = .loading
     @State private var retrySeed = UUID()
+    @State private var selectedAdditive: AdditiveEntry?
 
     private let service = OpenFactsService()
 
@@ -283,6 +284,9 @@ struct ResultView: View {
             .navigationBarTitleDisplayMode(.inline)
             .task(id: retrySeed) {
                 await loadProduct()
+            }
+            .sheet(item: $selectedAdditive) { additive in
+                AdditiveInfoSheet(additive: additive)
             }
     }
 
@@ -299,8 +303,10 @@ struct ResultView: View {
                     icon: "magnifyingglass",
                     title: L("result_not_found_title"),
                     message: consultedSourcesMessage(consultedSources),
-                    actionTitle: L("retry"),
-                    action: { retrySeed = UUID() }
+                    primaryActionTitle: L("add_to_open_food_facts"),
+                    primaryAction: openAddProductOnOpenFoodFacts,
+                    secondaryActionTitle: L("retry"),
+                    secondaryAction: { retrySeed = UUID() }
                 )
             case .networkError(let message):
                 ErrorStateView(
@@ -310,12 +316,25 @@ struct ResultView: View {
                     actionTitle: L("retry"),
                     action: { retrySeed = UUID() }
                 )
-            case .success(let product, let source):
+            case .success(let product, let source, let fromCache):
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 16) {
-                        VeganBannerView(analysis: analyzeVegan(product), source: source)
+                        VeganBannerView(
+                            analysis: analyzeVegan(product),
+                            source: source,
+                            fromCache: fromCache
+                        )
 
                         ProductHeaderCard(product: product, barcode: barcode)
+
+                        Button {
+                            openProductOnOpenFoodFacts()
+                        } label: {
+                            Label(L("view_in_open_food_facts"), systemImage: "safari")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.green)
 
                         if let imageURLString = product.imageUrl, let url = URL(string: imageURLString) {
                             AsyncImage(url: url) { phase in
@@ -342,10 +361,12 @@ struct ResultView: View {
                             }
                         }
 
+                        ScoresCard(product: product)
                         IngredientsCard(product: product)
-                        SimpleSectionCard(title: L("additives_title")) {
-                            Text(cleanTags(product.additivesTags))
-                        }
+                        AdditivesCard(
+                            product: product,
+                            onAdditiveTap: { selectedAdditive = $0 }
+                        )
                         SimpleSectionCard(title: L("allergens_title")) {
                             Text(cleanTags(product.allergensTags))
                         }
@@ -379,11 +400,17 @@ struct ResultView: View {
         switch result {
         case .success(let fetched):
             saveToHistory(product: fetched.product)
-            loadState = .success(fetched.product, fetched.source)
+            saveToCache(product: fetched.product, source: fetched.source)
+            loadState = .success(fetched.product, fetched.source, false)
         case .notFound(let consultedSources):
             loadState = .notFound(consultedSources)
         case .error(let message):
-            loadState = .networkError(message)
+            if let cached = loadCachedProduct() {
+                saveToHistory(product: cached.product)
+                loadState = .success(cached.product, cached.source, true)
+            } else {
+                loadState = .networkError(message)
+            }
         }
     }
 
@@ -411,12 +438,65 @@ struct ResultView: View {
         }
     }
 
+    @MainActor
+    private func saveToCache(product: Product, source: ProductSource) {
+        do {
+            let descriptor = FetchDescriptor<CachedProduct>(predicate: #Predicate { $0.barcode == barcode })
+            let encoded = try JSONEncoder().encode(product)
+            if let existing = try modelContext.fetch(descriptor).first {
+                existing.productData = encoded
+                existing.sourceName = source.rawValue
+                existing.cachedAt = Date()
+            } else {
+                modelContext.insert(CachedProduct(
+                    barcode: barcode,
+                    productData: encoded,
+                    sourceName: source.rawValue,
+                    cachedAt: Date()
+                ))
+            }
+            try modelContext.save()
+        } catch {
+            print("No se pudo guardar la caché: \(error)")
+        }
+    }
+
+    private func loadCachedProduct() -> (product: Product, source: ProductSource)? {
+        do {
+            let descriptor = FetchDescriptor<CachedProduct>(predicate: #Predicate { $0.barcode == barcode })
+            guard let cached = try modelContext.fetch(descriptor).first else {
+                return nil
+            }
+            let product = try JSONDecoder().decode(Product.self, from: cached.productData)
+            let source = ProductSource(rawValue: cached.sourceName) ?? .openFoodFacts
+            return (product, source)
+        } catch {
+            print("No se pudo cargar la caché: \(error)")
+            return nil
+        }
+    }
+
     private func cleanTags(_ tags: [String]?) -> String {
         let cleaned = (tags ?? []).compactMap(cleanFoodFactsLabel)
         return cleaned.isEmpty ? L("not_available") : cleaned.joined(separator: ", ")
     }
 
+    private func openProductOnOpenFoodFacts() {
+        guard let url = URL(string: "https://world.openfoodfacts.org/product/\(barcode)") else {
+            return
+        }
+        UIApplication.shared.open(url)
+    }
+
+    private func openAddProductOnOpenFoodFacts() {
+        guard let url = URL(string: "https://world.openfoodfacts.org/cgi/product.pl?type=add&code=\(barcode)") else {
+            return
+        }
+        UIApplication.shared.open(url)
+    }
+
     private func consultedSourcesMessage(_ consultedSources: [ProductSource]) -> String {
+
         var seen = Set<String>()
         let names = consultedSources
             .map(\.displayName)
@@ -433,7 +513,7 @@ enum LoadState {
     case loading
     case notFound([ProductSource])
     case networkError(String)
-    case success(Product, ProductSource)
+    case success(Product, ProductSource, Bool)
 }
 
 struct HistoryView: View {
@@ -588,6 +668,7 @@ private struct HistoryThumbnail: View {
 private struct VeganBannerView: View {
     let analysis: VeganAnalysis
     let source: ProductSource
+    let fromCache: Bool
 
     var body: some View {
         let spec = bannerSpec
@@ -612,6 +693,10 @@ private struct VeganBannerView: View {
             }
 
             SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
+
+            if fromCache {
+                SourceCapsule(text: L("offline_cache_badge"), foreground: spec.foreground)
+            }
 
             Text(L("open_food_facts_attribution"))
                 .font(.caption2)
@@ -896,8 +981,10 @@ private struct EmptyResultStateView: View {
     let icon: String
     let title: String
     let message: String
-    let actionTitle: String
-    let action: () -> Void
+    let primaryActionTitle: String
+    let primaryAction: () -> Void
+    let secondaryActionTitle: String?
+    let secondaryAction: (() -> Void)?
 
     var body: some View {
         VStack(spacing: 14) {
@@ -914,9 +1001,14 @@ private struct EmptyResultStateView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 
-            Button(actionTitle, action: action)
+            Button(primaryActionTitle, action: primaryAction)
                 .buttonStyle(.borderedProminent)
                 .tint(.green)
+
+            if let secondaryActionTitle, let secondaryAction {
+                Button(secondaryActionTitle, action: secondaryAction)
+                    .buttonStyle(.bordered)
+            }
         }
         .padding(28)
         .frame(maxWidth: .infinity)
@@ -1223,4 +1315,249 @@ private struct NutritionRow: View {
                 .fontWeight(.semibold)
         }
     }
+}
+
+private struct ScoresCard: View {
+    let product: Product
+
+    var body: some View {
+        let nutriScore = normalizedScore(product.nutriscoreGrade)
+        let ecoScore = normalizedScore(product.ecoscoreGrade)
+        let novaGroup = product.novaGroup.flatMap { (1...4).contains($0) ? $0 : nil }
+
+        return Group {
+            if nutriScore == nil && ecoScore == nil && novaGroup == nil {
+                EmptyView()
+            } else {
+                SimpleSectionCard(title: L("product_scores_title")) {
+                    HStack(alignment: .top, spacing: 16) {
+                        if let nutriScore {
+                            ScoreColumn(label: L("nutriscore_badge_title")) {
+                                NutriScoreBadgeView(grade: nutriScore)
+                            }
+                        }
+                        if let ecoScore {
+                            ScoreColumn(label: L("ecoscore_badge_title")) {
+                                EcoScoreBadgeView(grade: ecoScore)
+                            }
+                        }
+                        if let novaGroup {
+                            ScoreColumn(label: L("nova_group_badge_title")) {
+                                NovaGroupBadgeView(group: novaGroup)
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+        }
+    }
+}
+
+private func normalizedScore(_ value: String?) -> String? {
+    let normalized = value?
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+        .uppercased()
+    guard let normalized, !normalized.isEmpty else {
+        return nil
+    }
+    return normalized
+}
+
+private struct ScoreColumn<Content: View>: View {
+    let label: String
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        VStack(alignment: .center, spacing: 6) {
+            Text(label)
+                .font(.footnote.weight(.semibold))
+                .multilineTextAlignment(.center)
+            content
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
+}
+
+private struct EcoScoreBadgeView: View {
+    let grade: String
+
+    var body: some View {
+        let colors = nutriScoreColors(grade)
+        Text(grade)
+            .font(.title3.bold())
+            .foregroundStyle(colors.foreground)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(colors.background)
+            )
+            .accessibilityLabel(LF("ecoscore_badge_content_description", grade))
+    }
+}
+
+private struct NovaGroupBadgeView: View {
+    let group: Int
+
+    var body: some View {
+        let colors = novaGroupColors(group)
+        Text("\(L("nova_group_badge_title")) \(group)")
+            .font(.subheadline.bold())
+            .foregroundStyle(colors.content)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 7)
+            .background(colors.background)
+            .clipShape(Capsule())
+            .accessibilityLabel(LF("nova_group_badge_content_description", group))
+    }
+}
+
+private func novaGroupColors(_ group: Int) -> NutriScoreColors {
+    switch group {
+    case 1:
+        return NutriScoreColors(background: Color(red: 0.18, green: 0.49, blue: 0.20), foreground: .white)
+    case 2:
+        return NutriScoreColors(background: Color(red: 0.49, green: 0.70, blue: 0.20), foreground: Color(red: 0.15, green: 0.18, blue: 0.20))
+    case 3:
+        return NutriScoreColors(background: Color(red: 0.96, green: 0.49, blue: 0.00), foreground: .white)
+    case 4:
+        return NutriScoreColors(background: Color(red: 0.76, green: 0.16, blue: 0.16), foreground: .white)
+    default:
+        return NutriScoreColors(background: Color.secondary.opacity(0.2), foreground: .primary)
+    }
+}
+
+private struct AdditivesCard: View {
+    let product: Product
+    let onAdditiveTap: (AdditiveEntry) -> Void
+
+    var body: some View {
+        let items = additiveDisplayItems(for: product.additivesTags)
+        SimpleSectionCard(title: L("additives_title")) {
+            if items.isEmpty {
+                Text(L("not_available"))
+            } else {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(items) { item in
+                        if let additive = item.additive {
+                            Button {
+                                onAdditiveTap(additive)
+                            } label: {
+                                AdditiveChipView(item: item)
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            AdditiveChipView(item: item)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct AdditiveDisplayItem: Identifiable {
+    let code: String
+    let additive: AdditiveEntry?
+
+    var id: String { code }
+}
+
+private func additiveDisplayItems(for tags: [String]?) -> [AdditiveDisplayItem] {
+    var seen = Set<String>()
+    return (tags ?? []).compactMap { tag in
+        guard let code = cleanFoodFactsLabel(tag)?.uppercased(), seen.insert(code).inserted else {
+            return nil
+        }
+        return AdditiveDisplayItem(code: code, additive: additiveEntry(for: code))
+    }
+}
+
+private struct AdditiveChipView: View {
+    let item: AdditiveDisplayItem
+
+    var body: some View {
+        let name = item.additive?.info.commonName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let label = name.flatMap { $0.isEmpty ? nil : "\(item.code) · \($0)" } ?? item.code
+        let colors = item.additive.map { additiveOriginColors($0.info.origin) } ?? AdditiveBadgeColors(background: Color(.secondarySystemBackground), content: .secondary)
+        Text(label)
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(colors.content)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(colors.background)
+            .clipShape(Capsule())
+    }
+}
+
+private struct AdditiveInfoSheet: View {
+    let additive: AdditiveEntry
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                let colors = additiveOriginColors(additive.info.origin)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(additive.code)
+                        .font(.headline)
+                        .foregroundStyle(colors.content)
+                    Text(additive.info.commonName ?? L("additive_unknown_name"))
+                        .font(.title2.bold())
+                        .foregroundStyle(colors.content)
+                    Text(additiveOriginLabel(additive.info.origin))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(colors.content)
+                }
+                .padding(18)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(colors.background)
+                .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+
+                if !additive.info.note.isEmpty {
+                    SimpleSectionCard(title: L("additive_origin_label")) {
+                        Text(additive.info.note)
+                    }
+                }
+            }
+            .padding()
+        }
+        .presentationDetents([.medium, .large])
+    }
+}
+
+private func additiveOriginLabel(_ origin: AdditiveOrigin) -> String {
+    switch origin {
+    case .animal:
+        return L("additive_origin_animal")
+    case .plant:
+        return L("additive_origin_plant")
+    case .synthetic:
+        return L("additive_origin_synthetic")
+    case .uncertain:
+        return L("additive_origin_uncertain")
+    case .unknown:
+        return L("additive_origin_no_data")
+    }
+}
+
+private func additiveOriginColors(_ origin: AdditiveOrigin) -> AdditiveBadgeColors {
+    switch origin {
+    case .animal:
+        return AdditiveBadgeColors(background: Color(red: 1.0, green: 0.92, blue: 0.93), content: Color(red: 0.78, green: 0.15, blue: 0.16))
+    case .plant:
+        return AdditiveBadgeColors(background: Color(red: 0.91, green: 0.96, blue: 0.91), content: Color(red: 0.18, green: 0.49, blue: 0.20))
+    case .synthetic:
+        return AdditiveBadgeColors(background: Color(red: 0.89, green: 0.95, blue: 0.99), content: Color(red: 0.08, green: 0.39, blue: 0.74))
+    case .uncertain:
+        return AdditiveBadgeColors(background: Color(red: 1.0, green: 0.95, blue: 0.88), content: Color(red: 0.70, green: 0.42, blue: 0.00))
+    case .unknown:
+        return AdditiveBadgeColors(background: Color(red: 0.91, green: 0.91, blue: 0.93), content: Color(red: 0.28, green: 0.34, blue: 0.45))
+    }
+}
+
+private struct AdditiveBadgeColors {
+    let background: Color
+    let content: Color
 }
