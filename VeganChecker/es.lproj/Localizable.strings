@@ -11,7 +11,7 @@
 "permission_denied_message" = "La cámara está desactivada para esta app. Puedes habilitarla en Ajustes.";
 "permission_restricted_message" = "El acceso a la cámara está restringido en este dispositivo.";
 "permission_unknown_message" = "No se pudo determinar el estado de la cámara.";
-"scan_instruction" = "Apunta al código de barras";
+"scan_instruction" = "📷 Apunta al código de barras";
 "scan_formats_hint" = "Se admiten códigos EAN y UPC.";
 "scanner_confirmation" = "Código detectado";
 "scanner_confirmation_subtitle" = "Abriendo el resultado…";
@@ -23,25 +23,25 @@
 "allergen_profile_catalog_title" = "Alérgenos comunes";
 "strict_mode_title" = "Modo estricto";
 "strict_mode_description" = "También avisa cuando haya trazas o posibles coincidencias relacionadas.";
-"allergen_warning_title" = "Alérgenos de tu perfil";
-"allergen_warning_message" = "Contiene alérgenos de tu perfil: %@";
+"allergen_warning_title" = "⚠️ Alérgenos de tu perfil";
+"allergen_warning_message" = "⚠️ Contiene alérgenos de tu perfil: %@";
 "manual_barcode_entry" = "Introducir código";
 "manual_barcode_title" = "Introducir código de barras";
-"manual_barcode_hint" = "Escribe un código numérico válido de 8 a 14 dígitos.";
+"manual_barcode_hint" = "🔢 Escribe un código numérico válido de 8 a 14 dígitos.";
 "manual_barcode_field_label" = "Código de barras";
 "manual_barcode_invalid" = "Introduce solo dígitos, entre 8 y 14 caracteres.";
 "manual_barcode_submit" = "Ver resultado";
 "manual_barcode_cancel" = "Cancelar";
-"onboarding_title" = "Bienvenido a VeganLens";
+"onboarding_title" = "👋 Bienvenido a VeganLens";
 "onboarding_message" = "Escanea un código de barras para comprobar si un producto es apto para veganos.
 
 Verde = apto · Rojo = no apto · Ámbar = dudoso · Gris = sin datos.";
 "onboarding_dismiss" = "Entendido";
 "share_action" = "Compartir";
-"share_verdict_apto" = "Apto";
-"share_verdict_no_apto" = "No apto";
-"share_verdict_dudoso" = "Dudoso";
-"share_verdict_sin_datos" = "Sin datos";
+"share_verdict_apto" = "Apto ✅";
+"share_verdict_no_apto" = "No apto ❌";
+"share_verdict_dudoso" = "Origen dudoso ⚠️";
+"share_verdict_sin_datos" = "Sin datos suficientes 🔍";
 "share_result_template" = "%@
 Veredicto: %@
 Fuente: %@
@@ -49,7 +49,7 @@ Fuente: %@
 "product_not_found" = "Producto no encontrado en Open Food Facts";
 "product_not_found_sources" = "No se ha encontrado información suficiente en ninguna de las bases consultadas: %@.";
 "network_error" = "Sin conexión / error de red";
-"result_not_found_title" = "Sin datos suficientes";
+"result_not_found_title" = "Sin datos suficientes 🔍";
 "result_not_found_message" = "No hemos encontrado un producto con información vegana suficiente en las bases consultadas.";
 "network_error_title" = "No hemos podido consultar las bases de datos";
 "retry" = "Reintentar";
@@ -86,8 +86,8 @@ Fuente: %@
 "history_action" = "Historial";
 "favorites_action" = "Favoritos";
 "favorites_title" = "Favoritos";
-"favorites_empty_title" = "Sin favoritos aún";
-"favorites_empty_message" = "Guarda productos con la estrella para verlos aquí.";
+"favorites_empty_title" = "✨ Sin favoritos aún";
+"favorites_empty_message" = "Guarda productos con la estrella para verlos aquí. ⭐";
 "favorites_chip_open_result" = "Ver favorito";
 "search_action" = "Buscar";
 "search_title" = "Buscar por nombre";
@@ -96,9 +96,9 @@ Fuente: %@
 "search_prompt_title" = "Busca por nombre";
 "search_prompt_message" = "Escribe un nombre o marca para encontrar un producto.";
 "search_loading" = "Buscando…";
-"search_empty_title" = "Sin resultados";
+"search_empty_title" = "🔍 Sin resultados";
 "search_empty_message" = "Empieza escribiendo un nombre de producto.";
-"search_no_results_message" = "No se encontraron productos para “%@”.";
+"search_no_results_message" = "No se encontraron productos para “%@”. 🔍";
 "search_error_title" = "No se ha podido buscar";
 "search_retry" = "Reintentar";
 "favorite_add_action" = "Añadir a favoritos";
@@ -125,16 +125,16 @@ Fuente: %@
 "nutrition_salt" = "Sal";
 "nutrition_proteins" = "Proteínas";
 "vegan_title" = "¿Es vegano?";
-"vegan_verdict_vegan" = "Vegano";
+"vegan_verdict_vegan" = "Apto ✅";
 "vegan_headline_vegan" = "SÍ · PRODUCTO APTO PARA VEGANOS";
 "vegan_verdict_vegan_subtitle" = "No se han detectado ingredientes de origen animal ni dudoso.";
-"vegan_verdict_not_vegan" = "No vegano — contiene ingredientes de origen animal";
+"vegan_verdict_not_vegan" = "No apto ❌ — contiene ingredientes de origen animal";
 "vegan_headline_not_vegan" = "NO · PRODUCTO NO APTO PARA VEGANOS";
 "vegan_verdict_not_vegan_subtitle" = "Open Food Facts indica ingredientes de origen animal.";
-"vegan_verdict_maybe" = "Origen dudoso — contiene ingredientes de procedencia incierta";
+"vegan_verdict_maybe" = "Origen dudoso ⚠️ — contiene ingredientes de procedencia incierta";
 "vegan_headline_maybe" = "DUDOSO · ORIGEN INCIERTO";
 "vegan_verdict_maybe_subtitle" = "Open Food Facts marca ingredientes con origen dudoso.";
-"vegan_verdict_unknown" = "No hay datos suficientes para determinarlo";
+"vegan_verdict_unknown" = "Sin datos suficientes 🔍";
 "vegan_headline_unknown" = "SIN DATOS SUFICIENTES";
 "vegan_verdict_unknown_subtitle" = "No aporta información suficiente para este producto";
 "product_scores_title" = "Puntuaciones del producto";
