@@ -1,5 +1,5 @@
 import XCTest
-@testable import VeganChecker
+@testable import VCheck
 
 final class VeganAnalyzerTests: XCTestCase {
     func testDecisiveVeganTagReturnsVegan() {
