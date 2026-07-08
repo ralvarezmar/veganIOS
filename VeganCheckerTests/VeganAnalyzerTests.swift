@@ -8,7 +8,7 @@ final class VeganAnalyzerTests: XCTestCase {
             ingredients: nil
         )
 
-        XCTAssertEqual(analysis.status, .vegan)
+        XCTAssertTrue(isStatus(analysis.status, .vegan))
         XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
         XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
     }
@@ -19,7 +19,7 @@ final class VeganAnalyzerTests: XCTestCase {
             ingredients: nil
         )
 
-        XCTAssertEqual(analysis.status, .notVegan)
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
         XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
         XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
     }
@@ -30,7 +30,7 @@ final class VeganAnalyzerTests: XCTestCase {
             ingredients: nil
         )
 
-        XCTAssertEqual(analysis.status, .maybe)
+        XCTAssertTrue(isStatus(analysis.status, .maybe))
         XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
         XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
     }
@@ -44,7 +44,7 @@ final class VeganAnalyzerTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(analysis.status, .notVegan)
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
         XCTAssertEqual(analysis.nonVeganIngredients, ["Gelatin"])
         XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
     }
@@ -57,7 +57,7 @@ final class VeganAnalyzerTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(analysis.status, .maybe)
+        XCTAssertTrue(isStatus(analysis.status, .maybe))
         XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
         XCTAssertEqual(analysis.doubtfulIngredients, ["Mono And Diglycerides"])
     }
@@ -70,7 +70,7 @@ final class VeganAnalyzerTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(analysis.status, .vegan)
+        XCTAssertTrue(isStatus(analysis.status, .vegan))
         XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
         XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
     }
@@ -79,8 +79,8 @@ final class VeganAnalyzerTests: XCTestCase {
         let nilAnalysis = analyzeVegan(ingredientsAnalysisTags: nil, ingredients: nil)
         let emptyAnalysis = analyzeVegan(ingredientsAnalysisTags: [], ingredients: [])
 
-        XCTAssertEqual(nilAnalysis.status, .unknown)
-        XCTAssertEqual(emptyAnalysis.status, .unknown)
+        XCTAssertTrue(isStatus(nilAnalysis.status, .unknown))
+        XCTAssertTrue(isStatus(emptyAnalysis.status, .unknown))
         XCTAssertTrue(nilAnalysis.nonVeganIngredients.isEmpty)
         XCTAssertTrue(nilAnalysis.doubtfulIngredients.isEmpty)
     }
@@ -95,5 +95,14 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertNil(cleanFoodFactsLabel(nil))
         XCTAssertNil(cleanFoodFactsLabel(""))
         XCTAssertNil(cleanFoodFactsLabel("   "))
+    }
+}
+
+private func isStatus(_ lhs: VeganStatus, _ rhs: VeganStatus) -> Bool {
+    switch (lhs, rhs) {
+    case (.vegan, .vegan), (.notVegan, .notVegan), (.maybe, .maybe), (.unknown, .unknown):
+        return true
+    default:
+        return false
     }
 }
