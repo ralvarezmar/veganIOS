@@ -1,5 +1,6 @@
 name: VeganChecker
 developmentLanguage: es
+objectVersion: 56
 options:
   bundleIdPrefix: com.ralvarezmar
 settings:
