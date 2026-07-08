@@ -57,7 +57,7 @@ jobs:
         run: |
           mkdir -p build
           set -o pipefail
-          xcodebuild test -scheme VeganChecker -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" -destination-timeout 60 CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGNING_IDENTITY="" -derivedDataPath build 2>&1 | tee build/xcodebuild.log
+          xcodebuild test -scheme VeganChecker -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" -destination-timeout 60 -derivedDataPath build 2>&1 | tee build/xcodebuild.log
 
       - name: Surface iOS test failure
         if: steps.tests.outcome == 'failure'
