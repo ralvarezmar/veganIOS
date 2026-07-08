@@ -94,7 +94,7 @@ final class OpenFactsService {
             }
 
             let decoded = try JSONDecoder().decode(OpenFoodFactsSearchResponse.self, from: data)
-            let products = (decoded.products ?? []).compactMap { product in
+            let products: [OpenFoodFactsSearchProduct] = (decoded.products ?? []).compactMap { product -> OpenFoodFactsSearchProduct? in
                 let code = product.code?.trimmingCharacters(in: .whitespacesAndNewlines)
                 guard let code, !code.isEmpty else {
                     return nil
