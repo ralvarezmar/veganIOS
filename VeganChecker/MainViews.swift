@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Charts
 import SwiftData
 import AVFoundation
 import UIKit
@@ -1530,24 +1531,16 @@ private struct MacroDistributionView: View {
     var body: some View {
         let segments = distribution.segments
         VStack(alignment: .leading, spacing: 10) {
-            GeometryReader { geometry in
-                HStack(spacing: 0) {
-                    ForEach(segments) { segment in
-                        ZStack {
-                            segment.color
-                            Text(segment.label)
-                                .font(.caption2.bold())
-                                .foregroundStyle(segment.foreground)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.55)
-                                .padding(.horizontal, 4)
-                        }
-                        .frame(width: geometry.size.width * segment.share)
-                    }
-                }
+            Chart(segments) { segment in
+                SectorMark(
+                    angle: .value(segment.label, segment.share),
+                    innerRadius: .ratio(0.6),
+                    angularInset: 1.2
+                )
+                .foregroundStyle(segment.color)
             }
-            .frame(height: 34)
-            .clipShape(RoundedRectangle(cornerRadius: 999, style: .continuous))
+            .frame(height: 184)
+            .chartLegend(.hidden)
             .accessibilityLabel(
                 LF(
                     "macro_chart_content_description",
