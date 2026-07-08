@@ -73,7 +73,8 @@ struct SearchScreen: View {
             } else {
                 ScrollView {
                     LazyVStack(spacing: 12) {
-                        ForEach(Array(products.enumerated()), id: \.offset) { _, product in
+                        ForEach(products.indices, id: \.self) { index in
+                            let product = products[index]
                             Button {
                                 if let code = product.code {
                                     onSelectBarcode(code)

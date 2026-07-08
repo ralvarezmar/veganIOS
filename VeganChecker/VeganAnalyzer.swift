@@ -18,7 +18,8 @@ func analyzeVegan(_ product: Product) -> VeganAnalysis {
 }
 
 func analyzeVegan(ingredientsAnalysisTags: [String]?, ingredients: [OffIngredient]?) -> VeganAnalysis {
-    let normalizedIngredients = ingredients.orEmpty.compactMap { ingredient -> (String, String)? in
+    let ingredientList = ingredients ?? []
+    let normalizedIngredients = ingredientList.compactMap { ingredient -> (String, String)? in
         guard let vegan = ingredient.vegan?.lowercased(), let cleanedText = cleanFoodFactsLabel(ingredient.text) else {
             return nil
         }
