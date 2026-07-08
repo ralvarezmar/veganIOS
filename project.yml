@@ -51,7 +51,7 @@ targets:
         SWIFT_VERSION: 5.9
         IPHONEOS_DEPLOYMENT_TARGET: 17.0
         GENERATE_INFOPLIST_FILE: YES
-        TEST_HOST: $(BUILT_PRODUCTS_DIR)/VeganChecker.app/VeganChecker
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/VCheck.app/VCheck
         BUNDLE_LOADER: $(TEST_HOST)
 schemes:
   VeganChecker:
