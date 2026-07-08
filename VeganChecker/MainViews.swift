@@ -13,6 +13,8 @@ struct ScannerView: View {
     @State private var detectedBarcode: String?
     @State private var showingDetectionConfirmation = false
     @State private var pendingNavigationTask: Task<Void, Never>?
+    @State private var showingManualBarcodeEntry = false
+    @State private var didSubmitManualBarcode = false
 
     var body: some View {
         ZStack {
@@ -22,15 +24,18 @@ struct ScannerView: View {
                 }
                 .ignoresSafeArea()
 
-                ScannerOverlayView(showingDetectionConfirmation: showingDetectionConfirmation)
+                ScannerOverlayView(
+                    showingDetectionConfirmation: showingDetectionConfirmation,
+                    onManualEntry: presentManualBarcodeEntry
+                )
                     .ignoresSafeArea()
-                    .allowsHitTesting(false)
             } else {
                 CameraPermissionView(
                     status: authorizationStatus,
                     isRequestingAccess: isRequestingAccess,
                     onRequestAccess: requestCameraAccess,
-                    onOpenSettings: openSettings
+                    onOpenSettings: openSettings,
+                    onManualEntry: presentManualBarcodeEntry
                 )
                 .padding()
             }
@@ -50,6 +55,16 @@ struct ScannerView: View {
         }
         .onDisappear {
             pendingNavigationTask?.cancel()
+        }
+        .sheet(isPresented: $showingManualBarcodeEntry) {
+            ManualBarcodeEntrySheet { barcode in
+                handleManualBarcodeEntry(barcode)
+            }
+            .onDisappear {
+                if !didSubmitManualBarcode && authorizationStatus == .authorized {
+                    isScannerRunning = true
+                }
+            }
         }
     }
 
@@ -100,6 +115,22 @@ struct ScannerView: View {
         }
     }
 
+    private func handleManualBarcodeEntry(_ barcode: String) {
+        didSubmitManualBarcode = true
+        isScannerRunning = false
+        showingManualBarcodeEntry = false
+        onDetectedBarcode(barcode)
+    }
+
+    private func presentManualBarcodeEntry() {
+        didSubmitManualBarcode = false
+        detectedBarcode = nil
+        showingDetectionConfirmation = false
+        pendingNavigationTask?.cancel()
+        isScannerRunning = false
+        showingManualBarcodeEntry = true
+    }
+
     private func openSettings() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url)
@@ -108,6 +139,7 @@ struct ScannerView: View {
 
 private struct ScannerOverlayView: View {
     let showingDetectionConfirmation: Bool
+    let onManualEntry: () -> Void
 
     var body: some View {
         GeometryReader { proxy in
@@ -140,7 +172,7 @@ private struct ScannerOverlayView: View {
                             .padding(.bottom, 24)
                     }
 
-                    HelperCardView()
+                    HelperCardView(onManualEntry: onManualEntry)
                         .padding(.horizontal, 20)
                         .padding(.bottom, 20)
                 }
@@ -150,6 +182,8 @@ private struct ScannerOverlayView: View {
 }
 
 private struct HelperCardView: View {
+    let onManualEntry: () -> Void
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(L("scan_instruction"))
@@ -158,6 +192,16 @@ private struct HelperCardView: View {
             Text(L("scan_formats_hint"))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+
+            Button {
+                onManualEntry()
+            } label: {
+                Label(L("manual_barcode_entry"), systemImage: "keyboard")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .tint(.green)
+            .padding(.top, 8)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
@@ -197,6 +241,7 @@ private struct CameraPermissionView: View {
     let isRequestingAccess: Bool
     let onRequestAccess: () -> Void
     let onOpenSettings: () -> Void
+    let onManualEntry: () -> Void
 
     var body: some View {
         VStack(spacing: 20) {
@@ -226,6 +271,14 @@ private struct CameraPermissionView: View {
                     .buttonStyle(.borderedProminent)
                     .tint(.green)
                     .disabled(isRequestingAccess)
+
+                    Button {
+                        onManualEntry()
+                    } label: {
+                        Label(L("manual_barcode_entry"), systemImage: "keyboard")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
                 } else {
                     Button {
                         onOpenSettings()
@@ -235,6 +288,14 @@ private struct CameraPermissionView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(.green)
+
+                    Button {
+                        onManualEntry()
+                    } label: {
+                        Label(L("manual_barcode_entry"), systemImage: "keyboard")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
                 }
             }
             .padding(24)
@@ -267,6 +328,136 @@ private struct CameraPermissionView: View {
     }
 }
 
+private struct ManualBarcodeEntrySheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var barcode = ""
+    @State private var errorMessage: String?
+
+    let onSubmit: (String) -> Void
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section(L("manual_barcode_hint")) {
+                    TextField("", text: $barcode, prompt: Text(L("manual_barcode_field_label")))
+                        .keyboardType(.numberPad)
+                        .textContentType(.none)
+                        .textInputAutocapitalization(.never)
+                        .onChange(of: barcode) { _, newValue in
+                            let filtered = newValue.filter { $0.isNumber }
+                            if filtered != newValue {
+                                barcode = filtered
+                            }
+                        }
+                    if let errorMessage {
+                        Text(errorMessage)
+                            .font(.footnote)
+                            .foregroundStyle(.red)
+                    }
+                }
+            }
+            .navigationTitle(L("manual_barcode_title"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(L("manual_barcode_cancel")) {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(L("manual_barcode_submit")) {
+                        submit()
+                    }
+                }
+            }
+        }
+    }
+
+    private func submit() {
+        let value = barcode.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard isPlausibleBarcode(value) else {
+            errorMessage = L("manual_barcode_invalid")
+            return
+        }
+        errorMessage = nil
+        dismiss()
+        onSubmit(value)
+    }
+}
+
+private func isPlausibleBarcode(_ value: String) -> Bool {
+    guard (8...14).contains(value.count) else { return false }
+    return value.allSatisfy { $0.isNumber }
+}
+
+private struct OnboardingView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let onDismiss: () -> Void
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Image(systemName: "leaf.circle.fill")
+                        .font(.system(size: 56, weight: .semibold))
+                        .foregroundStyle(.green)
+
+                    Text(L("onboarding_title"))
+                        .font(.title.bold())
+
+                    Text(L("onboarding_message"))
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        OnboardingLegendRow(color: .green, text: L("vegan_verdict_vegan"))
+                        OnboardingLegendRow(color: .red, text: L("vegan_verdict_not_vegan"))
+                        OnboardingLegendRow(color: .orange, text: L("vegan_verdict_maybe"))
+                        OnboardingLegendRow(color: .gray, text: L("vegan_verdict_unknown"))
+                    }
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+
+                    Button {
+                        dismissAndMarkSeen()
+                    } label: {
+                        Text(L("onboarding_dismiss"))
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.green)
+                }
+                .padding()
+            }
+            .navigationTitle(L("app_name"))
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+
+    private func dismissAndMarkSeen() {
+        onDismiss()
+        dismiss()
+    }
+}
+
+private struct OnboardingLegendRow: View {
+    let color: Color
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Circle()
+                .fill(color)
+                .frame(width: 14, height: 14)
+            Text(text)
+                .font(.subheadline.weight(.semibold))
+        }
+    }
+}
+
 struct ResultView: View {
     let barcode: String
     let onBack: () -> Void
@@ -284,6 +475,16 @@ struct ResultView: View {
             .navigationBarTitleDisplayMode(.inline)
             .task(id: retrySeed) {
                 await loadProduct()
+            }
+            .toolbar {
+                if let shareText {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        ShareLink(item: shareText) {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                        .accessibilityLabel(L("share_action"))
+                    }
+                }
             }
             .sheet(item: $selectedAdditive) { additive in
                 AdditiveInfoSheet(additive: additive)
@@ -493,6 +694,34 @@ struct ResultView: View {
             return
         }
         UIApplication.shared.open(url)
+    }
+
+    private var shareText: String? {
+        guard case .success(let product, let source, _) = loadState else {
+            return nil
+        }
+        return buildShareText(product: product, source: source)
+    }
+
+    private func buildShareText(product: Product, source: ProductSource) -> String {
+        let title = product.productName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let shareTitle = (title?.isEmpty == false ? title : nil) ?? barcode
+        let verdict = shareVerdictLabel(for: analyzeVegan(product).status)
+        let url = "https://world.openfoodfacts.org/product/\(barcode)"
+        return String(format: L("share_result_template"), shareTitle, verdict, source.displayName, url)
+    }
+
+    private func shareVerdictLabel(for status: VeganStatus) -> String {
+        switch status {
+        case .vegan:
+            return L("share_verdict_apto")
+        case .notVegan:
+            return L("share_verdict_no_apto")
+        case .maybe:
+            return L("share_verdict_dudoso")
+        case .unknown:
+            return L("share_verdict_sin_datos")
+        }
     }
 
     private func consultedSourcesMessage(_ consultedSources: [ProductSource]) -> String {

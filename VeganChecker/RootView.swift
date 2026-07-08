@@ -4,6 +4,8 @@ struct RootView: View {
     @State private var path = NavigationPath()
 
     @State private var scannerRunning = true
+    @AppStorage("onboarding_seen") private var onboardingSeen = false
+    @State private var showingOnboarding = false
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -23,6 +25,14 @@ struct RootView: View {
                     }
                 }
             }
+            .sheet(isPresented: $showingOnboarding, onDismiss: {
+                onboardingSeen = true
+                scannerRunning = path.isEmpty
+            }) {
+                OnboardingView {
+                    showingOnboarding = false
+                }
+            }
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .history:
@@ -39,6 +49,12 @@ struct RootView: View {
                         }
                     )
                 }
+            }
+        }
+        .onAppear {
+            if !onboardingSeen {
+                showingOnboarding = true
+                scannerRunning = false
             }
         }
         .onChange(of: path.count) { _, newValue in
