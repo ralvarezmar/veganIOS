@@ -62,7 +62,7 @@ jobs:
       - name: Surface iOS test failure
         if: steps.tests.outcome == 'failure'
         run: |
-          grep -n -A 20 -B 20 "error:" build/xcodebuild.log | tail -n 300 || true
+          sed -n '120,190p' build/xcodebuild.log
           tail -n 80 build/xcodebuild.log
           tail -n 40 build/xcodebuild.log | sed 's/^/::error::/'
           exit 1
