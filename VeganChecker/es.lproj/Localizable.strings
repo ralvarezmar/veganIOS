@@ -35,7 +35,7 @@
 "onboarding_title" = "👋 Bienvenido a VeganLens";
 "onboarding_message" = "Escanea un código de barras para comprobar si un producto es apto para veganos.
 
-Verde = apto · Rojo = no apto · Ámbar = dudoso · Gris = sin datos.";
+✅ Apto · ❌ No apto · ⚠ Origen dudoso · 🔍 Sin datos suficientes.";
 "onboarding_dismiss" = "Entendido";
 "share_action" = "Compartir";
 "share_verdict_apto" = "Apto ✅";
