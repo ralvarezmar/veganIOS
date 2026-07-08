@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct FavoritesScreen: View {
-    @Query(sort: \FavoriteProduct.addedAt, order: .reverse) private var favorites: [FavoriteProduct]
+    @Query(sort: [SortDescriptor(\FavoriteProduct.addedAt, order: .reverse)]) private var favorites: [FavoriteProduct]
 
     let onSelectBarcode: (String) -> Void
 
