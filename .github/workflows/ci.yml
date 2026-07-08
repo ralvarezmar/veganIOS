@@ -52,4 +52,4 @@ jobs:
           echo "udid=$SIMULATOR_UDID" >> "$GITHUB_OUTPUT"
 
       - name: Run iOS unit tests
-        run: xcodebuild test -scheme VeganChecker -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" -destination-timeout 60 -derivedDataPath build
+        run: xcodebuild test -scheme VeganChecker -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" -destination-timeout 60 CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGNING_IDENTITY="" -derivedDataPath build
