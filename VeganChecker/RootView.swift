@@ -48,6 +48,9 @@ struct RootView: View {
                 case .result(let barcode):
                     ResultView(
                         barcode: barcode,
+                        onSelectBarcode: { alternativeBarcode in
+                            path.append(Route.result(alternativeBarcode))
+                        },
                         onBack: {
                             if !path.isEmpty {
                                 path.removeLast()

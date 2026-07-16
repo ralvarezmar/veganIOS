@@ -186,3 +186,6 @@
 "watchlist_warning_title" = "⚠️ Personal watchlist matches";
 "watchlist_warning_additives" = "Watched additives: %@";
 "watchlist_warning_keywords" = "Watched ingredient words: %@";
+"alternatives_title" = "Vegan alternatives";
+"alternatives_loading" = "Finding alternatives…";
+"alternative_unknown_product" = "Vegan product";

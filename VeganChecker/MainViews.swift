@@ -481,6 +481,7 @@ private struct OnboardingLegendRow: View {
 
 struct ResultView: View {
     let barcode: String
+    let onSelectBarcode: (String) -> Void
     let onBack: () -> Void
 
     @Environment(\.modelContext) private var modelContext
@@ -492,11 +493,17 @@ struct ResultView: View {
     @State private var loadState: LoadState = .loading
     @State private var retrySeed = UUID()
     @State private var selectedAdditive: AdditiveEntry?
+    @State private var alternativesState: AlternativesState = .idle
 
     private let service = OpenFactsService()
 
-    init(barcode: String, onBack: @escaping () -> Void) {
+    init(
+        barcode: String,
+        onSelectBarcode: @escaping (String) -> Void,
+        onBack: @escaping () -> Void
+    ) {
         self.barcode = barcode
+        self.onSelectBarcode = onSelectBarcode
         self.onBack = onBack
         _favoriteProducts = Query(filter: #Predicate<FavoriteProduct> { favorite in
             favorite.barcode == barcode
@@ -596,6 +603,15 @@ struct ResultView: View {
 
                         ProductHeaderCard(product: product, barcode: barcode)
 
+                        if case .success(let alternatives) = alternativesState, !alternatives.isEmpty {
+                            AlternativesSection(
+                                products: alternatives,
+                                onSelectBarcode: onSelectBarcode
+                            )
+                        } else if case .loading = alternativesState {
+                            AlternativesLoadingSection()
+                        }
+
                         if !allergenMatches.isEmpty {
                             AllergenWarningCard(matches: allergenMatches)
                         }
@@ -678,22 +694,42 @@ struct ResultView: View {
     @MainActor
     private func loadProduct() async {
         loadState = .loading
+        alternativesState = .idle
         let result = await service.fetchProduct(barcode: barcode)
         switch result {
         case .success(let fetched):
             saveToHistory(product: fetched.product)
             saveToCache(product: fetched.product, source: fetched.source)
             loadState = .success(fetched.product, fetched.source, false, nil)
+            await loadAlternatives(for: fetched.product, source: fetched.source)
         case .notFound(let consultedSources):
             loadState = .notFound(consultedSources)
         case .error(let message):
             if let cached = loadCachedProduct() {
                 saveToHistory(product: cached.product)
                 loadState = .success(cached.product, cached.source, true, cached.cachedAt)
+                await loadAlternatives(for: cached.product, source: cached.source)
             } else {
                 loadState = .networkError(message)
             }
         }
+    }
+
+    private func loadAlternatives(for product: Product, source: ProductSource) async {
+        let analysis = analyzeVegan(product)
+        guard analysis.status != .vegan,
+              let categoryTag = mostSpecificCategoryTag(product.categoriesTags) else {
+            alternativesState = .unavailable
+            return
+        }
+
+        alternativesState = .loading
+        let alternatives = await service.fetchVeganAlternatives(
+            categoryTag: categoryTag,
+            source: source,
+            excludingBarcode: barcode
+        )
+        alternativesState = alternatives.isEmpty ? .unavailable : .success(alternatives)
     }
 
     @MainActor
@@ -866,6 +902,96 @@ enum LoadState {
     case notFound([ProductSource])
     case networkError(String)
     case success(Product, ProductSource, Bool, Date?)
+}
+
+private enum AlternativesState {
+    case idle
+    case loading
+    case success([OpenFoodFactsSearchProduct])
+    case unavailable
+}
+
+private struct AlternativesSection: View {
+    let products: [OpenFoodFactsSearchProduct]
+    let onSelectBarcode: (String) -> Void
+
+    var body: some View {
+        SimpleSectionCard(title: L("alternatives_title")) {
+            VStack(spacing: 10) {
+                ForEach(products.indices, id: \.self) { index in
+                    let product = products[index]
+                    if let code = product.code {
+                        Button {
+                            onSelectBarcode(code)
+                        } label: {
+                            HStack(spacing: 12) {
+                                AlternativeThumbnail(imageURL: product.imageUrl)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(product.productName ?? L("alternative_unknown_product"))
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(.primary)
+                                        .multilineTextAlignment(.leading)
+                                    if let brand = product.brands, !brand.isEmpty {
+                                        Text(brand)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct AlternativesLoadingSection: View {
+    var body: some View {
+        SimpleSectionCard(title: L("alternatives_title")) {
+            HStack(spacing: 10) {
+                ProgressView()
+                Text(L("alternatives_loading"))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
+private struct AlternativeThumbnail: View {
+    let imageURL: String?
+
+    var body: some View {
+        Group {
+            if let imageURL, let url = URL(string: imageURL) {
+                AsyncImage(url: url) { phase in
+                    if case .success(let image) = phase {
+                        image.resizable().scaledToFill()
+                    } else {
+                        placeholder
+                    }
+                }
+            } else {
+                placeholder
+            }
+        }
+        .frame(width: 58, height: 58)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
+    private var placeholder: some View {
+        RoundedRectangle(cornerRadius: 12, style: .continuous)
+            .fill(.quaternary)
+            .overlay {
+                Image(systemName: "leaf")
+                    .foregroundStyle(.secondary)
+            }
+    }
 }
 
 struct HistoryView: View {

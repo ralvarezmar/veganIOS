@@ -15,12 +15,16 @@ struct OpenFoodFactsSearchProduct: Codable {
     let productName: String?
     let brands: String?
     let imageUrl: String?
+    let ingredientsAnalysisTags: [String]?
+    let ingredients: [OffIngredient]?
 
     enum CodingKeys: String, CodingKey {
         case code
         case productName = "product_name"
         case brands
         case imageUrl = "image_url"
+        case ingredientsAnalysisTags = "ingredients_analysis_tags"
+        case ingredients
     }
 }
 
@@ -30,6 +34,7 @@ struct Product: Codable {
     let imageUrl: String?
     let ingredientsText: String?
     let ingredientsAnalysisTags: [String]?
+    let categoriesTags: [String]?
     let ingredients: [OffIngredient]?
     let additivesTags: [String]?
     let allergensTags: [String]?
@@ -45,6 +50,7 @@ struct Product: Codable {
         case imageUrl = "image_url"
         case ingredientsText = "ingredients_text"
         case ingredientsAnalysisTags = "ingredients_analysis_tags"
+        case categoriesTags = "categories_tags"
         case ingredients
         case additivesTags = "additives_tags"
         case allergensTags = "allergens_tags"

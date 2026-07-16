@@ -191,3 +191,6 @@ Fuente: %@
 "watchlist_warning_title" = "⚠️ Coincidencias de tus listas";
 "watchlist_warning_additives" = "Aditivos vigilados: %@";
 "watchlist_warning_keywords" = "Palabras de ingredientes vigiladas: %@";
+"alternatives_title" = "Alternativas veganas";
+"alternatives_loading" = "Buscando alternativas…";
+"alternative_unknown_product" = "Producto vegano";

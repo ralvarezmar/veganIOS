@@ -1,6 +1,6 @@
 import Foundation
 
-enum VeganStatus {
+enum VeganStatus: Equatable {
     case vegan
     case notVegan
     case maybe
