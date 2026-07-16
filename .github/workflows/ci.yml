@@ -25,10 +25,17 @@ jobs:
 
       - name: Build for iOS Simulator
         run: |
+          mkdir -p build
+          set -o pipefail
           xcodebuild \
             -project VeganChecker.xcodeproj \
             -scheme VeganChecker \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            build
+            build 2>&1 | tee build/xcodebuild.log
+
+      - name: Surface build failure
+        if: failure()
+        run: |
+          grep -nE 'error:|fatal error:|BUILD FAILED' build/xcodebuild.log | head -n 200 || tail -n 200 build/xcodebuild.log
