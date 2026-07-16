@@ -5,6 +5,26 @@ import SwiftData
 import AVFoundation
 import UIKit
 
+private func cacheAgeText(_ date: Date) -> String {
+    let age = cacheAge(from: date)
+    switch age.unit {
+    case .seconds:
+        return LF("cache_age_seconds", age.value)
+    case .minute:
+        return L("cache_age_minute")
+    case .minutes:
+        return LF("cache_age_minutes", age.value)
+    case .hour:
+        return L("cache_age_hour")
+    case .hours:
+        return LF("cache_age_hours", age.value)
+    case .day:
+        return L("cache_age_day")
+    case .days:
+        return LF("cache_age_days", age.value)
+    }
+}
+
 struct ScannerView: View {
     @Binding var isScannerRunning: Bool
     let onDetectedBarcode: (String) -> Void
@@ -553,7 +573,7 @@ struct ResultView: View {
                     actionTitle: L("retry"),
                     action: { retrySeed = UUID() }
                 )
-            case .success(let product, let source, let fromCache):
+            case .success(let product, let source, let fromCache, let cachedAt):
                 let allergenItems = buildAllergenDisplayItems(tags: product.allergensTags ?? [])
                 let allergenMatches = buildProfileAllergenMatches(
                     product: product,
@@ -570,7 +590,8 @@ struct ResultView: View {
                         VeganBannerView(
                             analysis: analyzeVegan(product),
                             source: source,
-                            fromCache: fromCache
+                            fromCache: fromCache,
+                            cachedAt: cachedAt
                         )
 
                         ProductHeaderCard(product: product, barcode: barcode)
@@ -662,13 +683,13 @@ struct ResultView: View {
         case .success(let fetched):
             saveToHistory(product: fetched.product)
             saveToCache(product: fetched.product, source: fetched.source)
-            loadState = .success(fetched.product, fetched.source, false)
+            loadState = .success(fetched.product, fetched.source, false, nil)
         case .notFound(let consultedSources):
             loadState = .notFound(consultedSources)
         case .error(let message):
             if let cached = loadCachedProduct() {
                 saveToHistory(product: cached.product)
-                loadState = .success(cached.product, cached.source, true)
+                loadState = .success(cached.product, cached.source, true, cached.cachedAt)
             } else {
                 loadState = .networkError(message)
             }
@@ -717,12 +738,13 @@ struct ResultView: View {
                 ))
             }
             try modelContext.save()
+            evictOldestCacheEntries()
         } catch {
             print("No se pudo guardar la caché: \(error)")
         }
     }
 
-    private func loadCachedProduct() -> (product: Product, source: ProductSource)? {
+    private func loadCachedProduct() -> (product: Product, source: ProductSource, cachedAt: Date)? {
         do {
             let descriptor = FetchDescriptor<CachedProduct>(predicate: #Predicate { $0.barcode == barcode })
             guard let cached = try modelContext.fetch(descriptor).first else {
@@ -730,10 +752,27 @@ struct ResultView: View {
             }
             let product = try JSONDecoder().decode(Product.self, from: cached.productData)
             let source = ProductSource(rawValue: cached.sourceName) ?? .openFoodFacts
-            return (product, source)
+            return (product, source, cached.cachedAt)
         } catch {
             print("No se pudo cargar la caché: \(error)")
             return nil
+        }
+    }
+
+    @MainActor
+    private func evictOldestCacheEntries() {
+        do {
+            let entries = try modelContext.fetch(FetchDescriptor<CachedProduct>())
+            let metadata = entries.map {
+                CacheEntryMetadata(barcode: $0.barcode, cachedAt: $0.cachedAt)
+            }
+            let barcodes = cacheBarcodesToEvict(entries: metadata)
+            entries.filter { barcodes.contains($0.barcode) }.forEach(modelContext.delete)
+            if !barcodes.isEmpty {
+                try modelContext.save()
+            }
+        } catch {
+            print("No se pudo limitar la caché: \(error)")
         }
     }
 
@@ -758,7 +797,7 @@ struct ResultView: View {
 
     @MainActor
     private func toggleFavorite() {
-        guard case .success(let product, _, _) = loadState else {
+        guard case .success(let product, _, _, _) = loadState else {
             return
         }
 
@@ -781,7 +820,7 @@ struct ResultView: View {
     }
 
     private var shareText: String? {
-        guard case .success(let product, let source, _) = loadState else {
+        guard case .success(let product, let source, _, _) = loadState else {
             return nil
         }
         return buildShareText(product: product, source: source)
@@ -826,7 +865,7 @@ enum LoadState {
     case loading
     case notFound([ProductSource])
     case networkError(String)
-    case success(Product, ProductSource, Bool)
+    case success(Product, ProductSource, Bool, Date?)
 }
 
 struct HistoryView: View {
@@ -982,6 +1021,7 @@ private struct VeganBannerView: View {
     let analysis: VeganAnalysis
     let source: ProductSource
     let fromCache: Bool
+    let cachedAt: Date?
 
     var body: some View {
         let spec = bannerSpec
@@ -1009,6 +1049,12 @@ private struct VeganBannerView: View {
 
             if fromCache {
                 SourceCapsule(text: L("offline_cache_badge"), foreground: spec.foreground)
+                if let cachedAt {
+                    SourceCapsule(
+                        text: cacheAgeText(cachedAt),
+                        foreground: spec.foreground
+                    )
+                }
             }
 
             Text(L("open_food_facts_attribution"))

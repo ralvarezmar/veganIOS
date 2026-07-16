@@ -152,6 +152,16 @@ Fuente: %@
 "view_in_open_food_facts" = "Ver en Open Food Facts";
 "add_to_open_food_facts" = "Añadir a Open Food Facts";
 "offline_cache_badge" = "Datos sin conexión (caché)";
+"cache_section_title" = "Caché";
+"clear_cache" = "Borrar caché";
+"clear_cache_confirmation" = "¿Borrar todos los productos guardados en caché?";
+"cache_age_seconds" = "Actualizado hace %d segundos";
+"cache_age_minute" = "Actualizado hace 1 minuto";
+"cache_age_minutes" = "Actualizado hace %d minutos";
+"cache_age_hour" = "Actualizado hace 1 hora";
+"cache_age_hours" = "Actualizado hace %d horas";
+"cache_age_day" = "Actualizado hace 1 día";
+"cache_age_days" = "Actualizado hace %d días";
 "vegan_non_vegan_label" = "Ingredientes de origen animal:";
 "vegan_doubtful_label" = "Ingredientes de procedencia dudosa:";
 "data_source_label" = "Fuente:";
