@@ -392,7 +392,7 @@ private func isPlausibleBarcode(_ value: String) -> Bool {
     return value.allSatisfy { $0.isNumber }
 }
 
-private struct OnboardingView: View {
+struct OnboardingView: View {
     @Environment(\.dismiss) private var dismiss
 
     let onDismiss: () -> Void
