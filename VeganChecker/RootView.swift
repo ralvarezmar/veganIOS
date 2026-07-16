@@ -18,45 +18,7 @@ struct RootView: View {
             )
             .navigationTitle(L("app_name"))
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(L("history_action")) {
-                        path.append(Route.history)
-                    }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        path.append(Route.settings)
-                    } label: {
-                        Image(systemName: "gearshape")
-                    }
-                    .accessibilityLabel(L("settings_action"))
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        path.append(Route.favorites)
-                    } label: {
-                        Image(systemName: "star")
-                    }
-                    .accessibilityLabel(L("favorites_action"))
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        path.append(Route.search)
-                    } label: {
-                        Image(systemName: "magnifyingglass")
-                    }
-                    .accessibilityLabel(L("search_action"))
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        path.append(Route.profile)
-                    } label: {
-                        Image(systemName: "person.circle")
-                    }
-                    .accessibilityLabel(L("profile_action"))
-                }
-            }
+            .toolbar { toolbarItems }
             .sheet(isPresented: $showingOnboarding, onDismiss: {
                 onboardingSeen = true
                 scannerRunning = path.isEmpty
@@ -103,6 +65,47 @@ struct RootView: View {
         }
         .onChange(of: path.count) { _, newValue in
             scannerRunning = newValue == 0
+        }
+    }
+
+    @ToolbarContentBuilder
+    private var toolbarItems: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            Button(L("history_action")) {
+                path.append(Route.history)
+            }
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                path.append(Route.settings)
+            } label: {
+                Image(systemName: "gearshape")
+            }
+            .accessibilityLabel(L("settings_action"))
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                path.append(Route.favorites)
+            } label: {
+                Image(systemName: "star")
+            }
+            .accessibilityLabel(L("favorites_action"))
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                path.append(Route.search)
+            } label: {
+                Image(systemName: "magnifyingglass")
+            }
+            .accessibilityLabel(L("search_action"))
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                path.append(Route.profile)
+            } label: {
+                Image(systemName: "person.circle")
+            }
+            .accessibilityLabel(L("profile_action"))
         }
     }
 }
