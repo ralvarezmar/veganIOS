@@ -51,15 +51,19 @@
     <li>Favorites: barcode, product name, brand, image URL, and the date saved.</li>
     <li>A local cache of queried products, including the source and cache date, to support later offline lookups. The cache is bounded and managed automatically.</li>
     <li>Local preferences such as selected allergens, strict mode, and whether onboarding has been seen.</li>
+    <li>User-configured watchlists, such as additive codes and ingredient keywords.</li>
   </ul>
-  <p>These data are not sent to the developer. You can clear scan history and
-  remove favorites in the app. The local cache is removed when VeganCheck is
-  uninstalled. Uninstalling the app removes its local data from the device.</p>
+  <p>These data are not sent to the developer. You can clear scan history,
+  remove favorites, and clear the product cache in the app. Uninstalling the
+  app removes its local data from the device.</p>
 
   <h2>Camera and barcodes</h2>
-  <p>VeganCheck requests camera access only to read product barcodes. Analysis
-  runs locally on the device using AVFoundation. Camera frames are processed in
-  memory: no photos or videos are taken, stored, or sent to any server.</p>
+  <p>VeganCheck requests camera access to scan product barcodes and, optionally,
+  capture an image of an ingredients list for text recognition. Barcode
+  scanning and OCR run locally on the device using AVFoundation and Apple's
+  Vision framework. Images used for OCR are processed only in memory: they are
+  not uploaded or persistently stored, and the OCR image is not sent as part
+  of a contribution.</p>
 
   <h2>Queries to third-party databases</h2>
   <p>When you scan or search for a product, the app may connect to these public
@@ -77,6 +81,19 @@
   relevant services. In particular, see Open Food Facts' privacy policy:
   <a href="https://world.openfoodfacts.org/privacy">world.openfoodfacts.org/privacy</a>.</p>
 
+  <h2>Anonymous contributions</h2>
+  <p>When a user actively chooses to contribute, they can select one of the four
+  databases and submit an anonymous contribution. The contribution includes
+  the barcode and only the product fields the user filled in, such as product
+  name, brand, quantity, categories, ingredients, and labels. If the user adds
+  product photos, those photos are also sent to the selected database to add or
+  replace product images. No <code>user_id</code>, passwords, credentials,
+  names, email addresses, or other personal identifiers are sent.</p>
+  <p>Contributions are sent only when the user explicitly starts the action.
+  They may become publicly available under the selected database's terms,
+  privacy policy, and applicable data license. Do not include personal
+  information in text fields or photographs you submit.</p>
+
   <h2>Analytics, crash reporting, advertising, and tracking</h2>
   <ul>
     <li>Usage analytics.</li>
@@ -88,8 +105,9 @@
   <h2>Retention and security</h2>
   <p>Local data remain on the device until you clear them in the app, remove a
   favorite, the cache is replaced or removed, or you uninstall VeganCheck.
-  Queries to third-party databases are subject to their own policies and
-  retention periods.</p>
+  Contributions sent to a public database may be retained under its own rules
+  and cannot be managed from VeganCheck. Queries to third-party databases are
+  subject to their own policies and retention periods.</p>
   <p>iOS app sandboxing protects local storage from other apps. VeganCheck does
   not store credentials or transmit data to the developer. No storage or
   transmission method can guarantee absolute security; keep iOS updated and

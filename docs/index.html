@@ -51,17 +51,20 @@
     <li>Favoritos: código de barras, nombre, marca, URL de imagen y fecha en que se guardaron.</li>
     <li>Caché local de productos consultados, incluida la fuente y la fecha de caché, para facilitar consultas posteriores sin conexión. La caché está limitada y se gestiona automáticamente.</li>
     <li>Preferencias locales, como alérgenos seleccionados, modo estricto y el indicador de que se ha visto la introducción.</li>
+    <li>Listas de vigilancia configuradas por el usuario, como códigos de aditivos y palabras clave de ingredientes.</li>
   </ul>
-  <p>Estos datos no se envían al desarrollador. Puedes borrar el historial y
-  eliminar favoritos desde la aplicación. La caché local se elimina al
-  desinstalar VeganCheck. Al desinstalar la aplicación, el sistema elimina sus
-  datos locales.</p>
+  <p>Estos datos no se envían al desarrollador. Puedes borrar el historial,
+  eliminar favoritos y borrar la caché desde la aplicación. Al desinstalar la
+  aplicación, el sistema elimina sus datos locales.</p>
 
   <h2>Cámara y códigos de barras</h2>
-  <p>VeganCheck solicita permiso para usar la cámara únicamente para leer
-  códigos de barras. El análisis se realiza localmente en el dispositivo
-  mediante AVFoundation. Los fotogramas de cámara se procesan en memoria: no
-  se toman, guardan ni envían fotografías o vídeos a ningún servidor.</p>
+  <p>VeganCheck solicita permiso para usar la cámara para leer códigos de
+  barras y, opcionalmente, capturar una imagen de la lista de ingredientes para
+  reconocer su texto. El escaneo y el reconocimiento OCR se realizan
+  localmente en el dispositivo mediante AVFoundation y Vision. Las imágenes
+  usadas para OCR se procesan únicamente en memoria: no se suben ni se guardan
+  de forma persistente, y la imagen de OCR no se envía como parte de una
+  contribución.</p>
 
   <h2>Consultas a bases de datos de terceros</h2>
   <p>Al escanear o buscar un producto, la aplicación puede conectarse a estas
@@ -82,6 +85,21 @@
   privacidad de Open Food Facts:
   <a href="https://world.openfoodfacts.org/privacy">world.openfoodfacts.org/privacy</a>.</p>
 
+  <h2>Contribuciones anónimas</h2>
+  <p>Cuando el usuario decide contribuir activamente, puede elegir una de las
+  cuatro bases de datos y enviar una contribución anónima. La contribución
+  incluye el código de barras y únicamente los campos de producto que haya
+  rellenado, como nombre, marca, cantidad, categorías, ingredientes y
+  etiquetas. Si añade fotos del producto, esas fotos también se envían a la
+  base seleccionada para añadir o sustituir imágenes del producto. No se
+  envían <code>user_id</code>, contraseñas, credenciales, nombres, correos
+  electrónicos ni otros identificadores personales.</p>
+  <p>Las contribuciones solo se envían cuando el usuario las inicia
+  explícitamente. Pueden quedar disponibles públicamente según los términos,
+  la política de privacidad y la licencia de datos de la base seleccionada.
+  No incluyas información personal en los campos de texto ni en las
+  fotografías que envíes.</p>
+
   <h2>Analítica, fallos, publicidad y rastreo</h2>
   <ul>
     <li>Analítica de uso.</li>
@@ -93,8 +111,10 @@
   <h2>Conservación y seguridad</h2>
   <p>Los datos locales se conservan en el dispositivo hasta que los borres
   desde la aplicación, elimines un favorito, se sustituya o elimine la caché, o
-  desinstales VeganCheck. Las consultas a las bases de datos quedan sujetas a
-  sus propias políticas y periodos de conservación.</p>
+  desinstales VeganCheck. Las contribuciones enviadas a una base pública pueden
+  conservarse allí según sus propias reglas y no pueden gestionarse desde
+  VeganCheck. Las consultas a las bases de datos quedan sujetas a sus propias
+  políticas y periodos de conservación.</p>
   <p>El aislamiento de aplicaciones de iOS protege el almacenamiento local
   frente a otras aplicaciones. VeganCheck no guarda credenciales ni transmite
   datos al desarrollador. Ningún sistema de almacenamiento o transmisión puede

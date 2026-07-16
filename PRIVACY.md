@@ -27,18 +27,21 @@ La aplicación almacena exclusivamente en tu dispositivo:
   se gestiona automáticamente.
 - Preferencias locales, como alérgenos seleccionados, modo estricto y el
   indicador de que se ha visto la introducción.
+- Listas de vigilancia configuradas por el usuario, como códigos de aditivos y
+  palabras clave de ingredientes.
 
-Estos datos no se envían al desarrollador. Puedes borrar el historial y
-eliminar favoritos desde la aplicación. La caché local se elimina al
-desinstalar VeganCheck. Al desinstalar la aplicación, el sistema elimina sus
-datos locales.
+Estos datos no se envían al desarrollador. Puedes borrar el historial,
+eliminar favoritos y borrar la caché desde la aplicación. Al desinstalar la
+aplicación, el sistema elimina sus datos locales.
 
 ## Cámara y códigos de barras
 
-VeganCheck solicita permiso para usar la cámara únicamente para leer códigos de
-barras. El análisis se realiza localmente en el dispositivo mediante
-AVFoundation. Los fotogramas de cámara se procesan en memoria: no se toman,
-guardan ni envían fotografías o vídeos a ningún servidor.
+VeganCheck solicita permiso para usar la cámara para leer códigos de barras y,
+opcionalmente, capturar una imagen de la lista de ingredientes para reconocer
+su texto. El escaneo y el reconocimiento OCR se realizan localmente en el
+dispositivo mediante AVFoundation y Vision. Las imágenes usadas para OCR se
+procesan únicamente en memoria: no se suben ni se guardan de forma persistente,
+y la imagen de OCR no se envía como parte de una contribución.
 
 ## Consultas a bases de datos de terceros
 
@@ -60,6 +63,21 @@ servicios correspondientes. Consulta especialmente la política de privacidad
 de Open Food Facts:
 <https://world.openfoodfacts.org/privacy>
 
+## Contribuciones anónimas
+
+Cuando el usuario decide contribuir activamente, puede elegir una de las cuatro
+bases de datos y enviar una contribución anónima. La contribución incluye el
+código de barras y únicamente los campos de producto que haya rellenado, como
+nombre, marca, cantidad, categorías, ingredientes y etiquetas. Si añade fotos
+del producto, esas fotos también se envían a la base seleccionada para añadir o
+sustituir imágenes del producto. No se envían `user_id`, contraseñas,
+credenciales, nombres, correos electrónicos ni otros identificadores personales.
+
+Las contribuciones solo se envían cuando el usuario las inicia explícitamente.
+Pueden quedar disponibles públicamente según los términos, la política de
+privacidad y la licencia de datos de la base seleccionada. No incluyas
+información personal en los campos de texto ni en las fotografías que envíes.
+
 ## Analítica, fallos, publicidad y rastreo
 
 La versión actual de VeganCheck no incluye:
@@ -73,8 +91,10 @@ La versión actual de VeganCheck no incluye:
 
 Los datos locales se conservan en el dispositivo hasta que los borres desde la
 aplicación, elimines un favorito, se sustituya o elimine la caché, o
-desinstales VeganCheck. Las consultas a las bases de datos quedan sujetas a
-sus propias políticas y periodos de conservación.
+desinstales VeganCheck. Las contribuciones enviadas a una base pública pueden
+conservarse allí según sus propias reglas y no pueden gestionarse desde
+VeganCheck. Las consultas a las bases de datos quedan sujetas a sus propias
+políticas y periodos de conservación.
 
 El aislamiento de aplicaciones de iOS protege el almacenamiento local frente a
 otras aplicaciones. VeganCheck no guarda credenciales ni transmite datos al
