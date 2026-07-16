@@ -23,6 +23,35 @@ jobs:
       - name: Generate Xcode project
         run: xcodegen generate
 
+      - name: Pick iOS simulator
+        id: simulator
+        run: |
+          SIMULATOR_UDID=$(python3 - <<'PY'
+          import json
+          import subprocess
+
+          devices = json.loads(subprocess.check_output([
+              "xcrun",
+              "simctl",
+              "list",
+              "devices",
+              "available",
+              "-j",
+          ]))["devices"]
+
+          for runtime_devices in devices.values():
+              for device in runtime_devices:
+                  if device.get("isAvailable") and device.get("name", "").startswith("iPhone "):
+                      print(device["udid"])
+                      raise SystemExit
+
+          raise SystemExit("No available iPhone simulator found")
+          PY
+          )
+          xcrun simctl boot "$SIMULATOR_UDID" || true
+          xcrun simctl bootstatus "$SIMULATOR_UDID" -b || true
+          echo "udid=$SIMULATOR_UDID" >> "$GITHUB_OUTPUT"
+
       - name: Build for iOS Simulator
         run: |
           mkdir -p build
@@ -30,7 +59,8 @@ jobs:
           xcodebuild \
             -project VeganChecker.xcodeproj \
             -scheme VeganChecker \
-            -destination 'generic/platform=iOS Simulator' \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
+            -destination-timeout 60 \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             build 2>&1 | tee build/xcodebuild.log
