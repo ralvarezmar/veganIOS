@@ -481,6 +481,7 @@ private struct OnboardingLegendRow: View {
 
 struct ResultView: View {
     let barcode: String
+    let onContribute: (String, Product?, ProductSource?) -> Void
     let onSelectBarcode: (String) -> Void
     let onBack: () -> Void
 
@@ -499,10 +500,12 @@ struct ResultView: View {
 
     init(
         barcode: String,
+        onContribute: @escaping (String, Product?, ProductSource?) -> Void,
         onSelectBarcode: @escaping (String) -> Void,
         onBack: @escaping () -> Void
     ) {
         self.barcode = barcode
+        self.onContribute = onContribute
         self.onSelectBarcode = onSelectBarcode
         self.onBack = onBack
         _favoriteProducts = Query(filter: #Predicate<FavoriteProduct> { favorite in
@@ -567,8 +570,8 @@ struct ResultView: View {
                     icon: "magnifyingglass",
                     title: L("result_not_found_title"),
                     message: consultedSourcesMessage(consultedSources),
-                    primaryActionTitle: L("add_to_open_food_facts"),
-                    primaryAction: openAddProductOnOpenFoodFacts,
+                    primaryActionTitle: L("contribute_product_action"),
+                    primaryAction: { onContribute(barcode, nil, .openFoodFacts) },
                     secondaryActionTitle: L("retry"),
                     secondaryAction: { retrySeed = UUID() }
                 )
@@ -627,6 +630,14 @@ struct ResultView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(Color("AccentColor"))
+
+                        Button {
+                            onContribute(barcode, product, source)
+                        } label: {
+                            Label(L("contribute_product_action"), systemImage: "square.and.pencil")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
 
                         if let imageURLString = product.imageUrl, let url = URL(string: imageURLString) {
                             AsyncImage(url: url) { phase in

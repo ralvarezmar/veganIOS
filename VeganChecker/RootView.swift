@@ -4,6 +4,7 @@ struct RootView: View {
     @State private var path = NavigationPath()
 
     @State private var scannerRunning = true
+    @State private var contributionProduct: Product?
     @AppStorage("onboarding_seen") private var onboardingSeen = false
     @State private var showingOnboarding = false
 
@@ -48,9 +49,24 @@ struct RootView: View {
                 case .result(let barcode):
                     ResultView(
                         barcode: barcode,
+                        onContribute: { contributionBarcode, product, source in
+                            contributionProduct = product
+                            path.append(Route.contribution(contributionBarcode, source?.rawValue))
+                        },
                         onSelectBarcode: { alternativeBarcode in
                             path.append(Route.result(alternativeBarcode))
                         },
+                        onBack: {
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                        }
+                    )
+                case .contribution(let barcode, let sourceName):
+                    ContributionView(
+                        barcode: barcode,
+                        initialSource: sourceName.flatMap(ProductSource.init(rawValue:)),
+                        product: contributionProduct,
                         onBack: {
                             if !path.isEmpty {
                                 path.removeLast()
@@ -120,4 +136,5 @@ private enum Route: Hashable {
     case profile
     case settings
     case result(String)
+    case contribution(String, String?)
 }

@@ -35,6 +35,7 @@ struct Product: Codable {
     let ingredientsText: String?
     let ingredientsAnalysisTags: [String]?
     let categoriesTags: [String]?
+    let labelsTags: [String]?
     let ingredients: [OffIngredient]?
     let additivesTags: [String]?
     let allergensTags: [String]?
@@ -51,6 +52,7 @@ struct Product: Codable {
         case ingredientsText = "ingredients_text"
         case ingredientsAnalysisTags = "ingredients_analysis_tags"
         case categoriesTags = "categories_tags"
+        case labelsTags = "labels_tags"
         case ingredients
         case additivesTags = "additives_tags"
         case allergensTags = "allergens_tags"
@@ -103,7 +105,7 @@ extension Product {
     }
 }
 
-enum ProductSource: String, CaseIterable, Codable {
+enum ProductSource: String, CaseIterable, Codable, Hashable {
     case openFoodFacts
     case openBeautyFacts
     case openProductFacts

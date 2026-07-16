@@ -9,6 +9,7 @@ settings:
     GENERATE_INFOPLIST_FILE: YES
     INFOPLIST_KEY_CFBundleDisplayName: VeganLens
     INFOPLIST_KEY_NSCameraUsageDescription: Necesitamos la cámara para escanear códigos de barras.
+    INFOPLIST_KEY_NSPhotoLibraryUsageDescription: Necesitamos acceder a tus fotos para adjuntarlas a una contribución.
     INFOPLIST_KEY_UILaunchScreen_Generation: YES
     PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.vcheck
     SWIFT_VERSION: 5.9
@@ -36,6 +37,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: VeganLens
         INFOPLIST_KEY_NSCameraUsageDescription: Necesitamos la cámara para escanear códigos de barras.
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: Necesitamos acceder a tus fotos para adjuntarlas a una contribución.
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ENABLE_PREVIEWS: YES

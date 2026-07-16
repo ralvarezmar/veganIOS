@@ -21,7 +21,7 @@ final class OpenFactsService {
     private let session: URLSession
     private let userAgent = "VeganLens-iOS/1.0"
 
-    private static let fields = "product_name,brands,image_url,ingredients_text,ingredients_analysis_tags,ingredients,additives_tags,allergens_tags,nutriments,nutriscore_grade,ecoscore_grade,nova_group,quantity,carbohydrates_100g,categories_tags"
+    private static let fields = "product_name,brands,image_url,ingredients_text,ingredients_analysis_tags,ingredients,additives_tags,allergens_tags,nutriments,nutriscore_grade,ecoscore_grade,nova_group,quantity,carbohydrates_100g,categories_tags,labels_tags"
 
     init(session: URLSession = .shared) {
         self.session = session

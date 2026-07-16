@@ -63,6 +63,7 @@ final class WatchlistTests: XCTestCase {
             ingredientsText: ingredientsText,
             ingredientsAnalysisTags: nil,
             categoriesTags: nil,
+            labelsTags: nil,
             ingredients: nil,
             additivesTags: additivesTags,
             allergensTags: nil,
