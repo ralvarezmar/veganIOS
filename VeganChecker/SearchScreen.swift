@@ -42,7 +42,7 @@ struct SearchScreen: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .tint(.accentColor)
+            .tint(Color("AccentColor"))
             .disabled(query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
         .padding(18)
@@ -197,7 +197,7 @@ private struct EmptyStateCard: View {
             if let actionTitle, let action {
                 Button(actionTitle, action: action)
                     .buttonStyle(.borderedProminent)
-                    .tint(.accentColor)
+                    .tint(Color("AccentColor"))
             }
         }
         .padding(28)

@@ -201,7 +201,7 @@ private struct HelperCardView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            .tint(.accentColor)
+            .tint(Color("AccentColor"))
             .padding(.top, 8)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -270,7 +270,7 @@ private struct CameraPermissionView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.accentColor)
+                    .tint(Color("AccentColor"))
                     .disabled(isRequestingAccess)
 
                     Button {
@@ -288,7 +288,7 @@ private struct CameraPermissionView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.accentColor)
+                    .tint(Color("AccentColor"))
 
                     Button {
                         onManualEntry()
@@ -429,7 +429,7 @@ private struct OnboardingView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.accentColor)
+                    .tint(Color("AccentColor"))
                 }
                 .padding()
             }
@@ -579,7 +579,7 @@ struct ResultView: View {
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.borderedProminent)
-                        .tint(.accentColor)
+                        .tint(Color("AccentColor"))
 
                         if let imageURLString = product.imageUrl, let url = URL(string: imageURLString) {
                             AsyncImage(url: url) { phase in
@@ -1347,7 +1347,7 @@ private struct EmptyResultStateView: View {
 
             Button(primaryActionTitle, action: primaryAction)
                 .buttonStyle(.borderedProminent)
-                .tint(.accentColor)
+                .tint(Color("AccentColor"))
 
             if let secondaryActionTitle, let secondaryAction {
                 Button(secondaryActionTitle, action: secondaryAction)
@@ -1386,7 +1386,7 @@ private struct ErrorStateView: View {
 
             Button(actionTitle, action: action)
                 .buttonStyle(.borderedProminent)
-                .tint(.accentColor)
+                .tint(Color("AccentColor"))
         }
         .padding(28)
         .frame(maxWidth: .infinity)

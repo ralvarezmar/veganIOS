@@ -53,7 +53,7 @@ struct ProfileScreen: View {
                     .foregroundStyle(.secondary)
 
                 Toggle("", isOn: $strictMode)
-                    .tint(.accentColor)
+                    .tint(Color("AccentColor"))
                     .labelsHidden()
             }
         }
