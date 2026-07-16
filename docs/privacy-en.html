@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy · VeganCheck</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+      color: #1b1b1b;
+      background: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { color: #e7e7e7; background: #121212; }
+      a { color: #c7bfff; }
+      h1, h2 { color: #c7bfff; }
+    }
+    h1 { font-size: 1.8rem; }
+    h2 { margin-top: 2rem; font-size: 1.25rem; }
+    .date { color: #6b7280; font-size: 0.95rem; }
+    ul { padding-left: 1.25rem; }
+    a { color: #2e7d32; }
+  </style>
+</head>
+<body>
+  <p><a href="./">Versión en español</a></p>
+  <h1>VeganCheck Privacy Policy</h1>
+  <p class="date"><strong>Last updated:</strong> July 15, 2026</p>
+
+  <p>VeganCheck (bundle identifier
+  <code>com.ralvarezmar.veganchecker</code>) is an iOS app that scans product
+  barcodes and retrieves public product information to show ingredients,
+  additives, allergens, nutrition information, and an indicative analysis of
+  whether a product is suitable for a vegan diet. The developer does not
+  operate a backend server for the app.</p>
+
+  <h2>Summary</h2>
+  <p>VeganCheck does not collect personal data for the developer and does not
+  require an account, login, or credentials. The current app includes no
+  analytics, crash reporting, advertising, or third-party trackers.</p>
+
+  <h2>Data stored on the device</h2>
+  <p>The app stores the following only on your device:</p>
+  <ul>
+    <li>Local scan history: barcode, product name, brand, image URL, and scan date.</li>
+    <li>Favorites: barcode, product name, brand, image URL, and the date saved.</li>
+    <li>A local cache of queried products, including the source and cache date, to support later offline lookups. The cache is bounded and managed automatically.</li>
+    <li>Local preferences such as selected allergens, strict mode, and whether onboarding has been seen.</li>
+    <li>User-configured watchlists, such as additive codes and ingredient keywords.</li>
+  </ul>
+  <p>These data are not sent to the developer. You can clear scan history,
+  remove favorites, and clear the product cache in the app. Uninstalling the
+  app removes its local data from the device.</p>
+
+  <h2>Camera and barcodes</h2>
+  <p>VeganCheck requests camera access to scan product barcodes and, optionally,
+  capture an image of an ingredients list for text recognition. Barcode
+  scanning and OCR run locally on the device using AVFoundation and Apple's
+  Vision framework. Images used for OCR are processed only in memory: they are
+  not uploaded or persistently stored, and the OCR image is not sent as part
+  of a contribution.</p>
+
+  <h2>Queries to third-party databases</h2>
+  <p>When you scan or search for a product, the app may connect to these public
+  databases in the Open Food Facts family:</p>
+  <ul>
+    <li>Open Food Facts</li>
+    <li>Open Beauty Facts</li>
+    <li>Open Product Facts</li>
+    <li>Open Pet Food Facts</li>
+  </ul>
+  <p>The app sends the barcode or search terms needed to locate the product.
+  Product images may be loaded from servers or CDNs named by those databases.
+  Names, email addresses, and other personal identifiers are not sent.</p>
+  <p>These queries are governed by the terms and privacy policies of the
+  relevant services. In particular, see Open Food Facts' privacy policy:
+  <a href="https://world.openfoodfacts.org/privacy">world.openfoodfacts.org/privacy</a>.</p>
+
+  <h2>Anonymous contributions</h2>
+  <p>When a user actively chooses to contribute, they can select one of the four
+  databases and submit an anonymous contribution. The contribution includes
+  the barcode and only the product fields the user filled in, such as product
+  name, brand, quantity, categories, ingredients, and labels. If the user adds
+  product photos, those photos are also sent to the selected database to add or
+  replace product images. No <code>user_id</code>, passwords, credentials,
+  names, email addresses, or other personal identifiers are sent.</p>
+  <p>Contributions are sent only when the user explicitly starts the action.
+  They may become publicly available under the selected database's terms,
+  privacy policy, and applicable data license. Do not include personal
+  information in text fields or photographs you submit.</p>
+
+  <h2>Analytics, crash reporting, advertising, and tracking</h2>
+  <ul>
+    <li>Usage analytics.</li>
+    <li>Crash reports or crash-reporting services.</li>
+    <li>Advertising or advertising-network SDKs.</li>
+    <li>Third-party trackers.</li>
+  </ul>
+
+  <h2>Retention and security</h2>
+  <p>Local data remain on the device until you clear them in the app, remove a
+  favorite, the cache is replaced or removed, or you uninstall VeganCheck.
+  Contributions sent to a public database may be retained under its own rules
+  and cannot be managed from VeganCheck. Queries to third-party databases are
+  subject to their own policies and retention periods.</p>
+  <p>iOS app sandboxing protects local storage from other apps. VeganCheck does
+  not store credentials or transmit data to the developer. No storage or
+  transmission method can guarantee absolute security; keep iOS updated and
+  download the app from trusted sources.</p>
+
+  <h2>Children</h2>
+  <p>VeganCheck is not specifically directed at children and does not knowingly
+  collect children's personal data. No account is required.</p>
+
+  <h2>Rights and how to exercise them</h2>
+  <p>You can control local data by clearing history, removing favorites, or
+  uninstalling VeganCheck. To exercise rights over data processed by a
+  third-party database, contact that database under its own privacy policy.
+  The developer does not operate a backend or user account through which local
+  data can be identified or managed.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>We may update this policy if VeganCheck features or its services change.
+  The revised version will be published on this page with an updated date.</p>
+
+  <h2>Contact</h2>
+  <p>For questions about this policy, contact the developer at:
+  <strong>r.alvarezmar@gmail.com</strong>.</p>
+</body>
+</html>

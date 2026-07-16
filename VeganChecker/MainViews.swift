@@ -1,8 +1,29 @@
 import Foundation
 import SwiftUI
+import Charts
 import SwiftData
 import AVFoundation
 import UIKit
+
+private func cacheAgeText(_ date: Date) -> String {
+    let age = cacheAge(from: date)
+    switch age.unit {
+    case .seconds:
+        return LF("cache_age_seconds", age.value)
+    case .minute:
+        return L("cache_age_minute")
+    case .minutes:
+        return LF("cache_age_minutes", age.value)
+    case .hour:
+        return L("cache_age_hour")
+    case .hours:
+        return LF("cache_age_hours", age.value)
+    case .day:
+        return L("cache_age_day")
+    case .days:
+        return LF("cache_age_days", age.value)
+    }
+}
 
 struct ScannerView: View {
     @Binding var isScannerRunning: Bool
@@ -13,6 +34,8 @@ struct ScannerView: View {
     @State private var detectedBarcode: String?
     @State private var showingDetectionConfirmation = false
     @State private var pendingNavigationTask: Task<Void, Never>?
+    @State private var showingManualBarcodeEntry = false
+    @State private var didSubmitManualBarcode = false
 
     var body: some View {
         ZStack {
@@ -22,15 +45,18 @@ struct ScannerView: View {
                 }
                 .ignoresSafeArea()
 
-                ScannerOverlayView(showingDetectionConfirmation: showingDetectionConfirmation)
+                ScannerOverlayView(
+                    showingDetectionConfirmation: showingDetectionConfirmation,
+                    onManualEntry: presentManualBarcodeEntry
+                )
                     .ignoresSafeArea()
-                    .allowsHitTesting(false)
             } else {
                 CameraPermissionView(
                     status: authorizationStatus,
                     isRequestingAccess: isRequestingAccess,
                     onRequestAccess: requestCameraAccess,
-                    onOpenSettings: openSettings
+                    onOpenSettings: openSettings,
+                    onManualEntry: presentManualBarcodeEntry
                 )
                 .padding()
             }
@@ -50,6 +76,16 @@ struct ScannerView: View {
         }
         .onDisappear {
             pendingNavigationTask?.cancel()
+        }
+        .sheet(isPresented: $showingManualBarcodeEntry) {
+            ManualBarcodeEntrySheet { barcode in
+                handleManualBarcodeEntry(barcode)
+            }
+            .onDisappear {
+                if !didSubmitManualBarcode && authorizationStatus == .authorized {
+                    isScannerRunning = true
+                }
+            }
         }
     }
 
@@ -100,6 +136,22 @@ struct ScannerView: View {
         }
     }
 
+    private func handleManualBarcodeEntry(_ barcode: String) {
+        didSubmitManualBarcode = true
+        isScannerRunning = false
+        showingManualBarcodeEntry = false
+        onDetectedBarcode(barcode)
+    }
+
+    private func presentManualBarcodeEntry() {
+        didSubmitManualBarcode = false
+        detectedBarcode = nil
+        showingDetectionConfirmation = false
+        pendingNavigationTask?.cancel()
+        isScannerRunning = false
+        showingManualBarcodeEntry = true
+    }
+
     private func openSettings() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url)
@@ -108,6 +160,7 @@ struct ScannerView: View {
 
 private struct ScannerOverlayView: View {
     let showingDetectionConfirmation: Bool
+    let onManualEntry: () -> Void
 
     var body: some View {
         GeometryReader { proxy in
@@ -140,7 +193,7 @@ private struct ScannerOverlayView: View {
                             .padding(.bottom, 24)
                     }
 
-                    HelperCardView()
+                    HelperCardView(onManualEntry: onManualEntry)
                         .padding(.horizontal, 20)
                         .padding(.bottom, 20)
                 }
@@ -150,14 +203,26 @@ private struct ScannerOverlayView: View {
 }
 
 private struct HelperCardView: View {
+    let onManualEntry: () -> Void
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Apunta al código de barras")
+            Text(L("scan_instruction"))
                 .font(.headline)
                 .fontWeight(.semibold)
-            Text("Se admiten códigos EAN y UPC.")
+            Text(L("scan_formats_hint"))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+
+            Button {
+                onManualEntry()
+            } label: {
+                Label(L("manual_barcode_entry"), systemImage: "keyboard")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .tint(Color("AccentColor"))
+            .padding(.top, 8)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
@@ -176,10 +241,10 @@ private struct DetectionConfirmationView: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.title3.weight(.semibold))
             VStack(alignment: .leading, spacing: 2) {
-                Text("Código detectado")
+                Text(L("scanner_confirmation"))
                     .font(.headline)
                     .fontWeight(.semibold)
-                Text("Abriendo el resultado…")
+                Text(L("scanner_confirmation_subtitle"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -197,6 +262,7 @@ private struct CameraPermissionView: View {
     let isRequestingAccess: Bool
     let onRequestAccess: () -> Void
     let onOpenSettings: () -> Void
+    let onManualEntry: () -> Void
 
     var body: some View {
         VStack(spacing: 20) {
@@ -207,7 +273,7 @@ private struct CameraPermissionView: View {
                     .font(.system(size: 48, weight: .semibold))
                     .foregroundStyle(Color.green)
 
-                Text("Permiso de cámara necesario")
+                Text(L("permission_title"))
                     .font(.title2.bold())
                     .multilineTextAlignment(.center)
 
@@ -220,21 +286,37 @@ private struct CameraPermissionView: View {
                     Button {
                         onRequestAccess()
                     } label: {
-                        Label(isRequestingAccess ? "Solicitando…" : "Conceder permiso", systemImage: "camera.on.rectangle")
+                        Label(isRequestingAccess ? L("permission_requesting") : L("permission_grant"), systemImage: "camera.on.rectangle")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.green)
+                    .tint(Color("AccentColor"))
                     .disabled(isRequestingAccess)
+
+                    Button {
+                        onManualEntry()
+                    } label: {
+                        Label(L("manual_barcode_entry"), systemImage: "keyboard")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
                 } else {
                     Button {
                         onOpenSettings()
                     } label: {
-                        Label("Abrir ajustes", systemImage: "gearshape")
+                        Label(L("permission_settings"), systemImage: "gearshape")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.green)
+                    .tint(Color("AccentColor"))
+
+                    Button {
+                        onManualEntry()
+                    } label: {
+                        Label(L("manual_barcode_entry"), systemImage: "keyboard")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
                 }
             }
             .padding(24)
@@ -254,35 +336,224 @@ private struct CameraPermissionView: View {
     private var statusMessage: String {
         switch status {
         case .notDetermined:
-            return "Necesitamos la cámara para escanear códigos de barras."
+            return L("permission_message")
         case .denied:
-            return "La cámara está desactivada para esta app. Puedes habilitarla en Ajustes."
+            return L("permission_denied_message")
         case .restricted:
-            return "El acceso a la cámara está restringido en este dispositivo."
+            return L("permission_restricted_message")
         case .authorized:
             return ""
         @unknown default:
-            return "No se pudo determinar el estado de la cámara."
+            return L("permission_unknown_message")
+        }
+    }
+}
+
+private struct ManualBarcodeEntrySheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var barcode = ""
+    @State private var errorMessage: String?
+
+    let onSubmit: (String) -> Void
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section(L("manual_barcode_hint")) {
+                    TextField("", text: $barcode, prompt: Text(L("manual_barcode_field_label")))
+                        .keyboardType(.numberPad)
+                        .textContentType(.none)
+                        .textInputAutocapitalization(.never)
+                        .onChange(of: barcode) { _, newValue in
+                            let filtered = newValue.filter { $0.isNumber }
+                            if filtered != newValue {
+                                barcode = filtered
+                            }
+                        }
+                    if let errorMessage {
+                        Text(errorMessage)
+                            .font(.footnote)
+                            .foregroundStyle(.red)
+                    }
+                }
+            }
+            .navigationTitle(L("manual_barcode_title"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(L("manual_barcode_cancel")) {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(L("manual_barcode_submit")) {
+                        submit()
+                    }
+                }
+            }
+        }
+    }
+
+    private func submit() {
+        let value = barcode.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard isPlausibleBarcode(value) else {
+            errorMessage = L("manual_barcode_invalid")
+            return
+        }
+        errorMessage = nil
+        dismiss()
+        onSubmit(value)
+    }
+}
+
+private func isPlausibleBarcode(_ value: String) -> Bool {
+    guard (8...14).contains(value.count) else { return false }
+    return value.allSatisfy { $0.isNumber }
+}
+
+struct OnboardingView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let onDismiss: () -> Void
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Image(systemName: "leaf.circle.fill")
+                        .font(.system(size: 56, weight: .semibold))
+                        .foregroundStyle(.green)
+
+                    Text(L("onboarding_title"))
+                        .font(.title.bold())
+
+                    Text(L("onboarding_message"))
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        OnboardingLegendRow(color: .green, text: L("vegan_verdict_vegan"))
+                        OnboardingLegendRow(color: .red, text: L("vegan_verdict_not_vegan"))
+                        OnboardingLegendRow(color: .orange, text: L("vegan_verdict_maybe"))
+                        OnboardingLegendRow(color: .gray, text: L("vegan_verdict_unknown"))
+                    }
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+
+                    Button {
+                        dismissAndMarkSeen()
+                    } label: {
+                        Text(L("onboarding_dismiss"))
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color("AccentColor"))
+                }
+                .padding()
+            }
+            .navigationTitle(L("app_name"))
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+
+    private func dismissAndMarkSeen() {
+        onDismiss()
+        dismiss()
+    }
+}
+
+private struct OnboardingLegendRow: View {
+    let color: Color
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Circle()
+                .fill(color)
+                .frame(width: 14, height: 14)
+            Text(text)
+                .font(.subheadline.weight(.semibold))
         }
     }
 }
 
 struct ResultView: View {
     let barcode: String
+    let onContribute: (String, Product?, ProductSource?) -> Void
+    let onSelectBarcode: (String) -> Void
     let onBack: () -> Void
 
     @Environment(\.modelContext) private var modelContext
+    @Query private var favoriteProducts: [FavoriteProduct]
+    @AppStorage(AllergenPreferences.selectedKeysKey) private var selectedAllergenStorage = ""
+    @AppStorage(AllergenPreferences.strictModeKey) private var strictMode = false
+    @AppStorage(WatchlistPreferences.additivesKey) private var watchedAdditivesStorage = ""
+    @AppStorage(WatchlistPreferences.ingredientKeywordsKey) private var watchedKeywordsStorage = ""
     @State private var loadState: LoadState = .loading
     @State private var retrySeed = UUID()
+    @State private var selectedAdditive: AdditiveEntry?
+    @State private var alternativesState: AlternativesState = .idle
 
     private let service = OpenFactsService()
 
+    init(
+        barcode: String,
+        onContribute: @escaping (String, Product?, ProductSource?) -> Void,
+        onSelectBarcode: @escaping (String) -> Void,
+        onBack: @escaping () -> Void
+    ) {
+        self.barcode = barcode
+        self.onContribute = onContribute
+        self.onSelectBarcode = onSelectBarcode
+        self.onBack = onBack
+        _favoriteProducts = Query(filter: #Predicate<FavoriteProduct> { favorite in
+            favorite.barcode == barcode
+        })
+    }
+
+    private var selectedAllergenKeys: Set<String> {
+        AllergenPreferences.decodeSelectedKeys(selectedAllergenStorage)
+    }
+
+    private var favoriteProduct: FavoriteProduct? {
+        favoriteProducts.first
+    }
+
+    private var isFavorite: Bool {
+        favoriteProduct != nil
+    }
+
     var body: some View {
         content
-            .navigationTitle("Resultado")
+            .navigationTitle(L("result_title"))
             .navigationBarTitleDisplayMode(.inline)
             .task(id: retrySeed) {
                 await loadProduct()
+            }
+            .toolbar {
+                if case .success = loadState {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            toggleFavorite()
+                        } label: {
+                            Image(systemName: isFavorite ? "star.fill" : "star")
+                        }
+                        .accessibilityLabel(isFavorite ? L("favorite_remove_action") : L("favorite_add_action"))
+                    }
+                }
+                if let shareText {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        ShareLink(item: shareText) {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                        .accessibilityLabel(L("share_action"))
+                    }
+                }
+            }
+            .sheet(item: $selectedAdditive) { additive in
+                AdditiveInfoSheet(additive: additive)
             }
     }
 
@@ -297,25 +568,76 @@ struct ResultView: View {
             case .notFound(let consultedSources):
                 EmptyResultStateView(
                     icon: "magnifyingglass",
-                    title: "Sin datos suficientes",
+                    title: L("result_not_found_title"),
                     message: consultedSourcesMessage(consultedSources),
-                    actionTitle: "Reintentar",
-                    action: { retrySeed = UUID() }
+                    primaryActionTitle: L("contribute_product_action"),
+                    primaryAction: { onContribute(barcode, nil, .openFoodFacts) },
+                    secondaryActionTitle: L("retry"),
+                    secondaryAction: { retrySeed = UUID() }
                 )
             case .networkError(let message):
                 ErrorStateView(
                     icon: "wifi.exclamationmark",
-                    title: "No hemos podido consultar las bases de datos",
+                    title: L("network_error_title"),
                     message: message,
-                    actionTitle: "Reintentar",
+                    actionTitle: L("retry"),
                     action: { retrySeed = UUID() }
                 )
-            case .success(let product, let source):
+            case .success(let product, let source, let fromCache, let cachedAt):
+                let allergenItems = buildAllergenDisplayItems(tags: product.allergensTags ?? [])
+                let allergenMatches = buildProfileAllergenMatches(
+                    product: product,
+                    selectedKeys: selectedAllergenKeys,
+                    strictMode: strictMode
+                )
+                let watchMatches = watchlistMatches(
+                    product: product,
+                    watchedAdditives: WatchlistPreferences.decode(watchedAdditivesStorage),
+                    watchedKeywords: WatchlistPreferences.decode(watchedKeywordsStorage)
+                )
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 16) {
-                        VeganBannerView(analysis: analyzeVegan(product), source: source)
+                        VeganBannerView(
+                            analysis: analyzeVegan(product),
+                            source: source,
+                            fromCache: fromCache,
+                            cachedAt: cachedAt
+                        )
 
                         ProductHeaderCard(product: product, barcode: barcode)
+
+                        if case .success(let alternatives) = alternativesState, !alternatives.isEmpty {
+                            AlternativesSection(
+                                products: alternatives,
+                                onSelectBarcode: onSelectBarcode
+                            )
+                        } else if case .loading = alternativesState {
+                            AlternativesLoadingSection()
+                        }
+
+                        if !allergenMatches.isEmpty {
+                            AllergenWarningCard(matches: allergenMatches)
+                        }
+                        if !watchMatches.isEmpty {
+                            WatchlistWarningCard(matches: watchMatches)
+                        }
+
+                        Button {
+                            openProductOnOpenFoodFacts()
+                        } label: {
+                            Label(L("view_in_open_food_facts"), systemImage: "safari")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(Color("AccentColor"))
+
+                        Button {
+                            onContribute(barcode, product, source)
+                        } label: {
+                            Label(L("contribute_product_action"), systemImage: "square.and.pencil")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
 
                         if let imageURLString = product.imageUrl, let url = URL(string: imageURLString) {
                             AsyncImage(url: url) { phase in
@@ -342,21 +664,34 @@ struct ResultView: View {
                             }
                         }
 
-                        IngredientsCard(product: product)
-                        SimpleSectionCard(title: "Aditivos") {
-                            Text(cleanTags(product.additivesTags))
-                        }
-                        SimpleSectionCard(title: "Alérgenos") {
-                            Text(cleanTags(product.allergensTags))
-                        }
-                        SimpleSectionCard(title: "Nutrición básica por 100 g") {
+                        ScoresCard(product: product)
+                        IngredientsCard(
+                            product: product,
+                            watchedKeywords: watchMatches.ingredientKeywords
+                        )
+                        AdditivesCard(
+                            product: product,
+                            highlightedCodes: Set(watchMatches.additives),
+                            onAdditiveTap: { selectedAdditive = $0 }
+                        )
+                        AllergensCard(
+                            title: L("allergens_title"),
+                            values: allergenItems,
+                            highlightedKeys: Set(allergenMatches.compactMap(\.key))
+                        )
+                        SimpleSectionCard(title: L("nutrition_title")) {
                             NutritionGrid(nutriments: product.nutriments)
                         }
 
+                        if let distribution = MacroDistribution(nutriments: product.nutriments) {
+                            SimpleSectionCard(title: L("macro_distribution_title")) {
+                                MacroDistributionView(distribution: distribution)
+                            }
+                        }
+
                         if let grade = product.nutriscoreGrade, !grade.isEmpty {
-                            SimpleSectionCard(title: "Nutri-Score") {
-                                Text(grade.uppercased())
-                                    .font(.headline.bold())
+                            SimpleSectionCard(title: L("nutriscore_badge_title")) {
+                                NutriScoreBadgeView(grade: grade.uppercased())
                             }
                         }
                     }
@@ -370,16 +705,42 @@ struct ResultView: View {
     @MainActor
     private func loadProduct() async {
         loadState = .loading
+        alternativesState = .idle
         let result = await service.fetchProduct(barcode: barcode)
         switch result {
         case .success(let fetched):
             saveToHistory(product: fetched.product)
-            loadState = .success(fetched.product, fetched.source)
+            saveToCache(product: fetched.product, source: fetched.source)
+            loadState = .success(fetched.product, fetched.source, false, nil)
+            await loadAlternatives(for: fetched.product, source: fetched.source)
         case .notFound(let consultedSources):
             loadState = .notFound(consultedSources)
         case .error(let message):
-            loadState = .networkError(message)
+            if let cached = loadCachedProduct() {
+                saveToHistory(product: cached.product)
+                loadState = .success(cached.product, cached.source, true, cached.cachedAt)
+                await loadAlternatives(for: cached.product, source: cached.source)
+            } else {
+                loadState = .networkError(message)
+            }
         }
+    }
+
+    private func loadAlternatives(for product: Product, source: ProductSource) async {
+        let analysis = analyzeVegan(product)
+        guard analysis.status != .vegan,
+              let categoryTag = mostSpecificCategoryTag(product.categoriesTags) else {
+            alternativesState = .unavailable
+            return
+        }
+
+        alternativesState = .loading
+        let alternatives = await service.fetchVeganAlternatives(
+            categoryTag: categoryTag,
+            source: source,
+            excludingBarcode: barcode
+        )
+        alternativesState = alternatives.isEmpty ? .unavailable : .success(alternatives)
     }
 
     @MainActor
@@ -406,21 +767,144 @@ struct ResultView: View {
         }
     }
 
+    @MainActor
+    private func saveToCache(product: Product, source: ProductSource) {
+        do {
+            let descriptor = FetchDescriptor<CachedProduct>(predicate: #Predicate { $0.barcode == barcode })
+            let encoded = try JSONEncoder().encode(product)
+            if let existing = try modelContext.fetch(descriptor).first {
+                existing.productData = encoded
+                existing.sourceName = source.rawValue
+                existing.cachedAt = Date()
+            } else {
+                modelContext.insert(CachedProduct(
+                    barcode: barcode,
+                    productData: encoded,
+                    sourceName: source.rawValue,
+                    cachedAt: Date()
+                ))
+            }
+            try modelContext.save()
+            evictOldestCacheEntries()
+        } catch {
+            print("No se pudo guardar la caché: \(error)")
+        }
+    }
+
+    private func loadCachedProduct() -> (product: Product, source: ProductSource, cachedAt: Date)? {
+        do {
+            let descriptor = FetchDescriptor<CachedProduct>(predicate: #Predicate { $0.barcode == barcode })
+            guard let cached = try modelContext.fetch(descriptor).first else {
+                return nil
+            }
+            let product = try JSONDecoder().decode(Product.self, from: cached.productData)
+            let source = ProductSource(rawValue: cached.sourceName) ?? .openFoodFacts
+            return (product, source, cached.cachedAt)
+        } catch {
+            print("No se pudo cargar la caché: \(error)")
+            return nil
+        }
+    }
+
+    @MainActor
+    private func evictOldestCacheEntries() {
+        do {
+            let entries = try modelContext.fetch(FetchDescriptor<CachedProduct>())
+            let metadata = entries.map {
+                CacheEntryMetadata(barcode: $0.barcode, cachedAt: $0.cachedAt)
+            }
+            let barcodes = cacheBarcodesToEvict(entries: metadata)
+            entries.filter { barcodes.contains($0.barcode) }.forEach(modelContext.delete)
+            if !barcodes.isEmpty {
+                try modelContext.save()
+            }
+        } catch {
+            print("No se pudo limitar la caché: \(error)")
+        }
+    }
+
     private func cleanTags(_ tags: [String]?) -> String {
         let cleaned = (tags ?? []).compactMap(cleanFoodFactsLabel)
-        return cleaned.isEmpty ? "—" : cleaned.joined(separator: ", ")
+        return cleaned.isEmpty ? L("not_available") : cleaned.joined(separator: ", ")
+    }
+
+    private func openProductOnOpenFoodFacts() {
+        guard let url = URL(string: "https://world.openfoodfacts.org/product/\(barcode)") else {
+            return
+        }
+        UIApplication.shared.open(url)
+    }
+
+    private func openAddProductOnOpenFoodFacts() {
+        guard let url = URL(string: "https://world.openfoodfacts.org/cgi/product.pl?type=add&code=\(barcode)") else {
+            return
+        }
+        UIApplication.shared.open(url)
+    }
+
+    @MainActor
+    private func toggleFavorite() {
+        guard case .success(let product, _, _, _) = loadState else {
+            return
+        }
+
+        do {
+            if let favoriteProduct {
+                modelContext.delete(favoriteProduct)
+            } else {
+                modelContext.insert(FavoriteProduct(
+                    barcode: barcode,
+                    productName: product.productName,
+                    brand: product.brands,
+                    imageURL: product.imageUrl,
+                    addedAt: Date()
+                ))
+            }
+            try modelContext.save()
+        } catch {
+            print("No se pudo actualizar favoritos: \(error)")
+        }
+    }
+
+    private var shareText: String? {
+        guard case .success(let product, let source, _, _) = loadState else {
+            return nil
+        }
+        return buildShareText(product: product, source: source)
+    }
+
+    private func buildShareText(product: Product, source: ProductSource) -> String {
+        let title = product.productName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let shareTitle = (title?.isEmpty == false ? title : nil) ?? barcode
+        let verdict = shareVerdictLabel(for: analyzeVegan(product).status)
+        let url = "https://world.openfoodfacts.org/product/\(barcode)"
+        return String(format: L("share_result_template"), shareTitle, verdict, source.displayName, url)
+    }
+
+    private func shareVerdictLabel(for status: VeganStatus) -> String {
+        switch status {
+        case .vegan:
+            return L("share_verdict_apto")
+        case .notVegan:
+            return L("share_verdict_no_apto")
+        case .maybe:
+            return L("share_verdict_dudoso")
+        case .unknown:
+            return L("share_verdict_sin_datos")
+        }
     }
 
     private func consultedSourcesMessage(_ consultedSources: [ProductSource]) -> String {
+
         var seen = Set<String>()
         let names = consultedSources
             .map(\.displayName)
             .filter { seen.insert($0).inserted }
 
         guard !names.isEmpty else {
-            return "Producto no encontrado en Open Food Facts"
+            return L("product_not_found")
         }
-        return "No se ha encontrado información suficiente en ninguna de las bases consultadas: \(names.joined(separator: ", "))."
+        return LF("product_not_found_sources", names.joined(separator: ", "))
     }
 }
 
@@ -428,7 +912,97 @@ enum LoadState {
     case loading
     case notFound([ProductSource])
     case networkError(String)
-    case success(Product, ProductSource)
+    case success(Product, ProductSource, Bool, Date?)
+}
+
+private enum AlternativesState {
+    case idle
+    case loading
+    case success([OpenFoodFactsSearchProduct])
+    case unavailable
+}
+
+private struct AlternativesSection: View {
+    let products: [OpenFoodFactsSearchProduct]
+    let onSelectBarcode: (String) -> Void
+
+    var body: some View {
+        SimpleSectionCard(title: L("alternatives_title")) {
+            VStack(spacing: 10) {
+                ForEach(products.indices, id: \.self) { index in
+                    let product = products[index]
+                    if let code = product.code {
+                        Button {
+                            onSelectBarcode(code)
+                        } label: {
+                            HStack(spacing: 12) {
+                                AlternativeThumbnail(imageURL: product.imageUrl)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(product.productName ?? L("alternative_unknown_product"))
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(.primary)
+                                        .multilineTextAlignment(.leading)
+                                    if let brand = product.brands, !brand.isEmpty {
+                                        Text(brand)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct AlternativesLoadingSection: View {
+    var body: some View {
+        SimpleSectionCard(title: L("alternatives_title")) {
+            HStack(spacing: 10) {
+                ProgressView()
+                Text(L("alternatives_loading"))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
+private struct AlternativeThumbnail: View {
+    let imageURL: String?
+
+    var body: some View {
+        Group {
+            if let imageURL, let url = URL(string: imageURL) {
+                AsyncImage(url: url) { phase in
+                    if case .success(let image) = phase {
+                        image.resizable().scaledToFill()
+                    } else {
+                        placeholder
+                    }
+                }
+            } else {
+                placeholder
+            }
+        }
+        .frame(width: 58, height: 58)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
+    private var placeholder: some View {
+        RoundedRectangle(cornerRadius: 12, style: .continuous)
+            .fill(.quaternary)
+            .overlay {
+                Image(systemName: "leaf")
+                    .foregroundStyle(.secondary)
+            }
+    }
 }
 
 struct HistoryView: View {
@@ -447,10 +1021,10 @@ struct HistoryView: View {
                             .font(.system(size: 42, weight: .semibold))
                             .foregroundStyle(.green)
 
-                        Text("Historial vacío")
+                        Text(L("history_empty_title"))
                             .font(.title2.bold())
 
-                        Text("Escanea un producto para ver aquí tus consultas recientes.")
+                        Text(L("history_empty_message"))
                             .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -473,7 +1047,7 @@ struct HistoryView: View {
             }
             .padding()
         }
-        .navigationTitle("Historial")
+        .navigationTitle(L("history_title"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -485,11 +1059,11 @@ struct HistoryView: View {
                 .disabled(records.isEmpty)
             }
         }
-        .confirmationDialog("¿Limpiar historial?", isPresented: $showingClearConfirmation, titleVisibility: .visible) {
-            Button("Limpiar historial", role: .destructive) {
+        .confirmationDialog(L("clear_history_confirmation"), isPresented: $showingClearConfirmation, titleVisibility: .visible) {
+            Button(L("clear_history"), role: .destructive) {
                 clearHistory()
             }
-            Button("Cancelar", role: .cancel) {}
+            Button(L("cancel"), role: .cancel) {}
         }
     }
 
@@ -528,7 +1102,7 @@ private struct HistoryRow: View {
 
             Spacer(minLength: 8)
 
-            CapsuleChip(text: "Ver veredicto", tint: .green)
+            CapsuleChip(text: L("history_chip_open_result"), tint: .green)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -583,6 +1157,8 @@ private struct HistoryThumbnail: View {
 private struct VeganBannerView: View {
     let analysis: VeganAnalysis
     let source: ProductSource
+    let fromCache: Bool
+    let cachedAt: Date?
 
     var body: some View {
         let spec = bannerSpec
@@ -606,11 +1182,25 @@ private struct VeganBannerView: View {
                 }
             }
 
-            SourceCapsule(text: "Fuente: \(source.displayName)", foreground: spec.foreground)
+            SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
+
+            if fromCache {
+                SourceCapsule(text: L("offline_cache_badge"), foreground: spec.foreground)
+                if let cachedAt {
+                    SourceCapsule(
+                        text: cacheAgeText(cachedAt),
+                        foreground: spec.foreground
+                    )
+                }
+            }
+
+            Text(L("open_food_facts_attribution"))
+                .font(.caption2)
+                .foregroundStyle(spec.foreground.opacity(0.9))
 
             if !analysis.nonVeganIngredients.isEmpty {
                 SummaryBlock(
-                    title: "Ingredientes de origen animal:",
+                    title: L("vegan_non_vegan_label"),
                     values: analysis.nonVeganIngredients,
                     foreground: spec.foreground
                 )
@@ -618,7 +1208,7 @@ private struct VeganBannerView: View {
 
             if !analysis.doubtfulIngredients.isEmpty {
                 SummaryBlock(
-                    title: "Ingredientes de procedencia dudosa:",
+                    title: L("vegan_doubtful_label"),
                     values: analysis.doubtfulIngredients,
                     foreground: spec.foreground
                 )
@@ -635,32 +1225,32 @@ private struct VeganBannerView: View {
         switch analysis.status {
         case .vegan:
             return VeganBannerSpec(
-                headline: "SÍ · PRODUCTO APTO PARA VEGANOS",
-                subtitle: "No se han detectado ingredientes de origen animal ni dudoso.",
+                headline: L("vegan_headline_vegan"),
+                subtitle: L("vegan_verdict_vegan_subtitle"),
                 background: Color.green,
                 foreground: .white,
                 symbol: "checkmark.circle.fill"
             )
         case .notVegan:
             return VeganBannerSpec(
-                headline: "NO · PRODUCTO NO APTO PARA VEGANOS",
-                subtitle: "Open Facts indica ingredientes de origen animal.",
+                headline: L("vegan_headline_not_vegan"),
+                subtitle: L("vegan_verdict_not_vegan_subtitle"),
                 background: Color(red: 0.76, green: 0.16, blue: 0.16),
                 foreground: .white,
                 symbol: "xmark.circle.fill"
             )
         case .maybe:
             return VeganBannerSpec(
-                headline: "DUDOSO · ORIGEN INCIERTO",
-                subtitle: "Open Facts marca ingredientes con origen dudoso.",
+                headline: L("vegan_headline_maybe"),
+                subtitle: L("vegan_verdict_maybe_subtitle"),
                 background: Color(red: 0.85, green: 0.56, blue: 0.06),
                 foreground: .white,
                 symbol: "exclamationmark.triangle.fill"
             )
         case .unknown:
             return VeganBannerSpec(
-                headline: "SIN DATOS SUFICIENTES",
-                subtitle: "Open Facts no aporta análisis vegano suficiente para este producto.",
+                headline: L("vegan_headline_unknown"),
+                subtitle: L("vegan_verdict_unknown_subtitle"),
                 background: Color(red: 0.45, green: 0.47, blue: 0.50),
                 foreground: .white,
                 symbol: "questionmark.circle.fill"
@@ -688,13 +1278,13 @@ private struct ProductHeaderCard: View {
                 .foregroundStyle(.primary)
 
             if let brands = product.brands, !brands.isEmpty {
-                Text("Marca: \(brands)")
+                Text(String(format: L("brand_prefix"), brands))
                     .font(.headline)
                     .foregroundStyle(.secondary)
             }
 
             if let quantity = product.quantity, !quantity.isEmpty {
-                Text("Cantidad: \(quantity)")
+                Text(String(format: L("quantity_prefix"), quantity))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -717,34 +1307,70 @@ private struct ProductHeaderCard: View {
 
 private struct IngredientsCard: View {
     let product: Product
+    let watchedKeywords: [String]
 
     var body: some View {
-        SimpleSectionCard(title: "Ingredientes") {
-            if let paragraph = ingredientParagraph(for: product.ingredients) {
+        SimpleSectionCard(title: L("ingredients_title")) {
+            let items = ingredientItems(for: product.ingredients)
+            if let paragraph = ingredientParagraph(for: items) {
                 VStack(alignment: .leading, spacing: 8) {
-                    paragraph
+                    highlightedIngredientParagraph(paragraph: paragraph, items: items, keywords: watchedKeywords)
                         .font(.body)
                         .foregroundStyle(.primary)
+                        .accessibilityLabel(ingredientAccessibilityLabel(for: items))
 
-                    Text("Rojo = no apto para veganos · Naranja = dudoso")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .minimumScaleFactor(0.85)
+                    if items.contains(where: { $0.1 == .animal || $0.1 == .doubtful }) {
+                        Text(L("ingredients_legend"))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .minimumScaleFactor(0.85)
+                    }
                 }
             } else {
-                Text(product.ingredientsText?.isEmpty == false ? product.ingredientsText! : "—")
+                Text(product.ingredientsText?.isEmpty == false ? product.ingredientsText! : L("not_available"))
             }
         }
     }
 }
 
-private func ingredientParagraph(for ingredients: [OffIngredient]?) -> Text? {
-    let items = (ingredients ?? []).compactMap { ingredient -> (String, IngredientKind)? in
+private func highlightedIngredientParagraph(
+    paragraph: Text,
+    items: [(String, IngredientKind)],
+    keywords: [String]
+) -> Text {
+    guard !keywords.isEmpty else { return paragraph }
+    var result = Text("")
+    for (index, item) in items.enumerated() {
+        if index > 0 { result = result + Text(", ") }
+        let normalized = normalizeWatchedKeyword(item.0)
+        let isWatched = keywords.contains { normalized.contains(normalizeWatchedKeyword($0)) }
+        var segment = Text(item.0)
+        switch item.1 {
+        case .animal:
+            segment = segment.foregroundColor(.red).bold().underline(true, color: .red)
+        case .doubtful:
+            segment = segment.foregroundColor(.orange).bold().underline(true, color: .orange)
+        case .vegan, .unknown:
+            break
+        }
+        if isWatched {
+            segment = segment.bold().underline(true, color: Color("AccentColor"))
+                .foregroundColor(Color("AccentColor"))
+        }
+        result = result + segment
+    }
+    return result
+}
+
+private func ingredientItems(for ingredients: [OffIngredient]?) -> [(String, IngredientKind)] {
+    return (ingredients ?? []).compactMap { ingredient -> (String, IngredientKind)? in
         guard let label = cleanFoodFactsLabel(ingredient.text), !label.isEmpty else { return nil }
         let kind = IngredientKind(rawValue: ingredient.vegan?.lowercased() ?? "") ?? .unknown
         return (label, kind)
     }
+}
 
+private func ingredientParagraph(for items: [(String, IngredientKind)]) -> Text? {
     guard !items.isEmpty else { return nil }
 
     var paragraph = Text("")
@@ -756,15 +1382,30 @@ private func ingredientParagraph(for ingredients: [OffIngredient]?) -> Text? {
         let segment = Text(item.0)
         switch item.1 {
         case .animal:
-            paragraph = paragraph + segment.foregroundColor(.red).bold()
+            paragraph = paragraph + segment.foregroundColor(.red).bold().underline(true, color: .red)
         case .doubtful:
-            paragraph = paragraph + segment.foregroundColor(.orange).bold()
+            paragraph = paragraph + segment.foregroundColor(.orange).bold().underline(true, color: .orange)
         case .vegan, .unknown:
             paragraph = paragraph + segment
         }
     }
 
     return paragraph
+}
+
+private func ingredientAccessibilityLabel(for items: [(String, IngredientKind)]) -> String {
+    items.map { label, kind in
+        switch kind {
+        case .animal:
+            return "\(label), \(L("ingredient_status_animal"))"
+        case .doubtful:
+            return "\(label), \(L("ingredient_status_doubtful"))"
+        case .vegan:
+            return "\(label), \(L("ingredient_status_vegan"))"
+        case .unknown:
+            return "\(label), \(L("ingredient_status_unknown"))"
+        }
+    }.joined(separator: ", ")
 }
 
 private struct SimpleSectionCard<Content: View>: View {
@@ -790,6 +1431,78 @@ private struct SimpleSectionCard<Content: View>: View {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .strokeBorder(Color.secondary.opacity(0.10), lineWidth: 1)
         )
+    }
+}
+
+private struct AllergenWarningCard: View {
+    let matches: [AllergenDisplayItem]
+
+    var body: some View {
+        let labels = matches.map(\.label).joined(separator: ", ")
+
+        VStack(alignment: .leading, spacing: 10) {
+            Text(L("allergen_warning_title"))
+                .font(.headline.bold())
+                .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
+
+            Text(String(format: L("allergen_warning_message"), labels))
+                .font(.body)
+                .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(red: 1.0, green: 0.92, blue: 0.93))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+    }
+}
+
+private struct WatchlistWarningCard: View {
+    let matches: WatchlistMatches
+
+    var body: some View {
+        let additiveLabels = matches.additives.joined(separator: ", ")
+        let keywordLabels = matches.ingredientKeywords.joined(separator: ", ")
+        VStack(alignment: .leading, spacing: 10) {
+            Text(L("watchlist_warning_title"))
+                .font(.headline.bold())
+                .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
+
+            if !matches.additives.isEmpty {
+                Text(String(format: L("watchlist_warning_additives"), additiveLabels))
+            }
+            if !matches.ingredientKeywords.isEmpty {
+                Text(String(format: L("watchlist_warning_keywords"), keywordLabels))
+            }
+        }
+        .font(.body)
+        .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(red: 1.0, green: 0.92, blue: 0.93))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+    }
+}
+
+private struct AllergensCard: View {
+    let title: String
+    let values: [AllergenDisplayItem]
+    let highlightedKeys: Set<String>
+
+    var body: some View {
+        SimpleSectionCard(title: title) {
+            if values.isEmpty {
+                Text(L("not_available"))
+            } else {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(values) { item in
+                        CapsuleChip(
+                            text: item.label,
+                            tint: highlightedKeys.contains(item.key ?? "") ? .red : .secondary
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -847,7 +1560,7 @@ private struct LoadingStateView: View {
 
             VStack(spacing: 16) {
                 ProgressView()
-                Text("Consultando bases de datos…")
+                Text(L("loading_product"))
                     .font(.headline)
                     .foregroundStyle(.secondary)
             }
@@ -866,8 +1579,10 @@ private struct EmptyResultStateView: View {
     let icon: String
     let title: String
     let message: String
-    let actionTitle: String
-    let action: () -> Void
+    let primaryActionTitle: String
+    let primaryAction: () -> Void
+    let secondaryActionTitle: String?
+    let secondaryAction: (() -> Void)?
 
     var body: some View {
         VStack(spacing: 14) {
@@ -884,9 +1599,14 @@ private struct EmptyResultStateView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 
-            Button(actionTitle, action: action)
+            Button(primaryActionTitle, action: primaryAction)
                 .buttonStyle(.borderedProminent)
-                .tint(.green)
+                .tint(Color("AccentColor"))
+
+            if let secondaryActionTitle, let secondaryAction {
+                Button(secondaryActionTitle, action: secondaryAction)
+                    .buttonStyle(.bordered)
+            }
         }
         .padding(28)
         .frame(maxWidth: .infinity)
@@ -920,7 +1640,7 @@ private struct ErrorStateView: View {
 
             Button(actionTitle, action: action)
                 .buttonStyle(.borderedProminent)
-                .tint(.green)
+                .tint(Color("AccentColor"))
         }
         .padding(28)
         .frame(maxWidth: .infinity)
@@ -940,25 +1660,25 @@ private enum IngredientKind: String {
         switch self {
         case .vegan:
             return IngredientKindSpec(
-                label: "Vegano",
+                label: L("ingredient_status_vegan"),
                 accent: .green,
                 rowBackground: Color.green.opacity(0.10)
             )
         case .animal:
             return IngredientKindSpec(
-                label: "Origen animal",
+                label: L("ingredient_status_animal"),
                 accent: Color(red: 0.76, green: 0.16, blue: 0.16),
                 rowBackground: Color(red: 0.76, green: 0.16, blue: 0.16).opacity(0.10)
             )
         case .doubtful:
             return IngredientKindSpec(
-                label: "Dudoso",
+                label: L("ingredient_status_doubtful"),
                 accent: Color(red: 0.85, green: 0.56, blue: 0.06),
                 rowBackground: Color(red: 0.85, green: 0.56, blue: 0.06).opacity(0.10)
             )
         case .unknown:
             return IngredientKindSpec(
-                label: "Sin dato",
+                label: L("ingredient_status_unknown"),
                 accent: .secondary,
                 rowBackground: Color.secondary.opacity(0.10)
             )
@@ -977,22 +1697,200 @@ private struct NutritionGrid: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            NutritionRow(label: "Energía", value: format(nutriments?.energyKcal100g, unit: "kcal"))
-            NutritionRow(label: "Grasas", value: format(nutriments?.fat100g, unit: "g"))
-            NutritionRow(label: "Grasas saturadas", value: format(nutriments?.saturatedFat100g, unit: "g"))
-            NutritionRow(label: "Azúcares", value: format(nutriments?.sugars100g, unit: "g"))
-            NutritionRow(label: "Sal", value: format(nutriments?.salt100g, unit: "g"))
-            NutritionRow(label: "Proteínas", value: format(nutriments?.proteins100g, unit: "g"))
+            NutritionRow(label: L("nutrition_energy"), value: format(nutriments?.energyKcal100g, unit: "kcal"))
+            NutritionRow(label: L("nutrition_fat"), value: format(nutriments?.fat100g, unit: "g"))
+            NutritionRow(label: L("nutrition_saturated_fat"), value: format(nutriments?.saturatedFat100g, unit: "g"))
+            NutritionRow(label: L("nutrition_sugars"), value: format(nutriments?.sugars100g, unit: "g"))
+            NutritionRow(label: L("nutrition_salt"), value: format(nutriments?.salt100g, unit: "g"))
+            NutritionRow(label: L("nutrition_proteins"), value: format(nutriments?.proteins100g, unit: "g"))
         }
     }
 
     private func format(_ value: Double?, unit: String) -> String {
-        guard let value else { return "—" }
+        guard let value else { return L("not_available") }
         if value.rounded() == value {
             return "\(Int(value)) \(unit)"
         }
         return String(format: "%.1f %@", value, unit)
     }
+}
+
+private struct MacroDistribution {
+    let proteins: Double
+    let fats: Double
+    let carbohydrates: Double
+    let total: Double
+
+    init?(nutriments: Nutriments?) {
+        guard
+            let proteins = nutriments?.proteins100g,
+            let fats = nutriments?.fat100g,
+            let carbohydrates = nutriments?.carbohydrates100g
+        else {
+            return nil
+        }
+
+        let safeProteins = max(proteins, 0)
+        let safeFats = max(fats, 0)
+        let safeCarbohydrates = max(carbohydrates, 0)
+        let total = safeProteins + safeFats + safeCarbohydrates
+        guard total > 0 else { return nil }
+
+        self.proteins = safeProteins
+        self.fats = safeFats
+        self.carbohydrates = safeCarbohydrates
+        self.total = total
+    }
+
+    var segments: [MacroSegment] {
+        [
+            MacroSegment(
+                label: L("macro_proteins_label"),
+                grams: proteins,
+                share: proteins / total,
+                color: Color(red: 0.18, green: 0.49, blue: 0.20),
+                foreground: .white
+            ),
+            MacroSegment(
+                label: L("macro_fat_label"),
+                grams: fats,
+                share: fats / total,
+                color: Color(red: 0.96, green: 0.66, blue: 0.00),
+                foreground: Color(red: 0.15, green: 0.18, blue: 0.20)
+            ),
+            MacroSegment(
+                label: L("macro_carbohydrates_label"),
+                grams: carbohydrates,
+                share: carbohydrates / total,
+                color: Color(red: 0.08, green: 0.39, blue: 0.74),
+                foreground: .white
+            ),
+        ]
+    }
+}
+
+private struct MacroSegment: Identifiable {
+    let label: String
+    let grams: Double
+    let share: Double
+    let color: Color
+    let foreground: Color
+
+    var id: String { label }
+}
+
+private struct MacroDistributionView: View {
+    let distribution: MacroDistribution
+
+    var body: some View {
+        let segments = distribution.segments
+        VStack(alignment: .leading, spacing: 10) {
+            Chart(segments) { segment in
+                SectorMark(
+                    angle: .value(segment.label, segment.share),
+                    innerRadius: .ratio(0.6),
+                    angularInset: 1.2
+                )
+                .foregroundStyle(segment.color)
+            }
+            .frame(height: 184)
+            .chartLegend(.hidden)
+            .accessibilityLabel(
+                LF(
+                    "macro_chart_content_description",
+                    formatMacroValue(distribution.proteins),
+                    formatMacroPercent(segments[0].share),
+                    formatMacroValue(distribution.fats),
+                    formatMacroPercent(segments[1].share),
+                    formatMacroValue(distribution.carbohydrates),
+                    formatMacroPercent(segments[2].share)
+                )
+            )
+
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(segments) { segment in
+                    MacroLegendRow(segment: segment)
+                }
+            }
+        }
+    }
+}
+
+private struct MacroLegendRow: View {
+    let segment: MacroSegment
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 10) {
+            RoundedRectangle(cornerRadius: 3, style: .continuous)
+                .fill(segment.color)
+                .frame(width: 12, height: 12)
+                .padding(.top, 4)
+
+            Text(
+                LF(
+                    "macro_legend_format",
+                    segment.label,
+                    formatMacroValue(segment.grams),
+                    formatMacroPercent(segment.share)
+                )
+            )
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+
+            Spacer(minLength: 0)
+        }
+    }
+}
+
+private struct NutriScoreBadgeView: View {
+    let grade: String
+
+    var body: some View {
+        let colors = nutriScoreColors(grade)
+        Text(grade)
+            .font(.title3.bold())
+            .foregroundStyle(colors.foreground)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(colors.background)
+            )
+            .accessibilityLabel(LF("nutriscore_badge_content_description", grade))
+    }
+}
+
+private struct NutriScoreColors {
+    let background: Color
+    let foreground: Color
+}
+
+private func nutriScoreColors(_ grade: String) -> NutriScoreColors {
+    switch grade.uppercased() {
+    case "A":
+        return NutriScoreColors(background: Color(red: 0.18, green: 0.49, blue: 0.20), foreground: .white)
+    case "B":
+        return NutriScoreColors(background: Color(red: 0.49, green: 0.70, blue: 0.20), foreground: Color(red: 0.15, green: 0.18, blue: 0.20))
+    case "C":
+        return NutriScoreColors(background: Color(red: 0.99, green: 0.85, blue: 0.16), foreground: Color(red: 0.15, green: 0.18, blue: 0.20))
+    case "D":
+        return NutriScoreColors(background: Color(red: 0.96, green: 0.49, blue: 0.00), foreground: .white)
+    case "E":
+        return NutriScoreColors(background: Color(red: 0.76, green: 0.16, blue: 0.16), foreground: .white)
+    default:
+        return NutriScoreColors(background: Color.secondary.opacity(0.2), foreground: .primary)
+    }
+}
+
+private func formatMacroValue(_ value: Double) -> String {
+    if value.rounded() == value {
+        return String(format: "%.0f", value)
+    }
+    return String(format: "%.1f", value)
+}
+
+private func formatMacroPercent(_ value: Double) -> String {
+    String(format: "%.0f", value * 100)
 }
 
 private struct NutritionRow: View {
@@ -1007,4 +1905,253 @@ private struct NutritionRow: View {
                 .fontWeight(.semibold)
         }
     }
+}
+
+private struct ScoresCard: View {
+    let product: Product
+
+    var body: some View {
+        let nutriScore = normalizedScore(product.nutriscoreGrade)
+        let ecoScore = normalizedScore(product.ecoscoreGrade)
+        let novaGroup = product.novaGroup.flatMap { (1...4).contains($0) ? $0 : nil }
+
+        return Group {
+            if nutriScore == nil && ecoScore == nil && novaGroup == nil {
+                EmptyView()
+            } else {
+                SimpleSectionCard(title: L("product_scores_title")) {
+                    HStack(alignment: .top, spacing: 16) {
+                        if let nutriScore {
+                            ScoreColumn(label: L("nutriscore_badge_title")) {
+                                NutriScoreBadgeView(grade: nutriScore)
+                            }
+                        }
+                        if let ecoScore {
+                            ScoreColumn(label: L("ecoscore_badge_title")) {
+                                EcoScoreBadgeView(grade: ecoScore)
+                            }
+                        }
+                        if let novaGroup {
+                            ScoreColumn(label: L("nova_group_badge_title")) {
+                                NovaGroupBadgeView(group: novaGroup)
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+        }
+    }
+}
+
+private func normalizedScore(_ value: String?) -> String? {
+    let normalized = value?
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+        .uppercased()
+    guard let normalized, !normalized.isEmpty else {
+        return nil
+    }
+    return normalized
+}
+
+private struct ScoreColumn<Content: View>: View {
+    let label: String
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        VStack(alignment: .center, spacing: 6) {
+            Text(label)
+                .font(.footnote.weight(.semibold))
+                .multilineTextAlignment(.center)
+            content
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
+}
+
+private struct EcoScoreBadgeView: View {
+    let grade: String
+
+    var body: some View {
+        let colors = nutriScoreColors(grade)
+        Text(grade)
+            .font(.title3.bold())
+            .foregroundStyle(colors.foreground)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(colors.background)
+            )
+            .accessibilityLabel(LF("ecoscore_badge_content_description", grade))
+    }
+}
+
+private struct NovaGroupBadgeView: View {
+    let group: Int
+
+    var body: some View {
+        let colors = novaGroupColors(group)
+        Text("\(L("nova_group_badge_title")) \(group)")
+            .font(.subheadline.bold())
+            .foregroundStyle(colors.foreground)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 7)
+            .background(colors.background)
+            .clipShape(Capsule())
+            .accessibilityLabel(LF("nova_group_badge_content_description", group))
+    }
+}
+
+private func novaGroupColors(_ group: Int) -> NutriScoreColors {
+    switch group {
+    case 1:
+        return NutriScoreColors(background: Color(red: 0.18, green: 0.49, blue: 0.20), foreground: .white)
+    case 2:
+        return NutriScoreColors(background: Color(red: 0.49, green: 0.70, blue: 0.20), foreground: Color(red: 0.15, green: 0.18, blue: 0.20))
+    case 3:
+        return NutriScoreColors(background: Color(red: 0.96, green: 0.49, blue: 0.00), foreground: .white)
+    case 4:
+        return NutriScoreColors(background: Color(red: 0.76, green: 0.16, blue: 0.16), foreground: .white)
+    default:
+        return NutriScoreColors(background: Color.secondary.opacity(0.2), foreground: .primary)
+    }
+}
+
+private struct AdditivesCard: View {
+    let product: Product
+    let highlightedCodes: Set<String>
+    let onAdditiveTap: (AdditiveEntry) -> Void
+
+    var body: some View {
+        let items = additiveDisplayItems(for: product.additivesTags)
+        SimpleSectionCard(title: L("additives_title")) {
+            if items.isEmpty {
+                Text(L("not_available"))
+            } else {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(items) { item in
+                        if let additive = item.additive {
+                            Button {
+                                onAdditiveTap(additive)
+                            } label: {
+                                AdditiveChipView(item: item, highlighted: highlightedCodes.contains(item.code))
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            AdditiveChipView(item: item, highlighted: highlightedCodes.contains(item.code))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct AdditiveDisplayItem: Identifiable {
+    let code: String
+    let additive: AdditiveEntry?
+
+    var id: String { code }
+}
+
+private func additiveDisplayItems(for tags: [String]?) -> [AdditiveDisplayItem] {
+    var seen = Set<String>()
+    return (tags ?? []).compactMap { tag in
+        guard let code = cleanFoodFactsLabel(tag)?.uppercased(), seen.insert(code).inserted else {
+            return nil
+        }
+        return AdditiveDisplayItem(code: code, additive: additiveEntry(for: code))
+    }
+}
+
+private struct AdditiveChipView: View {
+    let item: AdditiveDisplayItem
+    let highlighted: Bool
+
+    var body: some View {
+        let name = item.additive?.info.commonName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let label = name.flatMap { $0.isEmpty ? nil : "\(item.code) · \($0)" } ?? item.code
+        let colors = highlighted
+            ? AdditiveBadgeColors(background: Color("AccentColor").opacity(0.18), content: Color("AccentColor"))
+            : item.additive.map { additiveOriginColors($0.info.origin) } ?? AdditiveBadgeColors(background: Color(.secondarySystemBackground), content: .secondary)
+        Text(label)
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(colors.content)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(colors.background)
+            .clipShape(Capsule())
+    }
+}
+
+private struct AdditiveInfoSheet: View {
+    let additive: AdditiveEntry
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                let colors = additiveOriginColors(additive.info.origin)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(additive.code)
+                        .font(.headline)
+                        .foregroundStyle(colors.content)
+                    Text(additive.info.commonName ?? L("additive_unknown_name"))
+                        .font(.title2.bold())
+                        .foregroundStyle(colors.content)
+                    Text(additiveOriginLabel(additive.info.origin))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(colors.content)
+                }
+                .padding(18)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(colors.background)
+                .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+
+                if !additive.info.note.isEmpty {
+                    SimpleSectionCard(title: L("additive_origin_label")) {
+                        Text(additive.info.note)
+                    }
+                }
+            }
+            .padding()
+        }
+        .presentationDetents([.medium, .large])
+    }
+}
+
+private func additiveOriginLabel(_ origin: AdditiveOrigin) -> String {
+    switch origin {
+    case .animal:
+        return L("additive_origin_animal")
+    case .plant:
+        return L("additive_origin_plant")
+    case .synthetic:
+        return L("additive_origin_synthetic")
+    case .uncertain:
+        return L("additive_origin_uncertain")
+    case .unknown:
+        return L("additive_origin_no_data")
+    }
+}
+
+private func additiveOriginColors(_ origin: AdditiveOrigin) -> AdditiveBadgeColors {
+    switch origin {
+    case .animal:
+        return AdditiveBadgeColors(background: Color(red: 1.0, green: 0.92, blue: 0.93), content: Color(red: 0.78, green: 0.15, blue: 0.16))
+    case .plant:
+        return AdditiveBadgeColors(background: Color(red: 0.91, green: 0.96, blue: 0.91), content: Color(red: 0.18, green: 0.49, blue: 0.20))
+    case .synthetic:
+        return AdditiveBadgeColors(background: Color(red: 0.89, green: 0.95, blue: 0.99), content: Color(red: 0.08, green: 0.39, blue: 0.74))
+    case .uncertain:
+        return AdditiveBadgeColors(background: Color(red: 1.0, green: 0.95, blue: 0.88), content: Color(red: 0.70, green: 0.42, blue: 0.00))
+    case .unknown:
+        return AdditiveBadgeColors(background: Color(red: 0.91, green: 0.91, blue: 0.93), content: Color(red: 0.28, green: 0.34, blue: 0.45))
+    }
+}
+
+private struct AdditiveBadgeColors {
+    let background: Color
+    let content: Color
 }

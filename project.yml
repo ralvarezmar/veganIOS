@@ -1,14 +1,17 @@
 name: VeganChecker
+developmentLanguage: es
+objectVersion: 56
 options:
   bundleIdPrefix: com.ralvarezmar
 settings:
   base:
     DEVELOPMENT_TEAM: ""
     GENERATE_INFOPLIST_FILE: YES
-    INFOPLIST_KEY_CFBundleDisplayName: VeganChecker
+    INFOPLIST_KEY_CFBundleDisplayName: VeganLens
     INFOPLIST_KEY_NSCameraUsageDescription: Necesitamos la cámara para escanear códigos de barras.
+    INFOPLIST_KEY_NSPhotoLibraryUsageDescription: Necesitamos acceder a tus fotos para adjuntarlas a una contribución.
     INFOPLIST_KEY_UILaunchScreen_Generation: YES
-    PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.veganchecker
+    PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.vcheck
     SWIFT_VERSION: 5.9
     IPHONEOS_DEPLOYMENT_TARGET: 17.0
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
@@ -22,15 +25,43 @@ targets:
       - path: VeganChecker
     resources:
       - path: Assets.xcassets
+      - path: VeganChecker/es.lproj
+      - path: VeganChecker/en.lproj
     settings:
       base:
-        PRODUCT_NAME: VeganChecker
-        PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.veganchecker
+        PRODUCT_NAME: VCheck
+        PRODUCT_MODULE_NAME: VeganChecker
+        PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.vcheck
         SWIFT_VERSION: 5.9
         IPHONEOS_DEPLOYMENT_TARGET: 17.0
         GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_CFBundleDisplayName: VeganChecker
+        INFOPLIST_KEY_CFBundleDisplayName: VeganLens
         INFOPLIST_KEY_NSCameraUsageDescription: Necesitamos la cámara para escanear códigos de barras.
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: Necesitamos acceder a tus fotos para adjuntarlas a una contribución.
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ENABLE_PREVIEWS: YES
+  VeganCheckerTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: 17.0
+    sources:
+      - path: VeganCheckerTests
+    dependencies:
+      - target: VeganChecker
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.vcheck.tests
+        SWIFT_VERSION: 5.9
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/VCheck.app/VCheck
+        BUNDLE_LOADER: $(TEST_HOST)
+schemes:
+  VeganChecker:
+    build:
+      targets:
+        VeganChecker: all
+    test:
+      targets:
+        - VeganCheckerTests

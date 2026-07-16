@@ -52,7 +52,7 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
     var onDetected: ((String) -> Void)?
 
     private let session = AVCaptureSession()
-    private let sessionQueue = DispatchQueue(label: "com.ralvarezmar.veganchecker.camera.session")
+    private let sessionQueue = DispatchQueue(label: "com.ralvarezmar.vcheck.camera.session")
     private let metadataOutput = AVCaptureMetadataOutput()
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var isConfigured = false
