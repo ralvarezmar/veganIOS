@@ -219,3 +219,6 @@
 "contribution_photo_uploading" = "Uploading…";
 "contribution_photo_uploaded" = "Uploaded";
 "contribution_photo_error" = "Upload failed";
+"contribution_scan_ingredients" = "Scan ingredients";
+"contribution_ocr_no_text" = "No ingredient text was recognized.";
+"contribution_ocr_error" = "Ingredient text recognition failed.";

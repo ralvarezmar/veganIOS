@@ -224,3 +224,6 @@ Fuente: %@
 "contribution_photo_uploading" = "Subiendo…";
 "contribution_photo_uploaded" = "Subida";
 "contribution_photo_error" = "Error al subir";
+"contribution_scan_ingredients" = "Escanear ingredientes";
+"contribution_ocr_no_text" = "No se ha reconocido texto de ingredientes.";
+"contribution_ocr_error" = "No se ha podido reconocer el texto de ingredientes.";

@@ -18,6 +18,9 @@ struct ContributionView: View {
     @State private var pendingPhotoType: ProductImageType?
     @State private var showingPhotosPicker = false
     @State private var showingCamera = false
+    @State private var showingIngredientScanner = false
+    @State private var isRecognizingIngredients = false
+    @State private var ocrMessageKey: String?
 
     private let service = ContributionService()
 
@@ -63,7 +66,7 @@ struct ContributionView: View {
                 contributionField("contribution_brands", text: $form.brands)
                 contributionField("contribution_quantity", text: $form.quantity)
                 contributionField("contribution_categories", text: $form.categories)
-                contributionField("contribution_ingredients", text: $form.ingredientsText, axis: .vertical)
+                ingredientsField
                 contributionField("contribution_labels", text: $form.labels)
 
                 photosSection
@@ -107,6 +110,61 @@ struct ContributionView: View {
                 }
             }
             .ignoresSafeArea()
+        }
+        .sheet(isPresented: $showingIngredientScanner) {
+            CameraImagePicker { image in
+                showingIngredientScanner = false
+                recognizeIngredients(in: image)
+            }
+            .ignoresSafeArea()
+        }
+    }
+
+    private var ingredientsField: some View {
+        HStack(alignment: .top, spacing: 10) {
+            contributionField(
+                "contribution_ingredients",
+                text: $form.ingredientsText,
+                axis: .vertical
+            )
+            .overlay(alignment: .topTrailing) {
+                Button {
+                    showingIngredientScanner = true
+                } label: {
+                    Image(systemName: isRecognizingIngredients ? "hourglass" : "text.viewfinder")
+                }
+                .padding(10)
+                .disabled(isRecognizingIngredients)
+                .accessibilityLabel(L("contribution_scan_ingredients"))
+            }
+        }
+        if let ocrMessageKey {
+            Text(L(ocrMessageKey))
+                .font(.footnote)
+                .foregroundStyle(.red)
+        }
+    }
+
+    private func recognizeIngredients(in image: UIImage) {
+        isRecognizingIngredients = true
+        ocrMessageKey = nil
+        Task {
+            do {
+                let text = try await IngredientOCR.recognizeText(from: image)
+                await MainActor.run {
+                    isRecognizingIngredients = false
+                    if text.isEmpty {
+                        ocrMessageKey = "contribution_ocr_no_text"
+                    } else {
+                        form.ingredientsText = text
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    isRecognizingIngredients = false
+                    ocrMessageKey = "contribution_ocr_error"
+                }
+            }
         }
     }
 
