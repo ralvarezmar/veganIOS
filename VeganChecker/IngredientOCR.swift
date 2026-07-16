@@ -4,7 +4,7 @@ import Vision
 
 func cleanRecognizedIngredientText(_ rawText: String) -> String {
     let withoutControlCharacters = rawText.unicodeScalars.filter {
-        !$0.properties.isControl && $0 != "\u{0}"
+        !CharacterSet.controlCharacters.contains($0) && $0 != "\u{0}"
     }
     return String(withoutControlCharacters.map { Character(String($0)) })
         .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
