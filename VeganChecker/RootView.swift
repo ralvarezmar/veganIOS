@@ -26,6 +26,14 @@ struct RootView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
+                        path.append(Route.settings)
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                    .accessibilityLabel(L("settings_action"))
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
                         path.append(Route.favorites)
                     } label: {
                         Image(systemName: "star")
@@ -73,6 +81,8 @@ struct RootView: View {
                     }
                 case .profile:
                     ProfileScreen()
+                case .settings:
+                    SettingsView()
                 case .result(let barcode):
                     ResultView(
                         barcode: barcode,
@@ -102,5 +112,6 @@ private enum Route: Hashable {
     case favorites
     case search
     case profile
+    case settings
     case result(String)
 }

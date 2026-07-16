@@ -159,3 +159,8 @@
 "brand_prefix" = "Brand: %@";
 "quantity_prefix" = "Quantity: %@";
 "not_available" = "—";
+"settings_action" = "Settings";
+"settings_title" = "Settings";
+"privacy_section_title" = "Privacy";
+"privacy_policy_title" = "Privacy policy";
+"privacy_policy_description" = "Learn how VeganCheck handles your data.";

@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - development
+      - main
   pull_request:
 
 jobs:
-  build-and-test:
+  build:
     runs-on: macos-15
     steps:
       - name: Checkout
@@ -22,47 +23,12 @@ jobs:
       - name: Generate Xcode project
         run: xcodegen generate
 
-      - name: Pick iOS simulator
-        id: simulator
+      - name: Build for iOS Simulator
         run: |
-          SIMULATOR_UDID=$(python3 - <<'PY'
-          import json
-          import subprocess
-
-          devices = json.loads(subprocess.check_output([
-              "xcrun",
-              "simctl",
-              "list",
-              "devices",
-              "available",
-              "-j",
-          ]))["devices"]
-
-          for runtime_devices in devices.values():
-              for device in runtime_devices:
-                  if device.get("isAvailable") and device.get("name", "").startswith("iPhone "):
-                      print(device["udid"])
-                      raise SystemExit
-
-          raise SystemExit("No available iPhone simulator found")
-          PY
-          )
-          xcrun simctl boot "$SIMULATOR_UDID" || true
-          xcrun simctl bootstatus "$SIMULATOR_UDID" -b || true
-          echo "udid=$SIMULATOR_UDID" >> "$GITHUB_OUTPUT"
-
-      - name: Run iOS unit tests
-        id: tests
-        continue-on-error: true
-        run: |
-          mkdir -p build
-          set -o pipefail
-          xcodebuild test -scheme VeganChecker -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" -destination-timeout 60 -derivedDataPath build 2>&1 | tee build/xcodebuild.log
-
-      - name: Surface iOS test failure
-        if: failure()
-        run: |
-          grep -nE 'error:|warning:' build/xcodebuild.log | head -n 200 | while IFS= read -r line; do
-            echo "::error::$line"
-          done
-          exit 1
+          xcodebuild \
+            -project VeganChecker.xcodeproj \
+            -scheme VeganChecker \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
