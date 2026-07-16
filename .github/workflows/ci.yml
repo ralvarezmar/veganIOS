@@ -68,4 +68,6 @@ jobs:
       - name: Surface build failure
         if: failure()
         run: |
-          grep -nE 'error:|fatal error:|BUILD FAILED' build/xcodebuild.log | head -n 200 || tail -n 200 build/xcodebuild.log
+          grep -nE 'error:|fatal error:|BUILD FAILED' build/xcodebuild.log | head -n 200 | while IFS= read -r line; do
+            echo "::error file=VeganChecker/Build.swift::$line"
+          done
