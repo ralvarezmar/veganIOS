@@ -169,3 +169,15 @@ Fuente: %@
 "privacy_section_title" = "Privacidad";
 "privacy_policy_title" = "Política de privacidad";
 "privacy_policy_description" = "Consulta cómo trata VeganCheck tus datos.";
+"watchlist_title" = "Listas de vigilancia personales";
+"watchlist_message" = "Añade aditivos y palabras de ingredientes para resaltarlos en cada resultado.";
+"watchlist_additives_title" = "Códigos de aditivos";
+"watchlist_keywords_title" = "Palabras de ingredientes";
+"watchlist_additive_hint" = "Código E, p. ej. E120";
+"watchlist_keyword_hint" = "Palabra o frase";
+"watchlist_add_action" = "Añadir";
+"watchlist_remove_action" = "Eliminar";
+"watchlist_empty" = "Todavía no hay elementos.";
+"watchlist_warning_title" = "⚠️ Coincidencias de tus listas";
+"watchlist_warning_additives" = "Aditivos vigilados: %@";
+"watchlist_warning_keywords" = "Palabras de ingredientes vigiladas: %@";

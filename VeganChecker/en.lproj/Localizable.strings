@@ -164,3 +164,15 @@
 "privacy_section_title" = "Privacy";
 "privacy_policy_title" = "Privacy policy";
 "privacy_policy_description" = "Learn how VeganCheck handles your data.";
+"watchlist_title" = "Personal watchlists";
+"watchlist_message" = "Add additives and ingredient words to highlight them in every product result.";
+"watchlist_additives_title" = "Additive codes";
+"watchlist_keywords_title" = "Ingredient keywords";
+"watchlist_additive_hint" = "E-number, e.g. E120";
+"watchlist_keyword_hint" = "Word or phrase";
+"watchlist_add_action" = "Add";
+"watchlist_remove_action" = "Remove";
+"watchlist_empty" = "Nothing added yet.";
+"watchlist_warning_title" = "⚠️ Personal watchlist matches";
+"watchlist_warning_additives" = "Watched additives: %@";
+"watchlist_warning_keywords" = "Watched ingredient words: %@";

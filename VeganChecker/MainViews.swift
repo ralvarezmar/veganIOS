@@ -467,6 +467,8 @@ struct ResultView: View {
     @Query private var favoriteProducts: [FavoriteProduct]
     @AppStorage(AllergenPreferences.selectedKeysKey) private var selectedAllergenStorage = ""
     @AppStorage(AllergenPreferences.strictModeKey) private var strictMode = false
+    @AppStorage(WatchlistPreferences.additivesKey) private var watchedAdditivesStorage = ""
+    @AppStorage(WatchlistPreferences.ingredientKeywordsKey) private var watchedKeywordsStorage = ""
     @State private var loadState: LoadState = .loading
     @State private var retrySeed = UUID()
     @State private var selectedAdditive: AdditiveEntry?
@@ -558,6 +560,11 @@ struct ResultView: View {
                     selectedKeys: selectedAllergenKeys,
                     strictMode: strictMode
                 )
+                let watchMatches = watchlistMatches(
+                    product: product,
+                    watchedAdditives: WatchlistPreferences.decode(watchedAdditivesStorage),
+                    watchedKeywords: WatchlistPreferences.decode(watchedKeywordsStorage)
+                )
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 16) {
                         VeganBannerView(
@@ -570,6 +577,9 @@ struct ResultView: View {
 
                         if !allergenMatches.isEmpty {
                             AllergenWarningCard(matches: allergenMatches)
+                        }
+                        if !watchMatches.isEmpty {
+                            WatchlistWarningCard(matches: watchMatches)
                         }
 
                         Button {
@@ -607,9 +617,13 @@ struct ResultView: View {
                         }
 
                         ScoresCard(product: product)
-                        IngredientsCard(product: product)
+                        IngredientsCard(
+                            product: product,
+                            watchedKeywords: watchMatches.ingredientKeywords
+                        )
                         AdditivesCard(
                             product: product,
+                            highlightedCodes: Set(watchMatches.additives),
                             onAdditiveTap: { selectedAdditive = $0 }
                         )
                         AllergensCard(
@@ -1110,13 +1124,14 @@ private struct ProductHeaderCard: View {
 
 private struct IngredientsCard: View {
     let product: Product
+    let watchedKeywords: [String]
 
     var body: some View {
         SimpleSectionCard(title: L("ingredients_title")) {
             let items = ingredientItems(for: product.ingredients)
             if let paragraph = ingredientParagraph(for: items) {
                 VStack(alignment: .leading, spacing: 8) {
-                    paragraph
+                    highlightedIngredientParagraph(paragraph: paragraph, items: items, keywords: watchedKeywords)
                         .font(.body)
                         .foregroundStyle(.primary)
                         .accessibilityLabel(ingredientAccessibilityLabel(for: items))
@@ -1133,6 +1148,35 @@ private struct IngredientsCard: View {
             }
         }
     }
+}
+
+private func highlightedIngredientParagraph(
+    paragraph: Text,
+    items: [(String, IngredientKind)],
+    keywords: [String]
+) -> Text {
+    guard !keywords.isEmpty else { return paragraph }
+    var result = Text("")
+    for (index, item) in items.enumerated() {
+        if index > 0 { result = result + Text(", ") }
+        let normalized = normalizeWatchedKeyword(item.0)
+        let isWatched = keywords.contains { normalized.contains(normalizeWatchedKeyword($0)) }
+        var segment = Text(item.0)
+        switch item.1 {
+        case .animal:
+            segment = segment.foregroundColor(.red).bold().underline(true, color: .red)
+        case .doubtful:
+            segment = segment.foregroundColor(.orange).bold().underline(true, color: .orange)
+        case .vegan, .unknown:
+            break
+        }
+        if isWatched {
+            segment = segment.bold().underline(true, color: Color("AccentColor"))
+                .foregroundColor(Color("AccentColor"))
+        }
+        result = result + segment
+    }
+    return result
 }
 
 private func ingredientItems(for ingredients: [OffIngredient]?) -> [(String, IngredientKind)] {
@@ -1222,6 +1266,33 @@ private struct AllergenWarningCard: View {
                 .font(.body)
                 .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
         }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(red: 1.0, green: 0.92, blue: 0.93))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+    }
+}
+
+private struct WatchlistWarningCard: View {
+    let matches: WatchlistMatches
+
+    var body: some View {
+        let additiveLabels = matches.additives.joined(separator: ", ")
+        let keywordLabels = matches.ingredientKeywords.joined(separator: ", ")
+        VStack(alignment: .leading, spacing: 10) {
+            Text(L("watchlist_warning_title"))
+                .font(.headline.bold())
+                .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
+
+            if !matches.additives.isEmpty {
+                Text(String(format: L("watchlist_warning_additives"), additiveLabels))
+            }
+            if !matches.ingredientKeywords.isEmpty {
+                Text(String(format: L("watchlist_warning_keywords"), keywordLabels))
+            }
+        }
+        .font(.body)
+        .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(red: 1.0, green: 0.92, blue: 0.93))
@@ -1766,6 +1837,7 @@ private func novaGroupColors(_ group: Int) -> NutriScoreColors {
 
 private struct AdditivesCard: View {
     let product: Product
+    let highlightedCodes: Set<String>
     let onAdditiveTap: (AdditiveEntry) -> Void
 
     var body: some View {
@@ -1780,11 +1852,11 @@ private struct AdditivesCard: View {
                             Button {
                                 onAdditiveTap(additive)
                             } label: {
-                                AdditiveChipView(item: item)
+                                AdditiveChipView(item: item, highlighted: highlightedCodes.contains(item.code))
                             }
                             .buttonStyle(.plain)
                         } else {
-                            AdditiveChipView(item: item)
+                            AdditiveChipView(item: item, highlighted: highlightedCodes.contains(item.code))
                         }
                     }
                 }
@@ -1812,11 +1884,14 @@ private func additiveDisplayItems(for tags: [String]?) -> [AdditiveDisplayItem] 
 
 private struct AdditiveChipView: View {
     let item: AdditiveDisplayItem
+    let highlighted: Bool
 
     var body: some View {
         let name = item.additive?.info.commonName?.trimmingCharacters(in: .whitespacesAndNewlines)
         let label = name.flatMap { $0.isEmpty ? nil : "\(item.code) · \($0)" } ?? item.code
-        let colors = item.additive.map { additiveOriginColors($0.info.origin) } ?? AdditiveBadgeColors(background: Color(.secondarySystemBackground), content: .secondary)
+        let colors = highlighted
+            ? AdditiveBadgeColors(background: Color("AccentColor").opacity(0.18), content: Color("AccentColor"))
+            : item.additive.map { additiveOriginColors($0.info.origin) } ?? AdditiveBadgeColors(background: Color(.secondarySystemBackground), content: .secondary)
         Text(label)
             .font(.subheadline.weight(.semibold))
             .foregroundStyle(colors.content)
