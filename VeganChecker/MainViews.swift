@@ -1740,7 +1740,7 @@ private struct NovaGroupBadgeView: View {
         let colors = novaGroupColors(group)
         Text("\(L("nova_group_badge_title")) \(group)")
             .font(.subheadline.bold())
-            .foregroundStyle(colors.content)
+            .foregroundStyle(colors.foreground)
             .padding(.horizontal, 14)
             .padding(.vertical, 7)
             .background(colors.background)
