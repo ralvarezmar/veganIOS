@@ -120,6 +120,7 @@ struct ContributionView: View {
         }
     }
 
+    @ViewBuilder
     private var ingredientsField: some View {
         HStack(alignment: .top, spacing: 10) {
             contributionField(
