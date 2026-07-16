@@ -23,7 +23,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 - Política de privacidad (`PRIVACY.md` y página en `/docs` para GitHub Pages).
 
 ### Cambiado
-- Acento coral en el modo oscuro, manteniendo el verde en el modo claro.
+- Acento lavanda en el modo oscuro, manteniendo el verde en el modo claro.
 - Renombrada la app a **VCheck**.
 - Rediseño general de la interfaz: banner de veredicto con subtítulo e indicador de fuente.
 - Lista de ingredientes como texto corrido; solo se resaltan los dudosos y los no aptos.
