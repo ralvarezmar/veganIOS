@@ -27,6 +27,8 @@ targets:
       - path: Assets.xcassets
       - path: VeganChecker/es.lproj
       - path: VeganChecker/en.lproj
+      - path: VeganChecker/de.lproj
+      - path: VeganChecker/fr.lproj
     settings:
       base:
         PRODUCT_NAME: VCheck
