@@ -158,7 +158,10 @@ final class OpenFactsService {
     private func fetchFromSource(_ source: ProductSource, barcode: String) async -> SourceFetchResult {
         var components = URLComponents(url: source.baseURL, resolvingAgainstBaseURL: false)
         components?.path = "/api/v2/product/\(barcode).json"
-        components?.queryItems = [URLQueryItem(name: "fields", value: Self.fields)]
+        components?.queryItems = [
+            URLQueryItem(name: "fields", value: Self.fields),
+            URLQueryItem(name: "lc", value: configuredProductLanguage())
+        ]
 
         guard let url = components?.url else {
             return .failure

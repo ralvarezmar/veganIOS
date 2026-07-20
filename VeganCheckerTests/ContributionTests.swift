@@ -26,7 +26,17 @@ final class ContributionTests: XCTestCase {
     func testImageFieldUsesSupportedLanguageAndFallsBackToSpanish() {
         XCTAssertEqual(imageField(for: .front, locale: Locale(identifier: "en_US")), "front_en")
         XCTAssertEqual(imageField(for: .ingredients, locale: Locale(identifier: "es_ES")), "ingredients_es")
-        XCTAssertEqual(imageField(for: .nutrition, locale: Locale(identifier: "fr_FR")), "nutrition_es")
+        XCTAssertEqual(imageField(for: .nutrition, locale: Locale(identifier: "fr_FR")), "nutrition_fr")
+        XCTAssertEqual(imageField(for: .packaging, locale: Locale(identifier: "de_DE")), "packaging_de")
+        XCTAssertEqual(imageField(for: .front, locale: Locale(identifier: "it_IT")), "front_es")
+    }
+
+    func testProductLanguageUsesSupportedLanguageAndEnglishFallback() {
+        XCTAssertEqual(supportedProductLanguage("es"), "es")
+        XCTAssertEqual(supportedProductLanguage("EN_us"), "en")
+        XCTAssertEqual(supportedProductLanguage("de-DE"), "de")
+        XCTAssertEqual(supportedProductLanguage("fr"), "fr")
+        XCTAssertEqual(supportedProductLanguage("it"), "en")
     }
 
     func testContributionEndpointsUseSelectedSource() {
