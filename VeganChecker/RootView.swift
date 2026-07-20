@@ -32,13 +32,27 @@ struct RootView: View {
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .history:
-                    HistoryView { barcode in
-                        path.append(Route.result(barcode))
-                    }
+                    HistoryView(
+                        onSelectBarcode: { barcode in
+                            path.append(Route.result(barcode))
+                        },
+                        onScanProduct: {
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                        }
+                    )
                 case .favorites:
-                    FavoritesScreen { barcode in
-                        path.append(Route.result(barcode))
-                    }
+                    FavoritesScreen(
+                        onSelectBarcode: { barcode in
+                            path.append(Route.result(barcode))
+                        },
+                        onScanProduct: {
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                        }
+                    )
                 case .search:
                     SearchScreen { barcode in
                         path.append(Route.result(barcode))

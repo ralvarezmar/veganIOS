@@ -1012,29 +1012,18 @@ struct HistoryView: View {
     @State private var showingClearConfirmation = false
 
     let onSelectBarcode: (String) -> Void
+    let onScanProduct: () -> Void
 
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 if records.isEmpty {
-                    VStack(spacing: 14) {
-                        Image(systemName: "clock.arrow.circlepath")
-                            .font(.system(size: 42, weight: .semibold))
-                            .foregroundStyle(.green)
-
-                        Text(L("history_empty_title"))
-                            .font(.title2.bold())
-
-                        Text(L("history_empty_message"))
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-                    }
-                    .padding(28)
-                    .frame(maxWidth: .infinity)
-                    .background(Color(.secondarySystemBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-                    .padding(.top, 64)
+                    EmptyStateView(
+                        icon: "clock.arrow.circlepath",
+                        title: L("history_empty_title"),
+                        message: L("history_empty_message"),
+                        action: onScanProduct
+                    )
                 } else {
                     ForEach(records, id: \.barcode) { record in
                         Button {

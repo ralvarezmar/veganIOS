@@ -5,12 +5,18 @@ struct FavoritesScreen: View {
     @Query(sort: [SortDescriptor(\FavoriteProduct.addedAt, order: .reverse)]) private var favorites: [FavoriteProduct]
 
     let onSelectBarcode: (String) -> Void
+    let onScanProduct: () -> Void
 
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 if favorites.isEmpty {
-                    EmptyFavoritesState()
+                    EmptyStateView(
+                        icon: "star",
+                        title: L("favorites_empty_title"),
+                        message: L("favorites_empty_message"),
+                        action: onScanProduct
+                    )
                 } else {
                     ForEach(favorites, id: \.barcode) { item in
                         Button {
@@ -26,29 +32,6 @@ struct FavoritesScreen: View {
         }
         .navigationTitle(L("favorites_title"))
         .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-private struct EmptyFavoritesState: View {
-    var body: some View {
-        VStack(spacing: 14) {
-            Image(systemName: "star")
-                .font(.system(size: 42, weight: .semibold))
-                .foregroundStyle(.green)
-
-            Text(L("favorites_empty_title"))
-                .font(.title2.bold())
-
-            Text(L("favorites_empty_message"))
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-        }
-        .padding(28)
-        .frame(maxWidth: .infinity)
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .padding(.top, 64)
     }
 }
 

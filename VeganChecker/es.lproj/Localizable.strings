@@ -88,6 +88,7 @@ Fuente: %@
 "favorites_title" = "Favoritos";
 "favorites_empty_title" = "✨ Sin favoritos aún";
 "favorites_empty_message" = "Guarda productos con la estrella para verlos aquí. ⭐";
+"empty_scan_action" = "Escanea un producto";
 "favorites_chip_open_result" = "Ver favorito";
 "search_action" = "Buscar";
 "search_title" = "Buscar por nombre";

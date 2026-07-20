@@ -83,6 +83,7 @@
 "favorites_title" = "Favorites";
 "favorites_empty_title" = "✨ No favorites yet";
 "favorites_empty_message" = "Save products with the star to see them here. ⭐";
+"empty_scan_action" = "Scan a product";
 "favorites_chip_open_result" = "Open favorite";
 "search_action" = "Search";
 "search_title" = "Search by name";

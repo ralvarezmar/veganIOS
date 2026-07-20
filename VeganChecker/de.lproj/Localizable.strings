@@ -83,6 +83,7 @@
 "favorites_title" = "Favoriten";
 "favorites_empty_title" = "✨ Noch keine Favoriten";
 "favorites_empty_message" = "Speichere Produkte mit dem Stern, um sie hier zu sehen. ⭐";
+"empty_scan_action" = "Produkt scannen";
 "favorites_chip_open_result" = "Favorit öffnen";
 "search_action" = "Suche";
 "search_title" = "Suche nach Namen";
