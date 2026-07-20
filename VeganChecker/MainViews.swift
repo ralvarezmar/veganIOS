@@ -1043,7 +1043,8 @@ struct HistoryView: View {
                 EmptyStateView(
                     icon: "clock.arrow.circlepath",
                     title: L("history_empty_title"),
-                    message: L("history_no_matches")
+                    message: L("history_no_matches"),
+                    action: nil
                 )
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)

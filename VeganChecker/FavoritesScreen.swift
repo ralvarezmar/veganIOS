@@ -38,7 +38,8 @@ struct FavoritesScreen: View {
                 EmptyStateView(
                     icon: "star",
                     title: L("favorites_empty_title"),
-                    message: L("favorites_no_matches")
+                    message: L("favorites_no_matches"),
+                    action: nil
                 )
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
