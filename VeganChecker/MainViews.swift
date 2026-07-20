@@ -448,6 +448,7 @@ struct OnboardingView: View {
                         Text(L("onboarding_dismiss"))
                             .frame(maxWidth: .infinity)
                     }
+                    .accessibilityIdentifier("onboarding-dismiss")
                     .buttonStyle(.borderedProminent)
                     .tint(Color("AccentColor"))
                 }

@@ -25,6 +25,7 @@ struct SettingsView: View {
                         Image(systemName: "hand.raised")
                     }
                 }
+                .accessibilityIdentifier("privacy-policy-row")
             } header: {
                 Text(L("privacy_section_title"))
             }

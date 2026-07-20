@@ -59,6 +59,21 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         TEST_HOST: $(BUILT_PRODUCTS_DIR)/VCheck.app/VCheck
         BUNDLE_LOADER: $(TEST_HOST)
+  VeganCheckerUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: 17.0
+    sources:
+      - path: VeganCheckerUITests
+    dependencies:
+      - target: VeganChecker
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.vcheck.uitests
+        SWIFT_VERSION: 5.9
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: VeganChecker
 schemes:
   VeganChecker:
     build:
@@ -67,3 +82,4 @@ schemes:
     test:
       targets:
         - VeganCheckerTests
+        - VeganCheckerUITests

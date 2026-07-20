@@ -17,6 +17,7 @@ struct RootView: View {
                     path.append(Route.result(barcode))
                 }
             )
+            .accessibilityIdentifier("main-scanner-screen")
             .navigationTitle(L("app_name"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbarItems }
@@ -101,6 +102,7 @@ struct RootView: View {
                 Image(systemName: "gearshape")
             }
             .accessibilityLabel(L("settings_action"))
+            .accessibilityIdentifier("settings-button")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {

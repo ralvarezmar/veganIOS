@@ -65,9 +65,21 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             build 2>&1 | tee build/xcodebuild.log
 
+      - name: Run UI tests on iOS Simulator
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project VeganChecker.xcodeproj \
+            -scheme VeganChecker \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
+            -destination-timeout 60 \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            test 2>&1 | tee build/xcodebuild-ui-tests.log
+
       - name: Surface build failure
         if: failure()
         run: |
-          grep -nE 'error:|fatal error:|BUILD FAILED' build/xcodebuild.log | head -n 200 | while IFS= read -r line; do
+          grep -nE 'error:|fatal error:|BUILD FAILED' build/xcodebuild.log build/xcodebuild-ui-tests.log 2>/dev/null | head -n 200 | while IFS= read -r line; do
             echo "::error file=VeganChecker/Build.swift::$line"
           done
