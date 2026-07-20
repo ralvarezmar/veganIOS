@@ -1009,37 +1009,68 @@ private struct AlternativeThumbnail: View {
 struct HistoryView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \ScanRecord.timestamp, order: .reverse) private var records: [ScanRecord]
+    @State private var query = ""
+    @State private var sortOrder: ListSortOrder = .mostRecent
     @State private var showingClearConfirmation = false
 
     let onSelectBarcode: (String) -> Void
     let onScanProduct: () -> Void
 
+    private var displayedRecords: [ScanRecord] {
+        filterAndSortItems(
+            records,
+            query: query,
+            sortOrder: sortOrder,
+            productName: { $0.productName },
+            brand: { $0.brand },
+            barcode: { $0.barcode },
+            timestamp: { $0.timestamp }
+        )
+    }
+
     var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 12) {
-                if records.isEmpty {
-                    EmptyStateView(
-                        icon: "clock.arrow.circlepath",
-                        title: L("history_empty_title"),
-                        message: L("history_empty_message"),
-                        action: onScanProduct
-                    )
-                } else {
-                    ForEach(records, id: \.barcode) { record in
-                        Button {
-                            onSelectBarcode(record.barcode)
+        List {
+            if records.isEmpty {
+                EmptyStateView(
+                    icon: "clock.arrow.circlepath",
+                    title: L("history_empty_title"),
+                    message: L("history_empty_message"),
+                    action: onScanProduct
+                )
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+            } else if displayedRecords.isEmpty {
+                EmptyStateView(
+                    icon: "clock.arrow.circlepath",
+                    title: L("history_empty_title"),
+                    message: L("history_no_matches")
+                )
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+            } else {
+                ForEach(displayedRecords, id: \.barcode) { record in
+                    Button {
+                        onSelectBarcode(record.barcode)
+                    } label: {
+                        HistoryRow(record: record)
+                    }
+                    .buttonStyle(.plain)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button(role: .destructive) {
+                            delete(record)
                         } label: {
-                            HistoryRow(record: record)
+                            Label(L("delete_action"), systemImage: "trash")
                         }
-                        .buttonStyle(.plain)
                     }
                 }
             }
-            .padding()
         }
-        .navigationTitle(L("history_title"))
-        .navigationBarTitleDisplayMode(.inline)
+        .listStyle(.insetGrouped)
+        .searchable(text: $query, prompt: L("history_search_hint"))
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                sortMenu
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(role: .destructive) {
                     showingClearConfirmation = true
@@ -1047,14 +1078,43 @@ struct HistoryView: View {
                     Image(systemName: "trash")
                 }
                 .disabled(records.isEmpty)
+                .accessibilityLabel(L("clear_history"))
             }
         }
-        .confirmationDialog(L("clear_history_confirmation"), isPresented: $showingClearConfirmation, titleVisibility: .visible) {
+        .confirmationDialog(
+            L("clear_history_confirmation_title"),
+            isPresented: $showingClearConfirmation,
+            titleVisibility: .visible
+        ) {
             Button(L("clear_history"), role: .destructive) {
                 clearHistory()
             }
             Button(L("cancel"), role: .cancel) {}
+        } message: {
+            Text(L("clear_history_confirmation_message"))
         }
+        .scrollContentBackground(.hidden)
+        .background(Color(.systemGroupedBackground))
+        .navigationTitle(L("history_title"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var sortMenu: some View {
+        Menu {
+            Picker(L("sort_action"), selection: $sortOrder) {
+                Text(L("sort_most_recent")).tag(ListSortOrder.mostRecent)
+                Text(L("sort_name_az")).tag(ListSortOrder.nameAscending)
+            }
+        } label: {
+            Image(systemName: "arrow.up.arrow.down")
+        }
+        .accessibilityLabel(L("sort_action"))
+    }
+
+    @MainActor
+    private func delete(_ record: ScanRecord) {
+        modelContext.delete(record)
+        try? modelContext.save()
     }
 
     @MainActor

@@ -3,6 +3,8 @@ import SwiftData
 
 @main
 struct VeganCheckerApp: App {
+    @UIApplicationDelegateAdaptor(VeganCheckerAppDelegate.self) private var appDelegate
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([ScanRecord.self, CachedProduct.self, FavoriteProduct.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
@@ -16,7 +18,7 @@ struct VeganCheckerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
+            RootView(quickActionRouter: appDelegate.quickActionRouter)
         }
         .modelContainer(sharedModelContainer)
     }

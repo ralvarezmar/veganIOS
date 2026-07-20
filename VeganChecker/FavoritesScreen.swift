@@ -3,35 +3,121 @@ import SwiftData
 
 struct FavoritesScreen: View {
     @Query(sort: [SortDescriptor(\FavoriteProduct.addedAt, order: .reverse)]) private var favorites: [FavoriteProduct]
+    @Environment(\.modelContext) private var modelContext
+    @State private var query = ""
+    @State private var sortOrder: ListSortOrder = .mostRecent
+    @State private var showingClearConfirmation = false
 
     let onSelectBarcode: (String) -> Void
     let onScanProduct: () -> Void
 
+    private var displayedFavorites: [FavoriteProduct] {
+        filterAndSortItems(
+            favorites,
+            query: query,
+            sortOrder: sortOrder,
+            productName: { $0.productName },
+            brand: { $0.brand },
+            barcode: { $0.barcode },
+            timestamp: { $0.addedAt }
+        )
+    }
+
     var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 12) {
-                if favorites.isEmpty {
-                    EmptyStateView(
-                        icon: "star",
-                        title: L("favorites_empty_title"),
-                        message: L("favorites_empty_message"),
-                        action: onScanProduct
-                    )
-                } else {
-                    ForEach(favorites, id: \.barcode) { item in
-                        Button {
-                            onSelectBarcode(item.barcode)
+        List {
+            if favorites.isEmpty {
+                EmptyStateView(
+                    icon: "star",
+                    title: L("favorites_empty_title"),
+                    message: L("favorites_empty_message"),
+                    action: onScanProduct
+                )
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+            } else if displayedFavorites.isEmpty {
+                EmptyStateView(
+                    icon: "star",
+                    title: L("favorites_empty_title"),
+                    message: L("favorites_no_matches")
+                )
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+            } else {
+                ForEach(displayedFavorites, id: \.barcode) { item in
+                    Button {
+                        onSelectBarcode(item.barcode)
+                    } label: {
+                        FavoriteRow(item: item)
+                    }
+                    .buttonStyle(.plain)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button(role: .destructive) {
+                            delete(item)
                         } label: {
-                            FavoriteRow(item: item)
+                            Label(L("delete_action"), systemImage: "trash")
                         }
-                        .buttonStyle(.plain)
                     }
                 }
             }
-            .padding()
         }
+        .listStyle(.insetGrouped)
+        .searchable(text: $query, prompt: L("favorites_search_hint"))
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                sortMenu
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(role: .destructive) {
+                    showingClearConfirmation = true
+                } label: {
+                    Image(systemName: "trash")
+                }
+                .disabled(favorites.isEmpty)
+                .accessibilityLabel(L("clear_favorites"))
+            }
+        }
+        .confirmationDialog(
+            L("favorites_clear_confirmation_title"),
+            isPresented: $showingClearConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(L("clear_favorites"), role: .destructive) {
+                clearFavorites()
+            }
+            Button(L("cancel"), role: .cancel) {}
+        } message: {
+            Text(L("favorites_clear_confirmation_message"))
+        }
+        .scrollContentBackground(.hidden)
+        .background(Color(.systemGroupedBackground))
         .navigationTitle(L("favorites_title"))
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var sortMenu: some View {
+        Menu {
+            Picker(L("sort_action"), selection: $sortOrder) {
+                Text(L("sort_most_recent")).tag(ListSortOrder.mostRecent)
+                Text(L("sort_name_az")).tag(ListSortOrder.nameAscending)
+            }
+        } label: {
+            Image(systemName: "arrow.up.arrow.down")
+        }
+        .accessibilityLabel(L("sort_action"))
+    }
+
+    @MainActor
+    private func delete(_ item: FavoriteProduct) {
+        modelContext.delete(item)
+        try? modelContext.save()
+    }
+
+    @MainActor
+    private func clearFavorites() {
+        for item in favorites {
+            modelContext.delete(item)
+        }
+        try? modelContext.save()
     }
 }
 

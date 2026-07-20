@@ -1,12 +1,19 @@
 import SwiftUI
 
 struct RootView: View {
+    @ObservedObject var quickActionRouter: QuickActionRouter
     @State private var path = NavigationPath()
 
     @State private var scannerRunning = true
     @State private var contributionProduct: Product?
     @AppStorage("onboarding_seen") private var onboardingSeen = false
     @State private var showingOnboarding = false
+
+    private func resetToScanner() {
+        path = NavigationPath()
+        scannerRunning = true
+        showingOnboarding = false
+    }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -92,13 +99,18 @@ struct RootView: View {
             }
         }
         .onAppear {
-            if !onboardingSeen {
+            if quickActionRouter.requestID > 0 {
+                resetToScanner()
+            } else if !onboardingSeen {
                 showingOnboarding = true
                 scannerRunning = false
             }
         }
         .onChange(of: path.count) { _, newValue in
             scannerRunning = newValue == 0
+        }
+        .onChange(of: quickActionRouter.requestID) {
+            resetToScanner()
         }
     }
 
