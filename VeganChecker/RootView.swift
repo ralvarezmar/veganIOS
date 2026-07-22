@@ -8,6 +8,7 @@ struct RootView: View {
     @State private var contributionProduct: Product?
     @AppStorage("onboarding_seen") private var onboardingSeen = false
     @AppStorage(AccessibilityPreferences.textSizeKey) private var textSize = AccessibilityTextSize.normal.rawValue
+    @AppStorage(AccessibilityPreferences.highLegibilityFontKey) private var highLegibilityFont = false
     @State private var showingOnboarding = false
 
     private func resetToScanner() {
@@ -25,6 +26,7 @@ struct RootView: View {
                 navigationContent
             }
         }
+        .environment(\.highLegibilityFont, highLegibilityFont)
         .onAppear {
             if quickActionRouter.requestID > 0 {
                 resetToScanner()

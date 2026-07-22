@@ -208,10 +208,9 @@ private struct HelperCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(L("scan_instruction"))
-                .font(.headline)
-                .fontWeight(.semibold)
+                .appFont(.headline, weight: .semibold)
             Text(L("scan_formats_hint"))
-                .font(.subheadline)
+                .appFont(.subheadline)
                 .foregroundStyle(.secondary)
 
             Button {
@@ -239,13 +238,12 @@ private struct DetectionConfirmationView: View {
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: "checkmark.circle.fill")
-                .font(.title3.weight(.semibold))
+                .appFont(.title3, weight: .semibold)
             VStack(alignment: .leading, spacing: 2) {
                 Text(L("scanner_confirmation"))
-                    .font(.headline)
-                    .fontWeight(.semibold)
+                    .appFont(.headline, weight: .semibold)
                 Text(L("scanner_confirmation_subtitle"))
-                    .font(.caption)
+                    .appFont(.caption)
                     .foregroundStyle(.secondary)
             }
         }
@@ -270,15 +268,15 @@ private struct CameraPermissionView: View {
 
             VStack(spacing: 18) {
                 Image(systemName: "camera.viewfinder")
-                    .font(.system(size: 48, weight: .semibold))
+                    .appIconFont(size: 48, weight: .semibold)
                     .foregroundStyle(Color.green)
 
                 Text(L("permission_title"))
-                    .font(.title2.bold())
+                    .appFont(.title2, weight: .bold)
                     .multilineTextAlignment(.center)
 
                 Text(statusMessage)
-                    .font(.body)
+                    .appFont(.body)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
 
@@ -373,7 +371,7 @@ private struct ManualBarcodeEntrySheet: View {
                         }
                     if let errorMessage {
                         Text(errorMessage)
-                            .font(.footnote)
+                            .appFont(.footnote)
                             .foregroundStyle(.red)
                     }
                 }
@@ -423,14 +421,14 @@ struct OnboardingView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     Image(systemName: "leaf.circle.fill")
-                        .font(.system(size: 56, weight: .semibold))
+                        .appIconFont(size: 56, weight: .semibold)
                         .foregroundStyle(veganVerdictColor(for: .vegan, colorblindSafe: colorblindSafePalette))
 
                     Text(L("onboarding_title"))
-                        .font(.title.bold())
+                        .appFont(.title, weight: .bold)
 
                     Text(L("onboarding_message"))
-                        .font(.body)
+                        .appFont(.body)
                         .foregroundStyle(.secondary)
 
                     VStack(alignment: .leading, spacing: 10) {
@@ -488,7 +486,7 @@ private struct OnboardingLegendRow: View {
                 .fill(color)
                 .frame(width: 14, height: 14)
             Text(text)
-                .font(.subheadline.weight(.semibold))
+                .appFont(.subheadline, weight: .semibold)
         }
     }
 }
@@ -953,12 +951,12 @@ private struct AlternativesSection: View {
                                 AlternativeThumbnail(imageURL: product.imageUrl)
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(product.productName ?? L("alternative_unknown_product"))
-                                        .font(.subheadline.weight(.semibold))
+                                        .appFont(.subheadline, weight: .semibold)
                                         .foregroundStyle(.primary)
                                         .multilineTextAlignment(.leading)
                                     if let brand = product.brands, !brand.isEmpty {
                                         Text(brand)
-                                            .font(.caption)
+                                            .appFont(.caption)
                                             .foregroundStyle(.secondary)
                                     }
                                 }
@@ -981,7 +979,7 @@ private struct AlternativesLoadingSection: View {
             HStack(spacing: 10) {
                 ProgressView()
                 Text(L("alternatives_loading"))
-                    .font(.subheadline)
+                    .appFont(.subheadline)
                     .foregroundStyle(.secondary)
             }
         }
@@ -1149,18 +1147,17 @@ private struct HistoryRow: View {
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(record.productName?.isEmpty == false ? record.productName! : record.barcode)
-                    .font(.headline)
-                    .fontWeight(.semibold)
+                    .appFont(.headline, weight: .semibold)
                     .foregroundStyle(.primary)
 
                 if let brand = record.brand, !brand.isEmpty {
                     Text(brand)
-                        .font(.subheadline)
+                        .appFont(.subheadline)
                         .foregroundStyle(.secondary)
                 }
 
                 Text(record.timestamp.formatted(date: .abbreviated, time: .shortened))
-                    .font(.caption)
+                    .appFont(.caption)
                     .foregroundStyle(.secondary)
             }
 
@@ -1212,7 +1209,7 @@ private struct HistoryThumbnail: View {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(.quaternary)
             Image(systemName: "photo")
-                .font(.title3)
+                .appFont(.title3)
                 .foregroundStyle(.secondary)
         }
     }
@@ -1231,18 +1228,18 @@ private struct VeganBannerView: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .top, spacing: 14) {
                 Image(systemName: spec.symbol)
-                    .font(.system(size: 34, weight: .semibold))
+                    .appIconFont(size: 34, weight: .semibold)
                     .foregroundStyle(spec.foreground)
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(spec.headline)
-                        .font(.title2.bold())
+                        .appFont(.title2, weight: .bold)
                         .foregroundStyle(spec.foreground)
                         .minimumScaleFactor(0.8)
                         .lineLimit(2)
 
                     Text(spec.subtitle)
-                        .font(.subheadline)
+                        .appFont(.subheadline)
                         .foregroundStyle(spec.foreground.opacity(0.96))
                 }
             }
@@ -1260,7 +1257,7 @@ private struct VeganBannerView: View {
             }
 
             Text(L("open_food_facts_attribution"))
-                .font(.caption2)
+                .appFont(.caption2)
                 .foregroundStyle(spec.foreground.opacity(0.9))
 
             if !analysis.nonVeganIngredients.isEmpty {
@@ -1339,18 +1336,18 @@ private struct ProductHeaderCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(displayName)
-                .font(.title.bold())
+                .appFont(.title, weight: .bold)
                 .foregroundStyle(.primary)
 
             if let brands = product.brands, !brands.isEmpty {
                 Text(String(format: L("brand_prefix"), brands))
-                    .font(.headline)
+                    .appFont(.headline)
                     .foregroundStyle(.secondary)
             }
 
             if let quantity = product.quantity, !quantity.isEmpty {
                 Text(String(format: L("quantity_prefix"), quantity))
-                    .font(.subheadline)
+                    .appFont(.subheadline)
                     .foregroundStyle(.secondary)
             }
         }
@@ -1386,13 +1383,13 @@ private struct IngredientsCard: View {
                         keywords: watchedKeywords,
                         colorblindSafe: colorblindSafePalette
                     )
-                        .font(.body)
+                        .appFont(.body)
                         .foregroundStyle(.primary)
                         .accessibilityLabel(ingredientAccessibilityLabel(for: items))
 
                     if items.contains(where: { $0.1 == .animal || $0.1 == .doubtful }) {
                         Text(L("ingredients_legend"))
-                            .font(.caption)
+                            .appFont(.caption)
                             .foregroundStyle(.secondary)
                             .minimumScaleFactor(0.85)
                     }
@@ -1494,12 +1491,11 @@ private struct SimpleSectionCard<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(title)
-                .font(.headline)
-                .fontWeight(.semibold)
+                .appFont(.headline, weight: .semibold)
                 .foregroundStyle(.primary)
 
             content
-                .font(.body)
+                .appFont(.body)
                 .foregroundStyle(.primary)
         }
         .padding(18)
@@ -1521,11 +1517,11 @@ private struct AllergenWarningCard: View {
 
         VStack(alignment: .leading, spacing: 10) {
             Text(L("allergen_warning_title"))
-                .font(.headline.bold())
+                .appFont(.headline, weight: .bold)
                 .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
 
             Text(String(format: L("allergen_warning_message"), labels))
-                .font(.body)
+                .appFont(.body)
                 .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
         }
         .padding(18)
@@ -1543,7 +1539,7 @@ private struct WatchlistWarningCard: View {
         let keywordLabels = matches.ingredientKeywords.joined(separator: ", ")
         VStack(alignment: .leading, spacing: 10) {
             Text(L("watchlist_warning_title"))
-                .font(.headline.bold())
+                .appFont(.headline, weight: .bold)
                 .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
 
             if !matches.additives.isEmpty {
@@ -1553,7 +1549,7 @@ private struct WatchlistWarningCard: View {
                 Text(String(format: L("watchlist_warning_keywords"), keywordLabels))
             }
         }
-        .font(.body)
+        .appFont(.body)
         .foregroundStyle(Color(red: 0.78, green: 0.16, blue: 0.16))
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1591,7 +1587,7 @@ private struct SourceCapsule: View {
 
     var body: some View {
         Text(text)
-            .font(.caption.weight(.semibold))
+            .appFont(.caption, weight: .semibold)
             .foregroundStyle(foreground)
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
@@ -1606,7 +1602,7 @@ private struct CapsuleChip: View {
 
     var body: some View {
         Text(text)
-            .font(.caption.weight(.semibold))
+            .appFont(.caption, weight: .semibold)
             .foregroundStyle(tint)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
@@ -1623,10 +1619,10 @@ private struct SummaryBlock: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
-                .font(.caption.bold())
+                .appFont(.caption, weight: .bold)
                 .foregroundStyle(foreground)
             Text(values.joined(separator: ", "))
-                .font(.body)
+                .appFont(.body)
                 .foregroundStyle(foreground)
         }
     }
@@ -1640,7 +1636,7 @@ private struct LoadingStateView: View {
             VStack(spacing: 16) {
                 ProgressView()
                 Text(L("loading_product"))
-                    .font(.headline)
+                    .appFont(.headline)
                     .foregroundStyle(.secondary)
             }
             .padding(28)
@@ -1666,15 +1662,15 @@ private struct EmptyResultStateView: View {
     var body: some View {
         VStack(spacing: 14) {
             Image(systemName: icon)
-                .font(.system(size: 42, weight: .semibold))
+                .appIconFont(size: 42, weight: .semibold)
                 .foregroundStyle(.green)
 
             Text(title)
-                .font(.title2.bold())
+                .appFont(.title2, weight: .bold)
                 .multilineTextAlignment(.center)
 
             Text(message)
-                .font(.body)
+                .appFont(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 
@@ -1705,15 +1701,15 @@ private struct ErrorStateView: View {
     var body: some View {
         VStack(spacing: 14) {
             Image(systemName: icon)
-                .font(.system(size: 42, weight: .semibold))
+                .appIconFont(size: 42, weight: .semibold)
                 .foregroundStyle(.red)
 
             Text(title)
-                .font(.title2.bold())
+                .appFont(.title2, weight: .bold)
                 .multilineTextAlignment(.center)
 
             Text(message)
-                .font(.body)
+                .appFont(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 
@@ -1916,7 +1912,7 @@ private struct MacroLegendRow: View {
                     formatMacroPercent(segment.share)
                 )
             )
-            .font(.footnote)
+            .appFont(.footnote)
             .foregroundStyle(.secondary)
 
             Spacer(minLength: 0)
@@ -1930,7 +1926,7 @@ private struct NutriScoreBadgeView: View {
     var body: some View {
         let colors = nutriScoreColors(grade)
         Text(grade)
-            .font(.title3.bold())
+            .appFont(.title3, weight: .bold)
             .foregroundStyle(colors.foreground)
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
@@ -1984,7 +1980,7 @@ private struct NutritionRow: View {
             Text(label)
             Spacer()
             Text(value)
-                .fontWeight(.semibold)
+                .appFont(.body, weight: .semibold)
         }
     }
 }
@@ -2043,7 +2039,7 @@ private struct ScoreColumn<Content: View>: View {
     var body: some View {
         VStack(alignment: .center, spacing: 6) {
             Text(label)
-                .font(.footnote.weight(.semibold))
+                .appFont(.footnote, weight: .semibold)
                 .multilineTextAlignment(.center)
             content
         }
@@ -2057,7 +2053,7 @@ private struct EcoScoreBadgeView: View {
     var body: some View {
         let colors = nutriScoreColors(grade)
         Text(grade)
-            .font(.title3.bold())
+            .appFont(.title3, weight: .bold)
             .foregroundStyle(colors.foreground)
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
@@ -2075,7 +2071,7 @@ private struct NovaGroupBadgeView: View {
     var body: some View {
         let colors = novaGroupColors(group)
         Text("\(L("nova_group_badge_title")) \(group)")
-            .font(.subheadline.bold())
+            .appFont(.subheadline, weight: .bold)
             .foregroundStyle(colors.foreground)
             .padding(.horizontal, 14)
             .padding(.vertical, 7)
@@ -2158,7 +2154,7 @@ private struct AdditiveChipView: View {
             ? AdditiveBadgeColors(background: Color("AccentColor").opacity(0.18), content: Color("AccentColor"))
             : item.additive.map { additiveOriginColors($0.info.origin) } ?? AdditiveBadgeColors(background: Color(.secondarySystemBackground), content: .secondary)
         Text(label)
-            .font(.subheadline.weight(.semibold))
+            .appFont(.subheadline, weight: .semibold)
             .foregroundStyle(colors.content)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 12)
@@ -2177,13 +2173,13 @@ private struct AdditiveInfoSheet: View {
                 let colors = additiveOriginColors(additive.info.origin)
                 VStack(alignment: .leading, spacing: 8) {
                     Text(additive.code)
-                        .font(.headline)
+                        .appFont(.headline)
                         .foregroundStyle(colors.content)
                     Text(additive.info.commonName ?? L("additive_unknown_name"))
-                        .font(.title2.bold())
+                        .appFont(.title2, weight: .bold)
                         .foregroundStyle(colors.content)
                     Text(additiveOriginLabel(additive.info.origin))
-                        .font(.subheadline.weight(.semibold))
+                        .appFont(.subheadline, weight: .semibold)
                         .foregroundStyle(colors.content)
                 }
                 .padding(18)

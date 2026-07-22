@@ -27,6 +27,8 @@
 "accessibility_description" = "Passe Farben und Textgröße an, damit die App leichter zu bedienen ist.";
 "accessibility_colorblind_title" = "Farbfehlsichtigkeitsfreundliche Palette";
 "accessibility_colorblind_description" = "Verwende gut unterscheidbare Farben für Menschen, die Farben schwer auseinanderhalten können.";
+"accessibility_font_title" = "Schrift mit hoher Lesbarkeit";
+"accessibility_font_description" = "Verwende Atkinson Hyperlegible für bessere Lesbarkeit.";
 "accessibility_text_size_title" = "Textgröße";
 "accessibility_text_size_normal" = "Normal";
 "accessibility_text_size_large" = "Groß";

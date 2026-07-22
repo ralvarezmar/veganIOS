@@ -27,6 +27,8 @@
 "accessibility_description" = "Personaliza los colores y el tamaño del texto para que la app sea más fácil de usar.";
 "accessibility_colorblind_title" = "Paleta apta para daltonismo";
 "accessibility_colorblind_description" = "Usa colores distinguibles para personas con dificultades para diferenciar colores.";
+"accessibility_font_title" = "Fuente de alta legibilidad";
+"accessibility_font_description" = "Usa Atkinson Hyperlegible para facilitar la lectura.";
 "accessibility_text_size_title" = "Tamaño del texto";
 "accessibility_text_size_normal" = "Normal";
 "accessibility_text_size_large" = "Grande";

@@ -7,6 +7,7 @@ struct SettingsView: View {
     @State private var showingClearCacheConfirmation = false
     @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
     @AppStorage(AccessibilityPreferences.textSizeKey) private var textSize = AccessibilityTextSize.normal.rawValue
+    @AppStorage(AccessibilityPreferences.highLegibilityFontKey) private var highLegibilityFont = false
 
     private let privacyURL = URL(string: "https://ralvarezmar.github.io/veganIOS/")!
 
@@ -15,6 +16,9 @@ struct SettingsView: View {
             Section {
                 Toggle(L("accessibility_colorblind_title"), isOn: $colorblindSafePalette)
                     .accessibilityIdentifier("accessibility-colorblind-toggle")
+
+                Toggle(L("accessibility_font_title"), isOn: $highLegibilityFont)
+                    .accessibilityIdentifier("accessibility-font-toggle")
 
                 Picker(L("accessibility_text_size_title"), selection: $textSize) {
                     Text(L("accessibility_text_size_normal"))
@@ -39,7 +43,7 @@ struct SettingsView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(L("privacy_policy_title"))
                             Text(L("privacy_policy_description"))
-                                .font(.footnote)
+                                .appFont(.footnote)
                                 .foregroundStyle(.secondary)
                         }
                     } icon: {

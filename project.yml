@@ -29,6 +29,7 @@ targets:
       - path: VeganChecker/en.lproj
       - path: VeganChecker/de.lproj
       - path: VeganChecker/fr.lproj
+      - path: VeganChecker/Fonts
     settings:
       base:
         PRODUCT_NAME: VCheck
@@ -50,6 +51,11 @@ targets:
           - UIApplicationShortcutItemType: com.ralvarezmar.vcheck.quick-scan
             UIApplicationShortcutItemTitle: Scan
             UIApplicationShortcutItemIconSymbolName: qrcode.viewfinder
+        UIAppFonts:
+          - AtkinsonHyperlegible-Regular.ttf
+          - AtkinsonHyperlegible-Bold.ttf
+          - AtkinsonHyperlegible-Italic.ttf
+          - AtkinsonHyperlegible-BoldItalic.ttf
   VeganCheckerTests:
     type: bundle.unit-test
     platform: iOS

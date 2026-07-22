@@ -27,6 +27,8 @@
 "accessibility_description" = "Customize colors and text size to make the app easier to use.";
 "accessibility_colorblind_title" = "Colorblind-safe palette";
 "accessibility_colorblind_description" = "Use distinguishable colors for people who have difficulty telling colors apart.";
+"accessibility_font_title" = "High-legibility font";
+"accessibility_font_description" = "Use Atkinson Hyperlegible to make reading easier.";
 "accessibility_text_size_title" = "Text size";
 "accessibility_text_size_normal" = "Normal";
 "accessibility_text_size_large" = "Large";

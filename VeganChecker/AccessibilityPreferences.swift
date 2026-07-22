@@ -3,6 +3,7 @@ import SwiftUI
 enum AccessibilityPreferences {
     static let colorblindPaletteKey = "accessibility_colorblind_palette"
     static let textSizeKey = "accessibility_text_size"
+    static let highLegibilityFontKey = "accessibility_high_legibility_font"
 }
 
 enum AccessibilityTextSize: String {

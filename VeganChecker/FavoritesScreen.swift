@@ -131,18 +131,17 @@ private struct FavoriteRow: View {
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(item.productName?.isEmpty == false ? item.productName! : item.barcode)
-                    .font(.headline)
-                    .fontWeight(.semibold)
+                    .appFont(.headline, weight: .semibold)
                     .foregroundStyle(.primary)
 
                 if let brand = item.brand, !brand.isEmpty {
                     Text(brand)
-                        .font(.subheadline)
+                        .appFont(.subheadline)
                         .foregroundStyle(.secondary)
                 }
 
                 Text(item.addedAt.formatted(date: .abbreviated, time: .shortened))
-                    .font(.caption)
+                    .appFont(.caption)
                     .foregroundStyle(.secondary)
             }
 
@@ -167,7 +166,7 @@ private struct CapsuleBadge: View {
 
     var body: some View {
         Text(text)
-            .font(.caption.weight(.semibold))
+            .appFont(.caption, weight: .semibold)
             .foregroundStyle(tint)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
@@ -209,7 +208,7 @@ private struct FavoriteThumbnail: View {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(.quaternary)
             Image(systemName: "photo")
-                .font(.title3)
+                .appFont(.title3)
                 .foregroundStyle(.secondary)
         }
     }
