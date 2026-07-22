@@ -23,6 +23,14 @@
 "allergen_profile_catalog_title" = "Common allergens";
 "strict_mode_title" = "Strict mode";
 "strict_mode_description" = "Also warn when there are traces or related matches.";
+"accessibility_title" = "Accessibility";
+"accessibility_description" = "Customize colors and text size to make the app easier to use.";
+"accessibility_colorblind_title" = "Colorblind-safe palette";
+"accessibility_colorblind_description" = "Use distinguishable colors for people who have difficulty telling colors apart.";
+"accessibility_text_size_title" = "Text size";
+"accessibility_text_size_normal" = "Normal";
+"accessibility_text_size_large" = "Large";
+"accessibility_text_size_extra_large" = "Extra large";
 "allergen_warning_title" = "⚠️ Allergens in your profile";
 "allergen_warning_message" = "⚠️ Contains allergens from your profile: %@";
 "manual_barcode_entry" = "Enter code";

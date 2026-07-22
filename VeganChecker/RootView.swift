@@ -7,6 +7,7 @@ struct RootView: View {
     @State private var scannerRunning = true
     @State private var contributionProduct: Product?
     @AppStorage("onboarding_seen") private var onboardingSeen = false
+    @AppStorage(AccessibilityPreferences.textSizeKey) private var textSize = AccessibilityTextSize.normal.rawValue
     @State private var showingOnboarding = false
 
     private func resetToScanner() {
@@ -16,6 +17,31 @@ struct RootView: View {
     }
 
     var body: some View {
+        Group {
+            if let selectedTextSize = AccessibilityTextSize(rawValue: textSize),
+               selectedTextSize != .normal {
+                navigationContent.environment(\.dynamicTypeSize, selectedTextSize.dynamicTypeSize)
+            } else {
+                navigationContent
+            }
+        }
+        .onAppear {
+            if quickActionRouter.requestID > 0 {
+                resetToScanner()
+            } else if !onboardingSeen {
+                showingOnboarding = true
+                scannerRunning = false
+            }
+        }
+        .onChange(of: path.count) { _, newValue in
+            scannerRunning = newValue == 0
+        }
+        .onChange(of: quickActionRouter.requestID) {
+            resetToScanner()
+        }
+    }
+
+    private var navigationContent: some View {
         NavigationStack(path: $path) {
             ScannerView(
                 isScannerRunning: $scannerRunning,
@@ -97,20 +123,6 @@ struct RootView: View {
                     )
                 }
             }
-        }
-        .onAppear {
-            if quickActionRouter.requestID > 0 {
-                resetToScanner()
-            } else if !onboardingSeen {
-                showingOnboarding = true
-                scannerRunning = false
-            }
-        }
-        .onChange(of: path.count) { _, newValue in
-            scannerRunning = newValue == 0
-        }
-        .onChange(of: quickActionRouter.requestID) {
-            resetToScanner()
         }
     }
 

@@ -23,6 +23,14 @@
 "allergen_profile_catalog_title" = "Allergènes courants";
 "strict_mode_title" = "Mode strict";
 "strict_mode_description" = "Avertit également en cas de traces ou de correspondances associées.";
+"accessibility_title" = "Accessibilité";
+"accessibility_description" = "Personnalisez les couleurs et la taille du texte pour faciliter l’utilisation de l’application.";
+"accessibility_colorblind_title" = "Palette adaptée au daltonisme";
+"accessibility_colorblind_description" = "Utilisez des couleurs faciles à distinguer pour les personnes qui différencient difficilement les couleurs.";
+"accessibility_text_size_title" = "Taille du texte";
+"accessibility_text_size_normal" = "Normale";
+"accessibility_text_size_large" = "Grande";
+"accessibility_text_size_extra_large" = "Très grande";
 "allergen_warning_title" = "⚠️ Allergènes de votre profil";
 "allergen_warning_message" = "⚠️ Contient des allergènes de votre profil : %@";
 "manual_barcode_entry" = "Saisir le code";

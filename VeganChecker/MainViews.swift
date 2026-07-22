@@ -414,6 +414,7 @@ private func isPlausibleBarcode(_ value: String) -> Bool {
 
 struct OnboardingView: View {
     @Environment(\.dismiss) private var dismiss
+    @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
 
     let onDismiss: () -> Void
 
@@ -423,7 +424,7 @@ struct OnboardingView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     Image(systemName: "leaf.circle.fill")
                         .font(.system(size: 56, weight: .semibold))
-                        .foregroundStyle(.green)
+                        .foregroundStyle(veganVerdictColor(for: .vegan, colorblindSafe: colorblindSafePalette))
 
                     Text(L("onboarding_title"))
                         .font(.title.bold())
@@ -433,10 +434,22 @@ struct OnboardingView: View {
                         .foregroundStyle(.secondary)
 
                     VStack(alignment: .leading, spacing: 10) {
-                        OnboardingLegendRow(color: .green, text: L("vegan_verdict_vegan"))
-                        OnboardingLegendRow(color: .red, text: L("vegan_verdict_not_vegan"))
-                        OnboardingLegendRow(color: .orange, text: L("vegan_verdict_maybe"))
-                        OnboardingLegendRow(color: .gray, text: L("vegan_verdict_unknown"))
+                        OnboardingLegendRow(
+                            color: veganVerdictColor(for: .vegan, colorblindSafe: colorblindSafePalette),
+                            text: L("vegan_verdict_vegan")
+                        )
+                        OnboardingLegendRow(
+                            color: veganVerdictColor(for: .notVegan, colorblindSafe: colorblindSafePalette),
+                            text: L("vegan_verdict_not_vegan")
+                        )
+                        OnboardingLegendRow(
+                            color: veganVerdictColor(for: .maybe, colorblindSafe: colorblindSafePalette),
+                            text: L("vegan_verdict_maybe")
+                        )
+                        OnboardingLegendRow(
+                            color: veganVerdictColor(for: .unknown, colorblindSafe: colorblindSafePalette),
+                            text: L("vegan_verdict_unknown")
+                        )
                     }
                     .padding()
                     .background(Color(.secondarySystemBackground))
@@ -1210,6 +1223,7 @@ private struct VeganBannerView: View {
     let source: ProductSource
     let fromCache: Bool
     let cachedAt: Date?
+    @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
 
     var body: some View {
         let spec = bannerSpec
@@ -1278,7 +1292,7 @@ private struct VeganBannerView: View {
             return VeganBannerSpec(
                 headline: L("vegan_headline_vegan"),
                 subtitle: L("vegan_verdict_vegan_subtitle"),
-                background: Color.green,
+                background: veganVerdictColor(for: .vegan, colorblindSafe: colorblindSafePalette),
                 foreground: .white,
                 symbol: "checkmark.circle.fill"
             )
@@ -1286,7 +1300,7 @@ private struct VeganBannerView: View {
             return VeganBannerSpec(
                 headline: L("vegan_headline_not_vegan"),
                 subtitle: L("vegan_verdict_not_vegan_subtitle"),
-                background: Color(red: 0.76, green: 0.16, blue: 0.16),
+                background: veganVerdictColor(for: .notVegan, colorblindSafe: colorblindSafePalette),
                 foreground: .white,
                 symbol: "xmark.circle.fill"
             )
@@ -1294,7 +1308,7 @@ private struct VeganBannerView: View {
             return VeganBannerSpec(
                 headline: L("vegan_headline_maybe"),
                 subtitle: L("vegan_verdict_maybe_subtitle"),
-                background: Color(red: 0.85, green: 0.56, blue: 0.06),
+                background: veganVerdictColor(for: .maybe, colorblindSafe: colorblindSafePalette),
                 foreground: .white,
                 symbol: "exclamationmark.triangle.fill"
             )
@@ -1302,7 +1316,7 @@ private struct VeganBannerView: View {
             return VeganBannerSpec(
                 headline: L("vegan_headline_unknown"),
                 subtitle: L("vegan_verdict_unknown_subtitle"),
-                background: Color(red: 0.45, green: 0.47, blue: 0.50),
+                background: veganVerdictColor(for: .unknown, colorblindSafe: colorblindSafePalette),
                 foreground: .white,
                 symbol: "questionmark.circle.fill"
             )
@@ -1359,13 +1373,19 @@ private struct ProductHeaderCard: View {
 private struct IngredientsCard: View {
     let product: Product
     let watchedKeywords: [String]
+    @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
 
     var body: some View {
         SimpleSectionCard(title: L("ingredients_title")) {
             let items = ingredientItems(for: product.ingredients)
-            if let paragraph = ingredientParagraph(for: items) {
+            if let paragraph = ingredientParagraph(for: items, colorblindSafe: colorblindSafePalette) {
                 VStack(alignment: .leading, spacing: 8) {
-                    highlightedIngredientParagraph(paragraph: paragraph, items: items, keywords: watchedKeywords)
+                    highlightedIngredientParagraph(
+                        paragraph: paragraph,
+                        items: items,
+                        keywords: watchedKeywords,
+                        colorblindSafe: colorblindSafePalette
+                    )
                         .font(.body)
                         .foregroundStyle(.primary)
                         .accessibilityLabel(ingredientAccessibilityLabel(for: items))
@@ -1387,7 +1407,8 @@ private struct IngredientsCard: View {
 private func highlightedIngredientParagraph(
     paragraph: Text,
     items: [(String, IngredientKind)],
-    keywords: [String]
+    keywords: [String],
+    colorblindSafe: Bool
 ) -> Text {
     guard !keywords.isEmpty else { return paragraph }
     var result = Text("")
@@ -1398,9 +1419,11 @@ private func highlightedIngredientParagraph(
         var segment = Text(item.0)
         switch item.1 {
         case .animal:
-            segment = segment.foregroundColor(.red).bold().underline(true, color: .red)
+            let color = veganVerdictColor(for: .notVegan, colorblindSafe: colorblindSafe)
+            segment = segment.foregroundColor(color).bold().underline(true, color: color)
         case .doubtful:
-            segment = segment.foregroundColor(.orange).bold().underline(true, color: .orange)
+            let color = veganVerdictColor(for: .maybe, colorblindSafe: colorblindSafe)
+            segment = segment.foregroundColor(color).bold().underline(true, color: color)
         case .vegan, .unknown:
             break
         }
@@ -1421,7 +1444,10 @@ private func ingredientItems(for ingredients: [OffIngredient]?) -> [(String, Ing
     }
 }
 
-private func ingredientParagraph(for items: [(String, IngredientKind)]) -> Text? {
+private func ingredientParagraph(
+    for items: [(String, IngredientKind)],
+    colorblindSafe: Bool
+) -> Text? {
     guard !items.isEmpty else { return nil }
 
     var paragraph = Text("")
@@ -1433,9 +1459,11 @@ private func ingredientParagraph(for items: [(String, IngredientKind)]) -> Text?
         let segment = Text(item.0)
         switch item.1 {
         case .animal:
-            paragraph = paragraph + segment.foregroundColor(.red).bold().underline(true, color: .red)
+            let color = veganVerdictColor(for: .notVegan, colorblindSafe: colorblindSafe)
+            paragraph = paragraph + segment.foregroundColor(color).bold().underline(true, color: color)
         case .doubtful:
-            paragraph = paragraph + segment.foregroundColor(.orange).bold().underline(true, color: .orange)
+            let color = veganVerdictColor(for: .maybe, colorblindSafe: colorblindSafe)
+            paragraph = paragraph + segment.foregroundColor(color).bold().underline(true, color: color)
         case .vegan, .unknown:
             paragraph = paragraph + segment
         }
@@ -1707,25 +1735,28 @@ private enum IngredientKind: String {
     case doubtful = "maybe"
     case unknown
 
-    var spec: IngredientKindSpec {
+    func spec(colorblindSafe: Bool) -> IngredientKindSpec {
         switch self {
         case .vegan:
+            let color = veganVerdictColor(for: .vegan, colorblindSafe: colorblindSafe)
             return IngredientKindSpec(
                 label: L("ingredient_status_vegan"),
-                accent: .green,
-                rowBackground: Color.green.opacity(0.10)
+                accent: color,
+                rowBackground: color.opacity(0.10)
             )
         case .animal:
+            let color = veganVerdictColor(for: .notVegan, colorblindSafe: colorblindSafe)
             return IngredientKindSpec(
                 label: L("ingredient_status_animal"),
-                accent: Color(red: 0.76, green: 0.16, blue: 0.16),
-                rowBackground: Color(red: 0.76, green: 0.16, blue: 0.16).opacity(0.10)
+                accent: color,
+                rowBackground: color.opacity(0.10)
             )
         case .doubtful:
+            let color = veganVerdictColor(for: .maybe, colorblindSafe: colorblindSafe)
             return IngredientKindSpec(
                 label: L("ingredient_status_doubtful"),
-                accent: Color(red: 0.85, green: 0.56, blue: 0.06),
-                rowBackground: Color(red: 0.85, green: 0.56, blue: 0.06).opacity(0.10)
+                accent: color,
+                rowBackground: color.opacity(0.10)
             )
         case .unknown:
             return IngredientKindSpec(
