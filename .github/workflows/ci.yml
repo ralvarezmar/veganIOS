@@ -66,6 +66,7 @@ jobs:
 
       - name: Run UI tests on iOS Simulator
         run: |
+          rm -rf build/Result.xcresult
           set -o pipefail
           xcodebuild \
             -project VeganChecker.xcodeproj \
@@ -74,7 +75,80 @@ jobs:
             -destination-timeout 60 \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
+            -resultBundlePath build/Result.xcresult \
             test 2>&1 | tee build/xcodebuild-ui-tests.log
+
+      - name: Export UI test screenshots
+        if: always()
+        run: |
+          rm -rf build/screenshots
+          mkdir -p build/screenshots
+          if [ -d build/Result.xcresult ]; then
+            if ! xcrun xcresulttool export attachments \
+              --path build/Result.xcresult \
+              --output-path build/screenshots; then
+              echo "Warning: failed to export xcresult attachments"
+            fi
+          else
+            echo "Warning: result bundle was not created"
+          fi
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          output = Path("build/screenshots")
+          manifest_path = output / "manifest.json"
+          if not manifest_path.exists():
+              raise SystemExit(0)
+
+          manifest = json.loads(manifest_path.read_text())
+          attachments = {}
+
+          def collect(value):
+              if isinstance(value, dict):
+                  attachment_id = value.get("attachmentID") or value.get("attachmentId")
+                  name = value.get("suggestedHumanReadableName")
+                  if attachment_id and name:
+                      attachments[attachment_id] = name
+                  for child in value.values():
+                      collect(child)
+              elif isinstance(value, list):
+                  for child in value:
+                      collect(child)
+
+          collect(manifest)
+
+          used_names = set()
+          for attachment_id, suggested_name in attachments.items():
+              candidates = [
+                  path for path in output.iterdir()
+                  if path.is_file() and path.name != "manifest.json"
+                  and path.name.startswith(attachment_id)
+              ]
+              for source in candidates:
+                  safe_name = re.sub(r"[^A-Za-z0-9._-]+", "-", suggested_name).strip("-")
+                  if not safe_name:
+                      safe_name = attachment_id
+                  suffix = source.suffix
+                  if not Path(safe_name).suffix:
+                      safe_name += suffix
+                  destination = output / safe_name
+                  counter = 2
+                  while destination.name in used_names or destination.exists():
+                      destination = output / f"{destination.stem}-{counter}{destination.suffix}"
+                      counter += 1
+                  source.rename(destination)
+                  used_names.add(destination.name)
+          PY
+
+      - name: Upload UI screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ui-screenshots
+          path: build/screenshots/**
+          if-no-files-found: warn
 
       - name: Surface build failure
         if: failure()

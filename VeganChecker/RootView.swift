@@ -134,6 +134,7 @@ struct RootView: View {
             Button(L("history_action")) {
                 path.append(Route.history)
             }
+            .accessibilityIdentifier("history-button")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
@@ -151,6 +152,7 @@ struct RootView: View {
                 Image(systemName: "star")
             }
             .accessibilityLabel(L("favorites_action"))
+            .accessibilityIdentifier("favorites-button")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
@@ -159,6 +161,7 @@ struct RootView: View {
                 Image(systemName: "magnifyingglass")
             }
             .accessibilityLabel(L("search_action"))
+            .accessibilityIdentifier("search-button")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
@@ -167,6 +170,7 @@ struct RootView: View {
                 Image(systemName: "person.circle")
             }
             .accessibilityLabel(L("profile_action"))
+            .accessibilityIdentifier("profile-button")
         }
     }
 }
