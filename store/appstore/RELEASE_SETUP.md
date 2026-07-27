@@ -32,9 +32,13 @@ variables → Actions**:
 | `ASC_KEY_ID` | The 10-character key ID from App Store Connect. |
 | `ASC_ISSUER_ID` | The issuer ID shown in App Store Connect API access. |
 | `ASC_API_KEY_P8` | The complete `.p8` private-key file encoded as base64. |
+| `ASC_TEAM_ID` | **Optional.** Your 10-character Apple Developer Team ID; set it if your account belongs to more than one team, otherwise leave unset. |
 
 Do not commit the `.p8` file, its base64 value, or any credentials to the
 repository.
+
+Find the Team ID in App Store Connect or Apple Developer under **Membership
+details**.
 
 ## Create the App Store Connect API key
 

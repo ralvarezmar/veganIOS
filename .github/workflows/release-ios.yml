@@ -13,6 +13,7 @@ jobs:
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       ASC_API_KEY_P8: ${{ secrets.ASC_API_KEY_P8 }}
+      ASC_TEAM_ID: ${{ secrets.ASC_TEAM_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -55,6 +56,10 @@ jobs:
         if: steps.credentials.outputs.configured == 'true'
         run: |
           set -o pipefail
+          TEAM_ARG=""
+          if [ -n "$ASC_TEAM_ID" ]; then
+            TEAM_ARG="DEVELOPMENT_TEAM=$ASC_TEAM_ID"
+          fi
           xcodebuild archive \
             -project VeganChecker.xcodeproj \
             -scheme VeganChecker \
@@ -65,6 +70,7 @@ jobs:
             -authenticationKeyPath "$ASC_KEY_PATH" \
             -authenticationKeyID "$ASC_KEY_ID" \
             -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            $TEAM_ARG \
             | tee "$RUNNER_TEMP/xcodebuild-archive.log"
 
       - name: Create export options
@@ -88,6 +94,11 @@ jobs:
           </dict>
           </plist>
           PLIST
+          if [ -n "$ASC_TEAM_ID" ]; then
+            /usr/libexec/PlistBuddy \
+              -c "Add :teamID string $ASC_TEAM_ID" \
+              "$RUNNER_TEMP/ExportOptions.plist"
+          fi
 
       - name: Export archive
         if: steps.credentials.outputs.configured == 'true'
