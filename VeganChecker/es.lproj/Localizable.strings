@@ -237,6 +237,7 @@ Fuente: %@
 "contribution_offline" = "Parece que no tienes conexión.";
 "contribution_network_error" = "No se ha podido enviar la contribución por un error de red.";
 "contribution_server_error" = "El servidor ha rechazado la contribución.";
+"contribution_server_error_detail" = "La base de datos no ha aceptado la contribución: %@";
 "contribution_photos_title" = "Fotos del producto";
 "contribution_photos_description" = "Añade o sustituye fotos. Cada foto se sube de forma independiente.";
 "contribution_photo_front" = "Frontal";

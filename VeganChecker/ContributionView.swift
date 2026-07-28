@@ -252,7 +252,11 @@ struct ContributionView: View {
         case .success: return L("contribution_success")
         case .offline: return L("contribution_offline")
         case .networkError: return L("contribution_network_error")
-        case .serverError: return L("contribution_server_error")
+        case .serverError(let detail):
+            guard let detail, !detail.isEmpty else {
+                return L("contribution_server_error")
+            }
+            return String(format: L("contribution_server_error_detail"), detail)
         }
     }
 }

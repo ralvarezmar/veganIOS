@@ -232,6 +232,7 @@
 "contribution_offline" = "Aucune connexion. Réessayez lorsque vous serez en ligne.";
 "contribution_network_error" = "La contribution n’a pas pu être envoyée en raison d’une erreur réseau.";
 "contribution_server_error" = "La base de données n’a pas accepté la contribution.";
+"contribution_server_error_detail" = "La base de données n'a pas accepté la contribution : %@";
 "contribution_photos_title" = "Photos du produit";
 "contribution_photos_description" = "Ajoutez ou remplacez des photos anonymement. Choisissez une image dans la galerie ou prenez une photo.";
 "contribution_photo_front" = "Face avant";
