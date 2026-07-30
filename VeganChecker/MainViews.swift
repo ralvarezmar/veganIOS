@@ -506,6 +506,7 @@ struct ResultView: View {
     @State private var loadState: LoadState = .loading
     @State private var retrySeed = UUID()
     @State private var selectedAdditive: AdditiveEntry?
+    @State private var selectedScoreInfo: ScoreExplanation?
     @State private var alternativesState: AlternativesState = .idle
 
     private let service = OpenFactsService()
@@ -566,6 +567,9 @@ struct ResultView: View {
             }
             .sheet(item: $selectedAdditive) { additive in
                 AdditiveInfoSheet(additive: additive)
+            }
+            .sheet(item: $selectedScoreInfo) { explanation in
+                ScoreInfoSheet(explanation: explanation)
             }
     }
 
@@ -676,7 +680,11 @@ struct ResultView: View {
                             }
                         }
 
-                        ScoresCard(product: product)
+                        ScoresCard(
+                            product: product,
+                            onScoreTap: { selectedScoreInfo = $0 }
+                        )
+                        PalmOilCard(tags: product.ingredientsAnalysisTags)
                         IngredientsCard(
                             product: product,
                             watchedKeywords: watchMatches.ingredientKeywords
@@ -703,7 +711,17 @@ struct ResultView: View {
 
                         if let grade = product.nutriscoreGrade, !grade.isEmpty {
                             SimpleSectionCard(title: L("nutriscore_badge_title")) {
-                                NutriScoreBadgeView(grade: grade.uppercased())
+                                Button {
+                                    selectedScoreInfo = ScoreExplanation(
+                                        id: "nutriscore-detail",
+                                        titleKey: "score_info_nutriscore_title",
+                                        bodyKey: "score_info_nutriscore_body"
+                                    )
+                                } label: {
+                                    NutriScoreBadgeView(grade: grade.uppercased())
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityHint(L("score_info_tap_hint"))
                             }
                         }
                     }
@@ -1987,8 +2005,15 @@ private struct NutritionRow: View {
     }
 }
 
+private struct ScoreExplanation: Identifiable {
+    let id: String
+    let titleKey: String
+    let bodyKey: String
+}
+
 private struct ScoresCard: View {
     let product: Product
+    let onScoreTap: (ScoreExplanation) -> Void
 
     var body: some View {
         let nutriScore = normalizedScore(product.nutriscoreGrade)
@@ -2002,25 +2027,138 @@ private struct ScoresCard: View {
                 SimpleSectionCard(title: L("product_scores_title")) {
                     HStack(alignment: .top, spacing: 16) {
                         if let nutriScore {
-                            ScoreColumn(label: L("nutriscore_badge_title")) {
-                                NutriScoreBadgeView(grade: nutriScore)
+                            Button {
+                                onScoreTap(
+                                    ScoreExplanation(
+                                        id: "nutriscore",
+                                        titleKey: "score_info_nutriscore_title",
+                                        bodyKey: "score_info_nutriscore_body"
+                                    )
+                                )
+                            } label: {
+                                ScoreColumn(label: L("nutriscore_badge_title")) {
+                                    NutriScoreBadgeView(grade: nutriScore)
+                                }
                             }
+                            .buttonStyle(.plain)
+                            .accessibilityHint(L("score_info_tap_hint"))
                         }
                         if let ecoScore {
-                            ScoreColumn(label: L("ecoscore_badge_title")) {
-                                EcoScoreBadgeView(grade: ecoScore)
+                            Button {
+                                onScoreTap(
+                                    ScoreExplanation(
+                                        id: "ecoscore",
+                                        titleKey: "score_info_ecoscore_title",
+                                        bodyKey: "score_info_ecoscore_body"
+                                    )
+                                )
+                            } label: {
+                                ScoreColumn(label: L("ecoscore_badge_title")) {
+                                    EcoScoreBadgeView(grade: ecoScore)
+                                }
                             }
+                            .buttonStyle(.plain)
+                            .accessibilityHint(L("score_info_tap_hint"))
                         }
                         if let novaGroup {
-                            ScoreColumn(label: L("nova_group_badge_title")) {
-                                NovaGroupBadgeView(group: novaGroup)
+                            Button {
+                                onScoreTap(
+                                    ScoreExplanation(
+                                        id: "nova",
+                                        titleKey: "score_info_nova_title",
+                                        bodyKey: "score_info_nova_body"
+                                    )
+                                )
+                            } label: {
+                                ScoreColumn(label: L("nova_group_badge_title")) {
+                                    NovaGroupBadgeView(group: novaGroup)
+                                }
                             }
+                            .buttonStyle(.plain)
+                            .accessibilityHint(L("score_info_tap_hint"))
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
         }
+    }
+}
+
+private struct ScoreInfoSheet: View {
+    let explanation: ScoreExplanation
+
+    var body: some View {
+        ScrollView {
+            SimpleSectionCard(title: L(explanation.titleKey)) {
+                Text(L(explanation.bodyKey))
+            }
+            .padding()
+        }
+        .presentationDetents([.medium, .large])
+    }
+}
+
+private struct PalmOilCard: View {
+    let tags: [String]?
+
+    var body: some View {
+        if let status = palmOilStatus(tags) {
+            let colors = palmOilColors(status)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(spacing: 10) {
+                    Image(systemName: "leaf")
+                        .foregroundStyle(colors.accent)
+                    Text(L("palm_oil_title"))
+                        .appFont(.headline, weight: .bold)
+                        .foregroundStyle(colors.accent)
+                }
+                Text(palmOilStatusText(status))
+                    .appFont(.body, weight: .semibold)
+                Text(L("palm_oil_note"))
+                    .appFont(.body)
+            }
+            .padding(18)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(colors.background)
+            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        }
+    }
+}
+
+private struct PalmOilColors {
+    let background: Color
+    let accent: Color
+}
+
+private func palmOilColors(_ status: PalmOilStatus) -> PalmOilColors {
+    switch status {
+    case .present:
+        return PalmOilColors(
+            background: Color(red: 1.0, green: 0.95, blue: 0.88),
+            accent: Color(red: 0.90, green: 0.32, blue: 0.00)
+        )
+    case .maybe:
+        return PalmOilColors(
+            background: Color(red: 1.0, green: 0.97, blue: 0.88),
+            accent: Color(red: 0.55, green: 0.43, blue: 0.00)
+        )
+    case .free:
+        return PalmOilColors(
+            background: Color(red: 0.91, green: 0.97, blue: 0.92),
+            accent: Color(red: 0.18, green: 0.49, blue: 0.20)
+        )
+    }
+}
+
+private func palmOilStatusText(_ status: PalmOilStatus) -> String {
+    switch status {
+    case .present:
+        return L("palm_oil_present")
+    case .maybe:
+        return L("palm_oil_maybe")
+    case .free:
+        return L("palm_oil_free")
     }
 }
 
