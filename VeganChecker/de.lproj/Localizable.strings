@@ -71,6 +71,13 @@
 "clear_history_confirmation_message" = "Alle gespeicherten Scans werden gelöscht.";
 "clear_history_confirmation" = "Verlauf löschen?";
 "ingredients_title" = "Zutaten";
+"ingredients_translate_action" = "Zutaten übersetzen";
+"ingredients_translating" = "Übersetze…";
+"ingredients_translated_note" = "Auf dem Gerät übersetzt";
+"ingredients_show_original" = "Original anzeigen";
+"ingredients_show_translation" = "Übersetzung anzeigen";
+"ingredients_translation_not_needed" = "Die Zutaten sind bereits in deiner Sprache";
+"ingredients_translation_error" = "Übersetzung fehlgeschlagen. Prüfe deine Verbindung und versuch es erneut.";
 "ingredients_legend" = "Unterstrichen + rot = nicht vegan · Unterstrichen + orange = zweifelhaft";
 "additives_title" = "Zusatzstoffe";
 "allergens_title" = "Allergene";

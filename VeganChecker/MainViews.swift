@@ -4,6 +4,7 @@ import Charts
 import SwiftData
 import AVFoundation
 import UIKit
+import Translation
 
 private func cacheAgeText(_ date: Date) -> String {
     let age = cacheAge(from: date)
@@ -1391,8 +1392,28 @@ private struct IngredientsCard: View {
     let product: Product
     let watchedKeywords: [String]
     @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
+    @State private var showTranslation = false
 
     var body: some View {
+        if #available(iOS 17.4, *), let ingredientText {
+            cardContent
+                .translationPresentation(
+                    isPresented: $showTranslation,
+                    text: ingredientText
+                )
+        } else {
+            cardContent
+        }
+    }
+
+    private var ingredientText: String? {
+        product.ingredientsText?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+            ? product.ingredientsText
+            : nil
+    }
+
+    @ViewBuilder
+    private var cardContent: some View {
         SimpleSectionCard(title: L("ingredients_title")) {
             let items = ingredientItems(for: product.ingredients)
             if let paragraph = ingredientParagraph(for: items, colorblindSafe: colorblindSafePalette) {
@@ -1416,6 +1437,14 @@ private struct IngredientsCard: View {
                 }
             } else {
                 Text(product.ingredientsText?.isEmpty == false ? product.ingredientsText! : L("not_available"))
+            }
+            if #available(iOS 17.4, *), ingredientText != nil {
+                Button {
+                    showTranslation = true
+                } label: {
+                    Text(L("ingredients_translate_action"))
+                }
+                .buttonStyle(.bordered)
             }
         }
     }

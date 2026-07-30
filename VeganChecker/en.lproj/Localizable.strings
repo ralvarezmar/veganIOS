@@ -71,6 +71,13 @@
 "clear_history_confirmation_message" = "All saved scans will be deleted.";
 "clear_history_confirmation" = "Clear history?";
 "ingredients_title" = "Ingredients";
+"ingredients_translate_action" = "Translate ingredients";
+"ingredients_translating" = "Translating…";
+"ingredients_translated_note" = "Translated on device";
+"ingredients_show_original" = "Show original";
+"ingredients_show_translation" = "Show translation";
+"ingredients_translation_not_needed" = "Ingredients are already in your language";
+"ingredients_translation_error" = "Couldn't translate. Check your connection and try again.";
 "ingredients_legend" = "Underlined + red = not vegan · Underlined + orange = doubtful";
 "additives_title" = "Additives";
 "allergens_title" = "Allergens";

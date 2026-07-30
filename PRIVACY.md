@@ -43,6 +43,13 @@ dispositivo mediante AVFoundation y Vision. Las imágenes usadas para OCR se
 procesan únicamente en memoria: no se suben ni se guardan de forma persistente,
 y la imagen de OCR no se envía como parte de una contribución.
 
+## Traducción de ingredientes en el dispositivo
+
+La traducción opcional de la lista de ingredientes se presenta mediante el
+framework Translation de Apple y se ejecuta en el dispositivo. El texto de
+ingredientes no se sube ni se envía a Apple para traducirlo. VeganCheck no
+incluye analítica, rastreo ni publicidad.
+
 ## Consultas a bases de datos de terceros
 
 Al escanear o buscar un producto, la aplicación puede conectarse a estas bases

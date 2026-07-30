@@ -76,6 +76,13 @@ Fuente: %@
 "clear_history_confirmation_message" = "Se eliminarán todos los escaneos guardados.";
 "clear_history_confirmation" = "¿Limpiar historial?";
 "ingredients_title" = "Ingredientes";
+"ingredients_translate_action" = "Traducir ingredientes";
+"ingredients_translating" = "Traduciendo…";
+"ingredients_translated_note" = "Traducido en el dispositivo";
+"ingredients_show_original" = "Ver original";
+"ingredients_show_translation" = "Ver traducción";
+"ingredients_translation_not_needed" = "Los ingredientes ya están en tu idioma";
+"ingredients_translation_error" = "No se pudo traducir. Revisa tu conexión e inténtalo de nuevo.";
 "ingredients_legend" = "Subrayado + rojo = no apto para veganos · Subrayado + naranja = dudoso";
 "additives_title" = "Aditivos";
 "allergens_title" = "Alérgenos";
