@@ -41,6 +41,13 @@ struct RootView: View {
         .onChange(of: quickActionRouter.requestID) {
             resetToScanner()
         }
+        .onOpenURL { url in
+            guard url.scheme == "vcheck",
+                  url.host == "scan" || url.path == "/scan" else {
+                return
+            }
+            resetToScanner()
+        }
     }
 
     private var navigationContent: some View {
