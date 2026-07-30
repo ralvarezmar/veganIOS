@@ -85,7 +85,7 @@ enum ProductImageType: String, CaseIterable, Identifiable {
 
 func imageField(for type: ProductImageType, locale: Locale = .current) -> String {
     let code = locale.languageCode ?? "es"
-    let language = ["en", "es", "de", "fr"].contains(code) ? code : "es"
+    let language = ["en", "es", "de", "fr", "it", "pt"].contains(code) ? code : "es"
     return "\(type.rawValue)_\(language)"
 }
 
@@ -95,7 +95,7 @@ func supportedProductLanguage(_ language: String) -> String {
         .split(whereSeparator: { $0 == "-" || $0 == "_" })
         .first
         .map(String.init) ?? "en"
-    return ["es", "en", "de", "fr"].contains(normalized) ? normalized : "en"
+    return ["es", "en", "de", "fr", "it", "pt"].contains(normalized) ? normalized : "en"
 }
 
 func configuredProductLanguage() -> String {

@@ -29,6 +29,8 @@ targets:
       - path: VeganChecker/en.lproj
       - path: VeganChecker/de.lproj
       - path: VeganChecker/fr.lproj
+      - path: VeganChecker/it.lproj
+      - path: VeganChecker/pt.lproj
       - path: VeganChecker/Fonts
     dependencies:
       - target: VeganCheckerWidget
