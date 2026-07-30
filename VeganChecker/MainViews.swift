@@ -1296,7 +1296,9 @@ private struct VeganBannerView: View {
         case .notVegan:
             return VeganBannerSpec(
                 headline: L("vegan_headline_not_vegan"),
-                subtitle: L("vegan_verdict_not_vegan_subtitle"),
+                subtitle: analysis.heuristic
+                    ? L("vegan_verdict_not_vegan_heuristic_subtitle")
+                    : L("vegan_verdict_not_vegan_subtitle"),
                 background: veganVerdictColor(for: .notVegan, colorblindSafe: colorblindSafePalette),
                 foreground: .white,
                 symbol: "xmark.circle.fill"

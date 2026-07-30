@@ -11,13 +11,34 @@ struct VeganAnalysis {
     let status: VeganStatus
     let nonVeganIngredients: [String]
     let doubtfulIngredients: [String]
+    let heuristic: Bool
+
+    init(
+        status: VeganStatus,
+        nonVeganIngredients: [String],
+        doubtfulIngredients: [String],
+        heuristic: Bool = false
+    ) {
+        self.status = status
+        self.nonVeganIngredients = nonVeganIngredients
+        self.doubtfulIngredients = doubtfulIngredients
+        self.heuristic = heuristic
+    }
 }
 
 func analyzeVegan(_ product: Product) -> VeganAnalysis {
-    analyzeVegan(ingredientsAnalysisTags: product.ingredientsAnalysisTags, ingredients: product.ingredients)
+    analyzeVegan(
+        ingredientsAnalysisTags: product.ingredientsAnalysisTags,
+        ingredients: product.ingredients,
+        ingredientsText: product.ingredientsText
+    )
 }
 
-func analyzeVegan(ingredientsAnalysisTags: [String]?, ingredients: [OffIngredient]?) -> VeganAnalysis {
+func analyzeVegan(
+    ingredientsAnalysisTags: [String]?,
+    ingredients: [OffIngredient]?,
+    ingredientsText: String? = nil
+) -> VeganAnalysis {
     let ingredientList = ingredients ?? []
     let normalizedIngredients = ingredientList.compactMap { ingredient -> (String, String)? in
         guard let vegan = ingredient.vegan?.lowercased(), let cleanedText = cleanFoodFactsLabel(ingredient.text) else {
@@ -55,6 +76,18 @@ func analyzeVegan(ingredientsAnalysisTags: [String]?, ingredients: [OffIngredien
         if !hasIngredients && !hasTags { return .unknown }
         return .unknown
     }()
+
+    if status == .unknown, let ingredientsText, !ingredientsText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        let detected = detectAnimalIngredients(ingredientsText)
+        if !detected.isEmpty {
+            return VeganAnalysis(
+                status: .notVegan,
+                nonVeganIngredients: detected,
+                doubtfulIngredients: [],
+                heuristic: true
+            )
+        }
+    }
 
     return VeganAnalysis(status: status, nonVeganIngredients: nonVegan, doubtfulIngredients: doubtful)
 }

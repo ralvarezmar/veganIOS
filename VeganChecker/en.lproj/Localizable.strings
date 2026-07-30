@@ -151,12 +151,13 @@
 "vegan_verdict_not_vegan" = "Not suitable ❌ — contains ingredients of animal origin";
 "vegan_headline_not_vegan" = "NO · PRODUCT NOT SUITABLE FOR VEGANS";
 "vegan_verdict_not_vegan_subtitle" = "Open Food Facts indicates ingredients of animal origin.";
+"vegan_verdict_not_vegan_heuristic_subtitle" = "Detected from the ingredient list (Open Food Facts had no analysis). Check the label to confirm.";
 "vegan_verdict_maybe" = "Doubtful origin ⚠️ — contains ingredients of uncertain provenance";
 "vegan_headline_maybe" = "DOUBTFUL · UNCERTAIN ORIGIN";
 "vegan_verdict_maybe_subtitle" = "Open Food Facts marks ingredients with doubtful origin.";
 "vegan_verdict_unknown" = "Not enough data 🔍";
 "vegan_headline_unknown" = "NOT ENOUGH DATA";
-"vegan_verdict_unknown_subtitle" = "Not enough information available for this product";
+"vegan_verdict_unknown_subtitle" = "We couldn't determine the verdict automatically. Check the ingredient list below.";
 "product_scores_title" = "Product scores";
 "ecoscore_badge_title" = "Eco-Score";
 "ecoscore_badge_content_description" = "Eco-Score %@";
