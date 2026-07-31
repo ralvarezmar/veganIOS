@@ -150,6 +150,222 @@ jobs:
           path: build/screenshots/**
           if-no-files-found: warn
 
+      - name: Capture App Store screenshots
+        if: always()
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          mkdir -p build/appstore build/appstore-screenshots
+
+          runtime_id=$(python3 - <<'PY'
+          import json
+          import subprocess
+
+          runtimes = json.loads(subprocess.check_output([
+              "xcrun", "simctl", "list", "runtimes", "-j",
+          ]))["runtimes"]
+          available = [
+              runtime for runtime in runtimes
+              if runtime.get("isAvailable")
+              and runtime.get("platform") == "iOS"
+          ]
+          if not available:
+              raise SystemExit(0)
+
+          def version(runtime):
+              identifier = runtime.get("identifier", "")
+              suffix = identifier.rsplit(".iOS-", 1)[-1]
+              return tuple(int(part) for part in suffix.split("-") if part.isdigit())
+
+          print(max(available, key=version)["identifier"])
+          PY
+          )
+          if [ -z "$runtime_id" ]; then
+            echo "warn: no available iOS simulator runtime found"
+            exit 0
+          fi
+
+          resolve_device_type() {
+            python3 - "$1" <<'PY'
+          import json
+          import subprocess
+          import sys
+
+          label = sys.argv[1]
+          device_types = json.loads(subprocess.check_output([
+              "xcrun", "simctl", "list", "devicetypes", "-j",
+          ]))["devicetypes"]
+
+          def version(device):
+              name = device.get("name", "")
+              numbers = []
+              for token in name.replace("-", " ").replace(".", " ").split():
+                  if token.isdigit():
+                      numbers.append(int(token))
+              return tuple(numbers)
+
+          def newest(candidates):
+              if not candidates:
+                  return ""
+              return max(candidates, key=lambda device: (version(device), device.get("identifier", "")))[
+                  "identifier"
+              ]
+
+          preferred = {
+              "iphone-6-9": ["iPhone 16 Pro Max"],
+              "iphone-6-5": ["iPhone 11 Pro Max"],
+              "ipad-13": ["iPad Pro 13-inch (M4)", "iPad Pro (12.9-inch)"],
+          }[label]
+          for preferred_name in preferred:
+              candidates = [
+                  device for device in device_types
+                  if preferred_name in device.get("name", "")
+              ]
+              if candidates:
+                  print(newest(candidates))
+                  raise SystemExit(0)
+
+          if label == "iphone-6-9":
+              candidates = [
+                  device for device in device_types
+                  if device.get("name", "").startswith("iPhone ")
+                  and "Pro Max" in device.get("name", "")
+              ]
+          elif label == "iphone-6-5":
+              candidates = [
+                  device for device in device_types
+                  if device.get("name", "").startswith("iPhone ")
+                  and ("11 Pro Max" in device.get("name", "") or "Plus" in device.get("name", ""))
+              ]
+          else:
+              candidates = [
+                  device for device in device_types
+                  if device.get("name", "").startswith("iPad Pro")
+                  and ("13-inch" in device.get("name", "")
+                       or "12.9-inch" in device.get("name", ""))
+              ]
+          print(newest(candidates))
+          PY
+          }
+
+          export_attachments() {
+            result_bundle="$1"
+            output="$2"
+            if [ ! -d "$result_bundle" ]; then
+              echo "warn: result bundle was not created: $result_bundle"
+              return 0
+            fi
+            if ! xcrun xcresulttool export attachments \
+              --path "$result_bundle" \
+              --output-path "$output"; then
+              echo "warn: failed to export attachments from $result_bundle"
+              return 0
+            fi
+            python3 - "$output" <<'PY'
+          import json
+          import re
+          import sys
+          from pathlib import Path
+
+          output = Path(sys.argv[1])
+          manifest_path = output / "manifest.json"
+          if not manifest_path.exists():
+              raise SystemExit(0)
+
+          manifest = json.loads(manifest_path.read_text())
+          attachments = {}
+
+          def collect(value):
+              if isinstance(value, dict):
+                  attachment_id = value.get("attachmentID") or value.get("attachmentId")
+                  name = value.get("suggestedHumanReadableName")
+                  if attachment_id and name:
+                      attachments[attachment_id] = name
+                  for child in value.values():
+                      collect(child)
+              elif isinstance(value, list):
+                  for child in value:
+                      collect(child)
+
+          collect(manifest)
+
+          used_names = set()
+          for attachment_id, suggested_name in attachments.items():
+              candidates = [
+                  path for path in output.iterdir()
+                  if path.is_file() and path.name != "manifest.json"
+                  and path.name.startswith(attachment_id)
+              ]
+              for source in candidates:
+                  safe_name = re.sub(r"[^A-Za-z0-9._-]+", "-", suggested_name).strip("-")
+                  if not safe_name:
+                      safe_name = attachment_id
+                  suffix = source.suffix
+                  if not Path(safe_name).suffix:
+                      safe_name += suffix
+                  destination = output / safe_name
+                  counter = 2
+                  while destination.name in used_names or destination.exists():
+                      destination = output / f"{destination.stem}-{counter}{destination.suffix}"
+                      counter += 1
+                  source.rename(destination)
+                  used_names.add(destination.name)
+          PY
+          }
+
+          capture_device() {
+            label="$1"
+            device_type_id="$2"
+            if [ -z "$device_type_id" ]; then
+              echo "warn: no simulator device type found for $label; skipping"
+              return 0
+            fi
+
+            simulator_name="screenshots-$label"
+            simulator_udid=$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id") || {
+              echo "warn: failed to create simulator for $label"
+              return 1
+            }
+            result_bundle="build/appstore/$label.xcresult"
+            output="build/appstore-screenshots/$label"
+            mkdir -p "$output"
+            rm -rf "$result_bundle"
+
+            status=0
+            xcrun simctl boot "$simulator_udid" || status=$?
+            xcrun simctl bootstatus "$simulator_udid" -b || status=$?
+            if [ "$status" -eq 0 ]; then
+              xcodebuild \
+                -project VeganChecker.xcodeproj \
+                -scheme VeganChecker \
+                -destination "platform=iOS Simulator,id=$simulator_udid" \
+                CODE_SIGNING_ALLOWED=NO \
+                CODE_SIGNING_REQUIRED=NO \
+                -only-testing:VeganCheckerUITests/ScreenshotUITests \
+                -resultBundlePath "$result_bundle" \
+                test || status=$?
+            fi
+            export_attachments "$result_bundle" "$output"
+            xcrun simctl shutdown "$simulator_udid" || true
+            xcrun simctl delete "$simulator_udid" || true
+            if [ "$status" -ne 0 ]; then
+              echo "warn: $label failed"
+            fi
+            return "$status"
+          }
+
+          capture_device iphone-6-9 "$(resolve_device_type iphone-6-9)" || echo "warn: iphone-6-9 failed"
+          capture_device iphone-6-5 "$(resolve_device_type iphone-6-5)" || echo "warn: iphone-6-5 failed"
+          capture_device ipad-13 "$(resolve_device_type ipad-13)" || echo "warn: ipad-13 failed"
+
+      - name: Upload App Store screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app-store-screenshots
+          path: build/appstore-screenshots/**
+          if-no-files-found: warn
+
       - name: Surface build failure
         if: failure()
         run: |
