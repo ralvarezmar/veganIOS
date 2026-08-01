@@ -46,9 +46,9 @@ struct ContributionView: View {
                         Text(L("contribution_description"))
                             .foregroundStyle(.secondary)
                         Text(LF("contribution_barcode", barcode))
-                            .font(.subheadline.weight(.semibold))
+                            .appFont(.subheadline, weight: .semibold)
                         Text(L("contribution_anonymous_note"))
-                            .font(.footnote)
+                            .appFont(.footnote)
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -141,7 +141,7 @@ struct ContributionView: View {
         }
         if let ocrMessageKey {
             Text(L(ocrMessageKey))
-                .font(.footnote)
+                .appFont(.footnote)
                 .foregroundStyle(.red)
         }
     }
@@ -185,7 +185,7 @@ struct ContributionView: View {
         ContributionCard(title: L("contribution_photos_title")) {
             VStack(alignment: .leading, spacing: 12) {
                 Text(L("contribution_photos_description"))
-                    .font(.footnote)
+                    .appFont(.footnote)
                     .foregroundStyle(.secondary)
                 ForEach(ProductImageType.allCases) { type in
                     ProductPhotoRow(
@@ -252,7 +252,11 @@ struct ContributionView: View {
         case .success: return L("contribution_success")
         case .offline: return L("contribution_offline")
         case .networkError: return L("contribution_network_error")
-        case .serverError: return L("contribution_server_error")
+        case .serverError(let detail):
+            guard let detail, !detail.isEmpty else {
+                return L("contribution_server_error")
+            }
+            return String(format: L("contribution_server_error_detail"), detail)
         }
     }
 }
@@ -269,7 +273,7 @@ private struct ContributionCard<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(title)
-                .font(.headline.bold())
+                .appFont(.headline, weight: .bold)
             content
         }
         .padding(18)
@@ -318,9 +322,9 @@ private struct ProductPhotoRow: View {
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(type.localizedTitle)
-                    .font(.subheadline.weight(.semibold))
+                    .appFont(.subheadline, weight: .semibold)
                 Text(state.localizedStatus)
-                    .font(.caption)
+                    .appFont(.caption)
                     .foregroundStyle(state == .error ? .red : .secondary)
             }
             Spacer()
@@ -329,7 +333,7 @@ private struct ProductPhotoRow: View {
                 Button(L("contribution_photo_take"), action: takePhoto)
             } label: {
                 Image(systemName: "ellipsis.circle")
-                    .font(.title3)
+                    .appFont(.title3)
             }
         }
     }

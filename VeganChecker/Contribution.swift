@@ -71,7 +71,7 @@ enum ContributionResult: Equatable {
     case success
     case offline
     case networkError
-    case serverError
+    case serverError(detail: String?)
 }
 
 enum ProductImageType: String, CaseIterable, Identifiable {
@@ -85,7 +85,7 @@ enum ProductImageType: String, CaseIterable, Identifiable {
 
 func imageField(for type: ProductImageType, locale: Locale = .current) -> String {
     let code = locale.languageCode ?? "es"
-    let language = ["en", "es", "de", "fr"].contains(code) ? code : "es"
+    let language = ["en", "es", "de", "fr", "it", "pt"].contains(code) ? code : "es"
     return "\(type.rawValue)_\(language)"
 }
 
@@ -95,7 +95,7 @@ func supportedProductLanguage(_ language: String) -> String {
         .split(whereSeparator: { $0 == "-" || $0 == "_" })
         .first
         .map(String.init) ?? "en"
-    return ["es", "en", "de", "fr"].contains(normalized) ? normalized : "en"
+    return ["es", "en", "de", "fr", "it", "pt"].contains(normalized) ? normalized : "en"
 }
 
 func configuredProductLanguage() -> String {
@@ -160,8 +160,13 @@ final class ContributionService {
         do {
             let (data, response) = try await session.data(for: request)
             guard let status = response as? HTTPURLResponse else { return .networkError }
-            guard (200..<300).contains(status.statusCode) else { return .serverError }
-            return jsonStatus(from: data) == 1 ? .success : .serverError
+            guard (200..<300).contains(status.statusCode) else {
+                return .serverError(detail: "HTTP \(status.statusCode)")
+            }
+            let responseStatus = jsonStatus(from: data)
+            return responseStatus == 1
+                ? .success
+                : .serverError(detail: contributionErrorDetail(from: data))
         } catch {
             return .networkError
         }
@@ -218,6 +223,31 @@ private func formURLEncoded(_ fields: [String: String]) -> Data? {
 private func jsonStatus(from data: Data) -> Int? {
     guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return nil }
     return (json["status"] as? NSNumber)?.intValue
+}
+
+private func contributionErrorDetail(from data: Data) -> String? {
+    guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+        return responseSnippet(from: data)
+    }
+    for key in ["status_verbose", "error", "errors"] {
+        if let value = json[key] as? String {
+            let detail = value.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !detail.isEmpty {
+                return detail
+            }
+        }
+    }
+    return nil
+}
+
+private func responseSnippet(from data: Data) -> String? {
+    guard let body = String(data: data, encoding: .utf8) else { return nil }
+    let snippet = body
+        .split(whereSeparator: \.isWhitespace)
+        .joined(separator: " ")
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+    let result = String(snippet.prefix(120))
+    return result.isEmpty ? nil : result
 }
 
 private func multipartBody(

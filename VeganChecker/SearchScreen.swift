@@ -21,7 +21,7 @@ struct SearchScreen: View {
     private var searchInputCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(L("search_title"))
-                .font(.title3.bold())
+                .appFont(.title3, weight: .bold)
 
             TextField(L("search_hint"), text: $query)
                 .textInputAutocapitalization(.never)
@@ -179,17 +179,17 @@ private struct EmptyStateCard: View {
                 ProgressView()
             } else if let icon {
                 Image(systemName: icon)
-                    .font(.system(size: 42, weight: .semibold))
+                    .appIconFont(size: 42, weight: .semibold)
                     .foregroundStyle(.green)
             }
 
             Text(title)
-                .font(.title2.bold())
+                .appFont(.title2, weight: .bold)
                 .multilineTextAlignment(.center)
 
             if let message {
                 Text(message)
-                    .font(.body)
+                    .appFont(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
@@ -216,18 +216,17 @@ private struct SearchResultCard: View {
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(product.productName?.isEmpty == false ? product.productName! : (product.code ?? ""))
-                    .font(.headline)
-                    .fontWeight(.semibold)
+                    .appFont(.headline, weight: .semibold)
                     .foregroundStyle(.primary)
 
                 if let brands = product.brands, !brands.isEmpty {
                     Text(brands)
-                        .font(.subheadline)
+                        .appFont(.subheadline)
                         .foregroundStyle(.secondary)
                 }
 
                 Text(product.code ?? "")
-                    .font(.caption)
+                    .appFont(.caption)
                     .foregroundStyle(.secondary)
             }
         }
@@ -292,7 +291,7 @@ private struct SearchThumbnail: View {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(.quaternary)
             Image(systemName: "photo")
-                .font(.title3)
+                .appFont(.title3)
                 .foregroundStyle(.secondary)
         }
     }

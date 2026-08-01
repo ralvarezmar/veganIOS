@@ -29,6 +29,12 @@ targets:
       - path: VeganChecker/en.lproj
       - path: VeganChecker/de.lproj
       - path: VeganChecker/fr.lproj
+      - path: VeganChecker/it.lproj
+      - path: VeganChecker/pt.lproj
+      - path: VeganChecker/Fonts
+    dependencies:
+      - target: VeganCheckerWidget
+        embed: true
     settings:
       base:
         PRODUCT_NAME: VCheck
@@ -43,6 +49,37 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ENABLE_PREVIEWS: YES
+    info:
+      path: VeganChecker/Info.plist
+      properties:
+        UIApplicationShortcutItems:
+          - UIApplicationShortcutItemType: com.ralvarezmar.vcheck.quick-scan
+            UIApplicationShortcutItemTitle: Scan
+            UIApplicationShortcutItemIconSymbolName: qrcode.viewfinder
+        UIAppFonts:
+          - AtkinsonHyperlegible-Regular.ttf
+          - AtkinsonHyperlegible-Bold.ttf
+          - AtkinsonHyperlegible-Italic.ttf
+          - AtkinsonHyperlegible-BoldItalic.ttf
+        CFBundleURLTypes:
+          - CFBundleURLName: com.ralvarezmar.vcheck
+            CFBundleURLSchemes:
+              - vcheck
+  VeganCheckerWidget:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: 17.0
+    sources:
+      - path: VeganCheckerWidget
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.vcheck.widget
+        SWIFT_VERSION: 5.9
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: VeganCheckerWidget/Info.plist
+        CODE_SIGN_STYLE: Automatic
+        SKIP_INSTALL: NO
   VeganCheckerTests:
     type: bundle.unit-test
     platform: iOS
@@ -59,6 +96,21 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         TEST_HOST: $(BUILT_PRODUCTS_DIR)/VCheck.app/VCheck
         BUNDLE_LOADER: $(TEST_HOST)
+  VeganCheckerUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: 17.0
+    sources:
+      - path: VeganCheckerUITests
+    dependencies:
+      - target: VeganChecker
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.vcheck.uitests
+        SWIFT_VERSION: 5.9
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: VeganChecker
 schemes:
   VeganChecker:
     build:
@@ -67,3 +119,4 @@ schemes:
     test:
       targets:
         - VeganCheckerTests
+        - VeganCheckerUITests

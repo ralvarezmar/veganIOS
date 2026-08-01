@@ -1,14 +1,56 @@
 import SwiftUI
 
 struct RootView: View {
+    @ObservedObject var quickActionRouter: QuickActionRouter
     @State private var path = NavigationPath()
 
     @State private var scannerRunning = true
     @State private var contributionProduct: Product?
     @AppStorage("onboarding_seen") private var onboardingSeen = false
+    @AppStorage(AccessibilityPreferences.textSizeKey) private var textSize = AccessibilityTextSize.normal.rawValue
+    @AppStorage(AccessibilityPreferences.highLegibilityFontKey) private var highLegibilityFont = false
     @State private var showingOnboarding = false
 
+    private func resetToScanner() {
+        path = NavigationPath()
+        scannerRunning = true
+        showingOnboarding = false
+    }
+
     var body: some View {
+        Group {
+            if let selectedTextSize = AccessibilityTextSize(rawValue: textSize),
+               selectedTextSize != .normal {
+                navigationContent.environment(\.dynamicTypeSize, selectedTextSize.dynamicTypeSize)
+            } else {
+                navigationContent
+            }
+        }
+        .environment(\.highLegibilityFont, highLegibilityFont)
+        .onAppear {
+            if quickActionRouter.requestID > 0 {
+                resetToScanner()
+            } else if !onboardingSeen {
+                showingOnboarding = true
+                scannerRunning = false
+            }
+        }
+        .onChange(of: path.count) { _, newValue in
+            scannerRunning = newValue == 0
+        }
+        .onChange(of: quickActionRouter.requestID) {
+            resetToScanner()
+        }
+        .onOpenURL { url in
+            guard url.scheme == "vcheck",
+                  url.host == "scan" || url.path == "/scan" else {
+                return
+            }
+            resetToScanner()
+        }
+    }
+
+    private var navigationContent: some View {
         NavigationStack(path: $path) {
             ScannerView(
                 isScannerRunning: $scannerRunning,
@@ -17,6 +59,7 @@ struct RootView: View {
                     path.append(Route.result(barcode))
                 }
             )
+            .accessibilityIdentifier("main-scanner-screen")
             .navigationTitle(L("app_name"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbarItems }
@@ -31,13 +74,27 @@ struct RootView: View {
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .history:
-                    HistoryView { barcode in
-                        path.append(Route.result(barcode))
-                    }
+                    HistoryView(
+                        onSelectBarcode: { barcode in
+                            path.append(Route.result(barcode))
+                        },
+                        onScanProduct: {
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                        }
+                    )
                 case .favorites:
-                    FavoritesScreen { barcode in
-                        path.append(Route.result(barcode))
-                    }
+                    FavoritesScreen(
+                        onSelectBarcode: { barcode in
+                            path.append(Route.result(barcode))
+                        },
+                        onScanProduct: {
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                        }
+                    )
                 case .search:
                     SearchScreen { barcode in
                         path.append(Route.result(barcode))
@@ -76,15 +133,6 @@ struct RootView: View {
                 }
             }
         }
-        .onAppear {
-            if !onboardingSeen {
-                showingOnboarding = true
-                scannerRunning = false
-            }
-        }
-        .onChange(of: path.count) { _, newValue in
-            scannerRunning = newValue == 0
-        }
     }
 
     @ToolbarContentBuilder
@@ -93,6 +141,7 @@ struct RootView: View {
             Button(L("history_action")) {
                 path.append(Route.history)
             }
+            .accessibilityIdentifier("history-button")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
@@ -101,6 +150,7 @@ struct RootView: View {
                 Image(systemName: "gearshape")
             }
             .accessibilityLabel(L("settings_action"))
+            .accessibilityIdentifier("settings-button")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
@@ -109,6 +159,7 @@ struct RootView: View {
                 Image(systemName: "star")
             }
             .accessibilityLabel(L("favorites_action"))
+            .accessibilityIdentifier("favorites-button")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
@@ -117,6 +168,7 @@ struct RootView: View {
                 Image(systemName: "magnifyingglass")
             }
             .accessibilityLabel(L("search_action"))
+            .accessibilityIdentifier("search-button")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
@@ -125,6 +177,7 @@ struct RootView: View {
                 Image(systemName: "person.circle")
             }
             .accessibilityLabel(L("profile_action"))
+            .accessibilityIdentifier("profile-button")
         }
     }
 }

@@ -19,7 +19,7 @@ struct ProfileScreen: View {
                 strictModeCard
                 watchlistCard
                 Text(L("allergen_profile_catalog_title"))
-                    .font(.headline.bold())
+                    .appFont(.headline, weight: .bold)
                     .padding(.horizontal, 4)
 
                 ForEach(AllergenCatalog.options) { option in
@@ -42,12 +42,12 @@ struct ProfileScreen: View {
         profileCard {
             VStack(alignment: .leading, spacing: 12) {
                 Text(L("watchlist_title"))
-                    .font(.headline.bold())
+                    .appFont(.headline, weight: .bold)
                 Text(L("watchlist_message"))
                     .foregroundStyle(.secondary)
 
                 Text(L("watchlist_additives_title"))
-                    .font(.subheadline.bold())
+                    .appFont(.subheadline, weight: .bold)
                 addRow(
                     placeholder: L("watchlist_additive_hint"),
                     input: $additiveInput,
@@ -59,7 +59,7 @@ struct ProfileScreen: View {
                 )
 
                 Text(L("watchlist_keywords_title"))
-                    .font(.subheadline.bold())
+                    .appFont(.subheadline, weight: .bold)
                 addRow(
                     placeholder: L("watchlist_keyword_hint"),
                     input: $keywordInput,
@@ -90,7 +90,7 @@ struct ProfileScreen: View {
 
     private func watchChipList(values: [String], remove: @escaping (String) -> Void) -> some View {
         if values.isEmpty {
-            return AnyView(Text(L("watchlist_empty")).font(.caption).foregroundStyle(.secondary))
+            return AnyView(Text(L("watchlist_empty")).appFont(.caption).foregroundStyle(.secondary))
         }
         return AnyView(
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 8)], spacing: 8) {
@@ -105,7 +105,7 @@ struct ProfileScreen: View {
                         .buttonStyle(.plain)
                         .accessibilityLabel(L("watchlist_remove_action"))
                     }
-                    .font(.subheadline.weight(.semibold))
+                    .appFont(.subheadline, weight: .semibold)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 7)
                     .background(Color("AccentColor").opacity(0.14))
@@ -119,7 +119,7 @@ struct ProfileScreen: View {
         profileCard {
             VStack(alignment: .leading, spacing: 10) {
                 Text(L("allergen_profile_title"))
-                    .font(.title3.bold())
+                    .appFont(.title3, weight: .bold)
                 Text(L("allergen_profile_message"))
                     .foregroundStyle(.secondary)
             }
@@ -130,7 +130,7 @@ struct ProfileScreen: View {
         profileCard {
             VStack(alignment: .leading, spacing: 10) {
                 Text(L("strict_mode_title"))
-                    .font(.headline.bold())
+                    .appFont(.headline, weight: .bold)
                 Text(L("strict_mode_description"))
                     .foregroundStyle(.secondary)
 

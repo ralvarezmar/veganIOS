@@ -7,6 +7,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 ## [Sin publicar]
 
 ### Añadido
+- Idiomas italiano y portugués, traducción de ingredientes en el dispositivo,
+  explicaciones de puntuaciones, aviso sobre aceite de palma y widget de
+  escaneo en la pantalla de inicio.
 - CI de compilación para macOS en GitHub Actions.
 - Email de contacto, políticas de privacidad en español e inglés en GitHub Pages y enlace desde la app.
 - Renombrada la app a VCheck, con el identificador actualizado a `com.ralvarezmar.vcheck`.

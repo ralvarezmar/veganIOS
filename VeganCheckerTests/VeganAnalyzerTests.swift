@@ -96,6 +96,41 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertNil(cleanFoodFactsLabel(""))
         XCTAssertNil(cleanFoodFactsLabel("   "))
     }
+
+    func testUnknownIngredientTextUsesHeuristic() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            ingredientsText: "Vollmilchpulver, Zucker"
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
+        XCTAssertEqual(analysis.nonVeganIngredients, ["Vollmilchpulver"])
+        XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
+        XCTAssertTrue(analysis.heuristic)
+    }
+
+    func testUnknownIngredientTextRemainsUnknownWithoutDetection() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            ingredientsText: "Zutaten: Weizenmehl, Zucker, Salz"
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .unknown))
+        XCTAssertFalse(analysis.heuristic)
+    }
+
+    func testDecisiveVeganTagIsNeverOverriddenByHeuristic() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: ["en:vegan"],
+            ingredients: nil,
+            ingredientsText: "Vollmilchpulver, Zucker"
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .vegan))
+        XCTAssertFalse(analysis.heuristic)
+    }
 }
 
 private func isStatus(_ lhs: VeganStatus, _ rhs: VeganStatus) -> Bool {
