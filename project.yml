@@ -23,8 +23,8 @@ targets:
     deploymentTarget: 17.0
     sources:
       - path: VeganChecker
-    resources:
       - path: Assets.xcassets
+    resources:
       - path: VeganChecker/es.lproj
       - path: VeganChecker/en.lproj
       - path: VeganChecker/de.lproj
