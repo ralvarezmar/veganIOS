@@ -8,7 +8,9 @@ on:
 
 jobs:
   release:
-    runs-on: macos-15
+    # macos-26 ships Xcode 26 (iOS 26 SDK), required by App Store Connect for
+    # uploads. Older images (Xcode 16 / iOS 18 SDK) are rejected on validation.
+    runs-on: macos-26
     env:
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
@@ -17,6 +19,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Select newest Xcode and show SDK
+        run: |
+          latest="$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)"
+          if [ -n "$latest" ]; then
+            sudo xcode-select -s "$latest/Contents/Developer"
+          fi
+          xcodebuild -version
+          xcodebuild -showsdks | grep -i "iphoneos" || true
 
       - name: Check App Store Connect credentials
         id: credentials
