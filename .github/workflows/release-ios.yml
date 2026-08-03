@@ -61,12 +61,17 @@ jobs:
           # *development* profile, which fails on teams with no registered
           # devices ("Your team has no devices…"). Distribution profiles used
           # for export do not require devices.
+          MARKETING_VERSION="${MARKETING_VERSION:-1.0.0}"
+          CURRENT_PROJECT_VERSION="${GITHUB_RUN_NUMBER}"
+          echo "Building version $MARKETING_VERSION ($CURRENT_PROJECT_VERSION)"
           xcodebuild archive \
             -project VeganChecker.xcodeproj \
             -scheme VeganChecker \
             -configuration Release \
             -destination "generic/platform=iOS" \
             -archivePath "$RUNNER_TEMP/VeganLens.xcarchive" \
+            MARKETING_VERSION="$MARKETING_VERSION" \
+            CURRENT_PROJECT_VERSION="$CURRENT_PROJECT_VERSION" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
