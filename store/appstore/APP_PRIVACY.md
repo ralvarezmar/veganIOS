@@ -66,6 +66,9 @@ database. This flow is anonymous:
 - Product photos are optional and independent from the in-memory OCR image.
 - The OCR image is not uploaded unless the user separately selects an image
   as an intentional product-photo contribution.
+- To let Open Food Facts accept anonymous contributions, the app also sends a
+  random app identifier (`app_uuid`) that is not linked to a personal account
+  and is not used for tracking.
 
 This user-directed product submission contains open product content, not
 personal data linked to the user. Keep the App Privacy personal-data answers

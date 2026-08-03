@@ -67,6 +67,25 @@ func contributionURL(for source: ProductSource) -> URL {
     source.baseURL.appendingPathComponent("cgi/product_jqm2.pl")
 }
 
+func contributionAppUUID() -> String {
+    let key = "contribution_app_uuid"
+    if let existing = UserDefaults.standard.string(forKey: key) {
+        return existing
+    }
+    let generated = UUID().uuidString
+    UserDefaults.standard.set(generated, forKey: key)
+    return generated
+}
+
+func contributionAppFields() -> [String: String] {
+    let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+    return [
+        "app_name": "VeganLens",
+        "app_version": version,
+        "app_uuid": contributionAppUUID(),
+    ]
+}
+
 enum ContributionResult: Equatable {
     case success
     case offline
@@ -114,6 +133,11 @@ func productImageUploadURL(for source: ProductSource) -> URL {
     source.baseURL.appendingPathComponent("cgi/product_image_upload.pl")
 }
 
+private func contributionUserAgent() -> String {
+    let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+    return "VeganLens/\(version) (https://github.com/ralvarezmar/veganIOS)"
+}
+
 struct ProductImageUploadSuccess: Equatable {
     let imageID: String?
     let imageField: String
@@ -154,8 +178,10 @@ final class ContributionService {
         var request = URLRequest(url: contributionURL(for: source))
         request.httpMethod = "POST"
         request.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        request.setValue("VeganLens-iOS/1.0", forHTTPHeaderField: "User-Agent")
-        request.httpBody = formURLEncoded(form.fields(code: barcode))
+        request.setValue(contributionUserAgent(), forHTTPHeaderField: "User-Agent")
+        request.httpBody = formURLEncoded(
+            form.fields(code: barcode).merging(contributionAppFields()) { current, _ in current }
+        )
 
         do {
             let (data, response) = try await session.data(for: request)
@@ -185,9 +211,10 @@ final class ContributionService {
         var request = URLRequest(url: productImageUploadURL(for: source))
         request.httpMethod = "POST"
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        request.setValue("VeganLens-iOS/1.0", forHTTPHeaderField: "User-Agent")
+        request.setValue(contributionUserAgent(), forHTTPHeaderField: "User-Agent")
         request.httpBody = multipartBody(
-            fields: anonymousImageFields(code: barcode, imageField: field),
+            fields: anonymousImageFields(code: barcode, imageField: field)
+                .merging(contributionAppFields()) { current, _ in current },
             fileName: "product-\(field).jpg",
             partName: "imgupload_\(field)",
             data: jpegData,
