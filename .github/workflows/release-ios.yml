@@ -73,6 +73,19 @@ jobs:
             $TEAM_ARG \
             | tee "$RUNNER_TEMP/xcodebuild-archive.log"
 
+      - name: Surface archive failure
+        if: failure()
+        run: |
+          log="$RUNNER_TEMP/xcodebuild-archive.log"
+          if [ -f "$log" ]; then
+            grep -iE "error:|provisioning|signing|cloud|development team|no profiles|certificate|no account|agreement|permission|entitlement|not been created|does not have|unable to" "$log" | tail -n 60 | while IFS= read -r line; do
+              echo "::error::$line"
+            done
+            tail -n 30 "$log" | while IFS= read -r line; do echo "::error::TAIL: $line"; done
+          else
+            echo "::error::no archive log found"
+          fi
+
       - name: Create export options
         if: steps.credentials.outputs.configured == 'true'
         run: |
