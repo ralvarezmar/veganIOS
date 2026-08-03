@@ -168,6 +168,14 @@ jobs:
             echo "::error::APPEX $(basename "$ax") $(codesign -dvvv "$ax" 2>&1 | grep -iE 'Authority|TeamIdentifier|flags' | tr '\n' ' ')"
           done
           echo "::error::EXPORTLOG $(grep -iE "widget|appex|profile|signing|distribution|apple distribution" "$RUNNER_TEMP/xcodebuild-export.log" | tail -n 25 | tr '\n' '|')"
+          echo "::error::PLIST_ICONS $(plutil -p "$app/Info.plist" | grep -iE 'icon' | tr '\n' '|')"
+          echo "::error::BUNDLE_FILES $(ls -1 "$app" | grep -iE 'appicon|\.car|\.png|assets' | tr '\n' '|')"
+          if [ -f "$app/Assets.car" ]; then
+            echo "::error::CAR_ICONS $(xcrun assetutil --info "$app/Assets.car" 2>/dev/null | grep -iE 'AppIcon|"Name"|RenditionName|SizeOnDisk' | head -n 30 | tr '\n' '|')"
+          else
+            echo "::error::CAR_ICONS no Assets.car in app bundle"
+          fi
+          echo "::error::LOOSE_ICONS $(find "$app" -maxdepth 1 -iname '*icon*' | tr '\n' '|')"
 
       - name: Upload to App Store Connect
         if: steps.credentials.outputs.configured == 'true'

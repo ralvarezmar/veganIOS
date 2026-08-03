@@ -52,13 +52,6 @@ targets:
     info:
       path: VeganChecker/Info.plist
       properties:
-        CFBundleIconName: AppIcon
-        CFBundleIcons:
-          CFBundlePrimaryIcon:
-            CFBundleIconName: AppIcon
-        CFBundleIcons~ipad:
-          CFBundlePrimaryIcon:
-            CFBundleIconName: AppIcon
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         UISupportedInterfaceOrientations~ipad:
