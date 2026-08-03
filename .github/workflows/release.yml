@@ -1,0 +1,120 @@
+name: iOS Version Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ios-version-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create and push semantic tag
+        id: tag_version
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: patch
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ -n "${{ steps.tag_version.outputs.new_version }}" ]; then
+            echo "name=${{ steps.tag_version.outputs.new_version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=0.0.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "code=${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      - name: Install XcodeGen
+        run: |
+          export HOMEBREW_NO_AUTO_UPDATE=1
+          export HOMEBREW_NO_INSTALL_CLEANUP=1
+          brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build unsigned iOS archive
+        run: |
+          set -o pipefail
+          mkdir -p build
+          xcodebuild archive \
+            -project VeganChecker.xcodeproj \
+            -scheme VeganChecker \
+            -configuration Release \
+            -destination "generic/platform=iOS" \
+            -archivePath "build/VeganLens.xcarchive" \
+            MARKETING_VERSION="${{ steps.version.outputs.name }}" \
+            CURRENT_PROJECT_VERSION="${{ steps.version.outputs.code }}" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            2>&1 | tee build/xcodebuild-archive.log
+
+      - name: Package unsigned IPA
+        run: |
+          set -e
+          APP_PATH="$(find build/VeganLens.xcarchive/Products/Applications -maxdepth 1 -name '*.app' | head -n1)"
+          if [ -z "$APP_PATH" ]; then
+            echo "No .app produced by archive" >&2
+            exit 1
+          fi
+          rm -rf build/Payload build/ipa
+          mkdir -p build/Payload build/ipa
+          cp -R "$APP_PATH" build/Payload/
+          (cd build && zip -qry "ipa/VeganLens-${{ steps.version.outputs.name }}-unsigned.ipa" Payload)
+          ls -lh build/ipa
+
+      - name: Upload unsigned IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-unsigned-ipa
+          path: build/ipa/*.ipa
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          name: ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+          files: |
+            build/ipa/*.ipa
+
+      - name: Commit release build and version back to repo
+        if: ${{ github.ref == 'refs/heads/main' }}
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.name }}
+          NEW_CODE: ${{ steps.version.outputs.code }}
+          NEW_TAG: ${{ steps.tag_version.outputs.new_tag }}
+        run: |
+          set -e
+          ipa="$(ls -1 build/ipa/*.ipa | head -n1)"
+          mkdir -p releases
+          cp "$ipa" releases/VeganLens-unsigned.ipa
+          printf 'MARKETING_VERSION=%s\nCURRENT_PROJECT_VERSION=%s\nTAG=%s\n' "$NEW_VERSION" "$NEW_CODE" "$NEW_TAG" > VERSION
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add releases/VeganLens-unsigned.ipa VERSION
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "chore(release): ${NEW_TAG} unsigned build and version [skip ci]"
+            git push origin HEAD:main
+          fi

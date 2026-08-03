@@ -76,3 +76,14 @@ location.
 
 The workflow uses the App Store Connect API key only on the ephemeral GitHub
 Actions runner and removes the runner after the job.
+
+## Versioned unsigned builds
+
+The `release.yml` workflow produces an unsigned, versioned `.ipa` on every push
+to `main`, analogous to the Android release workflow. It creates a GitHub
+Release, stores `releases/VeganLens-unsigned.ipa` in the repository, and writes
+the resolved version and build number to `VERSION`.
+
+The signed App Store upload remains handled by `release-ios.yml` and requires
+the `ASC_*` secrets. The unsigned IPA is a versioned build artifact and is not
+installable on a device without signing.

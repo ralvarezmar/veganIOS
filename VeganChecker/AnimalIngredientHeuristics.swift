@@ -41,26 +41,35 @@ private let eggTokens: Set<String> = [
     "trockenei", "huhnerei", "oeuf", "oeufs"
 ]
 
+private let traceWarningMarkers = [
+    "puede contener", "pode conter", "may contain", "peut contenir",
+    "puo contenere", "kann spuren", "spuren von", "trazas de", "traza de",
+    "tracce di", "traces of", "traces de", "vestigios de", "tracos de"
+]
+
 func detectAnimalIngredients(_ text: String) -> [String] {
     guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return [] }
 
     var results: [String] = []
     var seen = Set<String>()
-    text.components(separatedBy: CharacterSet(charactersIn: ",;()/\n")).forEach { segment in
-        let norm = normalizeIngredientSegment(segment)
-        let hasUnambiguousMatch = unambiguousAnimalStems.contains { norm.contains($0) }
-        let hasAmbiguousMatch = ambiguousAnimalStems.contains { norm.contains($0) } &&
-            !plantQualifiers.contains { norm.contains($0) }
-        let tokens = norm.components(separatedBy: CharacterSet.letters.inverted)
-            .filter { !$0.isEmpty }
-        let hasEggToken = tokens.contains { eggTokens.contains($0) }
+    for sentence in text.components(separatedBy: CharacterSet(charactersIn: ".!\n")) {
+        for segment in sentence.components(separatedBy: CharacterSet(charactersIn: ",;()/")) {
+            let norm = normalizeIngredientSegment(segment)
+            if traceWarningMarkers.contains(where: { norm.contains($0) }) { break }
+            let hasUnambiguousMatch = unambiguousAnimalStems.contains { norm.contains($0) }
+            let hasAmbiguousMatch = ambiguousAnimalStems.contains { norm.contains($0) } &&
+                !plantQualifiers.contains { norm.contains($0) }
+            let tokens = norm.components(separatedBy: CharacterSet.letters.inverted)
+                .filter { !$0.isEmpty }
+            let hasEggToken = tokens.contains { eggTokens.contains($0) }
 
-        guard hasUnambiguousMatch || hasAmbiguousMatch || hasEggToken,
-              let cleaned = cleanFoodFactsLabel(segment),
-              seen.insert(cleaned).inserted else {
-            return
+            guard hasUnambiguousMatch || hasAmbiguousMatch || hasEggToken,
+                  let cleaned = cleanFoodFactsLabel(segment),
+                  seen.insert(cleaned).inserted else {
+                continue
+            }
+            results.append(cleaned)
         }
-        results.append(cleaned)
     }
     return results
 }
