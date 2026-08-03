@@ -142,9 +142,24 @@ jobs:
       - name: Upload to App Store Connect
         if: steps.credentials.outputs.configured == 'true'
         run: |
+          set -o pipefail
+          ipa="$(find "$RUNNER_TEMP/VeganLens-export" -maxdepth 1 -name '*.ipa' | head -n1)"
+          echo "Uploading IPA: $ipa"
           xcrun altool \
             --upload-app \
-            --file "$RUNNER_TEMP/VeganLens-export/VCheck.ipa" \
+            --file "$ipa" \
             --type ios \
             --apiKey "$ASC_KEY_ID" \
-            --apiIssuer "$ASC_ISSUER_ID"
+            --apiIssuer "$ASC_ISSUER_ID" \
+            2>&1 | tee "$RUNNER_TEMP/altool-upload.log"
+
+      - name: Surface upload failure
+        if: failure()
+        run: |
+          log="$RUNNER_TEMP/altool-upload.log"
+          if [ -f "$log" ]; then
+            tail -n 60 "$log" | while IFS= read -r line; do echo "::error::$line"; done
+          else
+            echo "::error::no upload log found (ipa may be missing)"
+            ls -la "$RUNNER_TEMP/VeganLens-export" 2>&1 | while IFS= read -r line; do echo "::error::$line"; done
+          fi
