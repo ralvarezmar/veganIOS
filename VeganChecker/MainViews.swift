@@ -2144,8 +2144,10 @@ private struct PalmOilCard: View {
                 }
                 Text(palmOilStatusText(status))
                     .appFont(.body, weight: .semibold)
+                    .foregroundStyle(colors.text)
                 Text(L("palm_oil_note"))
                     .appFont(.body)
+                    .foregroundStyle(colors.text.opacity(0.85))
             }
             .padding(18)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -2158,6 +2160,7 @@ private struct PalmOilCard: View {
 private struct PalmOilColors {
     let background: Color
     let accent: Color
+    let text: Color
 }
 
 private func palmOilColors(_ status: PalmOilStatus) -> PalmOilColors {
@@ -2165,17 +2168,20 @@ private func palmOilColors(_ status: PalmOilStatus) -> PalmOilColors {
     case .present:
         return PalmOilColors(
             background: Color(red: 1.0, green: 0.95, blue: 0.88),
-            accent: Color(red: 0.90, green: 0.32, blue: 0.00)
+            accent: Color(red: 0.90, green: 0.32, blue: 0.00),
+            text: Color(red: 0.11, green: 0.11, blue: 0.12)
         )
     case .maybe:
         return PalmOilColors(
             background: Color(red: 1.0, green: 0.97, blue: 0.88),
-            accent: Color(red: 0.55, green: 0.43, blue: 0.00)
+            accent: Color(red: 0.55, green: 0.43, blue: 0.00),
+            text: Color(red: 0.11, green: 0.11, blue: 0.12)
         )
     case .free:
         return PalmOilColors(
             background: Color(red: 0.91, green: 0.97, blue: 0.92),
-            accent: Color(red: 0.18, green: 0.49, blue: 0.20)
+            accent: Color(red: 0.18, green: 0.49, blue: 0.20),
+            text: Color(red: 0.11, green: 0.11, blue: 0.12)
         )
     }
 }

@@ -19,4 +19,20 @@ final class AnimalIngredientHeuristicsTests: XCTestCase {
             ["Milk", "Gelatin"]
         )
     }
+
+    func testIgnoresTraceWarningsButKeepsEarlierAnimalIngredients() {
+        XCTAssertTrue(
+            detectAnimalIngredients("Harina de trigo, azúcar. Puede contener trazas de leche y huevo.").isEmpty
+        )
+        XCTAssertTrue(
+            detectAnimalIngredients("Wheat flour, sugar. May contain traces of milk.").isEmpty
+        )
+        XCTAssertTrue(
+            detectAnimalIngredients("Weizenmehl, Zucker. Kann Spuren von Milch enthalten.").isEmpty
+        )
+        XCTAssertEqual(
+            detectAnimalIngredients("Leche entera, azúcar. Puede contener trazas de soja."),
+            ["Leche Entera"]
+        )
+    }
 }

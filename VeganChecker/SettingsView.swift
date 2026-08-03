@@ -14,28 +14,6 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section {
-                Toggle(L("accessibility_colorblind_title"), isOn: $colorblindSafePalette)
-                    .accessibilityIdentifier("accessibility-colorblind-toggle")
-
-                Toggle(L("accessibility_font_title"), isOn: $highLegibilityFont)
-                    .accessibilityIdentifier("accessibility-font-toggle")
-
-                Picker(L("accessibility_text_size_title"), selection: $textSize) {
-                    Text(L("accessibility_text_size_normal"))
-                        .tag(AccessibilityTextSize.normal.rawValue)
-                    Text(L("accessibility_text_size_large"))
-                        .tag(AccessibilityTextSize.large.rawValue)
-                    Text(L("accessibility_text_size_extra_large"))
-                        .tag(AccessibilityTextSize.extraLarge.rawValue)
-                }
-                .accessibilityIdentifier("accessibility-text-size-picker")
-            } header: {
-                Text(L("accessibility_title"))
-            } footer: {
-                Text(L("accessibility_description"))
-            }
-
-            Section {
                 Button {
                     openURL(privacyURL)
                 } label: {
@@ -63,6 +41,28 @@ struct SettingsView: View {
                 }
             } header: {
                 Text(L("cache_section_title"))
+            }
+
+            Section {
+                Toggle(L("accessibility_colorblind_title"), isOn: $colorblindSafePalette)
+                    .accessibilityIdentifier("accessibility-colorblind-toggle")
+
+                Toggle(L("accessibility_font_title"), isOn: $highLegibilityFont)
+                    .accessibilityIdentifier("accessibility-font-toggle")
+
+                Picker(L("accessibility_text_size_title"), selection: $textSize) {
+                    Text(L("accessibility_text_size_normal"))
+                        .tag(AccessibilityTextSize.normal.rawValue)
+                    Text(L("accessibility_text_size_large"))
+                        .tag(AccessibilityTextSize.large.rawValue)
+                    Text(L("accessibility_text_size_extra_large"))
+                        .tag(AccessibilityTextSize.extraLarge.rawValue)
+                }
+                .accessibilityIdentifier("accessibility-text-size-picker")
+            } header: {
+                Text(L("accessibility_title"))
+            } footer: {
+                Text(L("accessibility_description"))
             }
         }
         .navigationTitle(L("settings_title"))
