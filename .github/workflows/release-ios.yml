@@ -155,6 +155,20 @@ jobs:
             echo "::error::no export log found"
           fi
 
+      - name: Inspect export signing
+        if: steps.credentials.outputs.configured == 'true'
+        run: |
+          ipa="$(find "$RUNNER_TEMP/VeganLens-export" -maxdepth 1 -name '*.ipa' | head -n1)"
+          work="$RUNNER_TEMP/signcheck"
+          rm -rf "$work"; mkdir -p "$work"
+          unzip -q "$ipa" -d "$work"
+          app="$(find "$work/Payload" -maxdepth 1 -name '*.app' | head -n1)"
+          echo "::error::APP $(codesign -dvvv "$app" 2>&1 | grep -iE 'Authority|TeamIdentifier|flags' | tr '\n' ' ')"
+          for ax in "$app"/PlugIns/*.appex; do
+            echo "::error::APPEX $(basename "$ax") $(codesign -dvvv "$ax" 2>&1 | grep -iE 'Authority|TeamIdentifier|flags' | tr '\n' ' ')"
+          done
+          echo "::error::EXPORTLOG $(grep -iE "widget|appex|profile|signing|distribution|apple distribution" "$RUNNER_TEMP/xcodebuild-export.log" | tail -n 25 | tr '\n' '|')"
+
       - name: Upload to App Store Connect
         if: steps.credentials.outputs.configured == 'true'
         run: |
