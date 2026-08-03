@@ -67,11 +67,13 @@ jobs:
         if: steps.credentials.outputs.configured == 'true'
         run: |
           set -o pipefail
-          # Archive without code signing: App Store (distribution) signing is
-          # applied during export. Signing the archive would try to create a
-          # *development* profile, which fails on teams with no registered
-          # devices ("Your team has no devices…"). Distribution profiles used
-          # for export do not require devices.
+          # Sign the archive directly for App Store distribution. Requesting the
+          # "Apple Distribution" identity with automatic signing provisions a
+          # *distribution* (App Store) profile via the API key, which — unlike a
+          # development profile — does NOT require registered devices. This
+          # produces a consistent distribution signature on the app and its
+          # embedded widget, avoiding the broken-seal errors seen when exporting
+          # an unsigned archive.
           MARKETING_VERSION="${MARKETING_VERSION:-1.0.0}"
           CURRENT_PROJECT_VERSION="${GITHUB_RUN_NUMBER}"
           echo "Building version $MARKETING_VERSION ($CURRENT_PROJECT_VERSION)"
@@ -81,11 +83,15 @@ jobs:
             -configuration Release \
             -destination "generic/platform=iOS" \
             -archivePath "$RUNNER_TEMP/VeganLens.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
             MARKETING_VERSION="$MARKETING_VERSION" \
             CURRENT_PROJECT_VERSION="$CURRENT_PROJECT_VERSION" \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
+            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            DEVELOPMENT_TEAM="$ASC_TEAM_ID" \
             | tee "$RUNNER_TEMP/xcodebuild-archive.log"
 
       - name: Surface archive failure
