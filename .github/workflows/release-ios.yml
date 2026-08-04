@@ -18,6 +18,7 @@ jobs:
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       ASC_API_KEY_P8: ${{ secrets.ASC_API_KEY_P8 }}
       ASC_TEAM_ID: ${{ secrets.ASC_TEAM_ID }}
+      BETA_GROUP_NAME: pruebas
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -269,3 +270,195 @@ jobs:
             echo "::error::no upload log found (ipa may be missing)"
             ls -la "$RUNNER_TEMP/VeganLens-export" 2>&1 | while IFS= read -r line; do echo "::error::$line"; done
           fi
+
+      - name: Assign build to TestFlight group
+        if: steps.credentials.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+          # Install deps; tolerate PEP 668 externally-managed Python on the runner.
+          pip3 install --quiet 'pyjwt[crypto]' requests \
+            || pip3 install --quiet --user 'pyjwt[crypto]' requests \
+            || pip3 install --quiet --break-system-packages 'pyjwt[crypto]' requests
+          python3 - <<'PY'
+          import os
+          import sys
+          import time
+
+          import jwt
+          import requests
+
+          API_BASE = "https://api.appstoreconnect.apple.com/v1"
+          BUNDLE_ID = "com.ralvarezmar.vcheck"
+          REQUEST_TIMEOUT = 30
+
+          key_id = os.environ["ASC_KEY_ID"]
+          issuer_id = os.environ["ASC_ISSUER_ID"]
+          key_path = os.environ["ASC_KEY_PATH"]
+          build_number = os.environ["GITHUB_RUN_NUMBER"]
+          group_name = os.environ["BETA_GROUP_NAME"]
+
+          def token():
+              now = int(time.time())
+              with open(key_path, "rb") as handle:
+                  private_key = handle.read()
+              return jwt.encode(
+                  {
+                      "iss": issuer_id,
+                      "iat": now,
+                      "exp": now + 15 * 60,
+                      "aud": "appstoreconnect-v1",
+                  },
+                  private_key,
+                  algorithm="ES256",
+                  headers={"kid": key_id, "typ": "JWT"},
+              )
+
+          def request(method, url, **kwargs):
+              headers = dict(kwargs.pop("headers", {}))
+              headers["Authorization"] = f"Bearer {token()}"
+              response = requests.request(
+                  method,
+                  url,
+                  headers=headers,
+                  timeout=REQUEST_TIMEOUT,
+                  **kwargs,
+              )
+              if response.status_code >= 400:
+                  print(
+                      f"::error::App Store Connect API {method} {url} "
+                      f"returned HTTP {response.status_code}: {response.text}",
+                      flush=True,
+                  )
+                  sys.exit(1)
+              return response
+
+          app_response = request(
+              "GET",
+              f"{API_BASE}/apps",
+              params={"filter[bundleId]": BUNDLE_ID},
+          )
+          apps = app_response.json().get("data", [])
+          if not apps:
+              print(
+                  f"::error::No App Store Connect app found for bundle id {BUNDLE_ID}",
+                  flush=True,
+              )
+              sys.exit(1)
+          app_id = apps[0]["id"]
+          print(f"Found App Store Connect app {app_id} for {BUNDLE_ID}", flush=True)
+
+          deadline = time.monotonic() + 30 * 60
+          build_id = None
+          processing_state = "NOT_FOUND"
+          while time.monotonic() < deadline:
+              build_response = request(
+                  "GET",
+                  f"{API_BASE}/builds",
+                  params={
+                      "filter[app]": app_id,
+                      "filter[version]": build_number,
+                      "limit": "1",
+                  },
+              )
+              builds = build_response.json().get("data", [])
+              if builds:
+                  build = builds[0]
+                  build_id = build["id"]
+                  processing_state = build.get("attributes", {}).get(
+                      "processingState", "UNKNOWN"
+                  )
+                  print(
+                      f"Build {build_number} ({build_id}) processing state: "
+                      f"{processing_state}",
+                      flush=True,
+                  )
+                  if processing_state == "VALID":
+                      break
+              else:
+                  build_id = None
+                  processing_state = "NOT_FOUND"
+                  print(
+                      f"Build {build_number} is not visible yet; retrying...",
+                      flush=True,
+                  )
+              time.sleep(30)
+
+          if not build_id or processing_state != "VALID":
+              print(
+                  "::warning::Build did not reach VALID within 30 minutes. "
+                  "Assign it manually in TestFlight if needed.",
+                  flush=True,
+              )
+              sys.exit(0)
+
+          groups_response = request(
+              "GET",
+              f"{API_BASE}/betaGroups",
+              params={"filter[app]": app_id},
+          )
+          groups = groups_response.json().get("data", [])
+          matching_group = next(
+              (
+                  group
+                  for group in groups
+                  if group.get("attributes", {}).get("name") == group_name
+              ),
+              None,
+          )
+          if matching_group is None:
+              available = [
+                  group.get("attributes", {}).get("name", "<unnamed>")
+                  for group in groups
+              ]
+              print(
+                  f"::error::TestFlight beta group '{group_name}' was not found. "
+                  f"Existing groups: {', '.join(available) or '<none>'}",
+                  flush=True,
+              )
+              sys.exit(1)
+
+          group_id = matching_group["id"]
+          relationship_url = f"{API_BASE}/betaGroups/{group_id}/relationships/builds"
+          relationship_body = {
+              "data": [{"type": "builds", "id": build_id}],
+          }
+          response = requests.post(
+              relationship_url,
+              headers={
+                  "Authorization": f"Bearer {token()}",
+                  "Content-Type": "application/json",
+              },
+              json=relationship_body,
+              timeout=REQUEST_TIMEOUT,
+          )
+          if response.status_code == 204:
+              print(
+                  f"Build {build_number} assigned to TestFlight group "
+                  f"'{group_name}'.",
+                  flush=True,
+              )
+              sys.exit(0)
+
+          body = response.text
+          normalized_body = body.lower()
+          if response.status_code == 409 or (
+              response.status_code == 400
+              and any(
+                  marker in normalized_body
+                  for marker in ("already", "assigned", "in the group")
+              )
+          ):
+              print(
+                  f"Build {build_number} is already assigned to TestFlight "
+                  f"group '{group_name}'.",
+                  flush=True,
+              )
+              sys.exit(0)
+
+          print(
+              f"::error::App Store Connect API POST {relationship_url} "
+              f"returned HTTP {response.status_code}: {body}",
+              flush=True,
+          )
+          sys.exit(1)
+          PY
