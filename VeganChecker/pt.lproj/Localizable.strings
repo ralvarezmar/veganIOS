@@ -162,6 +162,8 @@
 "vegan_verdict_maybe" = "Origem duvidosa ⚠️ — contém ingredientes de proveniência incerta";
 "vegan_headline_maybe" = "DUVIDOSO · ORIGEM INCERTA";
 "vegan_verdict_maybe_subtitle" = "O Open Food Facts assinala ingredientes de origem duvidosa.";
+"vegan_headline_maybe_heuristic" = "POSSIVELMENTE ADEQUADO · SEGUNDO OS INGREDIENTES";
+"vegan_verdict_maybe_heuristic_subtitle" = "Não detetámos ingredientes de origem animal na lista, mas o Open Food Facts não o confirma. Verifique o rótulo.";
 "vegan_verdict_unknown" = "Dados insuficientes 🔍";
 "vegan_headline_unknown" = "DADOS INSUFICIENTES";
 "vegan_verdict_unknown_subtitle" = "Não foi possível determinar a avaliação automaticamente. Consulte a lista de ingredientes abaixo.";

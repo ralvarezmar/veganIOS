@@ -34,16 +34,6 @@ struct SettingsView: View {
             }
 
             Section {
-                Button(role: .destructive) {
-                    showingClearCacheConfirmation = true
-                } label: {
-                    Label(L("clear_cache"), systemImage: "trash")
-                }
-            } header: {
-                Text(L("cache_section_title"))
-            }
-
-            Section {
                 Toggle(L("accessibility_colorblind_title"), isOn: $colorblindSafePalette)
                     .accessibilityIdentifier("accessibility-colorblind-toggle")
 
@@ -63,6 +53,16 @@ struct SettingsView: View {
                 Text(L("accessibility_title"))
             } footer: {
                 Text(L("accessibility_description"))
+            }
+
+            Section {
+                Button(role: .destructive) {
+                    showingClearCacheConfirmation = true
+                } label: {
+                    Label(L("clear_cache"), systemImage: "trash")
+                }
+            } header: {
+                Text(L("cache_section_title"))
             }
         }
         .navigationTitle(L("settings_title"))

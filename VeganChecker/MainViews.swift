@@ -1324,8 +1324,12 @@ private struct VeganBannerView: View {
             )
         case .maybe:
             return VeganBannerSpec(
-                headline: L("vegan_headline_maybe"),
-                subtitle: L("vegan_verdict_maybe_subtitle"),
+                headline: analysis.heuristic
+                    ? L("vegan_headline_maybe_heuristic")
+                    : L("vegan_headline_maybe"),
+                subtitle: analysis.heuristic
+                    ? L("vegan_verdict_maybe_heuristic_subtitle")
+                    : L("vegan_verdict_maybe_subtitle"),
                 background: veganVerdictColor(for: .maybe, colorblindSafe: colorblindSafePalette),
                 foreground: .white,
                 symbol: "exclamationmark.triangle.fill"
