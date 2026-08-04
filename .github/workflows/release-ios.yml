@@ -281,8 +281,11 @@ jobs:
             || pip3 install --quiet --break-system-packages 'pyjwt[crypto]' requests
           python3 - <<'PY'
           import os
+          import re
+          import subprocess
           import sys
           import time
+          from pathlib import Path
 
           import jwt
           import requests
@@ -313,7 +316,7 @@ jobs:
                   headers={"kid": key_id, "typ": "JWT"},
               )
 
-          def request(method, url, **kwargs):
+          def request(method, url, fatal=True, **kwargs):
               headers = dict(kwargs.pop("headers", {}))
               headers["Authorization"] = f"Bearer {token()}"
               response = requests.request(
@@ -323,7 +326,7 @@ jobs:
                   timeout=REQUEST_TIMEOUT,
                   **kwargs,
               )
-              if response.status_code >= 400:
+              if response.status_code >= 400 and fatal:
                   print(
                       f"::error::App Store Connect API {method} {url} "
                       f"returned HTTP {response.status_code}: {response.text}",
@@ -390,6 +393,161 @@ jobs:
                   flush=True,
               )
               sys.exit(0)
+
+          def git_output(*args):
+              result = subprocess.run(
+                  ["git", *args],
+                  check=False,
+                  capture_output=True,
+                  text=True,
+              )
+              return result.stdout.strip() if result.returncode == 0 else ""
+
+          def changelog_notes():
+              changelog = Path("CHANGELOG.md")
+              notes = ""
+              if changelog.is_file():
+                  try:
+                      contents = changelog.read_text(encoding="utf-8")
+                      headings = list(
+                          re.finditer(
+                              r"(?mi)^##\s+\[([^\]]+)\].*$",
+                              contents,
+                          )
+                      )
+                      if headings:
+                          selected = next(
+                              (
+                                  heading
+                                  for heading in headings
+                                  if heading.group(1).strip().lower() == "sin publicar"
+                              ),
+                              headings[0],
+                          )
+                          end = (
+                              headings[headings.index(selected) + 1].start()
+                              if selected is not headings[-1]
+                              else len(contents)
+                          )
+                          lines = []
+                          for line in contents[selected.end():end].splitlines():
+                              line = line.strip()
+                              if line.startswith("- "):
+                                  line = "• " + line[2:].strip()
+                              lines.append(line)
+                          notes = "\n".join(lines).strip()
+                  except Exception as error:
+                      print(
+                          f"::warning::Could not read CHANGELOG.md: {error}",
+                          flush=True,
+                      )
+
+              if not notes:
+                  last_tag = git_output("describe", "--tags", "--abbrev=0")
+                  if last_tag:
+                      notes = git_output(
+                          "log",
+                          "--pretty=format:%s",
+                          f"{last_tag}..HEAD",
+                      )
+                  else:
+                      notes = git_output(
+                          "log",
+                          "-n",
+                          "20",
+                          "--pretty=format:%s",
+                      )
+              if not notes:
+                  notes = "Nueva compilación de prueba."
+              return notes[:4000].strip()
+
+          notes = changelog_notes()
+          if not notes:
+              print(
+                  "::warning::Could not derive What to Test notes; skipping beta "
+                  "build localizations.",
+                  flush=True,
+              )
+          else:
+              localization_url = (
+                  f"{API_BASE}/builds/{build_id}/betaBuildLocalizations"
+              )
+              localizations_response = request(
+                  "GET",
+                  localization_url,
+                  fatal=False,
+              )
+              if localizations_response.status_code >= 400:
+                  print(
+                      "::warning::Could not list beta build localizations: "
+                      f"HTTP {localizations_response.status_code}: "
+                      f"{localizations_response.text}",
+                      flush=True,
+                  )
+              else:
+                  localizations = localizations_response.json().get("data", [])
+                  for locale in ("es-ES", "en-US"):
+                      existing = next(
+                          (
+                              localization
+                              for localization in localizations
+                              if localization.get("attributes", {}).get("locale")
+                              == locale
+                          ),
+                          None,
+                      )
+                      if existing:
+                          method = "PATCH"
+                          url = (
+                              f"{API_BASE}/betaBuildLocalizations/"
+                              f"{existing['id']}"
+                          )
+                          payload = {
+                              "data": {
+                                  "type": "betaBuildLocalizations",
+                                  "id": existing["id"],
+                                  "attributes": {"whatsNew": notes},
+                              }
+                          }
+                      else:
+                          method = "POST"
+                          url = f"{API_BASE}/betaBuildLocalizations"
+                          payload = {
+                              "data": {
+                                  "type": "betaBuildLocalizations",
+                                  "attributes": {
+                                      "locale": locale,
+                                      "whatsNew": notes,
+                                  },
+                                  "relationships": {
+                                      "build": {
+                                          "data": {
+                                              "type": "builds",
+                                              "id": build_id,
+                                          }
+                                      }
+                                  },
+                              }
+                          }
+                      update_response = request(
+                          method,
+                          url,
+                          fatal=False,
+                          headers={"Content-Type": "application/json"},
+                          json=payload,
+                      )
+                      if update_response.status_code in (200, 201, 204):
+                          print(
+                              f"Set What to Test notes for locale {locale}.",
+                              flush=True,
+                          )
+                      else:
+                          print(
+                              f"::warning::Could not set What to Test notes for "
+                              f"{locale}: HTTP {update_response.status_code}: "
+                              f"{update_response.text}",
+                              flush=True,
+                          )
 
           groups_response = request(
               "GET",
