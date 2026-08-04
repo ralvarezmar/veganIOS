@@ -110,15 +110,15 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertTrue(analysis.heuristic)
     }
 
-    func testUnknownIngredientTextRemainsUnknownWithoutDetection() {
+    func testUnknownIngredientTextWithoutAnimalTermsBecomesMaybeHeuristic() {
         let analysis = analyzeVegan(
             ingredientsAnalysisTags: nil,
             ingredients: nil,
             ingredientsText: "Zutaten: Weizenmehl, Zucker, Salz"
         )
 
-        XCTAssertTrue(isStatus(analysis.status, .unknown))
-        XCTAssertFalse(analysis.heuristic)
+        XCTAssertTrue(isStatus(analysis.status, .maybe))
+        XCTAssertTrue(analysis.heuristic)
     }
 
     func testDecisiveVeganTagIsNeverOverriddenByHeuristic() {

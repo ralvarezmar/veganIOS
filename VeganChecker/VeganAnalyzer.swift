@@ -87,6 +87,12 @@ func analyzeVegan(
                 heuristic: true
             )
         }
+        return VeganAnalysis(
+            status: .maybe,
+            nonVeganIngredients: [],
+            doubtfulIngredients: [],
+            heuristic: true
+        )
     }
 
     return VeganAnalysis(status: status, nonVeganIngredients: nonVegan, doubtfulIngredients: doubtful)
