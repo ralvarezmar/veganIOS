@@ -52,6 +52,7 @@ targets:
     info:
       path: VeganChecker/Info.plist
       properties:
+        ITSAppUsesNonExemptEncryption: false
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         UISupportedInterfaceOrientations~ipad:
