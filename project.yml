@@ -23,8 +23,8 @@ targets:
     deploymentTarget: 17.0
     sources:
       - path: VeganChecker
-    resources:
       - path: Assets.xcassets
+    resources:
       - path: VeganChecker/es.lproj
       - path: VeganChecker/en.lproj
       - path: VeganChecker/de.lproj
@@ -52,6 +52,13 @@ targets:
     info:
       path: VeganChecker/Info.plist
       properties:
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
         UIApplicationShortcutItems:
           - UIApplicationShortcutItemType: com.ralvarezmar.vcheck.quick-scan
             UIApplicationShortcutItemTitle: Scan
