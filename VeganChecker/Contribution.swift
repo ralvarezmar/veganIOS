@@ -240,7 +240,7 @@ final class ContributionService {
             guard let status = response as? HTTPURLResponse else { return .networkError }
             guard (200..<300).contains(status.statusCode) else { return .serverError }
             guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                  (json["status"] as? NSNumber)?.intValue == 1 else {
+                  intStatus(json["status"]) == 1 else {
                 return .serverError
             }
             return .success(ProductImageUploadSuccess(
@@ -261,9 +261,19 @@ private func formURLEncoded(_ fields: [String: String]) -> Data? {
     return components.percentEncodedQuery?.data(using: .utf8)
 }
 
-private func jsonStatus(from data: Data) -> Int? {
+func intStatus(_ value: Any?) -> Int? {
+    if let number = value as? NSNumber {
+        return number.intValue
+    }
+    if let text = value as? String {
+        return Int(text.trimmingCharacters(in: .whitespacesAndNewlines))
+    }
+    return nil
+}
+
+func jsonStatus(from data: Data) -> Int? {
     guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return nil }
-    return (json["status"] as? NSNumber)?.intValue
+    return intStatus(json["status"])
 }
 
 private func contributionErrorDetail(from data: Data) -> String? {

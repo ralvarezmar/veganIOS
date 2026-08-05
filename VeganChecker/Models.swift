@@ -62,6 +62,25 @@ struct Product: Codable {
         case novaGroup = "nova_group"
         case quantity
     }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        productName = try? container.decodeIfPresent(String.self, forKey: .productName)
+        brands = try? container.decodeIfPresent(String.self, forKey: .brands)
+        imageUrl = try? container.decodeIfPresent(String.self, forKey: .imageUrl)
+        ingredientsText = try? container.decodeIfPresent(String.self, forKey: .ingredientsText)
+        ingredientsAnalysisTags = try? container.decodeIfPresent([String].self, forKey: .ingredientsAnalysisTags)
+        categoriesTags = try? container.decodeIfPresent([String].self, forKey: .categoriesTags)
+        labelsTags = try? container.decodeIfPresent([String].self, forKey: .labelsTags)
+        ingredients = try? container.decodeIfPresent([OffIngredient].self, forKey: .ingredients)
+        additivesTags = try? container.decodeIfPresent([String].self, forKey: .additivesTags)
+        allergensTags = try? container.decodeIfPresent([String].self, forKey: .allergensTags)
+        nutriments = try? container.decodeIfPresent(Nutriments.self, forKey: .nutriments)
+        nutriscoreGrade = try? container.decodeIfPresent(String.self, forKey: .nutriscoreGrade)
+        ecoscoreGrade = try? container.decodeIfPresent(String.self, forKey: .ecoscoreGrade)
+        novaGroup = container.decodeFlexibleInt(forKey: .novaGroup)
+        quantity = try? container.decodeIfPresent(String.self, forKey: .quantity)
+    }
 }
 
 struct OffIngredient: Codable {
@@ -72,6 +91,7 @@ struct OffIngredient: Codable {
 
 struct Nutriments: Codable {
     let energyKcal100g: Double?
+    let energyKj100g: Double?
     let fat100g: Double?
     let saturatedFat100g: Double?
     let sugars100g: Double?
@@ -81,6 +101,7 @@ struct Nutriments: Codable {
 
     enum CodingKeys: String, CodingKey {
         case energyKcal100g = "energy-kcal_100g"
+        case energyKj100g = "energy-kj_100g"
         case fat100g = "fat_100g"
         case saturatedFat100g = "saturated-fat_100g"
         case sugars100g = "sugars_100g"
@@ -92,6 +113,7 @@ struct Nutriments: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         energyKcal100g = try container.decodeFlexibleDouble(forKey: .energyKcal100g)
+        energyKj100g = try container.decodeFlexibleDouble(forKey: .energyKj100g)
         fat100g = try container.decodeFlexibleDouble(forKey: .fat100g)
         saturatedFat100g = try container.decodeFlexibleDouble(forKey: .saturatedFat100g)
         sugars100g = try container.decodeFlexibleDouble(forKey: .sugars100g)
@@ -114,6 +136,16 @@ private extension KeyedDecodingContainer {
                 .trimmingCharacters(in: .whitespaces)
                 .replacingOccurrences(of: ",", with: ".")
             return Double(normalized)
+        }
+        return nil
+    }
+
+    func decodeFlexibleInt(forKey key: Key) -> Int? {
+        if let value = try? decode(Int.self, forKey: key) {
+            return value
+        }
+        if let text = try? decode(String.self, forKey: key) {
+            return Int(text.trimmingCharacters(in: .whitespacesAndNewlines))
         }
         return nil
     }

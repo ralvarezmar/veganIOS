@@ -18,10 +18,17 @@ enum SearchByNameResult {
 }
 
 final class OpenFactsService {
+    static let defaultSession: URLSession = {
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 15
+        configuration.timeoutIntervalForResource = 30
+        return URLSession(configuration: configuration)
+    }()
+
     private let session: URLSession
     private let userAgent = "VeganLens-iOS/1.0"
 
-    init(session: URLSession = .shared) {
+    init(session: URLSession = OpenFactsService.defaultSession) {
         self.session = session
     }
 
@@ -78,7 +85,7 @@ final class OpenFactsService {
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
 
         do {
-            let (data, response) = try await session.data(for: request)
+            let (data, response) = try await requestData(request)
             guard let httpResponse = response as? HTTPURLResponse else {
                 return .error(L("network_error"))
             }
@@ -130,7 +137,7 @@ final class OpenFactsService {
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
 
         do {
-            let (data, response) = try await session.data(for: request)
+            let (data, response) = try await requestData(request)
             guard let httpResponse = response as? HTTPURLResponse,
                   (200..<300).contains(httpResponse.statusCode) else {
                 return []
@@ -168,7 +175,7 @@ final class OpenFactsService {
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
 
         do {
-            let (data, response) = try await session.data(for: request)
+            let (data, response) = try await requestData(request)
             guard let httpResponse = response as? HTTPURLResponse,
                   (200..<300).contains(httpResponse.statusCode) || httpResponse.statusCode == 404 else {
                 return .failure
@@ -231,6 +238,14 @@ final class OpenFactsService {
             URLQueryItem(name: "fields", value: "code,product_name,brands,image_url,ingredients_analysis_tags,ingredients")
         ]
         return components?.url
+    }
+
+    private func requestData(_ request: URLRequest) async throws -> (Data, URLResponse) {
+        do {
+            return try await session.data(for: request)
+        } catch is URLError {
+            return try await session.data(for: request)
+        }
     }
 }
 
