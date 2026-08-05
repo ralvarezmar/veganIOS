@@ -63,6 +63,40 @@ struct Product: Codable {
         case quantity
     }
 
+    init(
+        productName: String?,
+        brands: String?,
+        imageUrl: String?,
+        ingredientsText: String?,
+        ingredientsAnalysisTags: [String]?,
+        categoriesTags: [String]?,
+        labelsTags: [String]?,
+        ingredients: [OffIngredient]?,
+        additivesTags: [String]?,
+        allergensTags: [String]?,
+        nutriments: Nutriments?,
+        nutriscoreGrade: String?,
+        ecoscoreGrade: String?,
+        novaGroup: Int?,
+        quantity: String?
+    ) {
+        self.productName = productName
+        self.brands = brands
+        self.imageUrl = imageUrl
+        self.ingredientsText = ingredientsText
+        self.ingredientsAnalysisTags = ingredientsAnalysisTags
+        self.categoriesTags = categoriesTags
+        self.labelsTags = labelsTags
+        self.ingredients = ingredients
+        self.additivesTags = additivesTags
+        self.allergensTags = allergensTags
+        self.nutriments = nutriments
+        self.nutriscoreGrade = nutriscoreGrade
+        self.ecoscoreGrade = ecoscoreGrade
+        self.novaGroup = novaGroup
+        self.quantity = quantity
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         productName = try? container.decodeIfPresent(String.self, forKey: .productName)
