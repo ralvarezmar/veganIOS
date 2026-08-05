@@ -88,6 +88,35 @@ struct Nutriments: Codable {
         case salt100g = "salt_100g"
         case proteins100g = "proteins_100g"
     }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        energyKcal100g = try container.decodeFlexibleDouble(forKey: .energyKcal100g)
+        fat100g = try container.decodeFlexibleDouble(forKey: .fat100g)
+        saturatedFat100g = try container.decodeFlexibleDouble(forKey: .saturatedFat100g)
+        sugars100g = try container.decodeFlexibleDouble(forKey: .sugars100g)
+        carbohydrates100g = try container.decodeFlexibleDouble(forKey: .carbohydrates100g)
+        salt100g = try container.decodeFlexibleDouble(forKey: .salt100g)
+        proteins100g = try container.decodeFlexibleDouble(forKey: .proteins100g)
+    }
+}
+
+private extension KeyedDecodingContainer {
+    // Open Food Facts returns nutriment values as either JSON numbers or
+    // numeric strings depending on how they were entered. Accept both so a
+    // single string-typed value does not blank out the whole nutrition table.
+    func decodeFlexibleDouble(forKey key: Key) -> Double? {
+        if let value = try? decode(Double.self, forKey: key) {
+            return value
+        }
+        if let text = try? decode(String.self, forKey: key) {
+            let normalized = text
+                .trimmingCharacters(in: .whitespaces)
+                .replacingOccurrences(of: ",", with: ".")
+            return Double(normalized)
+        }
+        return nil
+    }
 }
 
 extension Product {

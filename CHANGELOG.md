@@ -6,6 +6,12 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+### Corregido
+- Los valores nutricionales no se mostraban en la pantalla de resultado: ahora
+  se solicita el producto completo a Open Food Facts y se aceptan valores
+  numéricos entregados como texto, igual que en Android.
+- Las contribuciones a Open Food Facts fallaban porque OFF ya no acepta envíos anónimos; ahora se autentican con una cuenta compartida de la app configurada por CI.
+
 ### Añadido
 - Idiomas italiano y portugués, traducción de ingredientes en el dispositivo,
   explicaciones de puntuaciones, aviso sobre aceite de palma y widget de
