@@ -79,4 +79,12 @@ final class ContributionTests: XCTestCase {
         )
         XCTAssertEqual(contributionAccountFields(infoDictionary: [:]), [:])
     }
+
+    func testContributionStatusAcceptsNumbersAndNumericStrings() {
+        XCTAssertEqual(intStatus(NSNumber(value: 1)), 1)
+        XCTAssertEqual(intStatus(" 1 "), 1)
+        XCTAssertEqual(intStatus("not-a-number"), nil)
+        XCTAssertEqual(jsonStatus(from: Data(#"{"status":1}"#.utf8)), 1)
+        XCTAssertEqual(jsonStatus(from: Data(#"{"status":"1"}"#.utf8)), 1)
+    }
 }

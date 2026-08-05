@@ -1828,7 +1828,7 @@ private struct NutritionGrid: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            NutritionRow(label: L("nutrition_energy"), value: format(nutriments?.energyKcal100g, unit: "kcal"))
+            NutritionRow(label: L("nutrition_energy"), value: energyRowValue(nutriments))
             NutritionRow(label: L("nutrition_fat"), value: format(nutriments?.fat100g, unit: "g"))
             NutritionRow(label: L("nutrition_saturated_fat"), value: format(nutriments?.saturatedFat100g, unit: "g"))
             NutritionRow(label: L("nutrition_sugars"), value: format(nutriments?.sugars100g, unit: "g"))
@@ -1843,6 +1843,13 @@ private struct NutritionGrid: View {
             return "\(Int(value)) \(unit)"
         }
         return String(format: "%.1f %@", value, unit)
+    }
+
+    private func energyRowValue(_ nutriments: Nutriments?) -> String {
+        if let energyKcal = nutriments?.energyKcal100g {
+            return format(energyKcal, unit: "kcal")
+        }
+        return format(nutriments?.energyKj100g, unit: "kJ")
     }
 }
 
