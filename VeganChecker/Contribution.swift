@@ -86,6 +86,17 @@ func contributionAppFields() -> [String: String] {
     ]
 }
 
+func contributionAccountFields(
+    infoDictionary: [String: Any]? = Bundle.main.infoDictionary
+) -> [String: String] {
+    let user = (infoDictionary?["OFFAppUsername"] as? String)?
+        .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    let password = (infoDictionary?["OFFAppPassword"] as? String)?
+        .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    guard !user.isEmpty, !password.isEmpty else { return [:] }
+    return ["user_id": user, "password": password]
+}
+
 enum ContributionResult: Equatable {
     case success
     case offline
@@ -180,7 +191,9 @@ final class ContributionService {
         request.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.setValue(contributionUserAgent(), forHTTPHeaderField: "User-Agent")
         request.httpBody = formURLEncoded(
-            form.fields(code: barcode).merging(contributionAppFields()) { current, _ in current }
+            form.fields(code: barcode)
+                .merging(contributionAppFields()) { current, _ in current }
+                .merging(contributionAccountFields()) { current, _ in current }
         )
 
         do {
@@ -214,7 +227,8 @@ final class ContributionService {
         request.setValue(contributionUserAgent(), forHTTPHeaderField: "User-Agent")
         request.httpBody = multipartBody(
             fields: anonymousImageFields(code: barcode, imageField: field)
-                .merging(contributionAppFields()) { current, _ in current },
+                .merging(contributionAppFields()) { current, _ in current }
+                .merging(contributionAccountFields()) { current, _ in current },
             fileName: "product-\(field).jpg",
             partName: "imgupload_\(field)",
             data: jpegData,

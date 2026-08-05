@@ -53,14 +53,16 @@ OCR uses Apple's Vision framework on the device:
 Camera permission is therefore a device capability, not collection of personal
 data. No camera image should be declared in App Privacy as collected for OCR.
 
-## Anonymous, user-initiated contributions
+## User-initiated contributions
 
 When the user actively chooses to contribute, the app sends the product fields
 they entered and any product photos they explicitly selected to the selected
 Open Food Facts, Open Beauty Facts, Open Product Facts, or Open Pet Food Facts
-database. This flow is anonymous:
+database. Contributions are authenticated with a shared app account configured
+at build time; this is not a personal account, the user does not log in or
+provide credentials, and no personal data from the user is collected.
 
-- No account, login, password, user ID, or personal identifier is sent.
+- No personal account or user-provided login credentials are used.
 - It is not automatic, background collection, analytics, advertising, or
   tracking.
 - Product photos are optional and independent from the in-memory OCR image.

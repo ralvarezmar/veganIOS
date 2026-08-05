@@ -60,4 +60,23 @@ final class ContributionTests: XCTestCase {
         XCTAssertNil(fields["user_id"])
         XCTAssertNil(fields["password"])
     }
+
+    func testContributionAccountFieldsRequireBothConfiguredValues() {
+        XCTAssertEqual(
+            contributionAccountFields(
+                infoDictionary: [
+                    "OFFAppUsername": " u ",
+                    "OFFAppPassword": " p "
+                ]
+            ),
+            ["user_id": "u", "password": "p"]
+        )
+        XCTAssertEqual(
+            contributionAccountFields(
+                infoDictionary: ["OFFAppUsername": "u", "OFFAppPassword": ""]
+            ),
+            [:]
+        )
+        XCTAssertEqual(contributionAccountFields(infoDictionary: [:]), [:])
+    }
 }

@@ -130,6 +130,9 @@ jobs:
 
       - name: Archive app
         if: steps.credentials.outputs.configured == 'true'
+        env:
+          OFF_APP_USERNAME: ${{ secrets.OFF_APP_USERNAME }}
+          OFF_APP_PASSWORD: ${{ secrets.OFF_APP_PASSWORD }}
         run: |
           set -o pipefail
           # Archive without code signing; App Store (distribution) signing is
@@ -148,6 +151,8 @@ jobs:
             -archivePath "$RUNNER_TEMP/VeganLens.xcarchive" \
             MARKETING_VERSION="$MARKETING_VERSION" \
             CURRENT_PROJECT_VERSION="$CURRENT_PROJECT_VERSION" \
+            OFF_APP_USERNAME="$OFF_APP_USERNAME" \
+            OFF_APP_PASSWORD="$OFF_APP_PASSWORD" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
