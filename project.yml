@@ -49,9 +49,14 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ENABLE_PREVIEWS: YES
+        OFF_APP_USERNAME: ""
+        OFF_APP_PASSWORD: ""
     info:
       path: VeganChecker/Info.plist
       properties:
+        OFFAppUsername: "$(OFF_APP_USERNAME)"
+        OFFAppPassword: "$(OFF_APP_PASSWORD)"
+        ITSAppUsesNonExemptEncryption: false
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         UISupportedInterfaceOrientations~ipad:

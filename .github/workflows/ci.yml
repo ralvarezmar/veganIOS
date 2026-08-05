@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: macos-15
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -359,6 +361,28 @@ jobs:
           capture_device iphone-6-5 "$(resolve_device_type iphone-6-5)" || echo "warn: iphone-6-5 failed"
           capture_device ipad-13 "$(resolve_device_type ipad-13)" || echo "warn: ipad-13 failed"
 
+          shopt -s nullglob
+          normalize_pngs() {
+            label="$1"
+            height="$2"
+            width="$3"
+            files=(build/appstore-screenshots/"$label"/*.png)
+            if [ "${#files[@]}" -eq 0 ]; then
+              echo "No PNGs to normalize for $label"
+              return 0
+            fi
+            for file in "${files[@]}"; do
+              if sips -z "$height" "$width" "$file" >/dev/null; then
+                echo "Normalized $file to ${width}x${height}"
+              else
+                echo "warn: failed to normalize $file"
+              fi
+            done
+          }
+          normalize_pngs iphone-6-9 2868 1320
+          normalize_pngs iphone-6-5 2688 1242
+          normalize_pngs ipad-13 2752 2064
+
       - name: Upload App Store screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -366,6 +390,43 @@ jobs:
           name: ios-app-store-screenshots
           path: build/appstore-screenshots/**
           if-no-files-found: warn
+
+      - name: Commit App Store screenshots
+        if: ${{ always() && (github.ref == 'refs/heads/development' || github.ref == 'refs/heads/main') }}
+        run: |
+          set -euo pipefail
+          for label in iphone-6-9 iphone-6-5 ipad-13; do
+            source_dir="build/appstore-screenshots/$label"
+            files=("$source_dir"/*.png)
+            if [ ! -e "${files[0]:-}" ]; then
+              echo "No captured PNGs for $label"
+              continue
+            fi
+            destination_dir="store/appstore/screenshots/$label"
+            mkdir -p "$destination_dir"
+            for file in "${files[@]}"; do
+              [ -f "$file" ] || continue
+              cp "$file" "$destination_dir/"
+            done
+          done
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add store/appstore/screenshots
+          if git diff --cached --quiet; then
+            echo "No App Store screenshot changes to commit"
+            exit 0
+          fi
+
+          git commit -m "chore(ios): update App Store screenshots [skip ci]"
+          if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+            exit 0
+          fi
+
+          echo "Initial screenshot push raced with another update; rebasing and retrying"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Surface build failure
         if: failure()
