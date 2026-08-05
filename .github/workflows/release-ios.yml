@@ -12,6 +12,8 @@ jobs:
   release:
     # macos-26 ships Xcode 26 (iOS 26 SDK), required by App Store Connect for
     # uploads. Older images (Xcode 16 / iOS 18 SDK) are rejected on validation.
+    permissions:
+      contents: write
     runs-on: macos-26
     env:
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
@@ -42,6 +44,78 @@ jobs:
           else
             echo "App Store Connect credentials are configured."
             echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Roll CHANGELOG version
+        if: steps.credentials.outputs.configured == 'true' && github.ref == 'refs/heads/main'
+        env:
+          VERSION_LABEL: "1.0.0 (${{ github.run_number }})"
+        run: |
+          DATE="$(date +%F)"
+          export DATE
+          if ! python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          changelog = Path("CHANGELOG.md")
+          version_label = os.environ["VERSION_LABEL"]
+          release_date = os.environ["DATE"]
+          contents = changelog.read_text(encoding="utf-8")
+          headings = list(
+              re.finditer(r"(?mi)^##\s+\[([^\]]+)\][^\r\n]*", contents)
+          )
+          unpublished = next(
+              (
+                  heading
+                  for heading in headings
+                  if heading.group(1).strip().lower() == "sin publicar"
+              ),
+              None,
+          )
+          if unpublished is None:
+              raise RuntimeError("CHANGELOG.md has no [Sin publicar] section")
+
+          next_heading = next(
+              (heading for heading in headings if heading.start() > unpublished.start()),
+              None,
+          )
+          body_end = next_heading.start() if next_heading else len(contents)
+          body = contents[unpublished.end():body_end]
+          has_changes = any(
+              line.strip().startswith("- ") or line.strip().startswith("### ")
+              for line in body.splitlines()
+          )
+          if not has_changes:
+              print("No unpublished CHANGELOG changes; nothing to roll.")
+          else:
+              replacement = (
+                  "## [Sin publicar]\n\n"
+                  f"## [{version_label}] - {release_date}"
+              )
+              changelog.write_text(
+                  contents[:unpublished.start()]
+                  + replacement
+                  + contents[unpublished.end():],
+                  encoding="utf-8",
+              )
+              print(f"Rolled CHANGELOG.md to {version_label} - {release_date}")
+          PY
+          then
+            echo "::warning::Could not roll CHANGELOG.md; continuing release."
+          elif ! git diff --quiet -- CHANGELOG.md; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add CHANGELOG.md
+            if git commit -m "chore(ios): release changelog ${VERSION_LABEL} [skip ci]"; then
+              if git push origin HEAD:main; then
+                echo "CHANGELOG.md release commit pushed to main."
+              else
+                echo "::warning::Could not push the CHANGELOG release commit; continuing release."
+              fi
+            else
+              echo "::warning::Could not commit the CHANGELOG release; continuing release."
+            fi
           fi
 
       - name: Install XcodeGen
@@ -425,10 +499,22 @@ jobs:
                               (
                                   heading
                                   for heading in headings
-                                  if heading.group(1).strip().lower() == "sin publicar"
+                                  if heading.group(1).strip().lower() != "sin publicar"
                               ),
-                              headings[0],
+                              None,
                           )
+                          if selected is None:
+                              selected = next(
+                                  (
+                                      heading
+                                      for heading in headings
+                                      if heading.group(1).strip().lower()
+                                      == "sin publicar"
+                                  ),
+                                  None,
+                              )
+                          if selected is None:
+                              selected = headings[0]
                           end = (
                               headings[headings.index(selected) + 1].start()
                               if selected is not headings[-1]
