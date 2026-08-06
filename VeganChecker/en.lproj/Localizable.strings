@@ -239,7 +239,7 @@
 "contribute_product_action" = "Contribute product data";
 "contribution_title" = "Contribute product";
 "contribution_description" = "Help improve the product database.";
-"contribution_anonymous_note" = "Your contribution is sent anonymously. No account or credentials are required.";
+"contribution_anonymous_note" = "You do not need an account or to sign in. The contribution is published on Open Food Facts through the app's account.";
 "contribution_barcode" = "Barcode: %@";
 "contribution_database_title" = "Database";
 "contribution_product_name" = "Product name";
