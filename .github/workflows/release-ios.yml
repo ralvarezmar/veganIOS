@@ -717,9 +717,9 @@ jobs:
               print(
                   f"::error::TestFlight beta group '{group_name}' was not found. "
                   f"Existing groups: {', '.join(available) or '<none>'}",
-              flush=True,
-          )
-          sys.exit(1)
+                  flush=True,
+              )
+              sys.exit(1)
 
           group_attributes = matching_group.get("attributes", {})
           if group_attributes.get("isInternalGroup") is True:
