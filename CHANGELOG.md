@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+## [1.0.0 (20)] - 2026-08-06
+
 ### Cambiado
 - El changelog y las notas de prueba de TestFlight se dividen por versión publicada.
 
