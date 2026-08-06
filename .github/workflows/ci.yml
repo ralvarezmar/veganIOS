@@ -374,6 +374,23 @@ jobs:
 
           collect(manifest)
 
+          default_screen_names = (
+              "onboarding",
+              "scanner",
+              "settings-accessibility",
+              "profile",
+              "history-empty",
+              "favorites-empty",
+              "search",
+          )
+          if len(attachments) == len(default_screen_names) and all(
+              not name for _, name, _ in attachments
+          ):
+              attachments = [
+                  (attachment_id, default_screen_names[index], exported_name)
+                  for index, (attachment_id, _, exported_name) in enumerate(attachments)
+              ]
+
           image_suffixes = {".heic", ".jpeg", ".jpg", ".png", ".tif", ".tiff"}
           used_names = set()
           capture_index = 1
