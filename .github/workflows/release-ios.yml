@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Select newest Xcode and show SDK
         run: |
@@ -108,10 +110,29 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add CHANGELOG.md
             if git commit -m "chore(ios): release changelog ${VERSION_LABEL} [skip ci]"; then
-              if git push origin HEAD:main; then
+              pushed=false
+              for attempt in 1 2 3; do
+                if ! git fetch origin main; then
+                  echo "::warning::Could not fetch main before CHANGELOG push attempt ${attempt}."
+                  break
+                fi
+                if ! git rebase origin/main; then
+                  git rebase --abort || true
+                  echo "::warning::Could not rebase the CHANGELOG commit onto origin/main."
+                  break
+                fi
+                if git push origin HEAD:main; then
+                  pushed=true
+                  break
+                fi
+                if [ "$attempt" -lt 3 ]; then
+                  sleep $((attempt * 10))
+                fi
+              done
+              if [ "$pushed" = true ]; then
                 echo "CHANGELOG.md release commit pushed to main."
               else
-                echo "::warning::Could not push the CHANGELOG release commit; continuing release."
+                echo "::warning::Could not push the CHANGELOG release commit after 3 attempts; continuing release."
               fi
             else
               echo "::warning::Could not commit the CHANGELOG release; continuing release."
@@ -414,6 +435,35 @@ jobs:
                   sys.exit(1)
               return response
 
+          def formatted_api_errors(response):
+              try:
+                  payload = response.json()
+              except ValueError:
+                  return [response.text.strip() or "<empty response body>"]
+
+              errors = payload.get("errors")
+              if not isinstance(errors, list) or not errors:
+                  return [response.text.strip() or "<empty response body>"]
+
+              lines = []
+              for index, error in enumerate(errors, start=1):
+                  if not isinstance(error, dict):
+                      lines.append(f"error {index}: {error}")
+                      continue
+                  lines.append(f"error {index}:")
+                  for key in ("status", "code", "title", "detail"):
+                      if error.get(key) is not None:
+                          lines.append(f"  {key}: {error[key]}")
+                  source = error.get("source")
+                  if source is not None:
+                      lines.append(f"  source: {source}")
+              return lines
+
+          def print_api_error(prefix, response, level="error"):
+              print(f"::{level}::{prefix} HTTP {response.status_code}", flush=True)
+              for line in formatted_api_errors(response):
+                  print(f"::{level}::{line}", flush=True)
+
           app_response = request(
               "GET",
               f"{API_BASE}/apps",
@@ -671,43 +721,66 @@ jobs:
           relationship_body = {
               "data": [{"type": "builds", "id": build_id}],
           }
-          response = requests.post(
-              relationship_url,
-              headers={
-                  "Authorization": f"Bearer {token()}",
-                  "Content-Type": "application/json",
-              },
-              json=relationship_body,
-              timeout=REQUEST_TIMEOUT,
-          )
-          if response.status_code == 204:
-              print(
-                  f"Build {build_number} assigned to TestFlight group "
-                  f"'{group_name}'.",
-                  flush=True,
+          retry_delays = (15, 30, 45, 60)
+          for attempt in range(1, len(retry_delays) + 2):
+              response = requests.post(
+                  relationship_url,
+                  headers={
+                      "Authorization": f"Bearer {token()}",
+                      "Content-Type": "application/json",
+                  },
+                  json=relationship_body,
+                  timeout=REQUEST_TIMEOUT,
               )
-              sys.exit(0)
+              if response.status_code == 204:
+                  print(
+                      f"Build {build_number} assigned to TestFlight group "
+                      f"'{group_name}'.",
+                      flush=True,
+                  )
+                  sys.exit(0)
 
-          body = response.text
-          normalized_body = body.lower()
-          if response.status_code == 409 or (
-              response.status_code == 400
-              and any(
-                  marker in normalized_body
-                  for marker in ("already", "assigned", "in the group")
-              )
-          ):
-              print(
-                  f"Build {build_number} is already assigned to TestFlight "
-                  f"group '{group_name}'.",
-                  flush=True,
-              )
-              sys.exit(0)
+              normalized_body = response.text.lower()
+              if response.status_code == 409 or (
+                  response.status_code == 400
+                  and any(
+                      marker in normalized_body
+                      for marker in ("already", "assigned", "in the group")
+                  )
+              ):
+                  print(
+                      f"Build {build_number} is already assigned to TestFlight "
+                      f"group '{group_name}'.",
+                      flush=True,
+                  )
+                  sys.exit(0)
 
-          print(
-              f"::error::App Store Connect API POST {relationship_url} "
-              f"returned HTTP {response.status_code}: {body}",
-              flush=True,
-          )
-          sys.exit(1)
+              retryable = (
+                  response.status_code == 422
+                  or response.status_code == 429
+                  or response.status_code >= 500
+              )
+              if retryable:
+                  print_api_error(
+                      f"App Store Connect API POST {relationship_url} "
+                      f"attempt {attempt}/{len(retry_delays) + 1}:",
+                      response,
+                  )
+                  if attempt <= len(retry_delays):
+                      time.sleep(retry_delays[attempt - 1])
+                      continue
+                  print(
+                      "::warning::The build was uploaded to App Store Connect "
+                      "but could not be assigned to the TestFlight group "
+                      f"'{group_name}' after {attempt} attempts. Assign it "
+                      "manually in TestFlight.",
+                      flush=True,
+                  )
+                  sys.exit(0)
+
+              print_api_error(
+                  f"App Store Connect API POST {relationship_url}:",
+                  response,
+              )
+              sys.exit(1)
           PY

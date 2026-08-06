@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install XcodeGen
         run: |
@@ -419,14 +421,28 @@ jobs:
           fi
 
           git commit -m "chore(ios): update App Store screenshots [skip ci]"
-          if git push origin "HEAD:${GITHUB_REF_NAME}"; then
-            exit 0
+          pushed=false
+          for attempt in 1 2 3; do
+            if ! git fetch origin "$GITHUB_REF_NAME"; then
+              echo "::warning::Could not fetch ${GITHUB_REF_NAME} before screenshot push attempt ${attempt}."
+              break
+            fi
+            if ! git rebase "origin/${GITHUB_REF_NAME}"; then
+              git rebase --abort || true
+              echo "::warning::Could not rebase screenshot changes onto origin/${GITHUB_REF_NAME}."
+              break
+            fi
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              pushed=true
+              break
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 10))
+            fi
+          done
+          if [ "$pushed" != true ]; then
+            echo "::warning::Could not push App Store screenshots to ${GITHUB_REF_NAME} after 3 attempts; continuing CI."
           fi
-
-          echo "Initial screenshot push raced with another update; rebasing and retrying"
-          git fetch origin "$GITHUB_REF_NAME"
-          git rebase "origin/$GITHUB_REF_NAME"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Surface build failure
         if: failure()
