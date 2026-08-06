@@ -112,18 +112,23 @@ jobs:
             if git commit -m "chore(ios): release changelog ${VERSION_LABEL} [skip ci]"; then
               pushed=false
               for attempt in 1 2 3; do
-                if ! git fetch origin main; then
-                  echo "::warning::Could not fetch main before CHANGELOG push attempt ${attempt}."
+                if ! fetch_output=$(git fetch origin main 2>&1); then
+                  echo "::warning::Could not fetch main before CHANGELOG push attempt ${attempt}:"
+                  echo "$fetch_output"
                   break
                 fi
-                if ! git rebase origin/main; then
+                if ! rebase_output=$(git rebase --autostash origin/main 2>&1); then
                   git rebase --abort || true
-                  echo "::warning::Could not rebase the CHANGELOG commit onto origin/main."
+                  echo "::warning::Could not rebase the CHANGELOG commit onto origin/main (attempt ${attempt}):"
+                  echo "$rebase_output"
                   break
                 fi
-                if git push origin HEAD:main; then
+                if push_output=$(git push origin HEAD:main 2>&1); then
                   pushed=true
                   break
+                else
+                  echo "::warning::CHANGELOG push attempt ${attempt} failed:"
+                  echo "$push_output"
                 fi
                 if [ "$attempt" -lt 3 ]; then
                   sleep $((attempt * 10))
@@ -712,9 +717,21 @@ jobs:
               print(
                   f"::error::TestFlight beta group '{group_name}' was not found. "
                   f"Existing groups: {', '.join(available) or '<none>'}",
+              flush=True,
+          )
+          sys.exit(1)
+
+          group_attributes = matching_group.get("attributes", {})
+          if group_attributes.get("isInternalGroup") is True:
+              print(
+                  f"::notice::TestFlight group '{group_name}' is an internal "
+                  "group. Internal testers automatically receive all builds, "
+                  "so no explicit build assignment is needed. To distribute "
+                  "to external testers, create an external group and set "
+                  "BETA_GROUP_NAME to that group.",
                   flush=True,
               )
-              sys.exit(1)
+              sys.exit(0)
 
           group_id = matching_group["id"]
           relationship_url = f"{API_BASE}/betaGroups/{group_id}/relationships/builds"
@@ -755,11 +772,7 @@ jobs:
                   )
                   sys.exit(0)
 
-              retryable = (
-                  response.status_code == 422
-                  or response.status_code == 429
-                  or response.status_code >= 500
-              )
+              retryable = response.status_code == 429 or response.status_code >= 500
               if retryable:
                   print_api_error(
                       f"App Store Connect API POST {relationship_url} "
@@ -774,6 +787,21 @@ jobs:
                       "but could not be assigned to the TestFlight group "
                       f"'{group_name}' after {attempt} attempts. Assign it "
                       "manually in TestFlight.",
+                      flush=True,
+                  )
+                  sys.exit(0)
+
+              if response.status_code == 422:
+                  print_api_error(
+                      f"App Store Connect API POST {relationship_url}:",
+                      response,
+                  )
+                  print(
+                      "::warning::The build was uploaded to App Store Connect "
+                      "but could not be assigned to the external TestFlight "
+                      f"group '{group_name}'. The 422 response indicates a "
+                      "non-transient assignment restriction. Assign it "
+                      "manually in TestFlight or review the group configuration.",
                       flush=True,
                   )
                   sys.exit(0)

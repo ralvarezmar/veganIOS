@@ -118,18 +118,23 @@ jobs:
             git commit -m "chore(release): ${NEW_TAG} unsigned build and version [skip ci]"
             pushed=false
             for attempt in 1 2 3; do
-              if ! git fetch origin main; then
-                echo "::warning::Could not fetch main before release push attempt ${attempt}."
+              if ! fetch_output=$(git fetch origin main 2>&1); then
+                echo "::warning::Could not fetch main before release push attempt ${attempt}:"
+                echo "$fetch_output"
                 break
               fi
-              if ! git rebase origin/main; then
+              if ! rebase_output=$(git rebase --autostash origin/main 2>&1); then
                 git rebase --abort || true
-                echo "::warning::Could not rebase the release commit onto origin/main."
+                echo "::warning::Could not rebase the release commit onto origin/main (attempt ${attempt}):"
+                echo "$rebase_output"
                 break
               fi
-              if git push origin HEAD:main; then
+              if push_output=$(git push origin HEAD:main 2>&1); then
                 pushed=true
                 break
+              else
+                echo "::warning::Release push attempt ${attempt} failed:"
+                echo "$push_output"
               fi
               if [ "$attempt" -lt 3 ]; then
                 sleep $((attempt * 10))
