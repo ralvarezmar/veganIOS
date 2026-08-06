@@ -366,6 +366,17 @@ jobs:
           image_suffixes = {".heic", ".jpeg", ".jpg", ".png", ".tif", ".tiff"}
           used_names = set()
           capture_index = 1
+          claimed_sources = set()
+          image_sources = sorted(
+              (
+                  path
+                  for path in output.iterdir()
+                  if path.is_file()
+                  and path.name != "manifest.json"
+                  and path.suffix.casefold() in image_suffixes
+              ),
+              key=lambda path: path.name,
+          )
           for attachment_id, suggested_name, exported_name in attachments:
               if exported_name:
                   exported_path = output / Path(exported_name).name
@@ -383,6 +394,14 @@ jobs:
                       ),
                       key=lambda path: path.name,
                   )
+              attachment_files = [
+                  path for path in attachment_files if path not in claimed_sources
+              ]
+              if not attachment_files:
+                  attachment_files = [
+                      path for path in image_sources
+                      if path not in claimed_sources
+                  ][:1]
               candidates = []
               for source in attachment_files:
                   if source.suffix.casefold() in image_suffixes:
@@ -403,6 +422,7 @@ jobs:
                       counter += 1
                   source.rename(destination)
                   used_names.add(destination.name)
+                  claimed_sources.add(source)
                   capture_index += 1
 
           for source in sorted(output.iterdir(), key=lambda path: path.name):
