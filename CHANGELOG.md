@@ -6,13 +6,22 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+### Cambiado
+- El changelog y las notas de prueba de TestFlight se dividen por versión publicada.
+
 ## [0.1.2] - 2026-08-05
+
+### Añadido
+- Energía en kJ cuando el producto no aporta kilocalorías.
+- Pruebas de decodificación del modelo con respuestas de ejemplo de Open Food Facts.
 
 ### Cambiado
 - Ajustado el flujo de CI para asignar correctamente las compilaciones al grupo de TestFlight.
+- Tiempos de espera de red más cortos y un único reintento en las lecturas; las escrituras no se reintentan.
 
 ### Corregido
-- Decodificación tolerante de respuestas de Open Food Facts y preservación de la construcción de productos.
+- Decodificación tolerante de respuestas de Open Food Facts: un campo mal formado ya no descarta el producto completo y `nova_group` acepta número o texto.
+- El estado de las contribuciones se interpreta tanto si llega como número como si llega como texto, con mensajes de error más claros.
 
 ## [0.1.1] - 2026-08-05
 
