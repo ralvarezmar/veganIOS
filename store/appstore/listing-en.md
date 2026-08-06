@@ -49,7 +49,7 @@ vegan,ingredients,allergens,additives,barcode,alternatives,scanner
 
 ## Support URL
 
-https://ralvarezmar.github.io/veganIOS/
+https://ralvarezmar.github.io/veganIOS/support-en.html
 
 ## Marketing URL
 
