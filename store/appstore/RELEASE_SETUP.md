@@ -19,8 +19,8 @@ Before enabling a real release, the developer needs:
 5. App Store Connect access to upload builds to TestFlight.
 
 The Xcode project is generated from `project.yml` by XcodeGen. The release
-workflow archives the `VeganChecker` scheme and uploads the resulting
-`VCheck.ipa`.
+workflow archives the `VeganLens` scheme and uploads the resulting
+`VeganLens.ipa`.
 
 ## GitHub secrets
 

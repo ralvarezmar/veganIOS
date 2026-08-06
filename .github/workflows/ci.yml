@@ -29,7 +29,7 @@ jobs:
 
           directories = ("en.lproj", "es.lproj", "pt.lproj", "it.lproj", "fr.lproj", "de.lproj")
           files = {
-              directory: Path("VeganChecker") / directory / "Localizable.strings"
+              directory: Path("VeganLens") / directory / "Localizable.strings"
               for directory in directories
           }
           key_sets = {}
@@ -103,8 +103,8 @@ jobs:
           mkdir -p build
           set -o pipefail
           xcodebuild \
-            -project VeganChecker.xcodeproj \
-            -scheme VeganChecker \
+            -project VeganLens.xcodeproj \
+            -scheme VeganLens \
             -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
             -destination-timeout 60 \
             CODE_SIGNING_ALLOWED=NO \
@@ -116,14 +116,14 @@ jobs:
           rm -rf build/Result-unit.xcresult
           set -o pipefail
           xcodebuild \
-            -project VeganChecker.xcodeproj \
-            -scheme VeganChecker \
+            -project VeganLens.xcodeproj \
+            -scheme VeganLens \
             -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
             -destination-timeout 60 \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             -resultBundlePath build/Result-unit.xcresult \
-            -only-testing:VeganCheckerTests \
+            -only-testing:VeganLensTests \
             test 2>&1 | tee build/xcodebuild-unit-tests.log
           if ! grep -Eq 'Executed [1-9][0-9]* tests?' build/xcodebuild-unit-tests.log; then
             echo "::error::iOS unit-test run did not report any executed tests"
@@ -135,8 +135,8 @@ jobs:
           rm -rf build/Result.xcresult
           set -o pipefail
           xcodebuild \
-            -project VeganChecker.xcodeproj \
-            -scheme VeganChecker \
+            -project VeganLens.xcodeproj \
+            -scheme VeganLens \
             -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
             -destination-timeout 60 \
             CODE_SIGNING_ALLOWED=NO \
@@ -482,12 +482,12 @@ jobs:
             xcrun simctl bootstatus "$simulator_udid" -b || status=$?
             if [ "$status" -eq 0 ]; then
               xcodebuild \
-                -project VeganChecker.xcodeproj \
-                -scheme VeganChecker \
+                -project VeganLens.xcodeproj \
+                -scheme VeganLens \
                 -destination "platform=iOS Simulator,id=$simulator_udid" \
                 CODE_SIGNING_ALLOWED=NO \
                 CODE_SIGNING_REQUIRED=NO \
-                -only-testing:VeganCheckerUITests/ScreenshotUITests \
+                -only-testing:VeganLensUITests/ScreenshotUITests \
                 -resultBundlePath "$result_bundle" \
                 test || status=$?
             fi
@@ -611,5 +611,5 @@ jobs:
         if: failure()
         run: |
           grep -nE 'error:|fatal error:|BUILD FAILED' build/xcodebuild.log build/xcodebuild-ui-tests.log 2>/dev/null | head -n 200 | while IFS= read -r line; do
-            echo "::error file=VeganChecker/Build.swift::$line"
+            echo "::error file=VeganLens/Build.swift::$line"
           done

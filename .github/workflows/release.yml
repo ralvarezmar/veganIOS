@@ -51,8 +51,8 @@ jobs:
           set -o pipefail
           mkdir -p build
           xcodebuild archive \
-            -project VeganChecker.xcodeproj \
-            -scheme VeganChecker \
+            -project VeganLens.xcodeproj \
+            -scheme VeganLens \
             -configuration Release \
             -destination "generic/platform=iOS" \
             -archivePath "build/VeganLens.xcarchive" \

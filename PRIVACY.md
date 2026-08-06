@@ -1,8 +1,8 @@
-# Política de Privacidad de VeganCheck
+# Política de Privacidad de VeganLens
 
 **Última actualización:** 15 de julio de 2026
 
-VeganCheck (paquete `com.ralvarezmar.veganchecker`) es una aplicación iOS que
+VeganLens (paquete `com.ralvarezmar.vcheck`) es una aplicación iOS que
 escanea códigos de barras y consulta información pública de productos para
 mostrar ingredientes, aditivos, alérgenos, información nutricional y un
 análisis orientativo sobre su idoneidad para una alimentación vegana. El
@@ -10,7 +10,7 @@ desarrollador no opera ningún servidor backend para la aplicación.
 
 ## Resumen
 
-VeganCheck no recopila datos personales para el desarrollador y no necesita una
+VeganLens no recopila datos personales para el desarrollador y no necesita una
 cuenta, inicio de sesión ni credenciales. Actualmente no incorpora analítica,
 informes de fallos, publicidad ni rastreadores de terceros.
 
@@ -36,7 +36,7 @@ aplicación, el sistema elimina sus datos locales.
 
 ## Cámara y códigos de barras
 
-VeganCheck solicita permiso para usar la cámara para leer códigos de barras y,
+VeganLens solicita permiso para usar la cámara para leer códigos de barras y,
 opcionalmente, capturar una imagen de la lista de ingredientes para reconocer
 su texto. El escaneo y el reconocimiento OCR se realizan localmente en el
 dispositivo mediante AVFoundation y Vision. Las imágenes usadas para OCR se
@@ -47,7 +47,7 @@ y la imagen de OCR no se envía como parte de una contribución.
 
 La traducción opcional de la lista de ingredientes se presenta mediante el
 framework Translation de Apple y se ejecuta en el dispositivo. El texto de
-ingredientes no se sube ni se envía a Apple para traducirlo. VeganCheck no
+ingredientes no se sube ni se envía a Apple para traducirlo. VeganLens no
 incluye analítica, rastreo ni publicidad.
 
 ## Consultas a bases de datos de terceros
@@ -87,7 +87,7 @@ información personal en los campos de texto ni en las fotografías que envíes.
 
 ## Analítica, fallos, publicidad y rastreo
 
-La versión actual de VeganCheck no incluye:
+La versión actual de VeganLens no incluye:
 
 - Analítica de uso.
 - Informes de fallos o servicios de crash reporting.
@@ -98,27 +98,27 @@ La versión actual de VeganCheck no incluye:
 
 Los datos locales se conservan en el dispositivo hasta que los borres desde la
 aplicación, elimines un favorito, se sustituya o elimine la caché, o
-desinstales VeganCheck. Las contribuciones enviadas a una base pública pueden
+desinstales VeganLens. Las contribuciones enviadas a una base pública pueden
 conservarse allí según sus propias reglas y no pueden gestionarse desde
-VeganCheck. Las consultas a las bases de datos quedan sujetas a sus propias
+VeganLens. Las consultas a las bases de datos quedan sujetas a sus propias
 políticas y periodos de conservación.
 
 El aislamiento de aplicaciones de iOS protege el almacenamiento local frente a
-otras aplicaciones. VeganCheck no guarda credenciales ni transmite datos al
+otras aplicaciones. VeganLens no guarda credenciales ni transmite datos al
 desarrollador. Ningún sistema de almacenamiento o transmisión puede garantizar
 seguridad absoluta; mantén actualizado iOS y descarga la aplicación de fuentes
 fiables.
 
 ## Menores
 
-VeganCheck no está dirigida específicamente a menores y no recopila
+VeganLens no está dirigida específicamente a menores y no recopila
 conscientemente datos personales de menores. No se necesita una cuenta para
 utilizarla.
 
 ## Derechos y cómo ejercerlos
 
 Puedes controlar los datos locales borrando el historial, eliminando favoritos o
-desinstalando VeganCheck. Para ejercer derechos sobre los datos tratados por
+desinstalando VeganLens. Para ejercer derechos sobre los datos tratados por
 una base de datos de terceros, debes dirigirte a esa base conforme a su propia
 política de privacidad. El desarrollador no opera un backend ni dispone de una
 cuenta de usuario desde la que pueda identificar o administrar tus datos
@@ -126,7 +126,7 @@ locales.
 
 ## Cambios en esta política
 
-Podemos actualizar esta política si cambian las funciones de VeganCheck o los
+Podemos actualizar esta política si cambian las funciones de VeganLens o los
 servicios que utiliza. Publicaremos la versión revisada en esta página y
 actualizaremos la fecha indicada al principio.
 

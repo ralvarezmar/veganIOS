@@ -1,4 +1,4 @@
-name: VeganChecker
+name: VeganLens
 developmentLanguage: es
 objectVersion: 56
 options:
@@ -17,28 +17,28 @@ settings:
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     ENABLE_PREVIEWS: YES
 targets:
-  VeganChecker:
+  VeganLens:
     type: application
     platform: iOS
     deploymentTarget: 17.0
     sources:
-      - path: VeganChecker
+      - path: VeganLens
       - path: Assets.xcassets
     resources:
-      - path: VeganChecker/es.lproj
-      - path: VeganChecker/en.lproj
-      - path: VeganChecker/de.lproj
-      - path: VeganChecker/fr.lproj
-      - path: VeganChecker/it.lproj
-      - path: VeganChecker/pt.lproj
-      - path: VeganChecker/Fonts
+      - path: VeganLens/es.lproj
+      - path: VeganLens/en.lproj
+      - path: VeganLens/de.lproj
+      - path: VeganLens/fr.lproj
+      - path: VeganLens/it.lproj
+      - path: VeganLens/pt.lproj
+      - path: VeganLens/Fonts
     dependencies:
-      - target: VeganCheckerWidget
+      - target: VeganLensWidget
         embed: true
     settings:
       base:
-        PRODUCT_NAME: VCheck
-        PRODUCT_MODULE_NAME: VeganChecker
+        PRODUCT_NAME: VeganLens
+        PRODUCT_MODULE_NAME: VeganLens
         PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.vcheck
         SWIFT_VERSION: 5.9
         IPHONEOS_DEPLOYMENT_TARGET: 17.0
@@ -52,7 +52,7 @@ targets:
         OFF_APP_USERNAME: ""
         OFF_APP_PASSWORD: ""
     info:
-      path: VeganChecker/Info.plist
+      path: VeganLens/Info.plist
       properties:
         OFFAppUsername: "$(OFF_APP_USERNAME)"
         OFFAppPassword: "$(OFF_APP_PASSWORD)"
@@ -77,61 +77,61 @@ targets:
           - CFBundleURLName: com.ralvarezmar.vcheck
             CFBundleURLSchemes:
               - vcheck
-  VeganCheckerWidget:
+  VeganLensWidget:
     type: app-extension
     platform: iOS
     deploymentTarget: 17.0
     sources:
-      - path: VeganCheckerWidget
+      - path: VeganLensWidget
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.vcheck.widget
         SWIFT_VERSION: 5.9
         IPHONEOS_DEPLOYMENT_TARGET: 17.0
         GENERATE_INFOPLIST_FILE: NO
-        INFOPLIST_FILE: VeganCheckerWidget/Info.plist
+        INFOPLIST_FILE: VeganLensWidget/Info.plist
         CODE_SIGN_STYLE: Automatic
         SKIP_INSTALL: NO
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
-        PRODUCT_NAME: VeganCheckerWidget
-  VeganCheckerTests:
+        PRODUCT_NAME: VeganLensWidget
+  VeganLensTests:
     type: bundle.unit-test
     platform: iOS
     deploymentTarget: 17.0
     sources:
-      - path: VeganCheckerTests
+      - path: VeganLensTests
     dependencies:
-      - target: VeganChecker
+      - target: VeganLens
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.vcheck.tests
         SWIFT_VERSION: 5.9
         IPHONEOS_DEPLOYMENT_TARGET: 17.0
         GENERATE_INFOPLIST_FILE: YES
-        TEST_HOST: $(BUILT_PRODUCTS_DIR)/VCheck.app/VCheck
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/VeganLens.app/VeganLens
         BUNDLE_LOADER: $(TEST_HOST)
-  VeganCheckerUITests:
+  VeganLensUITests:
     type: bundle.ui-testing
     platform: iOS
     deploymentTarget: 17.0
     sources:
-      - path: VeganCheckerUITests
+      - path: VeganLensUITests
     dependencies:
-      - target: VeganChecker
+      - target: VeganLens
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ralvarezmar.vcheck.uitests
         SWIFT_VERSION: 5.9
         IPHONEOS_DEPLOYMENT_TARGET: 17.0
         GENERATE_INFOPLIST_FILE: YES
-        TEST_TARGET_NAME: VeganChecker
+        TEST_TARGET_NAME: VeganLens
 schemes:
-  VeganChecker:
+  VeganLens:
     build:
       targets:
-        VeganChecker: all
+        VeganLens: all
     test:
       targets:
-        - VeganCheckerTests
-        - VeganCheckerUITests
+        - VeganLensTests
+        - VeganLensUITests
