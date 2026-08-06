@@ -828,6 +828,11 @@ struct ResultView: View {
             guard let cached = try modelContext.fetch(descriptor).first else {
                 return nil
             }
+            if isCacheEntryExpired(cachedAt: cached.cachedAt) {
+                modelContext.delete(cached)
+                try modelContext.save()
+                return nil
+            }
             let product = try JSONDecoder().decode(Product.self, from: cached.productData)
             let source = ProductSource(rawValue: cached.sourceName) ?? .openFoodFacts
             return (product, source, cached.cachedAt)
@@ -1300,6 +1305,7 @@ private struct VeganBannerView: View {
         .background(spec.background)
         .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
         .shadow(color: spec.background.opacity(0.24), radius: 12, x: 0, y: 8)
+        .accessibilityElement(children: .combine)
     }
 
     private var bannerSpec: VeganBannerSpec {
@@ -2036,12 +2042,18 @@ private struct NutritionRow: View {
     let value: String
 
     var body: some View {
-        HStack {
+        HStack(alignment: .top, spacing: 12) {
             Text(label)
+                .layoutPriority(1)
             Spacer()
             Text(value)
                 .appFont(.body, weight: .semibold)
+                .multilineTextAlignment(.trailing)
+                .fixedSize(horizontal: false, vertical: true)
+                .layoutPriority(1)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(label), \(value)")
     }
 }
 

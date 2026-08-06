@@ -41,4 +41,18 @@ final class CacheSupportTests: XCTestCase {
         XCTAssertTrue(cacheBarcodesToEvict(entries: entries, limit: 2).isEmpty)
         XCTAssertEqual(cacheBarcodesToEvict(entries: entries, limit: 100), [])
     }
+
+    func testCacheEntryJustBelowTtlIsValid() {
+        let now = Date(timeIntervalSince1970: 1_000_000)
+        let cachedAt = now.addingTimeInterval(-cacheTTLSeconds + 1)
+
+        XCTAssertFalse(isCacheEntryExpired(cachedAt: cachedAt, now: now))
+    }
+
+    func testCacheEntryJustAboveTtlIsExpired() {
+        let now = Date(timeIntervalSince1970: 1_000_000)
+        let cachedAt = now.addingTimeInterval(-cacheTTLSeconds - 1)
+
+        XCTAssertTrue(isCacheEntryExpired(cachedAt: cachedAt, now: now))
+    }
 }

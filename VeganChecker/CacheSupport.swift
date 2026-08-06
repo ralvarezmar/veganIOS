@@ -20,6 +20,16 @@ struct CacheAge: Equatable {
     let unit: CacheAgeUnit
 }
 
+let cacheTTLSeconds: TimeInterval = 60 * 24 * 60 * 60
+
+func isCacheEntryExpired(
+    cachedAt: Date,
+    now: Date = Date(),
+    ttl: TimeInterval = cacheTTLSeconds
+) -> Bool {
+    now.timeIntervalSince(cachedAt) > ttl
+}
+
 func cacheAge(from date: Date, now: Date = Date()) -> CacheAge {
     let seconds = max(0, Int(now.timeIntervalSince(date)))
     if seconds < 60 {
