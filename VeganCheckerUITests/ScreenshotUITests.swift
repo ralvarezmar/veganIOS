@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 
 final class ScreenshotUITests: XCTestCase {
     func testCaptureKeyScreens() {
@@ -39,7 +40,11 @@ final class ScreenshotUITests: XCTestCase {
 
     private func capture(_ app: XCUIApplication, named name: String) {
         XCTContext.runActivity(named: name) { activity in
-            let attachment = XCTAttachment(screenshot: app.screenshot())
+            let path = FileManager.default.temporaryDirectory
+                .appendingPathComponent("\(name).png")
+            try? app.screenshot().image.pngData()?.write(to: path)
+            defer { try? FileManager.default.removeItem(at: path) }
+            let attachment = XCTAttachment(contentsOfFile: path)
             attachment.name = name
             attachment.lifetime = .keepAlways
             activity.add(attachment)
