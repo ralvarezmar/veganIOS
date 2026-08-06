@@ -283,8 +283,8 @@ jobs:
           def collect(value):
               if isinstance(value, dict):
                   attachment_id = value.get("attachmentID") or value.get("attachmentId")
-                  name = value.get("suggestedHumanReadableName")
-                  if attachment_id and name:
+                  name = value.get("suggestedHumanReadableName") or ""
+                  if attachment_id:
                       attachments[attachment_id] = name
                   for child in value.values():
                       collect(child)
@@ -295,20 +295,22 @@ jobs:
           collect(manifest)
 
           used_names = set()
-          for attachment_id, suggested_name in attachments.items():
+          for index, (attachment_id, suggested_name) in enumerate(
+              attachments.items(),
+              start=1,
+          ):
               candidates = [
                   path for path in output.iterdir()
                   if path.is_file() and path.name != "manifest.json"
                   and path.name.startswith(attachment_id)
               ]
               for source in candidates:
-                  safe_name = re.sub(r"[^A-Za-z0-9._-]+", "-", suggested_name).strip("-")
+                  base_name = Path(suggested_name).stem.casefold()
+                  safe_name = re.sub(r"[^a-z0-9]+", "-", base_name).strip("-")
                   if not safe_name:
-                      safe_name = attachment_id
-                  suffix = source.suffix
-                  if not Path(safe_name).suffix:
-                      safe_name += suffix
-                  destination = output / safe_name
+                      destination = output / f"{index:02d}.png"
+                  else:
+                      destination = output / f"{index:02d}-{safe_name}.png"
                   counter = 2
                   while destination.name in used_names or destination.exists():
                       destination = output / f"{destination.stem}-{counter}{destination.suffix}"
@@ -333,6 +335,7 @@ jobs:
             }
             result_bundle="build/appstore/$label.xcresult"
             output="build/appstore-screenshots/$label"
+            rm -rf "$output"
             mkdir -p "$output"
             rm -rf "$result_bundle"
 
@@ -355,6 +358,15 @@ jobs:
             xcrun simctl delete "$simulator_udid" || true
             if [ "$status" -ne 0 ]; then
               echo "warn: $label failed"
+            else
+              shopt -s nullglob
+              files=("$output"/*.png)
+              if [ "${#files[@]}" -ne 7 ]; then
+                echo "warn: $label produced ${#files[@]} PNGs; expected 7"
+                status=1
+              else
+                : > "$output/.capture-complete"
+              fi
             fi
             return "$status"
           }
@@ -400,12 +412,13 @@ jobs:
           for label in iphone-6-9 iphone-6-5 ipad-13; do
             source_dir="build/appstore-screenshots/$label"
             files=("$source_dir"/*.png)
-            if [ ! -e "${files[0]:-}" ]; then
-              echo "No captured PNGs for $label"
+            if [ ! -f "$source_dir/.capture-complete" ] || [ "${#files[@]}" -ne 7 ]; then
+              echo "Incomplete App Store screenshot set for $label; preserving existing files"
               continue
             fi
             destination_dir="store/appstore/screenshots/$label"
             mkdir -p "$destination_dir"
+            find "$destination_dir" -maxdepth 1 -type f -name "*.png" -delete
             for file in "${files[@]}"; do
               [ -f "$file" ] || continue
               cp "$file" "$destination_dir/"
@@ -414,7 +427,7 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add store/appstore/screenshots
+          git add -A -- store/appstore/screenshots
           if git diff --cached --quiet; then
             echo "No App Store screenshot changes to commit"
             exit 0
