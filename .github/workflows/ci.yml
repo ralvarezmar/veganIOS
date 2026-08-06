@@ -12,6 +12,8 @@ jobs:
     runs-on: macos-15
     permissions:
       contents: write
+    env:
+      EXPECTED_SCREENSHOTS: 7
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -294,29 +296,41 @@ jobs:
 
           collect(manifest)
 
+          image_suffixes = {".heic", ".jpeg", ".jpg", ".png", ".tif", ".tiff"}
           used_names = set()
-          for index, (attachment_id, suggested_name) in enumerate(
-              attachments.items(),
-              start=1,
-          ):
-              candidates = [
-                  path for path in output.iterdir()
-                  if path.is_file() and path.name != "manifest.json"
-                  and path.name.startswith(attachment_id)
-              ]
+          capture_index = 1
+          for attachment_id, suggested_name in attachments.items():
+              attachment_files = sorted(
+                  (
+                      path
+                      for path in output.iterdir()
+                      if path.is_file()
+                      and path.name != "manifest.json"
+                      and path.name.startswith(attachment_id)
+                  ),
+                  key=lambda path: path.name,
+              )
+              candidates = []
+              for source in attachment_files:
+                  if source.suffix.casefold() in image_suffixes:
+                      candidates.append(source)
+                  else:
+                      source.unlink()
               for source in candidates:
                   base_name = Path(suggested_name).stem.casefold()
                   safe_name = re.sub(r"[^a-z0-9]+", "-", base_name).strip("-")
+                  suffix = source.suffix
                   if not safe_name:
-                      destination = output / f"{index:02d}.png"
+                      destination = output / f"{capture_index:02d}{suffix}"
                   else:
-                      destination = output / f"{index:02d}-{safe_name}.png"
+                      destination = output / f"{capture_index:02d}-{safe_name}{suffix}"
                   counter = 2
                   while destination.name in used_names or destination.exists():
                       destination = output / f"{destination.stem}-{counter}{destination.suffix}"
                       counter += 1
                   source.rename(destination)
                   used_names.add(destination.name)
+                  capture_index += 1
           PY
           }
 
@@ -361,8 +375,8 @@ jobs:
             else
               shopt -s nullglob
               files=("$output"/*.png)
-              if [ "${#files[@]}" -ne 7 ]; then
-                echo "warn: $label produced ${#files[@]} PNGs; expected 7"
+              if [ "${#files[@]}" -ne "$EXPECTED_SCREENSHOTS" ]; then
+                echo "warn: $label produced ${#files[@]} PNGs; expected ${EXPECTED_SCREENSHOTS}"
                 status=1
               else
                 : > "$output/.capture-complete"
@@ -412,8 +426,8 @@ jobs:
           for label in iphone-6-9 iphone-6-5 ipad-13; do
             source_dir="build/appstore-screenshots/$label"
             files=("$source_dir"/*.png)
-            if [ ! -f "$source_dir/.capture-complete" ] || [ "${#files[@]}" -ne 7 ]; then
-              echo "Incomplete App Store screenshot set for $label; preserving existing files"
+            if [ ! -f "$source_dir/.capture-complete" ] || [ "${#files[@]}" -ne "$EXPECTED_SCREENSHOTS" ]; then
+              echo "Incomplete App Store screenshot set for $label: got ${#files[@]}, expected ${EXPECTED_SCREENSHOTS}; preserving existing files"
               continue
             fi
             destination_dir="store/appstore/screenshots/$label"
