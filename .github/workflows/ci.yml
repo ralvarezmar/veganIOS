@@ -449,24 +449,31 @@ jobs:
 
           git commit -m "chore(ios): update App Store screenshots [skip ci]"
           pushed=false
+          compact_git_output() {
+            output="$1"
+            output="${output//$'\n'/ }"
+            output="${output//$'\r'/ }"
+            printf '%s' "$output" | tr -s ' '
+          }
           for attempt in 1 2 3; do
             if ! fetch_output=$(git fetch origin "$GITHUB_REF_NAME" 2>&1); then
-              echo "::warning::Could not fetch ${GITHUB_REF_NAME} before screenshot push attempt ${attempt}:"
-              echo "$fetch_output"
+              echo "::warning::Could not fetch ${GITHUB_REF_NAME} before screenshot push attempt ${attempt}: $(compact_git_output "$fetch_output")"
               break
             fi
             if ! rebase_output=$(git rebase --autostash "origin/${GITHUB_REF_NAME}" 2>&1); then
               git rebase --abort || true
-              echo "::warning::Could not rebase screenshot changes onto origin/${GITHUB_REF_NAME} (attempt ${attempt}):"
-              echo "$rebase_output"
+              echo "::warning::Could not rebase screenshot changes onto origin/${GITHUB_REF_NAME} (attempt ${attempt}): $(compact_git_output "$rebase_output")"
+              if [ "$attempt" -lt 3 ]; then
+                sleep $((attempt * 10))
+                continue
+              fi
               break
             fi
             if push_output=$(git push origin "HEAD:${GITHUB_REF_NAME}" 2>&1); then
               pushed=true
               break
             else
-              echo "::warning::Screenshot push attempt ${attempt} failed:"
-              echo "$push_output"
+              echo "::warning::Screenshot push attempt ${attempt} failed: $(compact_git_output "$push_output")"
             fi
             if [ "$attempt" -lt 3 ]; then
               sleep $((attempt * 10))
