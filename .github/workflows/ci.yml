@@ -340,7 +340,7 @@ jobs:
 
           manifest = json.loads(manifest_path.read_text())
           attachments = []
-          seen_attachments = set()
+          attachment_positions = {}
 
           def collect(value):
               if isinstance(value, dict):
@@ -351,10 +351,21 @@ jobs:
                       or value.get("exportedFilename")
                       or ""
                   )
-                  attachment_key = (attachment_id, exported_name)
-                  if attachment_id and attachment_key not in seen_attachments:
-                      attachments.append((attachment_id, name, exported_name))
-                      seen_attachments.add(attachment_key)
+                  if attachment_id:
+                      position = attachment_positions.get(attachment_id)
+                      if position is None:
+                          attachment_positions[attachment_id] = len(attachments)
+                          attachments.append((attachment_id, name, exported_name))
+                      else:
+                          old_id, old_name, old_exported_name = attachments[position]
+                          if (name and not old_name) or (
+                              exported_name and not old_exported_name
+                          ):
+                              attachments[position] = (
+                                  old_id,
+                                  name or old_name,
+                                  exported_name or old_exported_name,
+                              )
                   for child in value.values():
                       collect(child)
               elif isinstance(value, list):
