@@ -94,7 +94,7 @@ jobs:
           files: |
             build/ipa/*.ipa
 
-      - name: Commit release build and version back to repo
+      - name: Commit release version back to repo
         if: ${{ github.ref == 'refs/heads/main' }}
         env:
           NEW_VERSION: ${{ steps.version.outputs.name }}
@@ -102,13 +102,10 @@ jobs:
           NEW_TAG: ${{ steps.tag_version.outputs.new_tag }}
         run: |
           set -e
-          ipa="$(ls -1 build/ipa/*.ipa | head -n1)"
-          mkdir -p releases
-          cp "$ipa" releases/VeganLens-unsigned.ipa
           printf 'MARKETING_VERSION=%s\nCURRENT_PROJECT_VERSION=%s\nTAG=%s\n' "$NEW_VERSION" "$NEW_CODE" "$NEW_TAG" > VERSION
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add releases/VeganLens-unsigned.ipa VERSION
+          git add VERSION
           if git diff --cached --quiet; then
             echo "Nothing to commit"
           else
