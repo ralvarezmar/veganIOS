@@ -328,6 +328,7 @@ jobs:
               echo "warn: failed to export attachments from $result_bundle"
               return 0
             fi
+            # Use test-results JSON because export's manifest omits attachment names on this Xcode.
             if ! xcrun xcresulttool get test-results tests \
               --path "$result_bundle" \
               --format json > "$output/test-results.json"; then
