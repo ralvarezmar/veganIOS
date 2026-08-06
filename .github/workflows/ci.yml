@@ -397,13 +397,14 @@ jobs:
               "favorites-empty",
               "search",
           )
-          if len(image_sources) == len(default_screen_names) and attachments and all(
-              not name for _, name, _ in attachments
+          if len(image_sources) == len(default_screen_names) and (
+              not attachments or all(not name for _, name, _ in attachments)
           ):
               attachments = [
-                  (attachment_id, default_screen_names[index], exported_name)
-                  for index, (attachment_id, _, exported_name) in enumerate(
+                  (attachment[0] if attachment else "", default_screen_names[index], "")
+                  for index, attachment in enumerate(
                       attachments[:len(default_screen_names)]
+                      or [("", "", "")] * len(default_screen_names)
                   )
               ]
 
@@ -413,7 +414,7 @@ jobs:
                   attachment_files = (
                       [exported_path] if exported_path.is_file() else []
                   )
-              else:
+              elif attachment_id:
                   attachment_files = sorted(
                       (
                           path
@@ -424,6 +425,8 @@ jobs:
                       ),
                       key=lambda path: path.name,
                   )
+              else:
+                  attachment_files = []
               attachment_files = [
                   path for path in attachment_files if path not in claimed_sources
               ]
