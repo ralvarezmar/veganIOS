@@ -345,6 +345,25 @@ jobs:
                   source.rename(destination)
                   used_names.add(destination.name)
                   capture_index += 1
+
+          for source in sorted(output.iterdir(), key=lambda path: path.name):
+              if (
+                  not source.is_file()
+                  or source.name == "manifest.json"
+                  or source.name in used_names
+              ):
+                  continue
+              if source.suffix.casefold() not in image_suffixes:
+                  source.unlink()
+                  continue
+              destination = output / f"{capture_index:02d}{source.suffix}"
+              counter = 2
+              while destination.name in used_names or destination.exists():
+                  destination = output / f"{destination.stem}-{counter}{destination.suffix}"
+                  counter += 1
+              source.rename(destination)
+              used_names.add(destination.name)
+              capture_index += 1
           PY
           }
 
