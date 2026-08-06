@@ -6,11 +6,42 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+### Cambiado
+- El changelog y las notas de prueba de TestFlight se dividen por versión publicada.
+
+## [0.1.2] - 2026-08-05
+
+### Añadido
+- Energía en kJ cuando el producto no aporta kilocalorías.
+- Pruebas de decodificación del modelo con respuestas de ejemplo de Open Food Facts.
+
+### Cambiado
+- Ajustado el flujo de CI para asignar correctamente las compilaciones al grupo de TestFlight.
+- Tiempos de espera de red más cortos y un único reintento en las lecturas; las escrituras no se reintentan.
+
+### Corregido
+- Decodificación tolerante de respuestas de Open Food Facts: un campo mal formado ya no descarta el producto completo y `nova_group` acepta número o texto.
+- El estado de las contribuciones se interpreta tanto si llega como número como si llega como texto, con mensajes de error más claros.
+
+## [0.1.1] - 2026-08-05
+
 ### Corregido
 - Los valores nutricionales no se mostraban en la pantalla de resultado: ahora
   se solicita el producto completo a Open Food Facts y se aceptan valores
   numéricos entregados como texto, igual que en Android.
 - Las contribuciones a Open Food Facts fallaban porque OFF ya no acepta envíos anónimos; ahora se autentican con una cuenta compartida de la app configurada por CI.
+
+## [0.1.0] - 2026-08-04
+
+### Añadido
+- Veredicto basado en ingredientes con ajustes de accesibilidad y nuevo icono de la app.
+
+## [0.0.2] - 2026-08-04
+
+### Cambiado
+- Ajustes del flujo de firma, exportación y validación de la distribución para el App Store.
+
+## [0.0.1] - 2026-08-03
 
 ### Añadido
 - Idiomas italiano y portugués, traducción de ingredientes en el dispositivo,
