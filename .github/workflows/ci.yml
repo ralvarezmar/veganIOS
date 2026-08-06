@@ -328,6 +328,12 @@ jobs:
               echo "warn: failed to export attachments from $result_bundle"
               return 0
             fi
+            if ! xcrun xcresulttool get test-results tests \
+              --path "$result_bundle" \
+              --format json > "$output/test-results.json"; then
+              echo "warn: failed to read test attachment metadata from $result_bundle"
+              rm -f "$output/test-results.json"
+            fi
             python3 - "$output" <<'PY'
           import json
           import re
@@ -335,144 +341,106 @@ jobs:
           from pathlib import Path
 
           output = Path(sys.argv[1])
-          manifest_path = output / "manifest.json"
-          if not manifest_path.exists():
-              raise SystemExit(0)
+          metadata_path = output / "test-results.json"
+          metadata = (
+              json.loads(metadata_path.read_text())
+              if metadata_path.exists()
+              else {}
+          )
+          attachment_refs = []
 
-          manifest = json.loads(manifest_path.read_text())
-          attachments = []
-          attachment_positions = {}
-
-          def collect(value):
+          def collect(value, in_attachments=False):
               if isinstance(value, dict):
-                  attachment_id = value.get("attachmentID") or value.get("attachmentId")
-                  name = value.get("suggestedHumanReadableName") or ""
-                  exported_name = (
-                      value.get("exportedFileName")
-                      or value.get("exportedFilename")
-                      or ""
+                  is_attachment = in_attachments or any(
+                      key in value
+                      for key in (
+                          "attachmentID",
+                          "attachmentId",
+                          "payloadRef",
+                          "filename",
+                          "exportedFileName",
+                          "exportedFilename",
+                      )
                   )
-                  if attachment_id:
-                      position = attachment_positions.get(attachment_id)
-                      if position is None:
-                          attachment_positions[attachment_id] = len(attachments)
-                          attachments.append((attachment_id, name, exported_name))
+                  if is_attachment:
+                      payload_ref = value.get("payloadRef")
+                      if isinstance(payload_ref, dict):
+                          attachment_id = (
+                              payload_ref.get("id")
+                              or payload_ref.get("identifier")
+                              or ""
+                          )
                       else:
-                          old_id, old_name, old_exported_name = attachments[position]
-                          if (name and not old_name) or (
-                              exported_name and not old_exported_name
-                          ):
-                              attachments[position] = (
-                                  old_id,
-                                  name or old_name,
-                                  exported_name or old_exported_name,
-                              )
-                  for child in value.values():
-                      collect(child)
+                          attachment_id = payload_ref or ""
+                      attachment_id = (
+                          value.get("attachmentID")
+                          or value.get("attachmentId")
+                          or attachment_id
+                      )
+                      name = (
+                          value.get("name")
+                          or value.get("suggestedHumanReadableName")
+                          or value.get("title")
+                          or ""
+                      )
+                      filename = (
+                          value.get("filename")
+                          or value.get("fileName")
+                          or value.get("exportedFileName")
+                          or value.get("exportedFilename")
+                          or ""
+                      )
+                      if name and (attachment_id or filename):
+                          attachment_refs.append(
+                              (str(attachment_id), Path(str(filename)).name, name)
+                          )
+                  for key, child in value.items():
+                      collect(
+                          child,
+                          in_attachments or key.casefold() in {"attachment", "attachments"},
+                      )
               elif isinstance(value, list):
                   for child in value:
-                      collect(child)
+                      collect(child, in_attachments)
 
-          collect(manifest)
+          collect(metadata)
 
           image_suffixes = {".heic", ".jpeg", ".jpg", ".png", ".tif", ".tiff"}
           used_names = set()
           capture_index = 1
-          claimed_sources = set()
           image_sources = sorted(
               (
                   path
                   for path in output.iterdir()
                   if path.is_file()
                   and path.name != "manifest.json"
+                  and path.name != "test-results.json"
                   and path.suffix.casefold() in image_suffixes
               ),
               key=lambda path: path.name,
           )
-          default_screen_names = (
-              "onboarding",
-              "scanner",
-              "settings-accessibility",
-              "profile",
-              "history-empty",
-              "favorites-empty",
-              "search",
-          )
-          expected_screenshots = int(
-              os.environ.get("EXPECTED_SCREENSHOTS", str(len(default_screen_names)))
-          )
-          if len(image_sources) == expected_screenshots and (
-              not attachments or all(not name for _, name, _ in attachments)
-          ):
-              attachments = [
-                  (attachment[0] if attachment else "", default_screen_names[index], "")
-                  for index, attachment in enumerate(
-                      attachments[:len(default_screen_names)]
-                      or [("", "", "")] * len(default_screen_names)
-                  )
-              ]
+          named_sources = {}
+          for source in image_sources:
+              for attachment_id, filename, name in attachment_refs:
+                  if (
+                      filename == source.name
+                      or (attachment_id and source.name.startswith(attachment_id))
+                  ):
+                      named_sources[source] = name
+                      break
 
-          for attachment_id, suggested_name, exported_name in attachments:
-              if exported_name:
-                  exported_path = output / Path(exported_name).name
-                  attachment_files = (
-                      [exported_path] if exported_path.is_file() else []
-                  )
-              elif attachment_id:
-                  attachment_files = sorted(
-                      (
-                          path
-                          for path in output.iterdir()
-                          if path.is_file()
-                          and path.name != "manifest.json"
-                          and path.name.startswith(attachment_id)
-                      ),
-                      key=lambda path: path.name,
-                  )
-              else:
-                  attachment_files = []
-              attachment_files = [
-                  path for path in attachment_files if path not in claimed_sources
-              ]
-              if not attachment_files:
-                  attachment_files = [
-                      path for path in image_sources
-                      if path not in claimed_sources
-                  ][:1]
-              candidates = []
-              for source in attachment_files:
-                  if source.suffix.casefold() in image_suffixes:
-                      candidates.append(source)
-                  else:
-                      source.unlink()
-              for source in candidates:
-                  base_name = Path(suggested_name).stem.casefold()
-                  safe_name = re.sub(r"[^a-z0-9]+", "-", base_name).strip("-")
-                  suffix = source.suffix
-                  if not safe_name:
-                      destination = output / f"{capture_index:02d}{suffix}"
-                  else:
-                      destination = output / f"{capture_index:02d}-{safe_name}{suffix}"
-                  counter = 2
-                  while destination.name in used_names or destination.exists():
-                      destination = output / f"{destination.stem}-{counter}{destination.suffix}"
-                      counter += 1
-                  source.rename(destination)
-                  used_names.add(destination.name)
-                  claimed_sources.add(source)
-                  capture_index += 1
-
-          for source in sorted(output.iterdir(), key=lambda path: path.name):
-              if (
-                  not source.is_file()
-                  or source.name == "manifest.json"
-                  or source.name in used_names
-              ):
-                  continue
-              if source.suffix.casefold() not in image_suffixes:
-                  source.unlink()
-                  continue
-              destination = output / f"{capture_index:02d}{source.suffix}"
+          for source in image_sources:
+              safe_name = re.sub(
+                  r"[^a-z0-9]+",
+                  "-",
+                  Path(named_sources.get(source, "")).stem.casefold(),
+              ).strip("-")
+              suffix = source.suffix
+              destination = (
+                  output / f"{capture_index:02d}-{safe_name}{suffix}"
+                  if safe_name
+                  else output / f"{capture_index:02d}{suffix}"
+              )
               counter = 2
               while destination.name in used_names or destination.exists():
                   destination = output / f"{destination.stem}-{counter}{destination.suffix}"
@@ -480,6 +448,13 @@ jobs:
               source.rename(destination)
               used_names.add(destination.name)
               capture_index += 1
+
+          for source in output.iterdir():
+              if source.is_file() and source.name not in used_names:
+                  if source.name in {"manifest.json", "test-results.json"}:
+                      source.unlink()
+                  elif source.suffix.casefold() not in image_suffixes:
+                      source.unlink()
           PY
           }
 
