@@ -374,23 +374,6 @@ jobs:
 
           collect(manifest)
 
-          default_screen_names = (
-              "onboarding",
-              "scanner",
-              "settings-accessibility",
-              "profile",
-              "history-empty",
-              "favorites-empty",
-              "search",
-          )
-          if len(attachments) == len(default_screen_names) and all(
-              not name for _, name, _ in attachments
-          ):
-              attachments = [
-                  (attachment_id, default_screen_names[index], exported_name)
-                  for index, (attachment_id, _, exported_name) in enumerate(attachments)
-              ]
-
           image_suffixes = {".heic", ".jpeg", ".jpg", ".png", ".tif", ".tiff"}
           used_names = set()
           capture_index = 1
@@ -405,6 +388,25 @@ jobs:
               ),
               key=lambda path: path.name,
           )
+          default_screen_names = (
+              "onboarding",
+              "scanner",
+              "settings-accessibility",
+              "profile",
+              "history-empty",
+              "favorites-empty",
+              "search",
+          )
+          if len(image_sources) == len(default_screen_names) and attachments and all(
+              not name for _, name, _ in attachments
+          ):
+              attachments = [
+                  (attachment_id, default_screen_names[index], exported_name)
+                  for index, (attachment_id, _, exported_name) in enumerate(
+                      attachments[:len(default_screen_names)]
+                  )
+              ]
+
           for attachment_id, suggested_name, exported_name in attachments:
               if exported_name:
                   exported_path = output / Path(exported_name).name
