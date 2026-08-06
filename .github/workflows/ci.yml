@@ -280,14 +280,22 @@ jobs:
               raise SystemExit(0)
 
           manifest = json.loads(manifest_path.read_text())
-          attachments = {}
+          attachments = []
+          seen_attachments = set()
 
           def collect(value):
               if isinstance(value, dict):
                   attachment_id = value.get("attachmentID") or value.get("attachmentId")
                   name = value.get("suggestedHumanReadableName") or ""
-                  if attachment_id:
-                      attachments[attachment_id] = name
+                  exported_name = (
+                      value.get("exportedFileName")
+                      or value.get("exportedFilename")
+                      or ""
+                  )
+                  attachment_key = (attachment_id, exported_name)
+                  if attachment_id and attachment_key not in seen_attachments:
+                      attachments.append((attachment_id, name, exported_name))
+                      seen_attachments.add(attachment_key)
                   for child in value.values():
                       collect(child)
               elif isinstance(value, list):
@@ -299,17 +307,23 @@ jobs:
           image_suffixes = {".heic", ".jpeg", ".jpg", ".png", ".tif", ".tiff"}
           used_names = set()
           capture_index = 1
-          for attachment_id, suggested_name in attachments.items():
-              attachment_files = sorted(
-                  (
-                      path
-                      for path in output.iterdir()
-                      if path.is_file()
-                      and path.name != "manifest.json"
-                      and path.name.startswith(attachment_id)
-                  ),
-                  key=lambda path: path.name,
-              )
+          for attachment_id, suggested_name, exported_name in attachments:
+              if exported_name:
+                  exported_path = output / Path(exported_name).name
+                  attachment_files = (
+                      [exported_path] if exported_path.is_file() else []
+                  )
+              else:
+                  attachment_files = sorted(
+                      (
+                          path
+                          for path in output.iterdir()
+                          if path.is_file()
+                          and path.name != "manifest.json"
+                          and path.name.startswith(attachment_id)
+                      ),
+                      key=lambda path: path.name,
+                  )
               candidates = []
               for source in attachment_files:
                   if source.suffix.casefold() in image_suffixes:
