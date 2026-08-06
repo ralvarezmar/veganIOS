@@ -6,6 +6,12 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+### Cambiado
+- Las aportaciones a Open Food Facts se explican correctamente: no requieren cuenta ni inicio de sesión y se publican a través de la cuenta de la aplicación.
+- La caché sin conexión caduca a los 60 días y los datos caducados ya no se muestran.
+- Los datos nutricionales y el veredicto se leen como unidades completas con lectores de pantalla, incluyendo sus valores y unidades.
+- Mejorados los procesos de distribución, pruebas automáticas, localizaciones y capturas de la aplicación; la aplicación y su documentación usan ahora el nombre VeganLens.
+
 ## [1.0.0 (20)] - 2026-08-06
 
 ### Cambiado
