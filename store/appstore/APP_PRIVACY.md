@@ -68,14 +68,14 @@ provide credentials, and no personal data from the user is collected.
 - Product photos are optional and independent from the in-memory OCR image.
 - The OCR image is not uploaded unless the user separately selects an image
   as an intentional product-photo contribution.
-- To let Open Food Facts accept anonymous contributions, the app also sends a
+- To let Open Food Facts accept contributions, the app also sends a
   random app identifier (`app_uuid`) that is not linked to a personal account
   and is not used for tracking.
 
 This user-directed product submission contains open product content, not
 personal data linked to the user. Keep the App Privacy personal-data answers
 above as **no data collected**. If Apple presents a separate question about
-user-generated content or product submissions, describe this anonymous,
+user-generated content or product submissions, describe this authenticated,
 explicitly user-initiated product contribution there.
 
 ## Local data and deletion
