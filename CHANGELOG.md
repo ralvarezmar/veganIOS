@@ -1,10 +1,16 @@
 # Changelog
 
-Todos los cambios notables de VCheck (iOS) se documentan en este archivo.
+Todos los cambios notables de VeganLens (iOS) se documentan en este archivo.
 
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
 ## [Sin publicar]
+
+### Cambiado
+- Las aportaciones a Open Food Facts se explican correctamente: no requieren cuenta ni inicio de sesión y se publican a través de la cuenta de la aplicación.
+- La caché sin conexión caduca a los 60 días y los datos caducados ya no se muestran.
+- Los datos nutricionales y el veredicto se leen como unidades completas con lectores de pantalla, incluyendo sus valores y unidades.
+- Mejorados los procesos de distribución, pruebas automáticas, localizaciones y capturas de la aplicación; la aplicación y su documentación usan ahora el nombre VeganLens.
 
 ## [1.0.0 (20)] - 2026-08-06
 
@@ -51,7 +57,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
   escaneo en la pantalla de inicio.
 - CI de compilación para macOS en GitHub Actions.
 - Email de contacto, políticas de privacidad en español e inglés en GitHub Pages y enlace desde la app.
-- Renombrada la app a VCheck, con el identificador actualizado a `com.ralvarezmar.vcheck`.
+- Renombrada la app a VeganLens, con el identificador actualizado a `com.ralvarezmar.vcheck`.
 - Distribución de macronutrientes y badge de Nutri-Score en la pantalla de resultado.
 - Atribución visible a Open Food Facts (ODbL), accesibilidad con subrayado/lectura de ingredientes señalados, localización completa ES/EN y licencia MIT.
 - Descripción para la App Store en el README (subtítulo, texto promocional y descripción completa).
@@ -66,7 +72,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ### Cambiado
 - Acento lavanda en el modo oscuro, manteniendo el verde en el modo claro.
-- Renombrada la app a **VCheck**.
+- Renombrada la app a **VeganLens**.
 - Rediseño general de la interfaz: banner de veredicto con subtítulo e indicador de fuente.
 - Lista de ingredientes como texto corrido; solo se resaltan los dudosos y los no aptos.
 - Limpieza más robusta de los nombres de ingredientes (entidades HTML, marcadores y espacios).

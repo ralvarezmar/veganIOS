@@ -1,4 +1,4 @@
-# VCheck
+# VeganLens
 
 iOS SwiftUI app para escanear códigos de barras EAN/UPC, consultar Open Food Facts con fallback a Open Beauty Facts, Open Product Facts y Open Pet Food Facts, mostrar un veredicto vegano prominente y guardar historial local con SwiftData.
 
@@ -14,9 +14,9 @@ iOS SwiftUI app para escanear códigos de barras EAN/UPC, consultar Open Food Fa
 
 **Descripción completa:**
 
-VCheck es tu asistente de compra vegana. Apunta la cámara al código de barras de cualquier producto alimentario o cosmético y descubre en segundos si es **apto para veganos**, junto con su lista completa de ingredientes, aditivos, alérgenos e información nutricional.
+VeganLens es tu asistente de compra vegana. Apunta la cámara al código de barras de cualquier producto alimentario o cosmético y descubre en segundos si es **apto para veganos**, junto con su lista completa de ingredientes, aditivos, alérgenos e información nutricional.
 
-Olvídate de leer etiquetas interminables o de buscar ingredientes de origen animal uno a uno. VCheck analiza la composición del producto y te muestra un veredicto claro y con color:
+Olvídate de leer etiquetas interminables o de buscar ingredientes de origen animal uno a uno. VeganLens analiza la composición del producto y te muestra un veredicto claro y con color:
 
 • Apto para veganos — sin ingredientes de origen animal ni dudoso.
 • No apto para veganos — contiene ingredientes de origen animal (te los enumera).
@@ -32,9 +32,9 @@ Funciones principales:
 • Historial local de tus escaneos recientes para volver a consultarlos cuando quieras.
 • Interfaz nativa SwiftUI con soporte de modo oscuro.
 
-Privacidad: VCheck solo usa la cámara para leer códigos de barras y se conecta a Internet para consultar la información pública de los productos. No requiere registro ni recopila datos personales; el historial se guarda únicamente en tu dispositivo.
+Privacidad: VeganLens solo usa la cámara para leer códigos de barras y se conecta a Internet para consultar la información pública de los productos. No requiere registro ni recopila datos personales; el historial se guarda únicamente en tu dispositivo.
 
-La información de los productos procede de las bases colaborativas y abiertas de Open Food Facts y sus proyectos hermanos. VCheck no está afiliada a dichos proyectos.
+La información de los productos procede de las bases colaborativas y abiertas de Open Food Facts y sus proyectos hermanos. VeganLens no está afiliada a dichos proyectos.
 
 *Nota: el veredicto vegano se basa en los datos disponibles en las bases consultadas y puede estar incompleto o desactualizado. Ante cualquier duda, consulta siempre el etiquetado oficial del producto.*
 
@@ -56,7 +56,7 @@ La información de los productos procede de las bases colaborativas y abiertas d
 ## Abrir el proyecto
 
 ```bash
-open VeganChecker.xcodeproj
+open VeganLens.xcodeproj
 ```
 
 ## Ejecutar
@@ -83,4 +83,4 @@ xcodegen generate
 
 La app usa datos de [Open Food Facts](https://world.openfoodfacts.org/), [Open Beauty Facts](https://world.openbeautyfacts.org/) y [Open Product Facts](https://world.openproductfacts.org/).
 
-La app incluye la fuente Atkinson Hyperlegible © Braille Institute, licenciada bajo SIL Open Font License 1.1. El texto completo de la licencia está en `VeganChecker/Fonts/OFL.txt`.
+La app incluye la fuente Atkinson Hyperlegible © Braille Institute, licenciada bajo SIL Open Font License 1.1. El texto completo de la licencia está en `VeganLens/Fonts/OFL.txt`.

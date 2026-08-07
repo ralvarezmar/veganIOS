@@ -10,7 +10,7 @@ Scan and choose wisely
 
 ## Promotional text (≤170 characters)
 
-Check ingredients, allergens, and additives, discover vegan alternatives, and contribute anonymously—without accounts or trackers.
+Check ingredients, allergens, and additives, discover vegan alternatives, and contribute through the app's account—without a personal account or trackers.
 
 ## Description (≤4000 characters)
 
@@ -30,7 +30,7 @@ You also get:
 * An offline cache for recently scanned products.
 * History and favourites stored locally on your device.
 * On-device ingredient OCR with Vision: capture a list and fill the ingredients field. The image is not uploaded or stored for OCR.
-* Anonymous contributions to the Open Facts databases only when you choose to start them, with product data and optional photos. No account or login is required.
+* Contributions to the Open Facts databases only when you choose to start them, published through the app's account with product data and optional photos. No personal account or login is required.
 * A user interface in Spanish, English, German, and French.
 
 Privacy first: no analytics, crash reporting, advertising, trackers, accounts, or personal identifiers. VeganLens is free and powered by open data.

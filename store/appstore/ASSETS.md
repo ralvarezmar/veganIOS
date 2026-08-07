@@ -1,4 +1,4 @@
-# App Store assets — VeganLens / VCheck
+# App Store assets — VeganLens / VeganLens
 
 Recursos de marketing para el envío a App Store Connect (bundle id `com.ralvarezmar.vcheck`).
 
@@ -13,7 +13,7 @@ Recursos de marketing para el envío a App Store Connect (bundle id `com.ralvare
 
 Las capturas se generan automáticamente en el runner **macOS de GitHub Actions** (workflow
 `iOS CI`, job `build`, paso *Capture App Store screenshots*) ejecutando
-`VeganCheckerUITests/ScreenshotUITests` en varios simuladores. Tras cada ejecución se suben
+`VeganLensUITests/ScreenshotUITests` en varios simuladores. Tras cada ejecución se suben
 como artefacto descargable **`ios-app-store-screenshots`**, con una subcarpeta por dispositivo.
 
 Descarga ese artefacto y coloca las PNG en las carpetas correspondientes de aquí:
