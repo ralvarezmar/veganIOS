@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+## [1.0.1 (22)] - 2026-08-07
+
 ### Cambiado
 - Las aportaciones a Open Food Facts se explican correctamente: no requieren cuenta ni inicio de sesión y se publican a través de la cuenta de la aplicación.
 - La caché sin conexión caduca a los 60 días y los datos caducados ya no se muestran.
