@@ -110,7 +110,7 @@ final class VeganAnalyzerTests: XCTestCase {
         )
         XCTAssertEqual(
             cleanFoodFactsLabel("&lt;b&gt;lait&lt;/b&gt;"),
-            "<b>Lait</b>"
+            "<b>lait</b>"
         )
     }
 

@@ -223,7 +223,13 @@ func cleanFoodFactsLabel(_ raw: String?) -> String? {
 
     return normalized
         .split(whereSeparator: { $0.isWhitespace })
-        .map { $0.lowercased().capitalized }
+        .map { word in
+            let lowercased = word.lowercased()
+            guard let first = lowercased.first, first.isLowercase else {
+                return lowercased
+            }
+            return String(first).uppercased() + lowercased.dropFirst()
+        }
         .joined(separator: " ")
 }
 
