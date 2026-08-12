@@ -130,6 +130,26 @@ jobs:
             exit 1
           fi
 
+      - name: Export unit test diagnostics
+        if: always()
+        run: |
+          if [ -d build/Result-unit.xcresult ]; then
+            xcrun xcresulttool get test-results tests \
+              --path build/Result-unit.xcresult \
+              --format json > build/unit-test-summary.json || true
+          fi
+
+      - name: Upload unit test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-unit-test-diagnostics
+          path: |
+            build/Result-unit.xcresult/**
+            build/unit-test-summary.json
+            build/xcodebuild-unit-tests.log
+          if-no-files-found: warn
+
       - name: Run UI tests on iOS Simulator
         run: |
           rm -rf build/Result.xcresult
