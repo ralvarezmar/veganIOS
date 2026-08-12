@@ -204,8 +204,15 @@
 "cache_age_hours" = "vor %d Std.";
 "cache_age_day" = "Vor 1 Tag aktualisiert";
 "cache_age_days" = "vor %d Tagen";
-"vegan_non_vegan_label" = "Zutaten tierischen Ursprungs:";
-"vegan_doubtful_label" = "Zutaten zweifelhafter Herkunft:";
+"vegan_reason_structured_non_vegan" = "Ursache: %@ (tierischen Ursprungs laut Open Food Facts).";
+"vegan_reason_structured_doubtful" = "Ursache: %@ (möglicherweise tierischen Ursprungs laut Open Food Facts).";
+"vegan_reason_structured_vegan" = "Open Food Facts kennzeichnet die Zutaten als geeignet.";
+"vegan_reason_decisive_tag" = "Bewertung direkt von Open Food Facts gekennzeichnet.";
+"vegan_reason_heuristic" = "Im Zutatentext erkannt: %@ (nur ein Hinweis, nicht von Open Food Facts bestätigt).";
+"vegan_reason_heuristic_uncertain" = "Der Zutatentext bestätigt die Herkunft nicht; prüfe das Etikett.";
+"vegan_reason_vegan_seal" = "Veganes Siegel in Open Food Facts registriert.";
+"vegan_reason_meat_category" = "Kategorie für Fleischersatz in Open Food Facts registriert.";
+"vegan_reason_more" = "und %d weitere";
 "data_source_label" = "Quelle:";
 "data_source_label_format" = "Quelle: %@";
 "ingredient_unknown" = "Unbekannte Zutat";

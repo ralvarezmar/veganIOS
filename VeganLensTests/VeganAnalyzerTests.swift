@@ -11,6 +11,7 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertTrue(isStatus(analysis.status, .vegan))
         XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
         XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
+        XCTAssertEqual(analysis.reason?.source, .decisiveTag)
     }
 
     func testDecisiveNonVeganTagReturnsNotVegan() {
@@ -22,6 +23,7 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertTrue(isStatus(analysis.status, .notVegan))
         XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
         XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
+        XCTAssertEqual(analysis.reason?.source, .decisiveTag)
     }
 
     func testDecisiveMaybeTagReturnsMaybe() {
@@ -33,6 +35,7 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertTrue(isStatus(analysis.status, .maybe))
         XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
         XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
+        XCTAssertEqual(analysis.reason?.source, .decisiveTag)
     }
 
     func testIngredientNoReturnsNotVeganAndCollectsNames() {
@@ -47,6 +50,7 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertTrue(isStatus(analysis.status, .notVegan))
         XCTAssertEqual(analysis.nonVeganIngredients, ["Gelatin"])
         XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
+        XCTAssertEqual(analysis.reason?.source, .structuredNonVeganIngredient)
     }
 
     func testIngredientMaybeReturnsMaybeAndCollectsNames() {
@@ -60,6 +64,7 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertTrue(isStatus(analysis.status, .maybe))
         XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
         XCTAssertEqual(analysis.doubtfulIngredients, ["Mono And Diglycerides"])
+        XCTAssertEqual(analysis.reason?.source, .structuredDoubtfulIngredient)
     }
 
     func testIngredientYesReturnsVegan() {
@@ -73,6 +78,7 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertTrue(isStatus(analysis.status, .vegan))
         XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
         XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
+        XCTAssertEqual(analysis.reason?.source, .structuredVeganIngredient)
     }
 
     func testUnknownWhenInputsAreEmptyOrNil() {
@@ -97,6 +103,17 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertNil(cleanFoodFactsLabel("   "))
     }
 
+    func testCleanFoodFactsLabelStripsMarkupBeforeDecodingEntities() {
+        XCTAssertEqual(
+            cleanFoodFactsLabel("<b>fr:lait crème</b> &amp; sucre"),
+            "Lait Crème & Sucre"
+        )
+        XCTAssertEqual(
+            cleanFoodFactsLabel("&lt;b&gt;lait&lt;/b&gt;"),
+            "<b>lait</b>"
+        )
+    }
+
     func testUnknownIngredientTextUsesHeuristic() {
         let analysis = analyzeVegan(
             ingredientsAnalysisTags: nil,
@@ -108,6 +125,10 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertEqual(analysis.nonVeganIngredients, ["Vollmilchpulver"])
         XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
         XCTAssertTrue(analysis.heuristic)
+    }
+
+    func testHeuristicDetectsAnimalIngredientInsideMarkup() {
+        XCTAssertEqual(detectAnimalIngredients("<b>lait</b>, sucre").count, 1)
     }
 
     func testUnknownIngredientTextWithoutAnimalTermsBecomesMaybeHeuristic() {
@@ -130,6 +151,65 @@ final class VeganAnalyzerTests: XCTestCase {
 
         XCTAssertTrue(isStatus(analysis.status, .vegan))
         XCTAssertFalse(analysis.heuristic)
+    }
+
+    func testVeganSealResolvesUnknownAndProvidesReason() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            labelsTags: ["en:certified-vegan"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .vegan))
+        XCTAssertEqual(analysis.reason?.source, .veganSeal)
+    }
+
+    func testMeatAlternativeCategoryResolvesUnknownAndProvidesReason() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            categoriesTags: ["en:plant-based-meat-substitutes"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .vegan))
+        XCTAssertEqual(analysis.reason?.source, .meatAlternativeCategory)
+    }
+
+    func testVeganSealDoesNotOverrideStructuredNonVeganIngredient() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: [
+                OffIngredient(text: "en:gelatin", vegan: "no", vegetarian: nil)
+            ],
+            labelsTags: ["en:certified-vegan"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
+        XCTAssertEqual(analysis.reason?.source, .structuredNonVeganIngredient)
+    }
+
+    func testMeatAlternativeCategoryDoesNotOverrideStructuredNonVeganIngredient() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: [
+                OffIngredient(text: "en:gelatin", vegan: "no", vegetarian: nil)
+            ],
+            categoriesTags: ["en:meat-substitutes"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
+        XCTAssertEqual(analysis.reason?.source, .structuredNonVeganIngredient)
+    }
+
+    func testHeuristicReasonIsMarkedAsTextBased() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            ingredientsText: "Vollmilchpulver, Zucker"
+        )
+
+        XCTAssertEqual(analysis.reason?.source, .heuristicText)
+        XCTAssertEqual(analysis.reason?.evidence, ["Vollmilchpulver"])
     }
 }
 

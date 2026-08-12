@@ -107,6 +107,7 @@ jobs:
         if: steps.credentials.outputs.configured == 'true' && github.ref == 'refs/heads/main'
         env:
           VERSION_LABEL: "${{ steps.version.outputs.name }} (${{ github.run_number }})"
+          VERSION_NAME: "${{ steps.version.outputs.name }}"
         run: |
           DATE="$(date +%F)"
           export DATE
@@ -160,10 +161,17 @@ jobs:
           PY
           then
             echo "::warning::Could not roll CHANGELOG.md; continuing release."
-          elif ! git diff --quiet -- CHANGELOG.md; then
+          else
+            cat > VERSION <<EOF
+          MARKETING_VERSION=${VERSION_NAME}
+          CURRENT_PROJECT_VERSION=${GITHUB_RUN_NUMBER}
+          TAG=v${VERSION_NAME}
+          EOF
+          fi
+          if ! git diff --quiet -- CHANGELOG.md VERSION; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add CHANGELOG.md
+            git add CHANGELOG.md VERSION
             if git commit -m "chore(ios): release changelog ${VERSION_LABEL} [skip ci]"; then
               pushed=false
               for attempt in 1 2 3; do

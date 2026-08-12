@@ -1268,6 +1268,14 @@ private struct VeganBannerView: View {
                 }
             }
 
+            if let explanation = veganReasonText(analysis.reason) {
+                Text(explanation)
+                    .appFont(.subheadline)
+                    .foregroundStyle(spec.foreground.opacity(0.96))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityLabel(explanation)
+            }
+
             SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
 
             if fromCache {
@@ -1284,21 +1292,6 @@ private struct VeganBannerView: View {
                 .appFont(.caption2)
                 .foregroundStyle(spec.foreground.opacity(0.9))
 
-            if !analysis.nonVeganIngredients.isEmpty {
-                SummaryBlock(
-                    title: L("vegan_non_vegan_label"),
-                    values: analysis.nonVeganIngredients,
-                    foreground: spec.foreground
-                )
-            }
-
-            if !analysis.doubtfulIngredients.isEmpty {
-                SummaryBlock(
-                    title: L("vegan_doubtful_label"),
-                    values: analysis.doubtfulIngredients,
-                    foreground: spec.foreground
-                )
-            }
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1349,6 +1342,41 @@ private struct VeganBannerView: View {
                 symbol: "questionmark.circle.fill"
             )
         }
+    }
+}
+
+private func veganReasonText(_ reason: VeganReason?) -> String? {
+    guard let reason else { return nil }
+    let visibleEvidence = Array(reason.evidence.prefix(3))
+    let evidence = visibleEvidence.joined(separator: ", ")
+    let remaining = max(0, reason.evidence.count - visibleEvidence.count)
+    let evidenceWithRemainder: String
+    if remaining > 0 {
+        let remainder = String(format: L("vegan_reason_more"), remaining)
+        evidenceWithRemainder = [evidence, remainder]
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+    } else {
+        evidenceWithRemainder = evidence
+    }
+
+    switch reason.source {
+    case .structuredNonVeganIngredient:
+        return String(format: L("vegan_reason_structured_non_vegan"), evidenceWithRemainder)
+    case .structuredDoubtfulIngredient:
+        return String(format: L("vegan_reason_structured_doubtful"), evidenceWithRemainder)
+    case .structuredVeganIngredient:
+        return L("vegan_reason_structured_vegan")
+    case .decisiveTag:
+        return L("vegan_reason_decisive_tag")
+    case .heuristicText:
+        return evidenceWithRemainder.isEmpty
+            ? L("vegan_reason_heuristic_uncertain")
+            : String(format: L("vegan_reason_heuristic"), evidenceWithRemainder)
+    case .veganSeal:
+        return L("vegan_reason_vegan_seal")
+    case .meatAlternativeCategory:
+        return L("vegan_reason_meat_category")
     }
 }
 
@@ -1667,23 +1695,6 @@ private struct CapsuleChip: View {
             .padding(.vertical, 6)
             .background(tint.opacity(0.14))
             .clipShape(Capsule())
-    }
-}
-
-private struct SummaryBlock: View {
-    let title: String
-    let values: [String]
-    let foreground: Color
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .appFont(.caption, weight: .bold)
-                .foregroundStyle(foreground)
-            Text(values.joined(separator: ", "))
-                .appFont(.body)
-                .foregroundStyle(foreground)
-        }
     }
 }
 
