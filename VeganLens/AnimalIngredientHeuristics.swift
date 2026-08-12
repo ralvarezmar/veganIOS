@@ -52,7 +52,8 @@ func detectAnimalIngredients(_ text: String) -> [String] {
 
     var results: [String] = []
     var seen = Set<String>()
-    for sentence in text.components(separatedBy: CharacterSet(charactersIn: ".!\n")) {
+    let textWithoutMarkup = cleanFoodFactsMarkup(text)
+    for sentence in textWithoutMarkup.components(separatedBy: CharacterSet(charactersIn: ".!\n")) {
         for segment in sentence.components(separatedBy: CharacterSet(charactersIn: ",;()/")) {
             let norm = normalizeIngredientSegment(segment)
             if traceWarningMarkers.contains(where: { norm.contains($0) }) { break }

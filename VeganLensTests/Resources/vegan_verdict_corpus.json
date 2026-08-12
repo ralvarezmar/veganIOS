@@ -99,6 +99,12 @@
       "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Milk"]}
     },
     {
+      "id": "heuristic-html-markup-evidence",
+      "rationale": "Markup must be removed before heuristic segmentation so evidence contains no tag residue.",
+      "ingredientsText": "<b>lait</b>, sucre",
+      "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Lait"]}
+    },
+    {
       "id": "portuguese-uncertain",
       "rationale": "A Portuguese ingredient without a shared animal marker must not be guessed as animal.",
       "ingredientsText": "Mel, açúcar",
