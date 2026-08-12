@@ -101,6 +101,8 @@ targets:
     deploymentTarget: 17.0
     sources:
       - path: VeganLensTests
+    resources:
+      - path: VeganLensTests/Resources
     dependencies:
       - target: VeganLens
     settings:

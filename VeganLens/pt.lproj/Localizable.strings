@@ -204,8 +204,6 @@
 "cache_age_hours" = "Atualizado há %d horas";
 "cache_age_day" = "Atualizado há 1 dia";
 "cache_age_days" = "Atualizado há %d dias";
-"vegan_non_vegan_label" = "Ingredientes de origem animal:";
-"vegan_doubtful_label" = "Ingredientes de proveniência duvidosa:";
 "vegan_reason_structured_non_vegan" = "Causa: %@ (origem animal segundo o Open Food Facts).";
 "vegan_reason_structured_doubtful" = "Causa: %@ (possível origem animal segundo o Open Food Facts).";
 "vegan_reason_structured_vegan" = "O Open Food Facts marca os ingredientes como adequados.";

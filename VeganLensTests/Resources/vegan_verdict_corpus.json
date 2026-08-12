@@ -1,0 +1,133 @@
+{
+  "__comment": "Shared byte-for-byte corpus for vegan verdict tests in veganAndroid and veganIOS. Any change must be applied identically in both repositories.",
+  "cases": [
+    {
+      "id": "structured-e120-cochineal",
+      "rationale": "A structured Open Food Facts ingredient marked no must identify cochineal/E120 as the confirmed cause.",
+      "ingredients": [{"text": "en:cochineal", "vegan": "no"}],
+      "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Cochineal"]}
+    },
+    {
+      "id": "natural-aroma-uncertain",
+      "rationale": "Natural aroma is not enough evidence for an animal origin and should remain orientative.",
+      "ingredientsText": "Aroma natural, azúcar",
+      "expected": {"status": "maybe", "reasonSource": "heuristicText", "culprits": []}
+    },
+    {
+      "id": "structured-lactose",
+      "rationale": "A structured lactose ingredient marked no is a confirmed animal-origin cause.",
+      "ingredients": [{"text": "en:lactose", "vegan": "no"}],
+      "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Lactose"]}
+    },
+    {
+      "id": "heuristic-milk-powder",
+      "rationale": "Milk powder in free text is detected heuristically and must be presented as orientative.",
+      "ingredientsText": "Milk powder, sugar",
+      "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Milk Powder"]}
+    },
+    {
+      "id": "trace-warning-does-not-condemn",
+      "rationale": "A may-contain trace warning is cross-contamination guidance, not a confirmed ingredient.",
+      "ingredientsText": "Wheat flour, sugar. May contain traces of milk.",
+      "expected": {"status": "maybe", "reasonSource": "heuristicText", "culprits": []}
+    },
+    {
+      "id": "structured-vitamin-d3",
+      "rationale": "Vitamin D3 marked maybe is a doubtful structured ingredient.",
+      "ingredients": [{"text": "en:vitamin d3", "vegan": "maybe"}],
+      "expected": {"status": "maybe", "reasonSource": "structuredDoubtfulIngredient", "culprits": ["Vitamin D3"]}
+    },
+    {
+      "id": "structured-mono-diglycerides",
+      "rationale": "Mono and diglycerides marked maybe must remain doubtful rather than being treated as certainly animal.",
+      "ingredients": [{"text": "en:mono and diglycerides", "vegan": "maybe"}],
+      "expected": {"status": "maybe", "reasonSource": "structuredDoubtfulIngredient", "culprits": ["Mono And Diglycerides"]}
+    },
+    {
+      "id": "structured-gelatin",
+      "rationale": "Gelatin marked no is a confirmed animal-origin ingredient.",
+      "ingredients": [{"text": "en:gelatin", "vegan": "no"}],
+      "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Gelatin"]}
+    },
+    {
+      "id": "structured-rennet",
+      "rationale": "Rennet marked no is a confirmed animal-origin ingredient.",
+      "ingredients": [{"text": "en:rennet", "vegan": "no"}],
+      "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Rennet"]}
+    },
+    {
+      "id": "heuristic-beeswax",
+      "rationale": "Beeswax in free text is detected by the animal-ingredient heuristic.",
+      "ingredientsText": "Beeswax, carnauba wax",
+      "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Beeswax"]}
+    },
+    {
+      "id": "vegan-seal-resolves-unknown",
+      "rationale": "A vegan seal may resolve an otherwise unknown product.",
+      "labelsTags": ["en:certified-vegan"],
+      "expected": {"status": "vegan", "reasonSource": "veganSeal", "culprits": []}
+    },
+    {
+      "id": "meat-substitute-category-resolves-unknown",
+      "rationale": "A meat-substitute category may resolve an otherwise unknown product.",
+      "categoriesTags": ["en:plant-based-meat-substitutes"],
+      "expected": {"status": "vegan", "reasonSource": "meatAlternativeCategory", "culprits": []}
+    },
+    {
+      "id": "vegan-seal-cannot-hide-animal-ingredient",
+      "rationale": "A vegan seal must never override a structured ingredient explicitly marked no.",
+      "ingredients": [{"text": "en:gelatin", "vegan": "no"}],
+      "labelsTags": ["en:certified-vegan"],
+      "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Gelatin"]}
+    },
+    {
+      "id": "uppercase-accent-prefix-html",
+      "rationale": "Normalization must handle uppercase text, accents, language prefixes, underscores and HTML.",
+      "ingredients": [{"text": "<b>fr:lait crème</b>", "vegan": "NO"}],
+      "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Lait Crème"]}
+    },
+    {
+      "id": "spanish-milk",
+      "rationale": "Spanish animal terminology must be detected from free text.",
+      "ingredientsText": "Leche desnatada, azúcar",
+      "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Leche Desnatada"]}
+    },
+    {
+      "id": "english-milk",
+      "rationale": "English animal terminology must be detected from free text.",
+      "ingredientsText": "Milk, sugar",
+      "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Milk"]}
+    },
+    {
+      "id": "portuguese-uncertain",
+      "rationale": "A Portuguese ingredient without a shared animal marker must not be guessed as animal.",
+      "ingredientsText": "Mel, açúcar",
+      "expected": {"status": "maybe", "reasonSource": "heuristicText", "culprits": []}
+    },
+    {
+      "id": "italian-honey",
+      "rationale": "Italian animal terminology must be detected from free text.",
+      "ingredientsText": "Miele, zucchero",
+      "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Miele"]}
+    },
+    {
+      "id": "french-milk",
+      "rationale": "French animal terminology must be detected from free text.",
+      "ingredientsText": "Lait, sucre",
+      "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Lait"]}
+    },
+    {
+      "id": "german-milk",
+      "rationale": "German animal terminology must be detected from free text.",
+      "ingredientsText": "Milch, Zucker",
+      "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Milch"]}
+    },
+    {
+      "id": "decisive-non-vegan-tag",
+      "rationale": "A decisive non-vegan analysis tag must take precedence over other positive evidence.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "labelsTags": ["en:certified-vegan"],
+      "expected": {"status": "notVegan", "reasonSource": "decisiveTag", "culprits": []}
+    }
+  ]
+}

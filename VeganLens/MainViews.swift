@@ -1698,23 +1698,6 @@ private struct CapsuleChip: View {
     }
 }
 
-private struct SummaryBlock: View {
-    let title: String
-    let values: [String]
-    let foreground: Color
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .appFont(.caption, weight: .bold)
-                .foregroundStyle(foreground)
-            Text(values.joined(separator: ", "))
-                .appFont(.body)
-                .foregroundStyle(foreground)
-        }
-    }
-}
-
 private struct LoadingStateView: View {
     var body: some View {
         VStack {

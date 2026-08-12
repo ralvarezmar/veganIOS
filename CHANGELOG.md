@@ -11,6 +11,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 - La caché sin conexión caduca a los 60 días y los datos caducados ya no se muestran.
 - Los datos nutricionales y el veredicto se leen como unidades completas con lectores de pantalla, incluyendo sus valores y unidades.
 - El veredicto explica qué ingrediente lo provoca y si la conclusión procede de datos de Open Food Facts o de una detección orientativa en el texto; también reconoce sellos veganos y categorías de sustitutos de carne.
+- Se comprueba con un corpus compartido que los casos clave del motor mantienen resultados coherentes.
 - Mejorados los procesos de distribución, pruebas automáticas, localizaciones y capturas de la aplicación; la aplicación y su documentación usan ahora el nombre VeganLens.
 
 ## [1.0.0 (20)] - 2026-08-06
