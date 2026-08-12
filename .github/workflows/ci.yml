@@ -137,6 +137,44 @@ jobs:
             xcrun xcresulttool get test-results tests \
               --path build/Result-unit.xcresult \
               --format json > build/unit-test-summary.json || true
+            python3 - <<'PY'
+            import json
+            from pathlib import Path
+
+            summary_path = Path("build/unit-test-summary.json")
+            if not summary_path.exists():
+                print("::error title=iOS unit test diagnostics::No xcresult test summary was produced")
+                raise SystemExit(0)
+
+            data = json.loads(summary_path.read_text())
+            failures = []
+
+            def walk(value):
+                if isinstance(value, dict):
+                    status = " ".join(
+                        str(value.get(key, "")) for key in ("testStatus", "result", "status")
+                    ).lower()
+                    name = value.get("name") or value.get("nodeName") or value.get("identifier")
+                    if "fail" in status and name:
+                        failures.append(f"{name}: {status}")
+                    for key in ("failureSummaries", "failureSummary", "message", "failureMessage"):
+                        detail = value.get(key)
+                        if detail:
+                            failures.append(f"{name or 'unit test'}: {detail}")
+                    for child in value.values():
+                        walk(child)
+                elif isinstance(value, list):
+                    for child in value:
+                        walk(child)
+
+            walk(data)
+            unique_failures = list(dict.fromkeys(str(item) for item in failures))
+            if unique_failures:
+                for failure in unique_failures[:20]:
+                    print(f"::error title=iOS unit test failure::{failure}")
+            else:
+                print("::error title=iOS unit test diagnostics::No failure detail found in xcresult summary")
+            PY
           fi
 
       - name: Upload unit test diagnostics
