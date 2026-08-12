@@ -127,6 +127,10 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertTrue(analysis.heuristic)
     }
 
+    func testHeuristicDetectsAnimalIngredientInsideMarkup() {
+        XCTAssertEqual(detectAnimalIngredients("<b>lait</b>, sucre"), ["Lait"])
+    }
+
     func testUnknownIngredientTextWithoutAnimalTermsBecomesMaybeHeuristic() {
         let analysis = analyzeVegan(
             ingredientsAnalysisTags: nil,
