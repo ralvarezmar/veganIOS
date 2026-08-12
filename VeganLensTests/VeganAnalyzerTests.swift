@@ -103,6 +103,17 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertNil(cleanFoodFactsLabel("   "))
     }
 
+    func testCleanFoodFactsLabelStripsMarkupBeforeDecodingEntities() {
+        XCTAssertEqual(
+            cleanFoodFactsLabel("<b>fr:lait crème</b> &amp; sucre"),
+            "Lait Crème & Sucre"
+        )
+        XCTAssertEqual(
+            cleanFoodFactsLabel("&lt;b&gt;lait&lt;/b&gt;"),
+            "<b>Lait</b>"
+        )
+    }
+
     func testUnknownIngredientTextUsesHeuristic() {
         let analysis = analyzeVegan(
             ingredientsAnalysisTags: nil,

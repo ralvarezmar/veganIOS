@@ -228,7 +228,13 @@ func cleanFoodFactsLabel(_ raw: String?) -> String? {
 }
 
 private func htmlDecoded(_ raw: String) -> String {
-    guard raw.contains("&") else { return raw }
+    let withoutMarkup = raw.replacingOccurrences(
+        of: #"</?[A-Za-z][^>]*>"#,
+        with: "",
+        options: .regularExpression
+    )
+
+    guard withoutMarkup.contains("&") else { return withoutMarkup }
 
     let entities: [(String, String)] = [
         ("&nbsp;", " "),
@@ -240,7 +246,7 @@ private func htmlDecoded(_ raw: String) -> String {
         ("&amp;", "&")
     ]
 
-    var result = raw
+    var result = withoutMarkup
     for (entity, replacement) in entities {
         result = result.replacingOccurrences(of: entity, with: replacement)
     }

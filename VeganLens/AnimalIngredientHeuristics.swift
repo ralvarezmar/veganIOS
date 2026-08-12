@@ -75,7 +75,7 @@ func detectAnimalIngredients(_ text: String) -> [String] {
 }
 
 private func normalizeIngredientSegment(_ segment: String) -> String {
-    segment
+    (cleanFoodFactsLabel(segment) ?? segment)
         .lowercased()
         .folding(options: .diacriticInsensitive, locale: Locale(identifier: "en"))
         .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
