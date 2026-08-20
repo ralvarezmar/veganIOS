@@ -91,6 +91,95 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertTrue(nilAnalysis.doubtfulIngredients.isEmpty)
     }
 
+    func testAnimalAdditiveReturnsNotVeganAndReportsCode() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            additivesTags: ["en:e441"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
+        XCTAssertEqual(analysis.nonVeganIngredients, ["E441"])
+        XCTAssertEqual(analysis.reason?.source, .additiveAnimal)
+        XCTAssertEqual(analysis.reason?.evidence, ["E441"])
+    }
+
+    func testAnimalAdditiveCodeInIngredientTextReturnsNotVegan() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            ingredientsText: "Ingredients: E120, water"
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
+        XCTAssertEqual(analysis.nonVeganIngredients, ["E120"])
+        XCTAssertEqual(analysis.reason?.source, .additiveAnimal)
+    }
+
+    func testAnimalAdditiveRomanSubindexInIngredientTextReturnsNotVegan() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            ingredientsText: "Ingredients: E120II"
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
+        XCTAssertEqual(analysis.nonVeganIngredients, ["E120"])
+        XCTAssertEqual(analysis.reason?.source, .additiveAnimal)
+    }
+
+    func testUncertainAdditiveReturnsMaybeWithoutCallingItNotVegan() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            additivesTags: ["en:e270"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .maybe))
+        XCTAssertEqual(analysis.doubtfulIngredients, ["E270"])
+        XCTAssertEqual(analysis.reason?.source, .additiveUncertain)
+    }
+
+    func testUncertainAdditiveDoesNotDegradeExistingNonVeganIngredient() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: [
+                OffIngredient(text: "en:gelatin", vegan: "no", vegetarian: nil)
+            ],
+            additivesTags: ["en:e270"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
+        XCTAssertEqual(analysis.nonVeganIngredients, ["Gelatin"])
+        XCTAssertEqual(analysis.reason?.source, .structuredNonVeganIngredient)
+    }
+
+    func testUncertainAdditiveDoesNotImprovePositiveTagToVegan() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: ["en:vegan"],
+            ingredients: nil,
+            additivesTags: ["en:e270"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .maybe))
+        XCTAssertEqual(analysis.doubtfulIngredients, ["E270"])
+        XCTAssertEqual(analysis.reason?.source, .additiveUncertain)
+    }
+
+    func testVegetalProductRemainsVeganWithPlantAdditive() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: [
+                OffIngredient(text: "en:water", vegan: "yes", vegetarian: nil)
+            ],
+            additivesTags: ["en:e140"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .vegan))
+        XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
+        XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
+    }
+
     func testCleanFoodFactsLabelStripsPrefixAndNormalizesCasing() {
         XCTAssertEqual(cleanFoodFactsLabel("en:tree_nuts"), "Treenuts")
         XCTAssertEqual(cleanFoodFactsLabel("en:carmine"), "Carmine")

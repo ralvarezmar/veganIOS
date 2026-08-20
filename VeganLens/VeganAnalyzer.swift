@@ -15,6 +15,8 @@ enum VeganReasonSource: Equatable {
     case heuristicText
     case veganSeal
     case meatAlternativeCategory
+    case additiveAnimal
+    case additiveUncertain
 }
 
 struct VeganReason: Equatable {
@@ -54,6 +56,7 @@ func analyzeVegan(_ product: Product) -> VeganAnalysis {
         ingredientsAnalysisTags: product.ingredientsAnalysisTags,
         ingredients: product.ingredients,
         ingredientsText: product.ingredientsText,
+        additivesTags: product.additivesTags,
         categoriesTags: product.categoriesTags,
         labelsTags: product.labelsTags
     )
@@ -63,6 +66,7 @@ func analyzeVegan(
     ingredientsAnalysisTags: [String]?,
     ingredients: [OffIngredient]?,
     ingredientsText: String? = nil,
+    additivesTags: [String]? = nil,
     categoriesTags: [String]? = nil,
     labelsTags: [String]? = nil
 ) -> VeganAnalysis {
@@ -85,6 +89,11 @@ func analyzeVegan(
         .orderedUnique()
 
     let hasYesIngredient = normalizedIngredients.contains { $0.0 == "yes" }
+    let additiveMatches = findAdditiveMatches(
+        additivesTags: additivesTags,
+        ingredientsText: ingredientsText,
+        ingredients: ingredients
+    )
     let hasIngredients = !(ingredients?.isEmpty ?? true)
     let hasTags = !(ingredientsAnalysisTags?.isEmpty ?? true)
 
@@ -105,23 +114,36 @@ func analyzeVegan(
         }
     }()
 
-    let status = decisiveStatus ?? {
+    let status: VeganStatus = {
+        if decisiveTag == "en:non-vegan" { return .notVegan }
         if !nonVegan.isEmpty { return .notVegan }
+        if !additiveMatches.animal.isEmpty { return .notVegan }
         if !doubtful.isEmpty { return .maybe }
+        if !additiveMatches.uncertain.isEmpty { return .maybe }
+        if let decisiveStatus { return decisiveStatus }
         if hasYesIngredient { return .vegan }
         if !hasIngredients && !hasTags { return .unknown }
         return .unknown
     }()
 
     let reason: VeganReason? = {
-        if let decisiveTag {
-            return VeganReason(source: .decisiveTag, evidence: [decisiveTag])
+        if decisiveTag == "en:non-vegan" {
+            return VeganReason(source: .decisiveTag, evidence: ["en:non-vegan"])
         }
         if !nonVegan.isEmpty {
             return VeganReason(source: .structuredNonVeganIngredient, evidence: nonVegan)
         }
+        if !additiveMatches.animal.isEmpty {
+            return VeganReason(source: .additiveAnimal, evidence: additiveMatches.animal)
+        }
         if !doubtful.isEmpty {
             return VeganReason(source: .structuredDoubtfulIngredient, evidence: doubtful)
+        }
+        if !additiveMatches.uncertain.isEmpty {
+            return VeganReason(source: .additiveUncertain, evidence: additiveMatches.uncertain)
+        }
+        if let decisiveTag {
+            return VeganReason(source: .decisiveTag, evidence: [decisiveTag])
         }
         if hasYesIngredient {
             return VeganReason(
@@ -153,6 +175,8 @@ func analyzeVegan(
         finalStatus = status
         finalReason = reason
     }
+    let reportedNonVeganIngredients = (nonVegan + additiveMatches.animal).orderedUnique()
+    let reportedDoubtfulIngredients = (doubtful + additiveMatches.uncertain).orderedUnique()
 
     if finalStatus == .unknown, let ingredientsText, !ingredientsText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
         let detected = detectAnimalIngredients(ingredientsText)
@@ -176,10 +200,50 @@ func analyzeVegan(
 
     return VeganAnalysis(
         status: finalStatus,
-        nonVeganIngredients: nonVegan,
-        doubtfulIngredients: doubtful,
+        nonVeganIngredients: reportedNonVeganIngredients,
+        doubtfulIngredients: reportedDoubtfulIngredients,
         reason: finalReason
     )
+}
+
+private struct AdditiveMatches {
+    let animal: [String]
+    let uncertain: [String]
+}
+
+private func findAdditiveMatches(
+    additivesTags: [String]?,
+    ingredientsText: String?,
+    ingredients: [OffIngredient]?
+) -> AdditiveMatches {
+    var codes: [String] = []
+    for raw in additivesTags ?? [] {
+        let tag = raw.components(separatedBy: ":").last ?? raw
+        if let entry = additiveEntry(for: tag), !codes.contains(entry.code) {
+            codes.append(entry.code)
+        }
+    }
+    let text = ([ingredientsText ?? ""] + (ingredients ?? []).map { $0.text ?? "" }).joined(separator: " ")
+    for rawCode in findAdditiveCodesInText(text) {
+        if let entry = additiveEntry(for: rawCode), !codes.contains(entry.code) {
+            codes.append(entry.code)
+        }
+    }
+
+    return AdditiveMatches(
+        animal: codes.filter { additiveEntry(for: $0)?.info.origin == .animal },
+        uncertain: codes.filter { additiveEntry(for: $0)?.info.origin == .uncertain }
+    )
+}
+
+private func findAdditiveCodesInText(_ text: String) -> [String] {
+    let pattern = #"(?i)(?<![a-z0-9])e\d{3,4}[a-z]*(?![a-z0-9])"#
+    guard let regex = try? NSRegularExpression(pattern: pattern) else { return [] }
+    let range = NSRange(text.startIndex..., in: text)
+    return regex.matches(in: text, range: range).compactMap { match in
+        guard let matchRange = Range(match.range, in: text) else { return nil }
+        return normalizeAdditiveCode(String(text[matchRange]))
+    }.orderedUnique()
 }
 
 private func isMeatAlternativeCategoryTag(_ tag: String) -> Bool {

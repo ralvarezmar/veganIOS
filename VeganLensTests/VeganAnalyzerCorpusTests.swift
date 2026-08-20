@@ -18,6 +18,7 @@ final class VeganAnalyzerCorpusTests: XCTestCase {
                     OffIngredient(text: $0.text, vegan: $0.vegan, vegetarian: nil)
                 },
                 ingredientsText: testCase.ingredientsText,
+                additivesTags: testCase.additivesTags,
                 categoriesTags: testCase.categoriesTags,
                 labelsTags: testCase.labelsTags
             )
@@ -59,6 +60,8 @@ final class VeganAnalyzerCorpusTests: XCTestCase {
         case "heuristicText": return .heuristicText
         case "veganSeal": return .veganSeal
         case "meatAlternativeCategory": return .meatAlternativeCategory
+        case "additiveAnimal": return .additiveAnimal
+        case "additiveUncertain": return .additiveUncertain
         default: fatalError("Unknown corpus reason source: \(value)")
         }
     }
@@ -72,6 +75,7 @@ private struct CorpusCase: Decodable {
     let id: String
     let ingredientsText: String?
     let ingredientsAnalysisTags: [String]?
+    let additivesTags: [String]?
     let ingredients: [CorpusIngredient]?
     let categoriesTags: [String]?
     let labelsTags: [String]?

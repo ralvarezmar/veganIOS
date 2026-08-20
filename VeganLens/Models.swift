@@ -509,9 +509,10 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
 
 func additiveEntry(for rawCode: String) -> AdditiveEntry? {
     let code = normalizeAdditiveCode(rawCode)
-    guard let record = additiveCatalog[code] else { return nil }
+    let resolvedCode = additiveCatalog[code] != nil ? code : romanParentCode(for: code)
+    guard let resolvedCode, let record = additiveCatalog[resolvedCode] else { return nil }
     return AdditiveEntry(
-        code: code,
+        code: resolvedCode,
         info: AdditiveInfo(
             commonName: localizedValue(record.commonName),
             origin: record.origin,
@@ -530,7 +531,7 @@ func additiveEntries(from tags: [String]?) -> [AdditiveEntry] {
     }
 }
 
-private func normalizeAdditiveCode(_ rawCode: String) -> String {
+func normalizeAdditiveCode(_ rawCode: String) -> String {
     let trimmed = rawCode.trimmingCharacters(in: .whitespacesAndNewlines)
     let codeOnly: String
     if let colonIndex = trimmed.firstIndex(of: ":") {
@@ -539,6 +540,17 @@ private func normalizeAdditiveCode(_ rawCode: String) -> String {
         codeOnly = trimmed
     }
     return codeOnly.uppercased()
+}
+
+private func romanParentCode(for code: String) -> String? {
+    guard code.range(of: #"^E\d{3,4}[IVX]+$"#, options: .regularExpression) != nil else {
+        return nil
+    }
+    return code.replacingOccurrences(
+        of: #"[IVX]+$"#,
+        with: "",
+        options: .regularExpression
+    )
 }
 
 private func localizedValue(_ values: (es: String?, en: String?)) -> String? {

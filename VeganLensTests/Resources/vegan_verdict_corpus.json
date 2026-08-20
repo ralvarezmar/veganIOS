@@ -134,6 +134,37 @@
       "ingredientsAnalysisTags": ["en:non-vegan"],
       "labelsTags": ["en:certified-vegan"],
       "expected": {"status": "notVegan", "reasonSource": "decisiveTag", "culprits": []}
+    },
+    {
+      "id": "animal-additive-e441-tag",
+      "rationale": "An animal-origin additive reported by Open Food Facts must make the product not vegan and report its code.",
+      "additivesTags": ["en:e441"],
+      "expected": {"status": "notVegan", "reasonSource": "additiveAnimal", "culprits": ["E441"]}
+    },
+    {
+      "id": "animal-additive-e428-tag",
+      "rationale": "Gelatine reported as E428 must make the product not vegan.",
+      "additivesTags": ["en:e428"],
+      "expected": {"status": "notVegan", "reasonSource": "additiveAnimal", "culprits": ["E428"]}
+    },
+    {
+      "id": "uncertain-additive-e270",
+      "rationale": "An uncertain-origin additive must remain doubtful rather than causing a false negative.",
+      "additivesTags": ["en:e270"],
+      "expected": {"status": "maybe", "reasonSource": "additiveUncertain", "culprits": ["E270"]}
+    },
+    {
+      "id": "animal-additive-e120-in-text",
+      "rationale": "An animal-origin additive code in the ingredient text must be detected without an additives tag.",
+      "ingredientsText": "Ingredients: E120, water",
+      "expected": {"status": "notVegan", "reasonSource": "additiveAnimal", "culprits": ["E120"]}
+    },
+    {
+      "id": "plant-product-with-plant-additive",
+      "rationale": "A structured vegan product with a plant-origin additive remains vegan without a culprit.",
+      "ingredients": [{"text": "en:water", "vegan": "yes"}],
+      "additivesTags": ["en:e140"],
+      "expected": {"status": "vegan", "reasonSource": "structuredVeganIngredient", "culprits": []}
     }
   ]
 }
