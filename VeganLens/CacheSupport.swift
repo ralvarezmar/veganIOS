@@ -20,7 +20,7 @@ struct CacheAge: Equatable {
     let unit: CacheAgeUnit
 }
 
-let cacheTTLSeconds: TimeInterval = 60 * 24 * 60 * 60
+let cacheTTLSeconds: TimeInterval = 14 * 24 * 60 * 60
 
 func isCacheEntryExpired(
     cachedAt: Date,

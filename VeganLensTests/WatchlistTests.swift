@@ -20,7 +20,7 @@ final class WatchlistTests: XCTestCase {
     func testE270CatalogEntryProvidesLocalizedNameAndUncertainOrigin() {
         let additive = additiveEntry(for: "e270")
 
-        XCTAssertEqual(additive?.info.commonName, "ácido láctico")
+        XCTAssertEqual(additive?.info.commonName, "Ácido láctico")
         XCTAssertEqual(additive?.info.origin, .uncertain)
         XCTAssertEqual(
             additive?.info.note,
@@ -31,7 +31,7 @@ final class WatchlistTests: XCTestCase {
     func testE428CatalogEntryProvidesLocalizedNameAndAnimalOrigin() {
         let additive = additiveEntry(for: "E428")
 
-        XCTAssertEqual(additive?.info.commonName, "gelatina")
+        XCTAssertEqual(additive?.info.commonName, "Gelatina")
         XCTAssertEqual(additive?.info.origin, .animal)
         XCTAssertEqual(additive?.info.note, "Gelificante proteico obtenido de colágeno animal.")
     }

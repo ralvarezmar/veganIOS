@@ -366,7 +366,7 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         origin: .synthetic
     ),
     "E270": LocalizedAdditiveRecord(
-        commonName: ("ácido láctico", "lactic acid"),
+        commonName: ("Ácido láctico", "Lactic acid"),
         note: ("Regulador de acidez; se obtiene casi siempre por fermentación de azúcares vegetales, pero puede proceder de lácteos.", "Acidity regulator; almost always produced by fermenting plant sugars, but it may come from dairy."),
         origin: .uncertain
     ),
@@ -411,7 +411,7 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         origin: .uncertain
     ),
     "E428": LocalizedAdditiveRecord(
-        commonName: ("gelatina", "gelatine"),
+        commonName: ("Gelatina", "Gelatine"),
         note: ("Gelificante proteico obtenido de colágeno animal.", "Protein gelling agent obtained from animal collagen."),
         origin: .animal
     ),
