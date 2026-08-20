@@ -69,7 +69,7 @@ func analyzePhotoIngredients(_ text: String) -> PhotoIngredientAnalysis {
             let withoutCodes = rawSegment.replacingOccurrences(
                 of: #"(?i)(?<![a-z0-9])e\s?-?\d{3,4}[a-z]*(?![a-z0-9])"#,
                 with: " ",
-                options: .regularExpression
+                options: NSString.CompareOptions.regularExpression
             )
             let remainder = cleanPhotoIngredientLabel(withoutCodes)
             let hasKnownNonAnimalAdditive = additiveCodes.contains {

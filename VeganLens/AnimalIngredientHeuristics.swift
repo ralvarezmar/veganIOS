@@ -75,6 +75,29 @@ func detectAnimalIngredients(_ text: String) -> [String] {
     return results
 }
 
+func ingredientSegments(_ text: String) -> [String] {
+    cleanFoodFactsMarkup(text)
+        .components(separatedBy: CharacterSet(charactersIn: ".!\n"))
+        .flatMap { sentence in
+            sentence.components(separatedBy: CharacterSet(charactersIn: ",;()/"))
+        }
+}
+
+func containsTraceWarning(_ segment: String) -> Bool {
+    traceWarningMarkers.contains { normalizeIngredientSegment(segment).contains($0) }
+}
+
+func containsAnimalIngredient(_ segment: String) -> Bool {
+    let normalized = normalizeIngredientSegment(segment)
+    let hasUnambiguousMatch = unambiguousAnimalStems.contains { normalized.contains($0) }
+    let hasAmbiguousMatch = ambiguousAnimalStems.contains { normalized.contains($0) } &&
+        !plantQualifiers.contains { normalized.contains($0) }
+    let tokens = normalized.components(separatedBy: CharacterSet.letters.inverted)
+        .filter { !$0.isEmpty }
+    let hasEggToken = tokens.contains { eggTokens.contains($0) }
+    return hasUnambiguousMatch || hasAmbiguousMatch || hasEggToken
+}
+
 func normalizeIngredientSegment(_ segment: String) -> String {
     segment
         .lowercased()

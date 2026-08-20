@@ -209,6 +209,7 @@ private struct ScannerOverlayView: View {
 
 private struct HelperCardView: View {
     let onManualEntry: () -> Void
+    let onPhotoAnalysis: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
