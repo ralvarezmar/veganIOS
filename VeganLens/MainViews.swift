@@ -198,7 +198,10 @@ private struct ScannerOverlayView: View {
                             .padding(.bottom, 24)
                     }
 
-                    HelperCardView(onManualEntry: onManualEntry)
+                    HelperCardView(
+                        onManualEntry: onManualEntry,
+                        onPhotoAnalysis: onPhotoAnalysis
+                    )
                         .padding(.horizontal, 20)
                         .padding(.bottom, 20)
                 }
