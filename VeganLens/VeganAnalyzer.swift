@@ -118,6 +118,7 @@ func analyzeVegan(
         if decisiveTag == "en:non-vegan" { return .notVegan }
         if !nonVegan.isEmpty { return .notVegan }
         if !additiveMatches.animal.isEmpty { return .notVegan }
+        if decisiveTag == "en:vegan" { return .vegan }
         if !doubtful.isEmpty { return .maybe }
         if !additiveMatches.uncertain.isEmpty { return .maybe }
         if let decisiveStatus { return decisiveStatus }
@@ -138,6 +139,9 @@ func analyzeVegan(
         }
         if !doubtful.isEmpty {
             return VeganReason(source: .structuredDoubtfulIngredient, evidence: doubtful)
+        }
+        if decisiveTag == "en:vegan" {
+            return VeganReason(source: .decisiveTag, evidence: ["en:vegan"])
         }
         if !additiveMatches.uncertain.isEmpty {
             return VeganReason(source: .additiveUncertain, evidence: additiveMatches.uncertain)
@@ -176,7 +180,9 @@ func analyzeVegan(
         finalReason = reason
     }
     let reportedNonVeganIngredients = (nonVegan + additiveMatches.animal).orderedUnique()
-    let reportedDoubtfulIngredients = (doubtful + additiveMatches.uncertain).orderedUnique()
+    let reportedDoubtfulIngredients = decisiveTag == "en:vegan"
+        ? doubtful
+        : (doubtful + additiveMatches.uncertain).orderedUnique()
 
     if finalStatus == .unknown, let ingredientsText, !ingredientsText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
         let detected = detectAnimalIngredients(ingredientsText)

@@ -165,6 +165,20 @@
       "ingredients": [{"text": "en:water", "vegan": "yes"}],
       "additivesTags": ["en:e140"],
       "expected": {"status": "vegan", "reasonSource": "structuredVeganIngredient", "culprits": []}
+    },
+    {
+      "id": "decisive-vegan-tag-with-uncertain-additive",
+      "rationale": "The decisive vegan tag takes precedence over an uncertain-origin additive.",
+      "ingredientsAnalysisTags": ["en:vegan"],
+      "additivesTags": ["en:e471"],
+      "expected": {"status": "vegan", "reasonSource": "decisiveTag", "culprits": []}
+    },
+    {
+      "id": "decisive-vegan-tag-with-animal-additive",
+      "rationale": "An animal-origin additive overrides a derived vegan tag and reports its code.",
+      "ingredientsAnalysisTags": ["en:vegan"],
+      "additivesTags": ["en:e120"],
+      "expected": {"status": "notVegan", "reasonSource": "additiveAnimal", "culprits": ["E120"]}
     }
   ]
 }

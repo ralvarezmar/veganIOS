@@ -154,16 +154,28 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertEqual(analysis.reason?.source, .structuredNonVeganIngredient)
     }
 
-    func testUncertainAdditiveDoesNotImprovePositiveTagToVegan() {
+    func testDecisiveVeganTagWinsOverUncertainAdditive() {
         let analysis = analyzeVegan(
             ingredientsAnalysisTags: ["en:vegan"],
             ingredients: nil,
-            additivesTags: ["en:e270"]
+            additivesTags: ["en:e471"]
         )
 
-        XCTAssertTrue(isStatus(analysis.status, .maybe))
-        XCTAssertEqual(analysis.doubtfulIngredients, ["E270"])
-        XCTAssertEqual(analysis.reason?.source, .additiveUncertain)
+        XCTAssertTrue(isStatus(analysis.status, .vegan))
+        XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
+        XCTAssertEqual(analysis.reason?.source, .decisiveTag)
+    }
+
+    func testAnimalAdditiveOverridesDecisiveVeganTag() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: ["en:vegan"],
+            ingredients: nil,
+            additivesTags: ["en:e120"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
+        XCTAssertEqual(analysis.nonVeganIngredients, ["E120"])
+        XCTAssertEqual(analysis.reason?.source, .additiveAnimal)
     }
 
     func testVegetalProductRemainsVeganWithPlantAdditive() {
