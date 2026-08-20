@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+## [1.2.0 (24)] - 2026-08-20
+
 ### Añadido
 - Se incorporan los aditivos E270 y E428 al catálogo, con información sobre su origen.
 
