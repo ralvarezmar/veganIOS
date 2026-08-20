@@ -57,6 +57,10 @@ struct RootView: View {
                 onDetectedBarcode: { barcode in
                     scannerRunning = false
                     path.append(Route.result(barcode))
+                },
+                onPhotoAnalysis: {
+                    scannerRunning = false
+                    path.append(Route.photoOCR)
                 }
             )
             .accessibilityIdentifier("main-scanner-screen")
@@ -130,6 +134,29 @@ struct RootView: View {
                             }
                         }
                     )
+                case .photoOCR:
+                    PhotoIngredientOCRView(
+                        onTextRecognized: { text in
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                            path.append(Route.photoResult(text))
+                        },
+                        onBack: {
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                        }
+                    )
+                case .photoResult(let text):
+                    PhotoIngredientResultView(
+                        initialText: text,
+                        onBack: {
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -190,4 +217,6 @@ private enum Route: Hashable {
     case settings
     case result(String)
     case contribution(String, String?)
+    case photoOCR
+    case photoResult(String)
 }

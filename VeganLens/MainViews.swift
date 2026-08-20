@@ -29,6 +29,7 @@ private func cacheAgeText(_ date: Date) -> String {
 struct ScannerView: View {
     @Binding var isScannerRunning: Bool
     let onDetectedBarcode: (String) -> Void
+    let onPhotoAnalysis: () -> Void
 
     @State private var authorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
     @State private var isRequestingAccess = false
@@ -48,7 +49,8 @@ struct ScannerView: View {
 
                 ScannerOverlayView(
                     showingDetectionConfirmation: showingDetectionConfirmation,
-                    onManualEntry: presentManualBarcodeEntry
+                    onManualEntry: presentManualBarcodeEntry,
+                    onPhotoAnalysis: onPhotoAnalysis
                 )
                     .ignoresSafeArea()
             } else {
@@ -57,7 +59,8 @@ struct ScannerView: View {
                     isRequestingAccess: isRequestingAccess,
                     onRequestAccess: requestCameraAccess,
                     onOpenSettings: openSettings,
-                    onManualEntry: presentManualBarcodeEntry
+                    onManualEntry: presentManualBarcodeEntry,
+                    onPhotoAnalysis: onPhotoAnalysis
                 )
                 .padding()
             }
@@ -162,6 +165,7 @@ struct ScannerView: View {
 private struct ScannerOverlayView: View {
     let showingDetectionConfirmation: Bool
     let onManualEntry: () -> Void
+    let onPhotoAnalysis: () -> Void
 
     var body: some View {
         GeometryReader { proxy in
@@ -223,6 +227,14 @@ private struct HelperCardView: View {
             .buttonStyle(.bordered)
             .tint(Color("AccentColor"))
             .padding(.top, 8)
+
+            Button {
+                onPhotoAnalysis()
+            } label: {
+                Label(L("photo_ingredients_action"), systemImage: "text.viewfinder")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
@@ -262,6 +274,7 @@ private struct CameraPermissionView: View {
     let onRequestAccess: () -> Void
     let onOpenSettings: () -> Void
     let onManualEntry: () -> Void
+    let onPhotoAnalysis: () -> Void
 
     var body: some View {
         VStack(spacing: 20) {
@@ -299,6 +312,14 @@ private struct CameraPermissionView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
+
+                    Button {
+                        onPhotoAnalysis()
+                    } label: {
+                        Label(L("photo_ingredients_action"), systemImage: "text.viewfinder")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
                 } else {
                     Button {
                         onOpenSettings()
@@ -313,6 +334,14 @@ private struct CameraPermissionView: View {
                         onManualEntry()
                     } label: {
                         Label(L("manual_barcode_entry"), systemImage: "keyboard")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+
+                    Button {
+                        onPhotoAnalysis()
+                    } label: {
+                        Label(L("photo_ingredients_action"), systemImage: "text.viewfinder")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)

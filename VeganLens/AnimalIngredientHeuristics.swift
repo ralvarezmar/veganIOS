@@ -75,7 +75,7 @@ func detectAnimalIngredients(_ text: String) -> [String] {
     return results
 }
 
-private func normalizeIngredientSegment(_ segment: String) -> String {
+func normalizeIngredientSegment(_ segment: String) -> String {
     segment
         .lowercased()
         .folding(options: .diacriticInsensitive, locale: Locale(identifier: "en"))

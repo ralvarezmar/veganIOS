@@ -8,6 +8,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ### Añadido
 - Se incorporan los aditivos E270 y E428 al catálogo, con información sobre su origen.
+- Se pueden fotografiar listas de ingredientes y analizarlas localmente con OCR editable, veredictos conservadores y avisos sobre segmentos no reconocidos.
 
 ### Cambiado
 - La caché sin conexión conserva los productos durante 14 días antes de considerarlos caducados.
