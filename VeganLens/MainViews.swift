@@ -538,6 +538,9 @@ struct ResultView: View {
     @State private var selectedAdditive: AdditiveEntry?
     @State private var selectedScoreInfo: ScoreExplanation?
     @State private var alternativesState: AlternativesState = .idle
+    @State private var showingShareSheet = false
+    @State private var shareTextForPresentation: String?
+    @State private var shareImageForPresentation: UIImage?
 
     private let service = OpenFactsService()
 
@@ -588,7 +591,9 @@ struct ResultView: View {
                 }
                 if let shareText {
                     ToolbarItem(placement: .topBarTrailing) {
-                        ShareLink(item: shareText) {
+                        Button {
+                            prepareShare(text: shareText)
+                        } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
                         .accessibilityLabel(L("share_action"))
@@ -600,6 +605,14 @@ struct ResultView: View {
             }
             .sheet(item: $selectedScoreInfo) { explanation in
                 ScoreInfoSheet(explanation: explanation)
+            }
+            .sheet(isPresented: $showingShareSheet, onDismiss: {
+                shareTextForPresentation = nil
+                shareImageForPresentation = nil
+            }) {
+                ShareSheet(
+                    items: [shareTextForPresentation, shareImageForPresentation].compactMap { $0 }
+                )
             }
     }
 
@@ -944,6 +957,26 @@ struct ResultView: View {
         let verdict = shareVerdictLabel(for: analyzeVegan(product).status)
         let url = "https://world.openfoodfacts.org/product/\(barcode)"
         return String(format: L("share_result_template"), shareTitle, verdict, source.displayName, url)
+    }
+
+    private func prepareShare(text: String) {
+        shareTextForPresentation = text
+        shareImageForPresentation = nil
+        guard
+            case .success(let product, _, _, _) = loadState,
+            let imageURLString = product.imageUrl,
+            let imageURL = URL(string: imageURLString)
+        else {
+            showingShareSheet = true
+            return
+        }
+
+        Task {
+            if let (data, _) = try? await URLSession.shared.data(from: imageURL) {
+                shareImageForPresentation = UIImage(data: data)
+            }
+            showingShareSheet = true
+        }
     }
 
     private func shareVerdictLabel(for status: VeganStatus) -> String {
@@ -2474,4 +2507,14 @@ private func additiveOriginColors(_ origin: AdditiveOrigin) -> AdditiveBadgeColo
 private struct AdditiveBadgeColors {
     let background: Color
     let content: Color
+}
+
+private struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ controller: UIActivityViewController, context: Context) {}
 }
