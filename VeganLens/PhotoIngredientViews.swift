@@ -118,19 +118,16 @@ struct PhotoIngredientResultView: View {
                     resultSection(title: L("photo_culprits_title")) {
                         ForEach(Array(analysis.culprits.enumerated()), id: \.offset) { item in
                             let culprit = item.element
+                            let reason = culprit.kind == .animalIngredient
+                                ? L("photo_culprit_ingredient")
+                                : L("photo_culprit_additive")
                             Label {
-                                Text("\(culprit.label) — \(culprit.kind == .animalIngredient
-                                    ? L("photo_culprit_ingredient")
-                                    : L("photo_culprit_additive"))")
+                                Text("\(culprit.label) — \(reason)")
                             } icon: {
                                 Image(systemName: "xmark.circle.fill")
                             }
                             .foregroundStyle(.red)
-                            .accessibilityLabel(
-                                "\(culprit.label), \(culprit.kind == .animalIngredient
-                                    ? L("photo_culprit_ingredient")
-                                    : L("photo_culprit_additive"))"
-                            )
+                            .accessibilityLabel("\(culprit.label), \(reason)")
                         }
                     }
                 }
