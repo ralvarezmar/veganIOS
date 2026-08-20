@@ -959,23 +959,23 @@ struct ResultView: View {
         return String(format: L("share_result_template"), shareTitle, verdict, source.displayName, url)
     }
 
+    @MainActor
     private func prepareShare(text: String) {
         shareTextForPresentation = text
         shareImageForPresentation = nil
+        showingShareSheet = true
         guard
             case .success(let product, _, _, _) = loadState,
             let imageURLString = product.imageUrl,
             let imageURL = URL(string: imageURLString)
         else {
-            showingShareSheet = true
             return
         }
 
-        Task {
+        Task { @MainActor in
             if let (data, _) = try? await URLSession.shared.data(from: imageURL) {
                 shareImageForPresentation = UIImage(data: data)
             }
-            showingShareSheet = true
         }
     }
 
