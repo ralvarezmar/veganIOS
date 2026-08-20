@@ -365,6 +365,11 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         note: ("Conservante y antioxidante.", "Preservative and antioxidant."),
         origin: .synthetic
     ),
+    "E270": LocalizedAdditiveRecord(
+        commonName: ("ácido láctico", "lactic acid"),
+        note: ("Regulador de acidez; se obtiene casi siempre por fermentación de azúcares vegetales, pero puede proceder de lácteos.", "Acidity regulator; almost always produced by fermenting plant sugars, but it may come from dairy."),
+        origin: .uncertain
+    ),
     "E306": LocalizedAdditiveRecord(
         commonName: ("Extracto rico en tocoferoles", "Tocopherol-rich extract"),
         note: ("Extracto de vitamina E con función antioxidante.", "Vitamin E extract with antioxidant function."),
@@ -404,6 +409,11 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         commonName: ("Glicerina / glicerol", "Glycerin / glycerol"),
         note: ("Puede ser de origen vegetal, animal o sintético.", "May be of plant, animal, or synthetic origin."),
         origin: .uncertain
+    ),
+    "E428": LocalizedAdditiveRecord(
+        commonName: ("gelatina", "gelatine"),
+        note: ("Gelificante proteico obtenido de colágeno animal.", "Protein gelling agent obtained from animal collagen."),
+        origin: .animal
     ),
     "E440": LocalizedAdditiveRecord(
         commonName: ("Pectinas", "Pectins"),

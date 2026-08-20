@@ -6,6 +6,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+### Añadido
+- Se incorporan los aditivos E270 y E428 al catálogo, con información sobre su origen.
+
 ### Cambiado
 - El veredicto explica qué ingrediente lo provoca y si la conclusión procede de datos de Open Food Facts o de una detección orientativa en el texto; también reconoce sellos veganos y categorías de sustitutos de carne.
 - Se comprueba con un corpus compartido que los casos clave del motor mantienen resultados coherentes.
