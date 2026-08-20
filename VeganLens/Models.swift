@@ -365,6 +365,11 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         note: ("Conservante y antioxidante.", "Preservative and antioxidant."),
         origin: .synthetic
     ),
+    "E270": LocalizedAdditiveRecord(
+        commonName: ("Ácido láctico", "Lactic acid"),
+        note: ("Regulador de acidez; se obtiene casi siempre por fermentación de azúcares vegetales, pero puede proceder de lácteos.", "Acidity regulator; almost always produced by fermenting plant sugars, but it may come from dairy."),
+        origin: .uncertain
+    ),
     "E306": LocalizedAdditiveRecord(
         commonName: ("Extracto rico en tocoferoles", "Tocopherol-rich extract"),
         note: ("Extracto de vitamina E con función antioxidante.", "Vitamin E extract with antioxidant function."),
@@ -404,6 +409,11 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         commonName: ("Glicerina / glicerol", "Glycerin / glycerol"),
         note: ("Puede ser de origen vegetal, animal o sintético.", "May be of plant, animal, or synthetic origin."),
         origin: .uncertain
+    ),
+    "E428": LocalizedAdditiveRecord(
+        commonName: ("Gelatina", "Gelatine"),
+        note: ("Gelificante proteico obtenido de colágeno animal.", "Protein gelling agent obtained from animal collagen."),
+        origin: .animal
     ),
     "E440": LocalizedAdditiveRecord(
         commonName: ("Pectinas", "Pectins"),
@@ -499,9 +509,10 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
 
 func additiveEntry(for rawCode: String) -> AdditiveEntry? {
     let code = normalizeAdditiveCode(rawCode)
-    guard let record = additiveCatalog[code] else { return nil }
+    let resolvedCode = additiveCatalog[code] != nil ? code : romanParentCode(for: code)
+    guard let resolvedCode, let record = additiveCatalog[resolvedCode] else { return nil }
     return AdditiveEntry(
-        code: code,
+        code: resolvedCode,
         info: AdditiveInfo(
             commonName: localizedValue(record.commonName),
             origin: record.origin,
@@ -520,7 +531,7 @@ func additiveEntries(from tags: [String]?) -> [AdditiveEntry] {
     }
 }
 
-private func normalizeAdditiveCode(_ rawCode: String) -> String {
+func normalizeAdditiveCode(_ rawCode: String) -> String {
     let trimmed = rawCode.trimmingCharacters(in: .whitespacesAndNewlines)
     let codeOnly: String
     if let colonIndex = trimmed.firstIndex(of: ":") {
@@ -529,6 +540,17 @@ private func normalizeAdditiveCode(_ rawCode: String) -> String {
         codeOnly = trimmed
     }
     return codeOnly.uppercased()
+}
+
+private func romanParentCode(for code: String) -> String? {
+    guard code.range(of: #"^E\d{3,4}[IVX]+$"#, options: .regularExpression) != nil else {
+        return nil
+    }
+    return code.replacingOccurrences(
+        of: #"[IVX]+$"#,
+        with: "",
+        options: .regularExpression
+    )
 }
 
 private func localizedValue(_ values: (es: String?, en: String?)) -> String? {

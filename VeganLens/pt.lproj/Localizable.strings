@@ -212,6 +212,8 @@
 "vegan_reason_heuristic_uncertain" = "O texto dos ingredientes não confirma a origem; verifique o rótulo.";
 "vegan_reason_vegan_seal" = "Selo vegan registado no Open Food Facts.";
 "vegan_reason_meat_category" = "Categoria de substituto de carne registada no Open Food Facts.";
+"vegan_reason_additive_animal" = "Causa: %@ (aditivo de origem animal segundo o catálogo).";
+"vegan_reason_additive_uncertain" = "Causa: %@ (origem incerta segundo o catálogo de aditivos).";
 "vegan_reason_more" = "e mais %d";
 "data_source_label" = "Fonte:";
 "data_source_label_format" = "Fuente: %@";

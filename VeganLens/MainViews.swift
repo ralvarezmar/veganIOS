@@ -1377,6 +1377,10 @@ private func veganReasonText(_ reason: VeganReason?) -> String? {
         return L("vegan_reason_vegan_seal")
     case .meatAlternativeCategory:
         return L("vegan_reason_meat_category")
+    case .additiveAnimal:
+        return String(format: L("vegan_reason_additive_animal"), evidenceWithRemainder)
+    case .additiveUncertain:
+        return String(format: L("vegan_reason_additive_uncertain"), evidenceWithRemainder)
     }
 }
 

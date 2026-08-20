@@ -17,6 +17,34 @@ final class WatchlistTests: XCTestCase {
         XCTAssertEqual(matches.additives, ["E120", "E441"])
     }
 
+    func testE270CatalogEntryProvidesLocalizedNameAndUncertainOrigin() {
+        let additive = additiveEntry(for: "e270")
+        let isEnglish = Locale.preferredLanguages.first?.lowercased().hasPrefix("en") == true
+
+        XCTAssertEqual(additive?.info.commonName, isEnglish ? "Lactic acid" : "Ácido láctico")
+        XCTAssertEqual(additive?.info.origin, .uncertain)
+        XCTAssertEqual(
+            additive?.info.note,
+            isEnglish
+                ? "Acidity regulator; almost always produced by fermenting plant sugars, but it may come from dairy."
+                : "Regulador de acidez; se obtiene casi siempre por fermentación de azúcares vegetales, pero puede proceder de lácteos."
+        )
+    }
+
+    func testE428CatalogEntryProvidesLocalizedNameAndAnimalOrigin() {
+        let additive = additiveEntry(for: "E428")
+        let isEnglish = Locale.preferredLanguages.first?.lowercased().hasPrefix("en") == true
+
+        XCTAssertEqual(additive?.info.commonName, isEnglish ? "Gelatine" : "Gelatina")
+        XCTAssertEqual(additive?.info.origin, .animal)
+        XCTAssertEqual(
+            additive?.info.note,
+            isEnglish
+                ? "Protein gelling agent obtained from animal collagen."
+                : "Gelificante proteico obtenido de colágeno animal."
+        )
+    }
+
     func testKeywordMatchingIsCaseInsensitiveSubstring() {
         let product = makeProduct(
             ingredientsText: "Water, COCONUT OIL, salt",

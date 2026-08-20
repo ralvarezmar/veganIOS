@@ -6,6 +6,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+### Añadido
+- Se incorporan los aditivos E270 y E428 al catálogo, con información sobre su origen.
+
+### Cambiado
+- La caché sin conexión conserva los productos durante 14 días antes de considerarlos caducados.
+- Los aditivos identificados como de origen animal hacen que el producto se marque como no vegano y se muestran como causa del veredicto.
+
 ## [1.1.0 (23)] - 2026-08-12
 
 ### Cambiado
