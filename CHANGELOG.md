@@ -7,6 +7,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 ## [Sin publicar]
 
 ### Añadido
+- Se incorpora la mascota de VeganLens como icono y una portada ilustrada rotatoria al iniciar la aplicación.
+
 - El catálogo de aditivos de iOS queda sincronizado con Android, incluidos los códigos E de origen animal e incierto.
 - Al compartir un resultado se incluye la imagen del producto cuando está disponible y se conserva el enlace de Open Food Facts.
 
