@@ -1,4 +1,7 @@
 "app_name" = "VeganLens";
+"portada_tagline" = "Comprueba si es vegano";
+"portada_image_description" = "Ilustración de frutas y verduras";
+"portada_dismiss" = "Cerrar bienvenida";
 "scanner_title" = "Escáner";
 "history_title" = "Historial";
 "result_title" = "Resultado";
