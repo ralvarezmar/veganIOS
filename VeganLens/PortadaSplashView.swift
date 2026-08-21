@@ -1,5 +1,11 @@
 import SwiftUI
 
+enum PortadaColors {
+    static let background = Color(red: 0.992, green: 0.988, blue: 0.949)
+    static let title = Color(red: 0.106, green: 0.369, blue: 0.125)
+    static let tagline = Color(red: 0.192, green: 0.357, blue: 0.208)
+}
+
 struct PortadaSplashView: View {
     let character: String
     let onDismiss: () -> Void
@@ -15,18 +21,18 @@ struct PortadaSplashView: View {
 
                 Text(L("app_name"))
                     .font(.largeTitle.weight(.semibold))
-                    .foregroundStyle(Color(red: 0.106, green: 0.369, blue: 0.125))
+                    .foregroundStyle(PortadaColors.title)
 
                 Text(L("portada_tagline"))
                     .font(.title3)
-                    .foregroundStyle(Color(red: 0.192, green: 0.357, blue: 0.208))
+                    .foregroundStyle(PortadaColors.tagline)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(24)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .background(Color(red: 0.992, green: 0.988, blue: 0.949))
+        .background(PortadaColors.background)
         .ignoresSafeArea()
         .accessibilityHint(L("portada_dismiss"))
         .task {

@@ -10,7 +10,7 @@ struct RootView: View {
     @ObservedObject var quickActionRouter: QuickActionRouter
     @State private var path = NavigationPath()
 
-    @State private var scannerRunning = true
+    @State private var scannerRunning = false
     @State private var contributionProduct: Product?
     @AppStorage("onboarding_seen") private var onboardingSeen = false
     @AppStorage(AccessibilityPreferences.textSizeKey) private var textSize = AccessibilityTextSize.normal.rawValue
@@ -21,7 +21,7 @@ struct RootView: View {
 
     private func resetToScanner() {
         path = NavigationPath()
-        scannerRunning = true
+        scannerRunning = !showingPortada
         showingOnboarding = false
     }
 
@@ -44,10 +44,12 @@ struct RootView: View {
             } else if !didShowPortada && !onboardingSeen {
                 showingOnboarding = true
                 scannerRunning = false
+            } else if !didShowPortada {
+                scannerRunning = true
             }
         }
         .onChange(of: path.count) { _, newValue in
-            scannerRunning = newValue == 0
+            scannerRunning = !showingPortada && newValue == 0
         }
         .onChange(of: quickActionRouter.requestID) {
             resetToScanner()
