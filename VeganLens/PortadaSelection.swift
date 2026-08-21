@@ -7,7 +7,6 @@ let portadaCharacterNames = [
     "broccoli",
     "carrot",
     "chili",
-    "citrus",
     "corn",
     "leaf",
     "mushrooms",
