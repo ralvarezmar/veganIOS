@@ -16,7 +16,7 @@ struct PortadaSplashView: View {
                 Image("portada_\(character)")
                     .resizable()
                     .scaledToFit()
-                    .frame(maxWidth: 300, maxHeight: 300)
+                    .frame(maxWidth: 240, maxHeight: 240)
                     .accessibilityLabel(L("portada_image_description"))
 
                 Text(L("app_name"))
@@ -36,7 +36,7 @@ struct PortadaSplashView: View {
         .ignoresSafeArea()
         .accessibilityHint(L("portada_dismiss"))
         .task {
-            try? await Task.sleep(nanoseconds: 1_800_000_000)
+            try? await Task.sleep(nanoseconds: 5_000_000_000)
             guard !Task.isCancelled else { return }
             onDismiss()
         }
