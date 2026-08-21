@@ -29,6 +29,7 @@ private func cacheAgeText(_ date: Date) -> String {
 struct ScannerView: View {
     @Binding var isScannerRunning: Bool
     let onDetectedBarcode: (String) -> Void
+    let onPhotoAnalysis: () -> Void
 
     @State private var authorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
     @State private var isRequestingAccess = false
@@ -48,7 +49,8 @@ struct ScannerView: View {
 
                 ScannerOverlayView(
                     showingDetectionConfirmation: showingDetectionConfirmation,
-                    onManualEntry: presentManualBarcodeEntry
+                    onManualEntry: presentManualBarcodeEntry,
+                    onPhotoAnalysis: onPhotoAnalysis
                 )
                     .ignoresSafeArea()
             } else {
@@ -57,7 +59,8 @@ struct ScannerView: View {
                     isRequestingAccess: isRequestingAccess,
                     onRequestAccess: requestCameraAccess,
                     onOpenSettings: openSettings,
-                    onManualEntry: presentManualBarcodeEntry
+                    onManualEntry: presentManualBarcodeEntry,
+                    onPhotoAnalysis: onPhotoAnalysis
                 )
                 .padding()
             }
@@ -162,6 +165,7 @@ struct ScannerView: View {
 private struct ScannerOverlayView: View {
     let showingDetectionConfirmation: Bool
     let onManualEntry: () -> Void
+    let onPhotoAnalysis: () -> Void
 
     var body: some View {
         GeometryReader { proxy in
@@ -194,7 +198,10 @@ private struct ScannerOverlayView: View {
                             .padding(.bottom, 24)
                     }
 
-                    HelperCardView(onManualEntry: onManualEntry)
+                    HelperCardView(
+                        onManualEntry: onManualEntry,
+                        onPhotoAnalysis: onPhotoAnalysis
+                    )
                         .padding(.horizontal, 20)
                         .padding(.bottom, 20)
                 }
@@ -205,6 +212,7 @@ private struct ScannerOverlayView: View {
 
 private struct HelperCardView: View {
     let onManualEntry: () -> Void
+    let onPhotoAnalysis: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -223,6 +231,14 @@ private struct HelperCardView: View {
             .buttonStyle(.bordered)
             .tint(Color("AccentColor"))
             .padding(.top, 8)
+
+            Button {
+                onPhotoAnalysis()
+            } label: {
+                Label(L("photo_ingredients_action"), systemImage: "text.viewfinder")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
@@ -262,6 +278,7 @@ private struct CameraPermissionView: View {
     let onRequestAccess: () -> Void
     let onOpenSettings: () -> Void
     let onManualEntry: () -> Void
+    let onPhotoAnalysis: () -> Void
 
     var body: some View {
         VStack(spacing: 20) {
@@ -299,6 +316,14 @@ private struct CameraPermissionView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
+
+                    Button {
+                        onPhotoAnalysis()
+                    } label: {
+                        Label(L("photo_ingredients_action"), systemImage: "text.viewfinder")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
                 } else {
                     Button {
                         onOpenSettings()
@@ -313,6 +338,14 @@ private struct CameraPermissionView: View {
                         onManualEntry()
                     } label: {
                         Label(L("manual_barcode_entry"), systemImage: "keyboard")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+
+                    Button {
+                        onPhotoAnalysis()
+                    } label: {
+                        Label(L("photo_ingredients_action"), systemImage: "text.viewfinder")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
@@ -509,6 +542,9 @@ struct ResultView: View {
     @State private var selectedAdditive: AdditiveEntry?
     @State private var selectedScoreInfo: ScoreExplanation?
     @State private var alternativesState: AlternativesState = .idle
+    @State private var showingShareSheet = false
+    @State private var shareTextForPresentation: String?
+    @State private var shareImageForPresentation: UIImage?
 
     private let service = OpenFactsService()
 
@@ -559,7 +595,9 @@ struct ResultView: View {
                 }
                 if let shareText {
                     ToolbarItem(placement: .topBarTrailing) {
-                        ShareLink(item: shareText) {
+                        Button {
+                            prepareShare(text: shareText)
+                        } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
                         .accessibilityLabel(L("share_action"))
@@ -571,6 +609,14 @@ struct ResultView: View {
             }
             .sheet(item: $selectedScoreInfo) { explanation in
                 ScoreInfoSheet(explanation: explanation)
+            }
+            .sheet(isPresented: $showingShareSheet, onDismiss: {
+                shareTextForPresentation = nil
+                shareImageForPresentation = nil
+            }) {
+                ShareSheet(
+                    items: [shareTextForPresentation, shareImageForPresentation].compactMap { $0 }
+                )
             }
     }
 
@@ -915,6 +961,26 @@ struct ResultView: View {
         let verdict = shareVerdictLabel(for: analyzeVegan(product).status)
         let url = "https://world.openfoodfacts.org/product/\(barcode)"
         return String(format: L("share_result_template"), shareTitle, verdict, source.displayName, url)
+    }
+
+    @MainActor
+    private func prepareShare(text: String) {
+        shareTextForPresentation = text
+        shareImageForPresentation = nil
+        showingShareSheet = true
+        guard
+            case .success(let product, _, _, _) = loadState,
+            let imageURLString = product.imageUrl,
+            let imageURL = URL(string: imageURLString)
+        else {
+            return
+        }
+
+        Task { @MainActor in
+            if let (data, _) = try? await URLSession.shared.data(from: imageURL) {
+                shareImageForPresentation = UIImage(data: data)
+            }
+        }
     }
 
     private func shareVerdictLabel(for status: VeganStatus) -> String {
@@ -2445,4 +2511,14 @@ private func additiveOriginColors(_ origin: AdditiveOrigin) -> AdditiveBadgeColo
 private struct AdditiveBadgeColors {
     let background: Color
     let content: Color
+}
+
+private struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ controller: UIActivityViewController, context: Context) {}
 }

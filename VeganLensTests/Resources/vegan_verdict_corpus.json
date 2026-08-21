@@ -179,6 +179,18 @@
       "ingredientsAnalysisTags": ["en:vegan"],
       "additivesTags": ["en:e120"],
       "expected": {"status": "notVegan", "reasonSource": "additiveAnimal", "culprits": ["E120"]}
+    },
+    {
+      "id": "animal-additive-e542-tag",
+      "rationale": "An animal-origin additive present only in the extended catalog must make the product not vegan.",
+      "additivesTags": ["en:e542"],
+      "expected": {"status": "notVegan", "reasonSource": "additiveAnimal", "culprits": ["E542"]}
+    },
+    {
+      "id": "uncertain-additive-e234",
+      "rationale": "An uncertain-origin additive present only in the extended catalog must remain doubtful.",
+      "additivesTags": ["en:e234"],
+      "expected": {"status": "maybe", "reasonSource": "additiveUncertain", "culprits": ["E234"]}
     }
   ]
 }

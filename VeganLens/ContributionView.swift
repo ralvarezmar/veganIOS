@@ -361,7 +361,7 @@ private extension PhotoUploadState {
     }
 }
 
-private struct CameraImagePicker: UIViewControllerRepresentable {
+struct CameraImagePicker: UIViewControllerRepresentable {
     let onImage: (UIImage) -> Void
 
     func makeCoordinator() -> Coordinator {

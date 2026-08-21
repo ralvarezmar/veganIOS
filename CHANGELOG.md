@@ -6,10 +6,17 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+### Añadido
+- Se incorpora la mascota de VeganLens como icono y una portada ilustrada rotatoria al iniciar la aplicación.
+
+- El catálogo de aditivos de iOS queda sincronizado con Android, incluidos los códigos E de origen animal e incierto.
+- Al compartir un resultado se incluye la imagen del producto cuando está disponible y se conserva el enlace de Open Food Facts.
+
 ## [1.2.0 (24)] - 2026-08-20
 
 ### Añadido
 - Se incorporan los aditivos E270 y E428 al catálogo, con información sobre su origen.
+- Se pueden fotografiar listas de ingredientes y analizarlas localmente con OCR editable, veredictos conservadores y avisos sobre segmentos no reconocidos.
 
 ### Cambiado
 - La caché sin conexión conserva los productos durante 14 días antes de considerarlos caducados.

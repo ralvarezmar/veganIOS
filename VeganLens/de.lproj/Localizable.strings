@@ -1,4 +1,7 @@
 "app_name" = "VeganLens";
+"portada_tagline" = "Prüfe, ob es für Veganer geeignet ist";
+"portada_image_description" = "Illustration von Obst und Gemüse";
+"portada_dismiss" = "Willkommensbildschirm schließen";
 "scanner_title" = "Scanner";
 "history_title" = "Verlauf";
 "result_title" = "Ergebnis";
@@ -279,3 +282,29 @@
 "contribution_scan_ingredients" = "Zutaten scannen";
 "contribution_ocr_no_text" = "Es wurde kein Zutatentext erkannt.";
 "contribution_ocr_error" = "Die Erkennung des Zutatentextes ist fehlgeschlagen.";
+
+"photo_ingredients_action" = "Zutaten per Foto analysieren";
+"photo_ingredients_title" = "Zutatenfoto";
+"photo_ingredients_notice" = "Nimm ein scharfes, gerade ausgerichtetes Foto der Zutatenliste auf. Die Analyse läuft auf diesem Gerät und ist nur ein Hinweis.";
+"photo_ingredients_take_photo" = "Foto aufnehmen";
+"photo_ingredients_recognizing" = "Zutaten werden erkannt…";
+"photo_ingredients_no_text" = "Es wurde kein Zutatentext erkannt.";
+"photo_ingredients_error" = "Der Zutatentext konnte nicht erkannt werden.";
+"photo_result_title" = "Fotoergebnis";
+"photo_result_notice" = "Dieses Ergebnis stammt aus einem Foto und dient nur als Hinweis. Prüfe im Zweifel das Etikett.";
+"photo_orientation_advice" = "Ein unscharfes, schräges oder spiegelndes Foto kann Fehler verursachen.";
+"photo_verdict_vegan" = "Vegan ✅";
+"photo_verdict_not_vegan" = "Nicht vegan ❌";
+"photo_verdict_review" = "Prüfen ⚠️";
+"photo_reason_animal_ingredient" = "Eine Zutat tierischen Ursprungs wurde erkannt.";
+"photo_reason_animal_additive" = "Ein Zusatzstoff tierischen Ursprungs wurde erkannt.";
+"photo_reason_all_recognized" = "Alle erkannten Segmente sind pflanzlich oder neutral.";
+"photo_reason_unrecognized" = "Einige Segmente konnten nicht sicher erkannt werden.";
+"photo_culprits_title" = "Gründe für das Ergebnis";
+"photo_culprit_ingredient" = "Zutat tierischen Ursprungs";
+"photo_culprit_additive" = "Zusatzstoff tierischen Ursprungs";
+"photo_unrecognized_title" = "Zu prüfende Segmente";
+"photo_trace_warning" = "Das Etikett enthält einen Hinweis auf mögliche Spuren. Das ändert das Ergebnis nicht, sollte aber geprüft werden.";
+"photo_text_label" = "Erkannter Text";
+"photo_text_content_description" = "Vom OCR erkannter Zutatentext. Du kannst ihn vor einer neuen Analyse bearbeiten.";
+"photo_reanalyze" = "Erneut analysieren";

@@ -1,4 +1,7 @@
 "app_name" = "VeganLens";
+"portada_tagline" = "Check if it's vegan-friendly";
+"portada_image_description" = "Fruit and vegetable illustration";
+"portada_dismiss" = "Close welcome screen";
 "scanner_title" = "Scanner";
 "history_title" = "History";
 "result_title" = "Result";
@@ -279,3 +282,29 @@
 "contribution_scan_ingredients" = "Scan ingredients";
 "contribution_ocr_no_text" = "No ingredient text was recognized.";
 "contribution_ocr_error" = "Ingredient text recognition failed.";
+
+"photo_ingredients_action" = "Analyze ingredients from a photo";
+"photo_ingredients_title" = "Ingredient photo";
+"photo_ingredients_notice" = "Take a clear, well-oriented photo of the list. Analysis runs on this device and is guidance only.";
+"photo_ingredients_take_photo" = "Take photo";
+"photo_ingredients_recognizing" = "Recognizing ingredients…";
+"photo_ingredients_no_text" = "No ingredient text was recognized.";
+"photo_ingredients_error" = "Couldn't recognize the ingredient text.";
+"photo_result_title" = "Photo result";
+"photo_result_notice" = "This result comes from a photo and is guidance only. Check the label if you are unsure.";
+"photo_orientation_advice" = "A blurry, tilted or reflective photo can cause errors.";
+"photo_verdict_vegan" = "Vegan ✅";
+"photo_verdict_not_vegan" = "Not vegan ❌";
+"photo_verdict_review" = "Review ⚠️";
+"photo_reason_animal_ingredient" = "An ingredient of animal origin was detected.";
+"photo_reason_animal_additive" = "An additive of animal origin was detected.";
+"photo_reason_all_recognized" = "All recognized segments are plant-based or neutral.";
+"photo_reason_unrecognized" = "Some segments could not be identified with confidence.";
+"photo_culprits_title" = "Reasons for the verdict";
+"photo_culprit_ingredient" = "ingredient of animal origin";
+"photo_culprit_additive" = "additive of animal origin";
+"photo_unrecognized_title" = "Segments to check";
+"photo_trace_warning" = "The label includes a possible traces warning. It does not change the verdict, but check it carefully.";
+"photo_text_label" = "Recognized text";
+"photo_text_content_description" = "Ingredient text recognized by OCR. You can edit it before analyzing it again.";
+"photo_reanalyze" = "Analyze again";

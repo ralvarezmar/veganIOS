@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - development
+  pull_request:
+    branches:
+      - main
+      - development
   workflow_dispatch:
 
 jobs:
@@ -568,7 +572,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Commit App Store screenshots
-        if: ${{ always() && (github.ref == 'refs/heads/development' || github.ref == 'refs/heads/main') }}
+        if: ${{ always() && github.ref == 'refs/heads/main' }}
         run: |
           set -euo pipefail
           for label in iphone-6-9 iphone-6-5 ipad-13; do

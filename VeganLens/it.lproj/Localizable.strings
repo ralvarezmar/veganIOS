@@ -1,4 +1,7 @@
 "app_name" = "VeganLens";
+"portada_tagline" = "Controlla se è adatto ai vegani";
+"portada_image_description" = "Illustrazione di frutta e verdura";
+"portada_dismiss" = "Chiudi la schermata di benvenuto";
 "scanner_title" = "Scanner";
 "history_title" = "Cronologia";
 "result_title" = "Risultato";
@@ -279,3 +282,29 @@
 "contribution_scan_ingredients" = "Scansiona ingredienti";
 "contribution_ocr_no_text" = "Non è stato riconosciuto alcun testo degli ingredienti.";
 "contribution_ocr_error" = "Impossibile riconoscere il testo degli ingredienti.";
+
+"photo_ingredients_action" = "Analizza gli ingredienti da una foto";
+"photo_ingredients_title" = "Foto degli ingredienti";
+"photo_ingredients_notice" = "Scatta una foto nitida e ben orientata della lista. L’analisi viene eseguita sul dispositivo ed è solo indicativa.";
+"photo_ingredients_take_photo" = "Scatta foto";
+"photo_ingredients_recognizing" = "Riconoscimento degli ingredienti…";
+"photo_ingredients_no_text" = "Non è stato riconosciuto alcun testo degli ingredienti.";
+"photo_ingredients_error" = "Impossibile riconoscere il testo degli ingredienti.";
+"photo_result_title" = "Risultato della foto";
+"photo_result_notice" = "Questo risultato proviene da una foto ed è solo indicativo. Controlla l’etichetta se hai dubbi.";
+"photo_orientation_advice" = "Una foto sfocata, inclinata o con riflessi può causare errori.";
+"photo_verdict_vegan" = "Vegano ✅";
+"photo_verdict_not_vegan" = "Non vegano ❌";
+"photo_verdict_review" = "Da verificare ⚠️";
+"photo_reason_animal_ingredient" = "È stato rilevato un ingrediente di origine animale.";
+"photo_reason_animal_additive" = "È stato rilevato un additivo di origine animale.";
+"photo_reason_all_recognized" = "Tutti i segmenti riconosciuti sono vegetali o neutri.";
+"photo_reason_unrecognized" = "Alcuni segmenti non sono stati identificati con sufficiente certezza.";
+"photo_culprits_title" = "Motivi del risultato";
+"photo_culprit_ingredient" = "ingrediente di origine animale";
+"photo_culprit_additive" = "additivo di origine animale";
+"photo_unrecognized_title" = "Segmenti da controllare";
+"photo_trace_warning" = "L’etichetta indica possibili tracce. Questo non cambia il risultato, ma controlla attentamente.";
+"photo_text_label" = "Testo riconosciuto";
+"photo_text_content_description" = "Testo degli ingredienti riconosciuto dall’OCR. Puoi modificarlo prima di analizzarlo di nuovo.";
+"photo_reanalyze" = "Analizza di nuovo";

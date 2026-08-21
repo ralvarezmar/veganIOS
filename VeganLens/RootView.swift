@@ -1,19 +1,27 @@
 import SwiftUI
 
+private let lastPortadaCharacterKey = "last_portada_character"
+
+private enum PortadaSession {
+    static var hasShown = false
+}
+
 struct RootView: View {
     @ObservedObject var quickActionRouter: QuickActionRouter
     @State private var path = NavigationPath()
 
-    @State private var scannerRunning = true
+    @State private var scannerRunning = false
     @State private var contributionProduct: Product?
     @AppStorage("onboarding_seen") private var onboardingSeen = false
     @AppStorage(AccessibilityPreferences.textSizeKey) private var textSize = AccessibilityTextSize.normal.rawValue
     @AppStorage(AccessibilityPreferences.highLegibilityFontKey) private var highLegibilityFont = false
     @State private var showingOnboarding = false
+    @State private var showingPortada = false
+    @State private var portadaCharacter: String?
 
     private func resetToScanner() {
         path = NavigationPath()
-        scannerRunning = true
+        scannerRunning = !showingPortada
         showingOnboarding = false
     }
 
@@ -21,22 +29,27 @@ struct RootView: View {
         Group {
             if let selectedTextSize = AccessibilityTextSize(rawValue: textSize),
                selectedTextSize != .normal {
-                navigationContent.environment(\.dynamicTypeSize, selectedTextSize.dynamicTypeSize)
+                appContent
+                    .environment(\.dynamicTypeSize, selectedTextSize.dynamicTypeSize)
             } else {
-                navigationContent
+                appContent
             }
         }
         .environment(\.highLegibilityFont, highLegibilityFont)
         .onAppear {
+            let didShowPortada = showPortadaIfNeeded()
             if quickActionRouter.requestID > 0 {
                 resetToScanner()
-            } else if !onboardingSeen {
+                scannerRunning = !didShowPortada
+            } else if !didShowPortada && !onboardingSeen {
                 showingOnboarding = true
                 scannerRunning = false
+            } else if !didShowPortada {
+                scannerRunning = true
             }
         }
         .onChange(of: path.count) { _, newValue in
-            scannerRunning = newValue == 0
+            scannerRunning = !showingPortada && newValue == 0
         }
         .onChange(of: quickActionRouter.requestID) {
             resetToScanner()
@@ -50,6 +63,45 @@ struct RootView: View {
         }
     }
 
+    private var appContent: some View {
+        ZStack {
+            navigationContent
+
+            if showingPortada, let portadaCharacter {
+                PortadaSplashView(
+                    character: portadaCharacter,
+                    onDismiss: dismissPortada
+                )
+                .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: showingPortada)
+    }
+
+    private func showPortadaIfNeeded() -> Bool {
+        guard !PortadaSession.hasShown else {
+            return false
+        }
+
+        PortadaSession.hasShown = true
+        let previous = UserDefaults.standard.string(forKey: lastPortadaCharacterKey)
+        let selected = selectPortadaCharacter(previous: previous)
+        UserDefaults.standard.set(selected, forKey: lastPortadaCharacterKey)
+        portadaCharacter = selected
+        showingPortada = true
+        scannerRunning = false
+        return true
+    }
+
+    private func dismissPortada() {
+        showingPortada = false
+        scannerRunning = path.isEmpty
+        if quickActionRouter.requestID == 0 && !onboardingSeen {
+            showingOnboarding = true
+            scannerRunning = false
+        }
+    }
+
     private var navigationContent: some View {
         NavigationStack(path: $path) {
             ScannerView(
@@ -57,6 +109,10 @@ struct RootView: View {
                 onDetectedBarcode: { barcode in
                     scannerRunning = false
                     path.append(Route.result(barcode))
+                },
+                onPhotoAnalysis: {
+                    scannerRunning = false
+                    path.append(Route.photoOCR)
                 }
             )
             .accessibilityIdentifier("main-scanner-screen")
@@ -130,6 +186,29 @@ struct RootView: View {
                             }
                         }
                     )
+                case .photoOCR:
+                    PhotoIngredientOCRView(
+                        onTextRecognized: { text in
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                            path.append(Route.photoResult(text))
+                        },
+                        onBack: {
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                        }
+                    )
+                case .photoResult(let text):
+                    PhotoIngredientResultView(
+                        initialText: text,
+                        onBack: {
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -190,4 +269,6 @@ private enum Route: Hashable {
     case settings
     case result(String)
     case contribution(String, String?)
+    case photoOCR
+    case photoResult(String)
 }

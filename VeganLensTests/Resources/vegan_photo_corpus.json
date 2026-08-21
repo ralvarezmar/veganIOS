@@ -1,0 +1,149 @@
+{
+  "__comment": "Shared byte-for-byte corpus for photo (OCR) ingredient analysis in veganAndroid and veganIOS. Any change must be applied identically in both repositories. Statuses: notVegan | vegan | review. Reason sources: photoAnimalIngredient | photoAnimalAdditive | photoAllPlantRecognized | photoUnrecognizedIngredient.",
+  "cases": [
+    {
+      "id": "photo-plain-plant-list-es",
+      "rationale": "A common Spanish label whose every segment is recognised plant or neutral must be the only way to reach a vegan verdict from a photo.",
+      "text": "Ingredientes: harina de trigo, azúcar, aceite de girasol, sal, levadura.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-plain-plant-list-en",
+      "rationale": "The same label in English must give the identical verdict, so the lexicon cannot be Spanish-only.",
+      "text": "Ingredients: wheat flour, sugar, sunflower oil, salt, yeast.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-percentages-and-noise",
+      "rationale": "OCR keeps percentages, quantities and the heading; none of them is an ingredient and none may push the verdict to review.",
+      "text": "INGREDIENTES: Tomate (85%), agua, sal 1,2%, aceite de oliva virgen extra (2 %).",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-animal-ingredient-condemns-es",
+      "rationale": "An unambiguous animal ingredient read from the photo condemns the verdict and is reported as the culprit.",
+      "text": "Ingredientes: harina de trigo, azúcar, mantequilla, huevo.",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalIngredient", "culprits": ["Mantequilla", "Huevo"], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-animal-ingredient-condemns-de",
+      "rationale": "German labels are the reported case that motivated this feature; whey must be caught there too.",
+      "text": "Zutaten: Weizenmehl, Zucker, Molkenpulver, Salz.",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalIngredient", "culprits": ["Molkenpulver"], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-plant-qualifier-does-not-condemn",
+      "rationale": "A plant qualifier next to an ambiguous animal word (coconut milk) must not condemn, and must not fall into review either.",
+      "text": "Ingredients: water, coconut milk, sugar, sea salt.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-animal-additive-condemns",
+      "rationale": "An additive of clearly animal origin read as a code condemns the verdict, matching the barcode path.",
+      "text": "Ingredientes: azúcar, agua, colorante E120, acidulante E330.",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalAdditive", "culprits": ["E120"], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-uncertain-additive-needs-review",
+      "rationale": "An additive of uncertain origin is not proof of an animal origin, so it must leave the verdict in review rather than condemning it.",
+      "text": "Ingredientes: harina de trigo, azúcar, emulgente E471, sal.",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["E471"], "traceWarning": false}
+    },
+    {
+      "id": "photo-unknown-word-needs-review",
+      "rationale": "An ingredient the lexicon does not know must never be assumed vegan; it is listed so the user can check that one word.",
+      "text": "Ingredientes: harina de trigo, azúcar, aroma natural, sal.",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["Aroma Natural"], "traceWarning": false}
+    },
+    {
+      "id": "photo-animal-wins-over-unknown",
+      "rationale": "When the photo contains both an animal ingredient and an unknown word, the animal ingredient decides; review would understate it.",
+      "text": "Ingredientes: harina de trigo, gelatina, aroma natural.",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalIngredient", "culprits": ["Gelatina"], "unrecognized": ["Aroma Natural"], "traceWarning": false}
+    },
+    {
+      "id": "photo-trace-warning-does-not-condemn",
+      "rationale": "A may-contain warning is cross-contamination guidance about the factory, not an ingredient, so it is surfaced as a note without changing the verdict.",
+      "text": "Ingredientes: harina de trigo, azúcar, aceite de girasol. Puede contener trazas de leche.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": true}
+    },
+    {
+      "id": "photo-trace-warning-after-animal",
+      "rationale": "The trace warning must not hide a real animal ingredient listed before it.",
+      "text": "Ingredients: wheat flour, honey, sugar. May contain traces of nuts.",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalIngredient", "culprits": ["Honey"], "unrecognized": [], "traceWarning": true}
+    },
+    {
+      "id": "photo-empty-text-needs-review",
+      "rationale": "A photo that yielded nothing readable must be review, never vegan.",
+      "text": "   ",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-heading-only-needs-review",
+      "rationale": "If the OCR only caught the heading, there is no ingredient evidence at all and the verdict cannot be vegan.",
+      "text": "INGREDIENTES:",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-line-broken-segment",
+      "rationale": "OCR breaks lines mid-list; newlines must split segments like commas so a wrapped ingredient is still recognised.",
+      "text": "Ingredientes: harina\nde trigo, azúcar,\nsal",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-parenthesised-sublist",
+      "rationale": "Sub-ingredients in parentheses are real ingredients and must be analysed, not skipped.",
+      "text": "Ingredientes: chocolate (pasta de cacao, azúcar, manteca de cacao), harina de trigo.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-parenthesised-animal-sublist",
+      "rationale": "An animal sub-ingredient hidden inside parentheses must condemn just like a top-level one.",
+      "text": "Ingredientes: chocolate (pasta de cacao, azúcar, leche en polvo), harina de trigo.",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalIngredient", "culprits": ["Leche En Polvo"], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-function-descriptor-alone-needs-review",
+      "rationale": "A function descriptor says what the additive does, not where it comes from, so on its own it is not evidence of a plant origin and must not produce a vegan verdict.",
+      "text": "Ingredientes: azúcar, agua, colorante natural.",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["Colorante Natural"], "traceWarning": false}
+    },
+    {
+      "id": "photo-bare-function-descriptor-needs-review",
+      "rationale": "Same rule for a bare descriptor with no qualifier at all: unknown origin means review, never vegan.",
+      "text": "Ingredientes: harina de trigo, azúcar, conservante.",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["Conservante"], "traceWarning": false}
+    },
+    {
+      "id": "photo-descriptor-with-plant-source-is-recognized",
+      "rationale": "A descriptor qualified by a recognised plant source is legitimate evidence and must not be dragged into review.",
+      "text": "Ingredientes: chocolate, emulgente lecitina de soja, azúcar.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-common-non-animal-additive-names",
+      "rationale": "Everyday additives written as words instead of E numbers are not animal-derived, and sending a whole label to review because of them would make the feature useless.",
+      "text": "Ingredientes: harina de trigo, azúcar, maltodextrina, bicarbonato sódico, ácido cítrico.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-uncertain-origin-name-needs-review",
+      "rationale": "Mono and diglycerides may come from animal fat, so the name alone must leave the verdict in review, exactly like the barcode path treats the equivalent additive.",
+      "text": "Ingredientes: harina de trigo, azúcar, mono y diglicéridos de ácidos grasos.",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["Mono Y Diglicéridos De Ácidos Grasos"], "traceWarning": false}
+    },
+    {
+      "id": "photo-glycerin-needs-review",
+      "rationale": "Glycerin can be of animal or plant origin, so it must never be whitelisted as a recognised plant source.",
+      "text": "Ingredients: wheat flour, sugar, glycerin.",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["Glycerin"], "traceWarning": false}
+    },
+    {
+      "id": "photo-accent-and-case-insensitive",
+      "rationale": "OCR loses accents and case; recognition must not depend on either.",
+      "text": "INGREDIENTES: HARINA DE TRIGO, AZUCAR, ACEITE DE GIRASOL, SAL",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    }
+  ]
+}

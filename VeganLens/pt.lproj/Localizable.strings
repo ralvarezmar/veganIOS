@@ -1,4 +1,7 @@
 "app_name" = "VeganLens";
+"portada_tagline" = "Verifica se é adequado para veganos";
+"portada_image_description" = "Ilustração de frutas e legumes";
+"portada_dismiss" = "Fechar o ecrã de boas-vindas";
 "scanner_title" = "Scanner";
 "history_title" = "Histórico";
 "result_title" = "Resultado";
@@ -279,3 +282,29 @@
 "contribution_scan_ingredients" = "Digitalizar ingredientes";
 "contribution_ocr_no_text" = "Não foi reconhecido texto de ingredientes.";
 "contribution_ocr_error" = "Não foi possível reconhecer o texto de ingredientes.";
+
+"photo_ingredients_action" = "Analisar ingredientes a partir de uma fotografia";
+"photo_ingredients_title" = "Fotografia dos ingredientes";
+"photo_ingredients_notice" = "Tire uma fotografia nítida e bem orientada da lista. A análise é feita neste dispositivo e é apenas indicativa.";
+"photo_ingredients_take_photo" = "Tirar fotografia";
+"photo_ingredients_recognizing" = "A reconhecer ingredientes…";
+"photo_ingredients_no_text" = "Não foi reconhecido texto de ingredientes.";
+"photo_ingredients_error" = "Não foi possível reconhecer o texto dos ingredientes.";
+"photo_result_title" = "Resultado da fotografia";
+"photo_result_notice" = "Este resultado vem de uma fotografia e é apenas indicativo. Verifique o rótulo se tiver dúvidas.";
+"photo_orientation_advice" = "Uma fotografia desfocada, inclinada ou com reflexos pode causar erros.";
+"photo_verdict_vegan" = "Vegano ✅";
+"photo_verdict_not_vegan" = "Não vegano ❌";
+"photo_verdict_review" = "Rever ⚠️";
+"photo_reason_animal_ingredient" = "Foi detetado um ingrediente de origem animal.";
+"photo_reason_animal_additive" = "Foi detetado um aditivo de origem animal.";
+"photo_reason_all_recognized" = "Todos os segmentos reconhecidos são vegetais ou neutros.";
+"photo_reason_unrecognized" = "Não foi possível identificar alguns segmentos com segurança.";
+"photo_culprits_title" = "Motivos do resultado";
+"photo_culprit_ingredient" = "ingrediente de origem animal";
+"photo_culprit_additive" = "aditivo de origem animal";
+"photo_unrecognized_title" = "Segmentos a verificar";
+"photo_trace_warning" = "O rótulo inclui um aviso de possíveis vestígios. Isto não altera o resultado, mas deve ser verificado.";
+"photo_text_label" = "Texto reconhecido";
+"photo_text_content_description" = "Texto dos ingredientes reconhecido por OCR. Pode editá-lo antes de analisar novamente.";
+"photo_reanalyze" = "Analisar novamente";
