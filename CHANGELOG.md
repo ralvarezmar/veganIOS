@@ -12,6 +12,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 - El catálogo de aditivos de iOS queda sincronizado con Android, incluidos los códigos E de origen animal e incierto.
 - Al compartir un resultado se incluye la imagen del producto cuando está disponible y se conserva el enlace de Open Food Facts.
 
+### Cambiado
+- La portada permanece visible hasta cinco segundos y sus recortes, junto con el icono recentrado, usan las ilustraciones revisadas.
+- Se retira el personaje `citrus` de la rotación de la portada.
+
 ## [1.2.0 (24)] - 2026-08-20
 
 ### Añadido
