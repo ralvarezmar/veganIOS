@@ -1,0 +1,256 @@
+name: iOS App Store Submit for Review
+
+run-name: Submit existing iOS App Store version for review
+
+on:
+  workflow_dispatch:
+    inputs:
+      versionString:
+        description: Optional App Store versionString to submit
+        required: false
+        type: string
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_API_KEY_P8: ${{ secrets.ASC_API_KEY_P8 }}
+    steps:
+      - name: Check App Store Connect credentials
+        id: credentials
+        run: |
+          set -euo pipefail
+          if [[ -z "$ASC_KEY_ID" || -z "$ASC_ISSUER_ID" || -z "$ASC_API_KEY_P8" ]]; then
+            echo "::warning::Configure ASC_KEY_ID, ASC_ISSUER_ID, and ASC_API_KEY_P8 to submit App Store versions."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Prepare App Store Connect API key
+        if: steps.credentials.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+          key_dir="$RUNNER_TEMP/appstore-connect"
+          mkdir -p "$key_dir"
+          key_path="$key_dir/AuthKey_${ASC_KEY_ID}.p8"
+          printf '%s' "$ASC_API_KEY_P8" | base64 --decode > "$key_path"
+          chmod 600 "$key_path"
+          echo "ASC_KEY_PATH=$key_path" >> "$GITHUB_ENV"
+
+      - name: Submit existing App Store version
+        if: steps.credentials.outputs.configured == 'true'
+        env:
+          VERSION_STRING: ${{ inputs.versionString }}
+        run: |
+          set -euo pipefail
+          pip3 install --quiet 'pyjwt[crypto]' requests \
+            || pip3 install --quiet --user 'pyjwt[crypto]' requests \
+            || pip3 install --quiet --break-system-packages 'pyjwt[crypto]' requests
+          python3 - <<'PY'
+          import os
+          import sys
+          import time
+
+          import jwt
+          import requests
+
+          API_BASE = "https://api.appstoreconnect.apple.com/v1"
+          BUNDLE_ID = "com.ralvarezmar.vcheck"
+          EDITABLE_STATES = {
+              "PREPARE_FOR_SUBMISSION",
+              "DEVELOPER_REJECTED",
+              "REJECTED",
+              "METADATA_REJECTED",
+          }
+          REQUEST_TIMEOUT = 30
+
+          key_id = os.environ["ASC_KEY_ID"]
+          issuer_id = os.environ["ASC_ISSUER_ID"]
+          key_path = os.environ["ASC_KEY_PATH"]
+          requested_version = os.environ.get("VERSION_STRING", "").strip()
+
+          def token():
+              now = int(time.time())
+              with open(key_path, "rb") as handle:
+                  private_key = handle.read()
+              return jwt.encode(
+                  {
+                      "iss": issuer_id,
+                      "iat": now,
+                      "exp": now + 15 * 60,
+                      "aud": "appstoreconnect-v1",
+                  },
+                  private_key,
+                  algorithm="ES256",
+                  headers={"kid": key_id, "typ": "JWT"},
+              )
+
+          def api_error(response):
+              try:
+                  errors = response.json().get("errors", [])
+              except ValueError:
+                  return f"HTTP {response.status_code}"
+              details = []
+              for error in errors[:3]:
+                  if isinstance(error, dict):
+                      details.append(
+                          ": ".join(
+                              str(part)
+                              for part in (
+                                  error.get("code"),
+                                  error.get("title"),
+                                  error.get("detail"),
+                              )
+                              if part
+                          )
+                      )
+              return f"HTTP {response.status_code}" + (
+                  f" ({'; '.join(details)})" if details else ""
+              )
+
+          def request(method, url, **kwargs):
+              headers = dict(kwargs.pop("headers", {}))
+              headers["Authorization"] = f"Bearer {token()}"
+              response = requests.request(
+                  method,
+                  url,
+                  headers=headers,
+                  timeout=REQUEST_TIMEOUT,
+                  **kwargs,
+              )
+              if response.status_code >= 400:
+                  raise RuntimeError(
+                      f"App Store Connect API {method} {url}: {api_error(response)}"
+                  )
+              return response
+
+          def find_version(app_identifier):
+              response = request(
+                  "GET",
+                  f"{API_BASE}/appStoreVersions",
+                  params={
+                      "filter[app]": app_identifier,
+                      "filter[platform]": "IOS",
+                      "sort": "-createdDate",
+                      "limit": "200",
+                  },
+              )
+              versions = response.json().get("data", [])
+              if requested_version:
+                  matching = [
+                      version
+                      for version in versions
+                      if version.get("attributes", {}).get("versionString")
+                      == requested_version
+                  ]
+                  if not matching:
+                      raise RuntimeError(
+                          f"App Store version {requested_version} was not found."
+                      )
+                  version = matching[0]
+                  state = version.get("attributes", {}).get(
+                      "appStoreState", "UNKNOWN"
+                  )
+                  if state not in EDITABLE_STATES:
+                      raise RuntimeError(
+                          f"App Store version {requested_version} is in state "
+                          f"{state}, which is not editable."
+                      )
+                  return version
+
+              for version in versions:
+                  state = version.get("attributes", {}).get(
+                      "appStoreState", "UNKNOWN"
+                  )
+                  if state in EDITABLE_STATES:
+                      return version
+              raise RuntimeError(
+                  "No editable App Store version is available for submission."
+              )
+
+          try:
+              app_response = request(
+                  "GET",
+                  f"{API_BASE}/apps",
+                  params={"filter[bundleId]": BUNDLE_ID, "limit": "1"},
+              )
+              apps = app_response.json().get("data", [])
+              if not apps:
+                  raise RuntimeError(
+                      f"No App Store Connect app found for bundle id {BUNDLE_ID}"
+                  )
+              app_identifier = apps[0]["id"]
+              version = find_version(app_identifier)
+              version_identifier = version["id"]
+              actual_version = version.get("attributes", {}).get(
+                  "versionString", "<unknown>"
+              )
+              submission = request(
+                  "POST",
+                  f"{API_BASE}/reviewSubmissions",
+                  headers={"Content-Type": "application/json"},
+                  json={
+                      "data": {
+                          "type": "reviewSubmissions",
+                          "attributes": {"platform": "IOS"},
+                          "relationships": {
+                              "app": {
+                                  "data": {
+                                      "type": "apps",
+                                      "id": app_identifier,
+                                  }
+                              }
+                          },
+                      }
+                  },
+              ).json()["data"]
+              submission_identifier = submission["id"]
+              request(
+                  "POST",
+                  f"{API_BASE}/reviewSubmissionItems",
+                  headers={"Content-Type": "application/json"},
+                  json={
+                      "data": {
+                          "type": "reviewSubmissionItems",
+                          "relationships": {
+                              "reviewSubmission": {
+                                  "data": {
+                                      "type": "reviewSubmissions",
+                                      "id": submission_identifier,
+                                  }
+                              },
+                              "appStoreVersion": {
+                                  "data": {
+                                      "type": "appStoreVersions",
+                                      "id": version_identifier,
+                                  }
+                              },
+                          },
+                      }
+                  },
+              )
+              request(
+                  "PATCH",
+                  f"{API_BASE}/reviewSubmissions/{submission_identifier}",
+                  headers={"Content-Type": "application/json"},
+                  json={
+                      "data": {
+                          "type": "reviewSubmissions",
+                          "id": submission_identifier,
+                          "attributes": {"submitted": True},
+                      }
+                  },
+              )
+              print(
+                  f"Submitted App Store version {actual_version} for review.",
+                  flush=True,
+              )
+          except Exception as error:
+              print(f"::error::App Store review submission failed: {error}", flush=True)
+              sys.exit(1)
+          PY
