@@ -300,6 +300,7 @@
 "photo_reason_animal_additive" = "Foi detetado um aditivo de origem animal.";
 "photo_reason_all_recognized" = "Todos os segmentos reconhecidos são vegetais ou neutros.";
 "photo_reason_unrecognized" = "Não foi possível identificar alguns segmentos com segurança.";
+"photo_reason_language_not_recognized" = "Não foi possível identificar o idioma do rótulo. Pode editar manualmente o texto reconhecido e analisá-lo novamente.";
 "photo_culprits_title" = "Motivos do resultado";
 "photo_culprit_ingredient" = "ingrediente de origem animal";
 "photo_culprit_additive" = "aditivo de origem animal";

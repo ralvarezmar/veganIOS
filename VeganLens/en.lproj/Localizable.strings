@@ -300,6 +300,7 @@
 "photo_reason_animal_additive" = "An additive of animal origin was detected.";
 "photo_reason_all_recognized" = "All recognized segments are plant-based or neutral.";
 "photo_reason_unrecognized" = "Some segments could not be identified with confidence.";
+"photo_reason_language_not_recognized" = "The label language could not be identified. You can edit the recognized text manually and analyze it again.";
 "photo_culprits_title" = "Reasons for the verdict";
 "photo_culprit_ingredient" = "ingredient of animal origin";
 "photo_culprit_additive" = "additive of animal origin";

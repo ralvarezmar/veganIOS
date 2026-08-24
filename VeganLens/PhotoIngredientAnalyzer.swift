@@ -11,6 +11,7 @@ enum PhotoReasonSource: Equatable {
     case animalAdditive
     case allPlantRecognized
     case unrecognizedIngredient
+    case languageNotRecognized
 }
 
 enum PhotoCulpritKind: Equatable {
@@ -31,14 +32,21 @@ struct PhotoIngredientAnalysis: Equatable {
     let traceWarning: Bool
 }
 
-func analyzePhotoIngredients(_ text: String) -> PhotoIngredientAnalysis {
+func analyzePhotoIngredients(
+    _ text: String,
+    preferredLanguage: String? = nil
+) -> PhotoIngredientAnalysis {
     var animalIngredients: [String] = []
     var animalAdditives: [String] = []
     var unrecognized: [String] = []
     var recognizedIngredientCount = 0
-    var traceWarning = false
+    let section = extractPhotoIngredientSection(
+        text,
+        preferredLanguage: preferredLanguage ?? Locale.current.languageCode
+    )
+    var traceWarning = containsTraceWarning("\(section.ingredientsText) \(section.trailingText)")
 
-    for rawSegment in ingredientSegments(text) {
+    for rawSegment in ingredientSegments(section.ingredientsText) {
         if containsTraceWarning(rawSegment) {
             traceWarning = true
             continue
@@ -112,7 +120,11 @@ func analyzePhotoIngredients(_ text: String) -> PhotoIngredientAnalysis {
     } else if !animalAdditives.isEmpty {
         reasonSource = .animalAdditive
     } else if !unrecognized.isEmpty || recognizedIngredientCount == 0 {
-        reasonSource = .unrecognizedIngredient
+        reasonSource = !section.hasSupportedHeader &&
+            !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+            recognizedIngredientCount == 0
+            ? .languageNotRecognized
+            : .unrecognizedIngredient
     } else {
         reasonSource = .allPlantRecognized
     }
@@ -134,6 +146,84 @@ func analyzePhotoIngredients(_ text: String) -> PhotoIngredientAnalysis {
     )
 }
 
+struct PhotoIngredientSection {
+    let ingredientsText: String
+    let trailingText: String
+    let hasSupportedHeader: Bool
+}
+
+private struct PhotoHeaderMatch {
+    let start: Int
+    let end: Int
+    let languages: Set<String>
+}
+
+private func extractPhotoIngredientSection(
+    _ text: String,
+    preferredLanguage: String?
+) -> PhotoIngredientSection {
+    let headerPattern = #"(?i)(?<!\p{L})(ingredientes|ingredients|ingrédients|ingredienti|zutaten|inhaltsstoffe|composición|composicion|composition|composizione|composição|composicao)(?!\p{L})\s*:?\s*"#
+    let markerPattern = #"(?i)(puede contener|pode conter|may contain|peut contenir|puo contenere|kann spuren|spuren von|trazas? de|traces? (?:of|de)|vestigios de|tracos de|informaci[oó]n nutricional|informa[cç][aã]o nutricional|valeurs? nutritionnelles?|n[aä]hrwerte|valori nutrizionali|nutrition information|nutrition facts|best before|conservar|consumir preferentemente|mindestens haltbar|zu verbrauchen bis|à consommer|a consommer|da consumarsi|validade|peso neto|poids net|net weight|nettogewicht|peso netto|\b\d+\s*(?:kj|kcal)\b)"#
+    guard let headerRegex = try? NSRegularExpression(pattern: headerPattern),
+          let markerRegex = try? NSRegularExpression(pattern: markerPattern) else {
+        return PhotoIngredientSection(
+            ingredientsText: text,
+            trailingText: "",
+            hasSupportedHeader: false
+        )
+    }
+
+    let fullRange = NSRange(text.startIndex..., in: text)
+    let headers = headerRegex.matches(in: text, range: fullRange).compactMap { match -> PhotoHeaderMatch? in
+        guard let headerRange = Range(match.range(at: 1), in: text) else { return nil }
+        let header = String(text[headerRange]).lowercased()
+        let languages: Set<String>
+        switch header {
+        case "ingredientes": languages = ["es", "pt"]
+        case "ingredients": languages = ["en", "fr"]
+        case "ingrédients": languages = ["fr"]
+        case "ingredienti": languages = ["it"]
+        case "zutaten", "inhaltsstoffe": languages = ["de"]
+        case "composición", "composicion": languages = ["es"]
+        case "composition": languages = ["en", "fr"]
+        case "composizione": languages = ["it"]
+        case "composição", "composicao": languages = ["pt"]
+        default: languages = []
+        }
+        return PhotoHeaderMatch(
+            start: match.range.location,
+            end: match.range.location + match.range.length,
+            languages: languages
+        )
+    }
+    let firstMarkerStart = markerRegex.firstMatch(in: text, range: fullRange)?.range.location ?? text.utf16.count
+    guard !headers.isEmpty else {
+        let ingredientsEnd = String.Index(utf16Offset: firstMarkerStart, in: text)
+        return PhotoIngredientSection(
+            ingredientsText: String(text[..<ingredientsEnd]),
+            trailingText: String(text[ingredientsEnd...]),
+            hasSupportedHeader: false
+        )
+    }
+
+    let language = (preferredLanguage ?? "").lowercased()
+        .split(separator: "-", omittingEmptySubsequences: true).first
+        .map(String.init) ?? ""
+    let selected = headers.first { $0.languages.contains(language) } ?? headers[0]
+    let nextHeaderStart = headers.first { $0.start > selected.start }?.start ?? text.utf16.count
+    let afterHeader = NSRange(location: selected.end, length: text.utf16.count - selected.end)
+    let markerAfterHeader = markerRegex.firstMatch(in: text, range: afterHeader)?.range.location ?? text.utf16.count
+    let end = min(nextHeaderStart, markerAfterHeader)
+    let ingredientsStart = String.Index(utf16Offset: selected.end, in: text)
+    let ingredientsEnd = String.Index(utf16Offset: end, in: text)
+    let trailingStart = ingredientsEnd
+    return PhotoIngredientSection(
+        ingredientsText: String(text[ingredientsStart..<ingredientsEnd]),
+        trailingText: String(text[trailingStart...]),
+        hasSupportedHeader: true
+    )
+}
+
 private let photoPlantSourceLexemes: Set<String> = [
     "agua", "water", "wasser", "eau", "acqua",
     "sal", "salt", "salz", "sel", "sale",
@@ -148,7 +238,8 @@ private let photoPlantSourceLexemes: Set<String> = [
     "almidon", "starch", "starke", "amidon", "amido",
     "aceite", "oil", "oleo", "ol", "oel", "huile", "olio",
     "girasol", "sunflower", "sonnenblume", "tournesol", "girasole", "girassol",
-    "oliva", "olive", "azeitona",
+    "oliva", "olive", "aceituna", "azeitona", "granada", "pomegranate", "granatapfel",
+    "melograno", "grenade", "zumo", "juice", "saft", "jus", "succo", "suco",
     "canola", "colza", "rapeseed", "raps",
     "coco", "coconut", "kokos", "cocco",
     "soja", "soy", "soya",
@@ -227,8 +318,16 @@ private let photoFunctionDescriptorLexemes: Set<String> = [
     "vegetal", "vegetable", "gemuse", "legume", "verdura", "hortalica",
     "semilla", "seed", "samen", "graine", "seme",
     "especia", "spice", "gewurz", "epice", "spezia", "especiaria",
-    "aroma", "flavor", "arome"
+    "aroma", "flavor", "arome",
+    "backtriebmittel", "gasificante", "agente lievitante", "levedante",
+    "poudre a lever", "levure chimique", "raising agent"
 ]
+
+private let photoPlantContainmentLexemes: Set<String> = [
+    "salz", "zucker", "mehl", "sonnenblume"
+]
+
+private let photoPlantPrefixLexemes: Set<String> = ["granatapfel"]
 
 private func cleanPhotoIngredientLabel(_ rawSegment: String) -> String? {
     guard let cleaned = cleanFoodFactsLabel(rawSegment) else { return nil }
@@ -249,43 +348,52 @@ private func isRecognizedPhotoPlantOrNeutral(
     hasKnownNonAnimalAdditive: Bool = false
 ) -> Bool {
     let normalized = normalizeIngredientSegment(label)
-    let tokens = normalized.components(separatedBy: CharacterSet.letters.inverted)
-        .filter { !$0.isEmpty }
     let hasPlantSource = photoPlantSourceLexemes.contains { lexeme in
-        matchesPhotoLexeme(lexeme, normalized: normalized, tokens: tokens)
+        matchesAnimalLexeme(
+            lexeme,
+            mode: photoPlantLexemeMode(lexeme),
+            normalized: normalized
+        )
     }
     let hasFunctionDescriptor = photoFunctionDescriptorLexemes.contains { lexeme in
-        matchesPhotoLexeme(lexeme, normalized: normalized, tokens: tokens)
+        matchesAnimalLexeme(
+            lexeme,
+            mode: .tokenExact,
+            normalized: normalized
+        )
     }
     return hasPlantSource || (hasFunctionDescriptor && hasKnownNonAnimalAdditive)
 }
 
 private func isPhotoFunctionDescriptorOnly(_ label: String) -> Bool {
     let normalized = normalizeIngredientSegment(label)
-    let tokens = normalized.components(separatedBy: CharacterSet.letters.inverted)
-        .filter { !$0.isEmpty }
     let hasPlantSource = photoPlantSourceLexemes.contains { lexeme in
-        matchesPhotoLexeme(lexeme, normalized: normalized, tokens: tokens)
+        matchesAnimalLexeme(
+            lexeme,
+            mode: photoPlantLexemeMode(lexeme),
+            normalized: normalized
+        )
     }
     let hasFunctionDescriptor = photoFunctionDescriptorLexemes.contains { lexeme in
-        matchesPhotoLexeme(lexeme, normalized: normalized, tokens: tokens)
+        matchesAnimalLexeme(
+            lexeme,
+            mode: .tokenExact,
+            normalized: normalized
+        )
     }
     return hasFunctionDescriptor && !hasPlantSource
 }
 
-private func matchesPhotoLexeme(
-    _ lexeme: String,
-    normalized: String,
-    tokens: [String]
-) -> Bool {
-    if lexeme.contains(" ") {
-        return normalized == lexeme ||
-            normalized.hasPrefix("\(lexeme) ") ||
-            normalized.hasSuffix(" \(lexeme)") ||
-            normalized.contains(" \(lexeme) ")
+private func photoPlantLexemeMode(_ lexeme: String) -> AnimalLexemeMatchMode {
+    if photoPlantContainmentLexemes.contains(lexeme) {
+        return .tokenContains
     }
-    return tokens.contains(lexeme)
+    if photoPlantPrefixLexemes.contains(lexeme) {
+        return .tokenPrefix
+    }
+    return .tokenExact
 }
+
 
 private func findPhotoAdditiveCodes(in text: String) -> [String] {
     guard let regex = try? NSRegularExpression(

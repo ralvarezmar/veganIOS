@@ -12,7 +12,7 @@ final class PhotoIngredientAnalyzerCorpusTests: XCTestCase {
         let corpus = try JSONDecoder().decode(PhotoCorpus.self, from: Data(contentsOf: url))
 
         for testCase in corpus.cases {
-            let analysis = analyzePhotoIngredients(testCase.text)
+            let analysis = analyzePhotoIngredients(testCase.text, preferredLanguage: "es")
             XCTAssertEqual(
                 analysis.status,
                 status(for: testCase.expected.status),
@@ -56,6 +56,7 @@ final class PhotoIngredientAnalyzerCorpusTests: XCTestCase {
         case "photoAnimalAdditive": return .animalAdditive
         case "photoAllPlantRecognized": return .allPlantRecognized
         case "photoUnrecognizedIngredient": return .unrecognizedIngredient
+        case "photoLanguageNotRecognized": return .languageNotRecognized
         default: fatalError("Unknown photo corpus reason source: \(value)")
         }
     }

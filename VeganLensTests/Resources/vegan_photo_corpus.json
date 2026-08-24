@@ -1,5 +1,5 @@
 {
-  "__comment": "Shared byte-for-byte corpus for photo (OCR) ingredient analysis in veganAndroid and veganIOS. Any change must be applied identically in both repositories. Statuses: notVegan | vegan | review. Reason sources: photoAnimalIngredient | photoAnimalAdditive | photoAllPlantRecognized | photoUnrecognizedIngredient.",
+  "__comment": "Shared byte-for-byte corpus for photo (OCR) ingredient analysis in veganAndroid and veganIOS. Any change must be applied identically in both repositories. Statuses: notVegan | vegan | review. Reason sources: photoAnimalIngredient | photoAnimalAdditive | photoAllPlantRecognized | photoUnrecognizedIngredient | photoLanguageNotRecognized.",
   "cases": [
     {
       "id": "photo-plain-plant-list-es",
@@ -144,6 +144,96 @@
       "rationale": "OCR loses accents and case; recognition must not depend on either.",
       "text": "INGREDIENTES: HARINA DE TRIGO, AZUCAR, ACEITE DE GIRASOL, SAL",
       "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-german-compounds-plant",
+      "rationale": "German compound words must recognize their plant roots.",
+      "text": "Weizenmehl, Zucker, Sonnenblumenöl, Speisesalz",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-german-functional-descriptor-needs-review",
+      "rationale": "A German raising-agent descriptor does not establish plant origin by itself.",
+      "text": "Weizenmehl, Zucker, Sonnenblumenöl, Speisesalz, Backtriebmittel",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["Backtriebmittel"], "traceWarning": false}
+    },
+    {
+      "id": "photo-german-pomegranate-juice-is-plant",
+      "rationale": "German compound fruit juice must not trigger the Spanish animal substring nata.",
+      "text": "Zutaten: Wasser, Zucker, Granatapfelsaft, Zitronensäure",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-spanish-olive-singular-is-plant",
+      "rationale": "The Spanish singular olive must not trigger the animal substring tuna.",
+      "text": "Ingredientes: aceituna",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-german-whole-milk-powder-is-animal",
+      "rationale": "A compositional German dairy compound must remain animal-derived.",
+      "text": "Zutaten: Vollmilchpulver",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalIngredient", "culprits": ["Vollmilchpulver"], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-spanish-list-before-nutrition-table",
+      "rationale": "Nutrition facts after the list are not ingredients and must be excluded.",
+      "text": "Ingredientes: harina, azúcar, sal. Información nutricional: valor energético 100 kcal.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-spanish-list-with-trace-tail",
+      "rationale": "The trace warning after the list must be retained without becoming an ingredient.",
+      "text": "Ingredientes: harina, azúcar, sal. Puede contener leche.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": true}
+    },
+    {
+      "id": "photo-unsupported-dutch-language",
+      "rationale": "An unsupported label language with no recognized ingredient needs an explicit language review reason.",
+      "text": "Ingrediënten: tarwebloem, suiker, zonnebloemolie, zout",
+      "expected": {"status": "review", "reasonSource": "photoLanguageNotRecognized", "culprits": [], "unrecognized": ["Tarwebloem", "Suiker", "Zonnebloemolie", "Zout"], "traceWarning": false}
+    },
+    {
+      "id": "photo-spanish-cream-plural-is-animal",
+      "rationale": "The common Spanish plural of cream must remain an animal detection.",
+      "text": "Ingredientes: natas",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalIngredient", "culprits": ["Natas"], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-animal-additive-e120",
+      "rationale": "Animal additive codes must be detected when written in the ingredient list.",
+      "text": "Ingredientes: E120",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalAdditive", "culprits": ["E120"], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-german-compound-honey-is-animal",
+      "rationale": "German compounds with an animal root at the end must remain animal detections.",
+      "text": "Zutaten: Zucker, Blütenhonig",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalIngredient", "culprits": ["Blütenhonig"], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-german-compound-gelatin-is-animal",
+      "rationale": "German compounds containing gelatin must remain animal detections.",
+      "text": "Zutaten: Wasser, Schweinegelatine",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalIngredient", "culprits": ["Schweinegelatine"], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-poppy-seed-is-not-pavo",
+      "rationale": "The French poppy-seed word must not trigger the Spanish turkey lexeme.",
+      "text": "Ingrédients: farine, graines de pavot",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["Graines De Pavot"], "traceWarning": false}
+    },
+    {
+      "id": "photo-porcini-is-not-pork",
+      "rationale": "The mushroom word porcini must not trigger the Spanish pork lexeme.",
+      "text": "Ingredientes: harina, setas porcini",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["Setas Porcini"], "traceWarning": false}
+    },
+    {
+      "id": "photo-e1201-is-not-e120",
+      "rationale": "An additive code extension must not be mistaken for the carmine code E120.",
+      "text": "Ingredientes: azúcar, E1201",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["E1201"], "traceWarning": false}
     }
   ]
 }

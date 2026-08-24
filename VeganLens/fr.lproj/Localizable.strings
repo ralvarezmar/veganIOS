@@ -300,6 +300,7 @@
 "photo_reason_animal_additive" = "Un additif d’origine animale a été détecté.";
 "photo_reason_all_recognized" = "Tous les segments reconnus sont végétaux ou neutres.";
 "photo_reason_unrecognized" = "Certains segments n’ont pas pu être identifiés avec certitude.";
+"photo_reason_language_not_recognized" = "La langue de l’étiquette n’a pas pu être identifiée. Vous pouvez modifier manuellement le texte reconnu et l’analyser à nouveau.";
 "photo_culprits_title" = "Causes du résultat";
 "photo_culprit_ingredient" = "ingrédient d’origine animale";
 "photo_culprit_additive" = "additif d’origine animale";
