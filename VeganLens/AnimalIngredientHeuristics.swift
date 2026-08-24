@@ -6,7 +6,7 @@ enum AnimalLexemeMatchMode {
     case tokenContains
 }
 
-let animalLexemeModes: [String: AnimalLexemeMatchMode] = [
+private let rawAnimalLexemeCatalog: [String: AnimalLexemeMatchMode] = [
     "molke": .tokenPrefix, "whey": .tokenPrefix, "lactos": .tokenPrefix,
     "laktos": .tokenPrefix, "lactosuero": .tokenPrefix,
     "casein": .tokenPrefix, "caseina": .tokenPrefix, "kasein": .tokenPrefix,
@@ -26,7 +26,7 @@ let animalLexemeModes: [String: AnimalLexemeMatchMode] = [
     "schwein": .tokenPrefix, "pork": .tokenPrefix, "porc": .tokenPrefix,
     "ternera": .tokenPrefix, "vacuno": .tokenPrefix, "beef": .tokenPrefix,
     "cordero": .tokenPrefix, "lamb": .tokenPrefix, "agnello": .tokenPrefix,
-    "pavo": .tokenPrefix, "turkey": .tokenPrefix, "chorizo": .tokenPrefix,
+    "pavo": .tokenPrefix, "pavos": .tokenPrefix, "turkey": .tokenPrefix, "chorizo": .tokenPrefix,
     "salami": .tokenPrefix, "wurst": .tokenContains, "embutido": .tokenPrefix,
     "pescado": .tokenPrefix, "poisson": .tokenPrefix, "fisch": .tokenPrefix,
     "atun": .tokenPrefix, "thunfisch": .tokenPrefix, "thon": .tokenPrefix,
@@ -59,6 +59,17 @@ let animalLexemeModes: [String: AnimalLexemeMatchMode] = [
     "mantequilla": .tokenPrefix, "beurre": .tokenContains, "burro": .tokenContains,
     "obers": .tokenContains, "rahm": .tokenContains
 ]
+
+let animalLexemeModes = rawAnimalLexemeCatalog.keys.reduce(into: [String: AnimalLexemeMatchMode]()) {
+    switch $1 {
+    case "tuna", "porc", "pavo", "pavos", "e120", "e901", "e904":
+        $0[$1] = .tokenExact
+    case "nata":
+        $0[$1] = .tokenPrefix
+    default:
+        $0[$1] = .tokenContains
+    }
+}
 
 let ambiguousAnimalLexemes: Set<String> = [
     "milch", "milk", "leche", "lait", "latte", "nata", "sahne", "cream",
