@@ -71,6 +71,12 @@ location.
   App-Store-Connect archive, and uploads the IPA with `xcrun altool`.
 - Builds appear in App Store Connect under **TestFlight** after Apple's
   processing completes.
+- On `main`, the release also creates or updates the App Store version,
+  attaches the processed build, and writes Spanish `What's New` notes.
+- The App Store review submission remains manual and is handled by the
+  **iOS App Store Submit for Review** workflow.
+- Run that workflow manually with an optional `versionString`; if it is empty,
+  the workflow submits the latest editable App Store version.
 - If one or more secrets are absent, the workflow reports that releases are
   skipped and exits successfully; it does not attempt to archive or upload.
 

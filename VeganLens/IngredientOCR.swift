@@ -32,7 +32,26 @@ enum IngredientOCR {
                 }
                 request.recognitionLevel = .accurate
                 request.usesLanguageCorrection = true
-                request.recognitionLanguages = ["es-ES", "en-US"]
+                let preferredLanguage = Locale.preferredLanguages.first
+                    .flatMap { Locale(identifier: $0).languageCode }
+                    ?? Locale.current.languageCode
+                    ?? "es"
+                let languageTags = ["es": "es-ES", "en": "en-US", "de": "de-DE",
+                                    "fr": "fr-FR", "it": "it-IT", "pt": "pt-PT"]
+                let orderedCodes = [preferredLanguage] + ["es", "en", "de", "fr", "it", "pt"]
+                    .filter { $0 != preferredLanguage }
+                let desiredLanguages = orderedCodes.compactMap { languageTags[$0] }
+                let supportedLanguages = (try? VNRecognizeTextRequest
+                    .supportedRecognitionLanguages(
+                        for: request.recognitionLevel,
+                        revision: request.revision
+                    )) ?? []
+                let supportedDesiredLanguages = desiredLanguages.filter {
+                    supportedLanguages.contains($0)
+                }
+                request.recognitionLanguages = supportedDesiredLanguages.isEmpty
+                    ? ["es-ES", "en-US"]
+                    : supportedDesiredLanguages
 
                 do {
                     let handler = VNImageRequestHandler(

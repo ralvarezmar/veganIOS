@@ -15,6 +15,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 ### Cambiado
 - La portada permanece visible hasta cinco segundos y sus recortes, junto con el icono recentrado, usan las ilustraciones revisadas.
 - Se retira el personaje `citrus` de la rotación de la portada.
+- El análisis fotográfico extrae la sección relevante, admite los seis idiomas del OCR y trata con más seguridad los envases multilingües y los compuestos alemanes.
 
 ## [1.2.0 (24)] - 2026-08-20
 

@@ -909,6 +909,376 @@ jobs:
               sys.exit(1)
           PY
 
+      - name: Manage App Store version
+        if: steps.credentials.outputs.configured == 'true' && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        env:
+          VERSION_NAME: ${{ steps.version.outputs.name }}
+        run: |
+          set -euo pipefail
+          pip3 install --quiet 'pyjwt[crypto]' requests \
+            || pip3 install --quiet --user 'pyjwt[crypto]' requests \
+            || pip3 install --quiet --break-system-packages 'pyjwt[crypto]' requests
+          python3 - <<'PY'
+          import os
+          import re
+          import sys
+          import time
+          from pathlib import Path
+
+          import jwt
+          import requests
+
+          API_BASE = "https://api.appstoreconnect.apple.com/v1"
+          BUNDLE_ID = "com.ralvarezmar.vcheck"
+          EDITABLE_STATES = {
+              "PREPARE_FOR_SUBMISSION",
+              "DEVELOPER_REJECTED",
+              "REJECTED",
+              "METADATA_REJECTED",
+          }
+          REQUEST_TIMEOUT = 30
+          MAX_WHATS_NEW_LENGTH = 4000
+
+          key_id = os.environ["ASC_KEY_ID"]
+          issuer_id = os.environ["ASC_ISSUER_ID"]
+          key_path = os.environ["ASC_KEY_PATH"]
+          build_number = os.environ["GITHUB_RUN_NUMBER"]
+          version_name = os.environ["VERSION_NAME"]
+
+          def token():
+              now = int(time.time())
+              with open(key_path, "rb") as handle:
+                  private_key = handle.read()
+              return jwt.encode(
+                  {
+                      "iss": issuer_id,
+                      "iat": now,
+                      "exp": now + 15 * 60,
+                      "aud": "appstoreconnect-v1",
+                  },
+                  private_key,
+                  algorithm="ES256",
+                  headers={"kid": key_id, "typ": "JWT"},
+              )
+
+          def api_error(response):
+              try:
+                  errors = response.json().get("errors", [])
+              except ValueError:
+                  return f"HTTP {response.status_code}"
+              details = []
+              for error in errors[:3]:
+                  if isinstance(error, dict):
+                      code = error.get("code")
+                      title = error.get("title")
+                      detail = error.get("detail")
+                      details.append(
+                          ": ".join(
+                              part
+                              for part in (code, title, detail)
+                              if part
+                          )
+                      )
+              return f"HTTP {response.status_code}" + (
+                  f" ({'; '.join(details)})" if details else ""
+              )
+
+          def request(method, url, **kwargs):
+              headers = dict(kwargs.pop("headers", {}))
+              headers["Authorization"] = f"Bearer {token()}"
+              response = requests.request(
+                  method,
+                  url,
+                  headers=headers,
+                  timeout=REQUEST_TIMEOUT,
+                  **kwargs,
+              )
+              if response.status_code >= 400:
+                  raise RuntimeError(
+                      f"App Store Connect API {method} {url}: {api_error(response)}"
+                  )
+              return response
+
+          def warn(message):
+              print(f"::warning::{message}", flush=True)
+
+          def app_id():
+              response = request(
+                  "GET",
+                  f"{API_BASE}/apps",
+                  params={"filter[bundleId]": BUNDLE_ID, "limit": "1"},
+              )
+              apps = response.json().get("data", [])
+              if not apps:
+                  raise RuntimeError(
+                      f"No App Store Connect app found for bundle id {BUNDLE_ID}"
+                  )
+              return apps[0]["id"]
+
+          def app_store_version_id(app_identifier):
+              response = request(
+                  "GET",
+                  f"{API_BASE}/appStoreVersions",
+                  params={
+                      "filter[app]": app_identifier,
+                      "filter[platform]": "IOS",
+                      "filter[versionString]": version_name,
+                      "limit": "50",
+                  },
+              )
+              versions = response.json().get("data", [])
+              versions.sort(
+                  key=lambda item: item.get("attributes", {}).get(
+                      "createdDate", ""
+                  ),
+                  reverse=True,
+              )
+              if versions:
+                  selected = versions[0]
+                  state = selected.get("attributes", {}).get(
+                      "appStoreState", "UNKNOWN"
+                  )
+                  if state not in EDITABLE_STATES:
+                      warn(
+                          f"App Store version {version_name} exists in state "
+                          f"{state}; leaving it unchanged."
+                      )
+                      return None
+                  print(
+                      f"Reusing editable App Store version {version_name} "
+                      f"({selected['id']}, {state}).",
+                      flush=True,
+                  )
+                  return selected["id"]
+
+              payload = {
+                  "data": {
+                      "type": "appStoreVersions",
+                      "attributes": {
+                          "platform": "IOS",
+                          "versionString": version_name,
+                          "releaseType": "AFTER_APPROVAL",
+                      },
+                      "relationships": {
+                          "app": {
+                              "data": {"type": "apps", "id": app_identifier}
+                          }
+                      },
+                  }
+              }
+              created = request(
+                  "POST",
+                  f"{API_BASE}/appStoreVersions",
+                  headers={"Content-Type": "application/json"},
+                  json=payload,
+              ).json()["data"]
+              print(
+                  f"Created App Store version {version_name} ({created['id']}).",
+                  flush=True,
+              )
+              return created["id"]
+
+          def wait_for_build(app_identifier):
+              deadline = time.monotonic() + 30 * 60
+              while time.monotonic() < deadline:
+                  response = request(
+                      "GET",
+                      f"{API_BASE}/builds",
+                      params={
+                          "filter[app]": app_identifier,
+                          "filter[version]": build_number,
+                          "limit": "1",
+                      },
+                  )
+                  builds = response.json().get("data", [])
+                  if builds:
+                      build = builds[0]
+                      state = build.get("attributes", {}).get(
+                          "processingState", "UNKNOWN"
+                      )
+                      print(
+                          f"Build {build_number} ({build['id']}) processing "
+                          f"state: {state}",
+                          flush=True,
+                      )
+                      if state == "VALID":
+                          return build["id"]
+                  else:
+                      print(
+                          f"Build {build_number} is not visible yet; retrying...",
+                          flush=True,
+                      )
+                  time.sleep(30)
+              warn(
+                  f"Build {build_number} was not VALID after 30 minutes; "
+                  "leaving the uploaded build untouched."
+              )
+              return None
+
+          def attach_build(version_identifier, build_identifier):
+              request(
+                  "PATCH",
+                  f"{API_BASE}/appStoreVersions/"
+                  f"{version_identifier}/relationships/build",
+                  headers={"Content-Type": "application/json"},
+                  json={
+                      "data": {"type": "builds", "id": build_identifier}
+                  },
+              )
+              print(
+                  f"Attached build {build_number} to App Store version "
+                  f"{version_name}.",
+                  flush=True,
+              )
+
+          def truncate_notes(text):
+              if len(text) <= MAX_WHATS_NEW_LENGTH:
+                  return text
+              candidate = text[: MAX_WHATS_NEW_LENGTH + 1]
+              boundary = max(candidate.rfind("\n"), candidate.rfind(" "))
+              if boundary <= 0:
+                  return text[:MAX_WHATS_NEW_LENGTH]
+              return candidate[:boundary].rstrip()
+
+          def sanitize_notes(text):
+              lines = []
+              for raw_line in str(text).splitlines():
+                  line = raw_line.strip()
+                  if not line:
+                      if lines and lines[-1] != "":
+                          lines.append("")
+                      continue
+                  heading = re.match(r"^#{1,6}\s+(.*)$", line)
+                  if heading:
+                      line = heading.group(1).strip()
+                  elif line.startswith("- "):
+                      line = f"• {line[2:].strip()}"
+                  lines.append(line)
+              return truncate_notes("\n".join(lines).strip())
+
+          def changelog_notes():
+              path = Path("CHANGELOG.md")
+              if not path.is_file():
+                  raise RuntimeError("CHANGELOG.md not found")
+              contents = path.read_text(encoding="utf-8")
+              match = re.search(
+                  rf"^##\s+\[{re.escape(version_name)}[^\]]*\]"
+                  rf"[^\r\n]*\r?\n(?P<body>.*?)(?=^##\s+\[|\Z)",
+                  contents,
+                  flags=re.MULTILINE | re.DOTALL,
+              )
+              if match is None:
+                  raise RuntimeError(
+                      f"CHANGELOG.md has no section for {version_name}"
+                  )
+              notes = sanitize_notes(match.group("body").strip())
+              if not notes:
+                  raise RuntimeError(
+                      f"CHANGELOG.md section for {version_name} is empty"
+                  )
+              return notes
+
+          def update_localizations(version_identifier, notes):
+              response = request(
+                  "GET",
+                  f"{API_BASE}/appStoreVersionLocalizations",
+                  params={
+                      "filter[appStoreVersion]": version_identifier,
+                      "limit": "200",
+                  },
+              )
+              localizations = response.json().get("data", [])
+              spanish = next(
+                  (
+                      localization
+                      for localization in localizations
+                      if localization.get("attributes", {}).get("locale")
+                      == "es-ES"
+                  ),
+                  None,
+              )
+              for localization in localizations:
+                  locale = localization.get("attributes", {}).get(
+                      "locale", "<unknown>"
+                  )
+                  if locale != "es-ES":
+                      warn(
+                          f"No changelog is available for App Store locale "
+                          f"{locale}; leaving its whatsNew unchanged."
+                      )
+
+              if spanish is None:
+                  payload = {
+                      "data": {
+                          "type": "appStoreVersionLocalizations",
+                          "attributes": {
+                              "locale": "es-ES",
+                              "whatsNew": notes,
+                          },
+                          "relationships": {
+                              "appStoreVersion": {
+                                  "data": {
+                                      "type": "appStoreVersions",
+                                      "id": version_identifier,
+                                  }
+                              }
+                          },
+                      }
+                  }
+                  request(
+                      "POST",
+                      f"{API_BASE}/appStoreVersionLocalizations",
+                      headers={"Content-Type": "application/json"},
+                      json=payload,
+                  )
+                  print(
+                      "Created Spanish App Store whatsNew localization.",
+                      flush=True,
+                  )
+                  return
+
+              request(
+                  "PATCH",
+                  f"{API_BASE}/appStoreVersionLocalizations/{spanish['id']}",
+                  headers={"Content-Type": "application/json"},
+                  json={
+                      "data": {
+                          "type": "appStoreVersionLocalizations",
+                          "id": spanish["id"],
+                          "attributes": {"whatsNew": notes},
+                      }
+                  },
+              )
+              print(
+                  "Updated Spanish App Store whatsNew localization.",
+                  flush=True,
+              )
+
+          try:
+              identifier = app_id()
+              version_identifier = app_store_version_id(identifier)
+              if version_identifier is not None:
+                  try:
+                      build_identifier = wait_for_build(identifier)
+                  except Exception as error:
+                      warn(f"Could not wait for App Store build: {error}")
+                      build_identifier = None
+                  if build_identifier is not None:
+                      try:
+                          attach_build(version_identifier, build_identifier)
+                      except Exception as error:
+                          warn(f"Could not attach App Store build: {error}")
+                  try:
+                      notes = changelog_notes()
+                      update_localizations(version_identifier, notes)
+                  except Exception as error:
+                      warn(f"Could not update App Store whatsNew: {error}")
+          except Exception as error:
+              warn(f"App Store version management skipped: {error}")
+              sys.exit(0)
+          PY
+
       - name: Create GitHub Release
         if: steps.credentials.outputs.configured == 'true' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
