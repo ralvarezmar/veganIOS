@@ -1,5 +1,5 @@
 {
-  "__comment": "Shared byte-for-byte corpus for photo (OCR) ingredient analysis in veganAndroid and veganIOS. Any change must be applied identically in both repositories. Statuses: notVegan | vegan | review. Reason sources: photoAnimalIngredient | photoAnimalAdditive | photoAllPlantRecognized | photoUnrecognizedIngredient.",
+  "__comment": "Shared byte-for-byte corpus for photo (OCR) ingredient analysis in veganAndroid and veganIOS. Any change must be applied identically in both repositories. Statuses: notVegan | vegan | review. Reason sources: photoAnimalIngredient | photoAnimalAdditive | photoAllPlantRecognized | photoUnrecognizedIngredient | photoLanguageNotRecognized.",
   "cases": [
     {
       "id": "photo-plain-plant-list-es",
@@ -192,6 +192,18 @@
       "rationale": "An unsupported label language with no recognized ingredient needs an explicit language review reason.",
       "text": "Ingrediënten: tarwebloem, suiker, zonnebloemolie, zout",
       "expected": {"status": "review", "reasonSource": "photoLanguageNotRecognized", "culprits": [], "unrecognized": ["Tarwebloem", "Suiker", "Zonnebloemolie", "Zout"], "traceWarning": false}
+    },
+    {
+      "id": "photo-spanish-cream-plural-is-animal",
+      "rationale": "The common Spanish plural of cream must remain an animal detection.",
+      "text": "Ingredientes: natas",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalIngredient", "culprits": ["Natas"], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-animal-additive-e120",
+      "rationale": "Animal additive codes must be detected when written in the ingredient list.",
+      "text": "Ingredientes: E120",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalAdditive", "culprits": ["E120"], "unrecognized": [], "traceWarning": false}
     }
   ]
 }

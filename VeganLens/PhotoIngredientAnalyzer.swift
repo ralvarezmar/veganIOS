@@ -14,12 +14,6 @@ enum PhotoReasonSource: Equatable {
     case languageNotRecognized
 }
 
-enum PhotoLexemeMatchMode {
-    case tokenExact
-    case tokenPrefix
-    case tokenContains
-}
-
 enum PhotoCulpritKind: Equatable {
     case animalIngredient
     case animalAdditive
@@ -105,7 +99,7 @@ func analyzePhotoIngredients(
             continue
         }
 
-        if containsPhotoAnimalIngredient(rawSegment) {
+        if containsAnimalIngredient(rawSegment) {
             appendUnique(label, to: &animalIngredients)
             recognizedIngredientCount += 1
         } else if isRecognizedPhotoPlantOrNeutral(label) {
@@ -335,110 +329,6 @@ private let photoPlantContainmentLexemes: Set<String> = [
 
 private let photoPlantPrefixLexemes: Set<String> = ["granatapfel"]
 
-private let photoAnimalLexemeModes: [String: PhotoLexemeMatchMode] = [
-    "milch": .tokenContains, "milk": .tokenContains, "leche": .tokenContains,
-    "lait": .tokenContains, "latte": .tokenContains, "nata": .tokenExact,
-    "sahne": .tokenContains, "cream": .tokenContains, "creme": .tokenContains,
-    "panna": .tokenContains, "crema": .tokenContains, "butter": .tokenContains,
-    "mantequilla": .tokenPrefix, "beurre": .tokenContains, "burro": .tokenContains,
-    "obers": .tokenContains, "rahm": .tokenContains, "molke": .tokenPrefix,
-    "whey": .tokenPrefix, "lactos": .tokenPrefix, "laktos": .tokenPrefix,
-    "lactosuero": .tokenPrefix,
-    "casein": .tokenPrefix, "caseina": .tokenPrefix, "kasein": .tokenPrefix,
-    "lactoglob": .tokenPrefix, "lactalb": .tokenPrefix, "queso": .tokenPrefix,
-    "suero de leche": .tokenExact,
-    "cheese": .tokenPrefix, "kase": .tokenContains, "fromage": .tokenPrefix,
-    "formagg": .tokenPrefix, "parmesan": .tokenPrefix, "parmigian": .tokenPrefix,
-    "mozzarella": .tokenPrefix, "cheddar": .tokenPrefix, "gouda": .tokenPrefix,
-    "emmental": .tokenPrefix, "ovoalbum": .tokenPrefix, "ovoprodu": .tokenPrefix,
-    "gelatin": .tokenPrefix, "gelatina": .tokenPrefix, "gelatine": .tokenPrefix,
-    "miel": .tokenExact, "honey": .tokenExact, "honig": .tokenExact,
-    "miele": .tokenExact, "carne": .tokenPrefix, "fleisch": .tokenContains,
-    "viande": .tokenPrefix, "jamon": .tokenPrefix, "tocino": .tokenPrefix,
-    "panceta": .tokenPrefix, "bacon": .tokenPrefix, "speck": .tokenPrefix,
-    "schinken": .tokenContains, "pollo": .tokenPrefix, "huhn": .tokenPrefix,
-    "poulet": .tokenPrefix, "chicken": .tokenPrefix, "cerdo": .tokenPrefix,
-    "schwein": .tokenPrefix, "pork": .tokenPrefix, "porc": .tokenPrefix,
-    "ternera": .tokenPrefix, "vacuno": .tokenPrefix, "beef": .tokenPrefix,
-    "cordero": .tokenPrefix, "lamb": .tokenPrefix, "agnello": .tokenPrefix,
-    "pavo": .tokenPrefix, "turkey": .tokenPrefix, "chorizo": .tokenPrefix,
-    "salami": .tokenPrefix, "wurst": .tokenContains, "embutido": .tokenPrefix,
-    "pescado": .tokenPrefix, "poisson": .tokenPrefix, "fisch": .tokenPrefix,
-    "atun": .tokenPrefix, "thunfisch": .tokenPrefix, "thon": .tokenPrefix,
-    "tuna": .tokenExact, "anchoa": .tokenPrefix, "anchois": .tokenPrefix,
-    "sardin": .tokenPrefix, "gamba": .tokenPrefix, "camaron": .tokenPrefix,
-    "shrimp": .tokenPrefix, "krill": .tokenPrefix, "krebstier": .tokenPrefix,
-    "molusco": .tokenPrefix, "calamar": .tokenPrefix, "pulpo": .tokenPrefix,
-    "marisco": .tokenPrefix, "seafood": .tokenPrefix, "surimi": .tokenPrefix,
-    "salmon": .tokenPrefix, "lachs": .tokenPrefix, "saumon": .tokenPrefix,
-    "bacalao": .tokenPrefix, "kabeljau": .tokenPrefix, "trucha": .tokenPrefix,
-    "forelle": .tokenPrefix, "schmalz": .tokenContains, "saindoux": .tokenPrefix,
-    "sebo": .tokenPrefix, "tallow": .tokenPrefix, "talg": .tokenPrefix,
-    "suif": .tokenPrefix, "lard": .tokenPrefix, "lardo": .tokenPrefix,
-    "carmin": .tokenPrefix, "karmin": .tokenPrefix, "cochinill": .tokenPrefix,
-    "cochenill": .tokenPrefix, "cochineal": .tokenPrefix, "e120": .tokenExact,
-    "carminico": .tokenPrefix, "shellac": .tokenPrefix, "schellack": .tokenPrefix,
-    "goma laca": .tokenExact,
-    "e904": .tokenExact, "albumin": .tokenPrefix, "albumina": .tokenPrefix,
-    "lanolin": .tokenPrefix, "lanolina": .tokenPrefix, "cuajo": .tokenPrefix,
-    "rennet": .tokenPrefix, "presure": .tokenPrefix, "labferment": .tokenPrefix,
-    "chitin": .tokenPrefix, "quitina": .tokenPrefix,
-    "manteca de cerdo": .tokenExact, "cera de abeja": .tokenExact,
-    "beeswax": .tokenExact, "bienenwachs": .tokenExact,
-    "cire d abeille": .tokenExact, "royal jelly": .tokenExact,
-    "jalea real": .tokenExact, "gelee royale": .tokenExact,
-    "propolis": .tokenExact, "e901": .tokenExact
-]
-
-private let photoAmbiguousAnimalLexemes: Set<String> = [
-    "milch", "milk", "leche", "lait", "latte", "nata", "sahne", "cream",
-    "creme", "panna", "crema", "butter", "mantequilla", "beurre", "burro",
-    "obers", "rahm"
-]
-
-private let photoPlantQualifiers: Set<String> = [
-    "coco", "coconut", "kokos", "almendra", "almend", "almond", "mandel",
-    "amande", "soja", "soy", "soya", "avena", "oat", "hafer", "avoine",
-    "arroz", "rice", "reis", "riz", "cacahuete", "cacahuet", "peanut",
-    "erdnuss", "arachide", "cacao", "cocoa", "kakao", "karite", "shea",
-    "anacardo", "cashew", "avellana", "hazelnut", "haselnuss", "nuez",
-    "walnut", "nogal", "vegetal", "vegetale", "vegetabil", "pflanzlich",
-    "vegan", "tofu", "seitan", "oliva", "olive", "girasol", "sunflower",
-    "sonnenblume", "tournesol", "palma", "palm"
-]
-
-private func containsPhotoAnimalIngredient(_ segment: String) -> Bool {
-    let normalized = normalizeIngredientSegment(segment)
-    let tokens = normalized.components(separatedBy: CharacterSet.letters.inverted)
-        .filter { !$0.isEmpty }
-    let hasUnambiguousMatch = photoAnimalLexemeModes.contains { entry in
-        !photoAmbiguousAnimalLexemes.contains(entry.key) &&
-            matchesPhotoLexeme(
-                entry.key,
-                mode: entry.value,
-                normalized: normalized,
-                tokens: tokens
-            )
-    }
-    let hasAmbiguousMatch = photoAnimalLexemeModes.contains { entry in
-        photoAmbiguousAnimalLexemes.contains(entry.key) &&
-            matchesPhotoLexeme(
-                entry.key,
-                mode: entry.value,
-                normalized: normalized,
-                tokens: tokens
-            )
-    }
-    let hasPlantQualifier = photoPlantQualifiers.contains { normalized.contains($0) }
-    let eggTokens: Set<String> = [
-        "huevo", "huevos", "yema", "yemas", "ovoproducto", "egg", "eggs",
-        "albumen", "ovalbumin", "ei", "eier", "eigelb", "eiklar", "vollei",
-        "volleipulver", "eipulver", "trockenei", "huhnerei", "oeuf", "oeufs"
-    ]
-    return hasUnambiguousMatch || (hasAmbiguousMatch && !hasPlantQualifier) ||
-        tokens.contains { eggTokens.contains($0) }
-}
-
 private func cleanPhotoIngredientLabel(_ rawSegment: String) -> String? {
     guard let cleaned = cleanFoodFactsLabel(rawSegment) else { return nil }
     let withoutQuantities = cleaned
@@ -458,22 +348,18 @@ private func isRecognizedPhotoPlantOrNeutral(
     hasKnownNonAnimalAdditive: Bool = false
 ) -> Bool {
     let normalized = normalizeIngredientSegment(label)
-    let tokens = normalized.components(separatedBy: CharacterSet.letters.inverted)
-        .filter { !$0.isEmpty }
     let hasPlantSource = photoPlantSourceLexemes.contains { lexeme in
-        matchesPhotoLexeme(
+        matchesAnimalLexeme(
             lexeme,
             mode: photoPlantLexemeMode(lexeme),
-            normalized: normalized,
-            tokens: tokens
+            normalized: normalized
         )
     }
     let hasFunctionDescriptor = photoFunctionDescriptorLexemes.contains { lexeme in
-        matchesPhotoLexeme(
+        matchesAnimalLexeme(
             lexeme,
             mode: .tokenExact,
-            normalized: normalized,
-            tokens: tokens
+            normalized: normalized
         )
     }
     return hasPlantSource || (hasFunctionDescriptor && hasKnownNonAnimalAdditive)
@@ -481,28 +367,24 @@ private func isRecognizedPhotoPlantOrNeutral(
 
 private func isPhotoFunctionDescriptorOnly(_ label: String) -> Bool {
     let normalized = normalizeIngredientSegment(label)
-    let tokens = normalized.components(separatedBy: CharacterSet.letters.inverted)
-        .filter { !$0.isEmpty }
     let hasPlantSource = photoPlantSourceLexemes.contains { lexeme in
-        matchesPhotoLexeme(
+        matchesAnimalLexeme(
             lexeme,
             mode: photoPlantLexemeMode(lexeme),
-            normalized: normalized,
-            tokens: tokens
+            normalized: normalized
         )
     }
     let hasFunctionDescriptor = photoFunctionDescriptorLexemes.contains { lexeme in
-        matchesPhotoLexeme(
+        matchesAnimalLexeme(
             lexeme,
             mode: .tokenExact,
-            normalized: normalized,
-            tokens: tokens
+            normalized: normalized
         )
     }
     return hasFunctionDescriptor && !hasPlantSource
 }
 
-private func photoPlantLexemeMode(_ lexeme: String) -> PhotoLexemeMatchMode {
+private func photoPlantLexemeMode(_ lexeme: String) -> AnimalLexemeMatchMode {
     if photoPlantContainmentLexemes.contains(lexeme) {
         return .tokenContains
     }
@@ -512,26 +394,6 @@ private func photoPlantLexemeMode(_ lexeme: String) -> PhotoLexemeMatchMode {
     return .tokenExact
 }
 
-func matchesPhotoLexeme(
-    _ lexeme: String,
-    mode: PhotoLexemeMatchMode,
-    normalized: String,
-    tokens: [String]
-) -> Bool {
-    if lexeme.contains(" ") {
-        return normalized == lexeme ||
-            normalized.hasPrefix("\(lexeme) ") ||
-            normalized.hasSuffix(" \(lexeme)") ||
-            normalized.contains(" \(lexeme) ")
-    }
-    return tokens.contains { token in
-        switch mode {
-        case .tokenExact: return token == lexeme
-        case .tokenPrefix: return token.hasPrefix(lexeme)
-        case .tokenContains: return token.contains(lexeme)
-        }
-    }
-}
 
 private func findPhotoAdditiveCodes(in text: String) -> [String] {
     guard let regex = try? NSRegularExpression(

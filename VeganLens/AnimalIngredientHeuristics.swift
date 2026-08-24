@@ -1,31 +1,72 @@
 import Foundation
 
-private let unambiguousAnimalStems = [
-    "molke", "whey", "lactos", "laktos", "casein", "caseina", "kasein", "lactoglob",
-    "lactalb", "suero de leche", "lactosuero", "queso", "cheese", "kase", "fromage",
-    "formagg", "parmesan", "parmigian", "mozzarella", "cheddar", "gouda", "emmental",
-    "ovoalbum", "ovoprodu", "miel", "honey", "honig", "miele", "gelatin", "gelatina",
-    "gelatine", "carne", "fleisch", "viande", "jamon", "tocino", "panceta", "bacon",
-    "speck", "schinken", "pollo", "huhn", "poulet", "chicken", "cerdo", "schwein",
-    "pork", "porc", "ternera", "vacuno", "beef", "cordero", "lamb", "agnello", "pavo",
-    "turkey", "chorizo", "salami", "wurst", "embutido", "pescado", "poisson", "fisch",
-    "atun", "thunfisch", "thon", "tuna", "anchoa", "anchois", "sardin", "gamba",
-    "camaron", "shrimp", "krill", "krebstier", "molusco", "calamar", "pulpo",
-    "marisco", "seafood", "surimi", "salmon", "lachs", "saumon", "bacalao", "kabeljau",
-    "trucha", "forelle", "schmalz", "saindoux", "manteca de cerdo", "sebo", "tallow",
-    "talg", "suif", "lard", "lardo", "carmin", "karmin", "cochinill", "cochenill",
-    "cochineal", "e120", "carminico", "shellac", "schellack", "goma laca", "e904",
-    "cera de abeja", "beeswax", "bienenwachs", "cire d abeille", "e901", "royal jelly",
-    "jalea real", "gelee royale", "propolis", "albumin", "albumina", "lanolin", "lanolina",
-    "cuajo", "rennet", "presure", "labferment", "chitin", "quitina"
+enum AnimalLexemeMatchMode {
+    case tokenExact
+    case tokenPrefix
+    case tokenContains
+}
+
+let animalLexemeModes: [String: AnimalLexemeMatchMode] = [
+    "molke": .tokenPrefix, "whey": .tokenPrefix, "lactos": .tokenPrefix,
+    "laktos": .tokenPrefix, "lactosuero": .tokenPrefix,
+    "casein": .tokenPrefix, "caseina": .tokenPrefix, "kasein": .tokenPrefix,
+    "lactoglob": .tokenPrefix, "lactalb": .tokenPrefix,
+    "suero de leche": .tokenExact, "queso": .tokenPrefix, "cheese": .tokenPrefix,
+    "kase": .tokenContains, "fromage": .tokenPrefix, "formagg": .tokenPrefix,
+    "parmesan": .tokenPrefix, "parmigian": .tokenPrefix,
+    "mozzarella": .tokenPrefix, "cheddar": .tokenPrefix, "gouda": .tokenPrefix,
+    "emmental": .tokenPrefix, "ovoalbum": .tokenPrefix, "ovoprodu": .tokenPrefix,
+    "miel": .tokenPrefix, "honey": .tokenPrefix, "honig": .tokenPrefix,
+    "miele": .tokenPrefix, "gelatin": .tokenPrefix, "gelatina": .tokenPrefix,
+    "gelatine": .tokenPrefix, "carne": .tokenPrefix, "fleisch": .tokenContains,
+    "viande": .tokenPrefix, "jamon": .tokenPrefix, "tocino": .tokenPrefix,
+    "panceta": .tokenPrefix, "bacon": .tokenPrefix, "speck": .tokenPrefix,
+    "schinken": .tokenContains, "pollo": .tokenPrefix, "huhn": .tokenPrefix,
+    "poulet": .tokenPrefix, "chicken": .tokenPrefix, "cerdo": .tokenPrefix,
+    "schwein": .tokenPrefix, "pork": .tokenPrefix, "porc": .tokenPrefix,
+    "ternera": .tokenPrefix, "vacuno": .tokenPrefix, "beef": .tokenPrefix,
+    "cordero": .tokenPrefix, "lamb": .tokenPrefix, "agnello": .tokenPrefix,
+    "pavo": .tokenPrefix, "turkey": .tokenPrefix, "chorizo": .tokenPrefix,
+    "salami": .tokenPrefix, "wurst": .tokenContains, "embutido": .tokenPrefix,
+    "pescado": .tokenPrefix, "poisson": .tokenPrefix, "fisch": .tokenPrefix,
+    "atun": .tokenPrefix, "thunfisch": .tokenPrefix, "thon": .tokenPrefix,
+    "tuna": .tokenExact, "anchoa": .tokenPrefix, "anchois": .tokenPrefix,
+    "sardin": .tokenPrefix, "gamba": .tokenPrefix, "camaron": .tokenPrefix,
+    "shrimp": .tokenPrefix, "krill": .tokenPrefix, "krebstier": .tokenPrefix,
+    "molusco": .tokenPrefix, "calamar": .tokenPrefix, "pulpo": .tokenPrefix,
+    "marisco": .tokenPrefix, "seafood": .tokenPrefix, "surimi": .tokenPrefix,
+    "salmon": .tokenPrefix, "lachs": .tokenPrefix, "saumon": .tokenPrefix,
+    "bacalao": .tokenPrefix, "kabeljau": .tokenPrefix, "trucha": .tokenPrefix,
+    "forelle": .tokenPrefix, "schmalz": .tokenContains, "saindoux": .tokenPrefix,
+    "sebo": .tokenPrefix, "tallow": .tokenPrefix, "talg": .tokenPrefix,
+    "suif": .tokenPrefix, "lard": .tokenPrefix, "lardo": .tokenPrefix,
+    "carmin": .tokenPrefix, "karmin": .tokenPrefix, "cochinill": .tokenPrefix,
+    "cochenill": .tokenPrefix, "cochineal": .tokenPrefix, "e120": .tokenExact,
+    "carminico": .tokenPrefix, "shellac": .tokenPrefix, "schellack": .tokenPrefix,
+    "goma laca": .tokenExact, "e904": .tokenExact, "albumin": .tokenPrefix,
+    "albumina": .tokenPrefix, "lanolin": .tokenPrefix, "lanolina": .tokenPrefix,
+    "cuajo": .tokenPrefix, "rennet": .tokenPrefix, "presure": .tokenPrefix,
+    "labferment": .tokenPrefix, "chitin": .tokenPrefix, "quitina": .tokenPrefix,
+    "manteca de cerdo": .tokenExact, "cera de abeja": .tokenExact,
+    "beeswax": .tokenExact, "bienenwachs": .tokenExact,
+    "cire d abeille": .tokenExact, "e901": .tokenExact,
+    "royal jelly": .tokenExact, "jalea real": .tokenExact,
+    "gelee royale": .tokenExact, "propolis": .tokenExact,
+    "milch": .tokenContains, "milk": .tokenContains, "leche": .tokenContains,
+    "lait": .tokenContains, "latte": .tokenContains, "nata": .tokenPrefix,
+    "sahne": .tokenContains, "cream": .tokenContains, "creme": .tokenContains,
+    "panna": .tokenContains, "crema": .tokenContains, "butter": .tokenContains,
+    "mantequilla": .tokenPrefix, "beurre": .tokenContains, "burro": .tokenContains,
+    "obers": .tokenContains, "rahm": .tokenContains
 ]
 
-private let ambiguousAnimalStems = [
-    "milch", "milk", "leche", "lait", "latte", "nata", "sahne", "cream", "creme",
-    "panna", "crema", "butter", "mantequilla", "beurre", "burro", "obers", "rahm"
+let ambiguousAnimalLexemes: Set<String> = [
+    "milch", "milk", "leche", "lait", "latte", "nata", "sahne", "cream",
+    "creme", "panna", "crema", "butter", "mantequilla", "beurre", "burro",
+    "obers", "rahm"
 ]
 
-private let plantQualifiers = [
+let plantQualifiers = [
     "coco", "coconut", "kokos", "almendra", "almend", "almond", "mandel", "amande",
     "soja", "soy", "soya", "avena", "oat", "hafer", "avoine", "arroz", "rice", "reis",
     "riz", "cacahuete", "cacahuet", "peanut", "erdnuss", "arachide", "cacao", "cocoa",
@@ -35,7 +76,7 @@ private let plantQualifiers = [
     "palma", "palm"
 ]
 
-private let eggTokens: Set<String> = [
+let eggTokens: Set<String> = [
     "huevo", "huevos", "yema", "yemas", "ovoproducto", "egg", "eggs", "albumen",
     "ovalbumin", "ei", "eier", "eigelb", "eiklar", "vollei", "volleipulver", "eipulver",
     "trockenei", "huhnerei", "oeuf", "oeufs"
@@ -57,11 +98,15 @@ func detectAnimalIngredients(_ text: String) -> [String] {
         for segment in sentence.components(separatedBy: CharacterSet(charactersIn: ",;()/")) {
             let norm = normalizeIngredientSegment(segment)
             if traceWarningMarkers.contains(where: { norm.contains($0) }) { break }
-            let hasUnambiguousMatch = unambiguousAnimalStems.contains { norm.contains($0) }
-            let hasAmbiguousMatch = ambiguousAnimalStems.contains { norm.contains($0) } &&
-                !plantQualifiers.contains { norm.contains($0) }
-            let tokens = norm.components(separatedBy: CharacterSet.letters.inverted)
-                .filter { !$0.isEmpty }
+            let hasUnambiguousMatch = animalLexemeModes.contains { entry in
+                !ambiguousAnimalLexemes.contains(entry.key) &&
+                    matchesAnimalLexeme(entry.key, mode: entry.value, normalized: norm)
+            }
+            let hasAmbiguousMatch = animalLexemeModes.contains { entry in
+                ambiguousAnimalLexemes.contains(entry.key) &&
+                    matchesAnimalLexeme(entry.key, mode: entry.value, normalized: norm)
+            } && !plantQualifiers.contains { norm.contains($0) }
+            let tokens = ingredientTokens(norm)
             let hasEggToken = tokens.contains { eggTokens.contains($0) }
 
             guard hasUnambiguousMatch || hasAmbiguousMatch || hasEggToken,
@@ -89,13 +134,43 @@ func containsTraceWarning(_ segment: String) -> Bool {
 
 func containsAnimalIngredient(_ segment: String) -> Bool {
     let normalized = normalizeIngredientSegment(segment)
-    let hasUnambiguousMatch = unambiguousAnimalStems.contains { normalized.contains($0) }
-    let hasAmbiguousMatch = ambiguousAnimalStems.contains { normalized.contains($0) } &&
+    let hasUnambiguousMatch = animalLexemeModes.contains { entry in
+        !ambiguousAnimalLexemes.contains(entry.key) &&
+            matchesAnimalLexeme(entry.key, mode: entry.value, normalized: normalized)
+    }
+    let hasAmbiguousMatch = animalLexemeModes.contains { entry in
+        ambiguousAnimalLexemes.contains(entry.key) &&
+            matchesAnimalLexeme(entry.key, mode: entry.value, normalized: normalized)
+    } &&
         !plantQualifiers.contains { normalized.contains($0) }
-    let tokens = normalized.components(separatedBy: CharacterSet.letters.inverted)
-        .filter { !$0.isEmpty }
+    let tokens = ingredientTokens(normalized)
     let hasEggToken = tokens.contains { eggTokens.contains($0) }
     return hasUnambiguousMatch || hasAmbiguousMatch || hasEggToken
+}
+
+func ingredientTokens(_ normalized: String) -> [String] {
+    normalized.components(separatedBy: CharacterSet.alphanumerics.inverted)
+        .filter { !$0.isEmpty }
+}
+
+func matchesAnimalLexeme(
+    _ lexeme: String,
+    mode: AnimalLexemeMatchMode,
+    normalized: String
+) -> Bool {
+    if lexeme.contains(" ") {
+        return normalized == lexeme ||
+            normalized.hasPrefix("\(lexeme) ") ||
+            normalized.hasSuffix(" \(lexeme)") ||
+            normalized.contains(" \(lexeme) ")
+    }
+    return ingredientTokens(normalized).contains { token in
+        switch mode {
+        case .tokenExact: return token == lexeme
+        case .tokenPrefix: return token.hasPrefix(lexeme)
+        case .tokenContains: return token.contains(lexeme)
+        }
+    }
 }
 
 func normalizeIngredientSegment(_ segment: String) -> String {

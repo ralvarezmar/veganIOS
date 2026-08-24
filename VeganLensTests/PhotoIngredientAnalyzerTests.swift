@@ -42,35 +42,31 @@ final class PhotoIngredientAnalyzerTests: XCTestCase {
 
     func testUsesExplicitLexemeMatchingModes() {
         XCTAssertTrue(
-            matchesPhotoLexeme(
+            matchesAnimalLexeme(
                 "milch",
                 mode: .tokenContains,
                 normalized: "vollmilchpulver",
-                tokens: ["vollmilchpulver"]
             )
         )
         XCTAssertTrue(
-            matchesPhotoLexeme(
+            matchesAnimalLexeme(
                 "granatapfel",
                 mode: .tokenPrefix,
                 normalized: "granatapfelsaft",
-                tokens: ["granatapfelsaft"]
             )
         )
         XCTAssertTrue(
-            matchesPhotoLexeme(
+            matchesAnimalLexeme(
                 "aceituna",
                 mode: .tokenExact,
                 normalized: "aceituna",
-                tokens: ["aceituna"]
             )
         )
         XCTAssertFalse(
-            matchesPhotoLexeme(
+            matchesAnimalLexeme(
                 "tuna",
                 mode: .tokenExact,
                 normalized: "aceituna",
-                tokens: ["aceituna"]
             )
         )
     }

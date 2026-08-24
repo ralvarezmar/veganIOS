@@ -12,7 +12,7 @@ final class PhotoIngredientAnalyzerCorpusTests: XCTestCase {
         let corpus = try JSONDecoder().decode(PhotoCorpus.self, from: Data(contentsOf: url))
 
         for testCase in corpus.cases {
-            let analysis = analyzePhotoIngredients(testCase.text)
+            let analysis = analyzePhotoIngredients(testCase.text, preferredLanguage: "es")
             XCTAssertEqual(
                 analysis.status,
                 status(for: testCase.expected.status),
