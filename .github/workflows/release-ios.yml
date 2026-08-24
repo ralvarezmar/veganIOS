@@ -175,18 +175,18 @@ jobs:
             if git commit -m "chore(ios): release changelog ${VERSION_LABEL} [skip ci]"; then
               pushed=false
               for attempt in 1 2 3; do
-                if ! fetch_output=$(git fetch origin main 2>&1); then
-                  echo "::warning::Could not fetch main before CHANGELOG push attempt ${attempt}:"
+                if ! fetch_output=$(git fetch origin development 2>&1); then
+                  echo "::warning::Could not fetch development before CHANGELOG push attempt ${attempt}:"
                   echo "$fetch_output"
                   break
                 fi
-                if ! rebase_output=$(git rebase --autostash origin/main 2>&1); then
+                if ! rebase_output=$(git rebase --autostash origin/development 2>&1); then
                   git rebase --abort || true
-                  echo "::warning::Could not rebase the CHANGELOG commit onto origin/main (attempt ${attempt}):"
+                  echo "::warning::Could not rebase the CHANGELOG commit onto origin/development (attempt ${attempt}):"
                   echo "$rebase_output"
                   break
                 fi
-                if push_output=$(git push origin HEAD:main 2>&1); then
+                if push_output=$(git push origin HEAD:development 2>&1); then
                   pushed=true
                   break
                 else
@@ -198,7 +198,7 @@ jobs:
                 fi
               done
               if [ "$pushed" = true ]; then
-                echo "CHANGELOG.md release commit pushed to main."
+                echo "CHANGELOG.md release commit pushed to development."
               else
                 echo "::warning::Could not push the CHANGELOG release commit after 3 attempts; continuing release."
               fi
@@ -1019,9 +1019,8 @@ jobs:
           def app_store_version_id(app_identifier):
               response = request(
                   "GET",
-                  f"{API_BASE}/appStoreVersions",
+                  f"{API_BASE}/apps/{app_identifier}/appStoreVersions",
                   params={
-                      "filter[app]": app_identifier,
                       "filter[platform]": "IOS",
                       "filter[versionString]": version_name,
                       "limit": "50",
@@ -1182,9 +1181,9 @@ jobs:
           def update_localizations(version_identifier, notes):
               response = request(
                   "GET",
-                  f"{API_BASE}/appStoreVersionLocalizations",
+                  f"{API_BASE}/appStoreVersions/"
+                  f"{version_identifier}/appStoreVersionLocalizations",
                   params={
-                      "filter[appStoreVersion]": version_identifier,
                       "limit": "200",
                   },
               )
