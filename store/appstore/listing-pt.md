@@ -6,7 +6,7 @@
 
 ## Subtítulo (≤30 caracteres)
 
-Digitaliza e escolhe com confiança
+Digitaliza e escolhe melhor
 
 ## Texto promocional (≤170 caracteres)
 
@@ -14,7 +14,7 @@ Alergénios do teu perfil em destaque, análise fotográfica dos ingredientes no
 
 ## Descrição (≤4000 caracteres)
 
-O VeganLens ajuda-te a escolher os teus produtos com mais informação. Digitaliza um código de barras ou introdu-lo manualmente e obtém um resultado claro: adequado para vegans, não adequado ou duvidoso.
+O VeganLens ajuda-te a escolher os teus produtos com mais informação. Digitaliza um código de barras ou insere-o manualmente e obtém um resultado claro: adequado para vegans, não adequado ou duvidoso.
 
 Consulta informações sobre produtos do Open Food Facts, Open Beauty Facts, Open Product Facts e Open Pet Food Facts. Consulta ingredientes, aditivos e números E, alergénios e dados nutricionais. Os ingredientes são apresentados no idioma configurado na aplicação, com tradução no próprio dispositivo quando o rótulo está noutra língua.
 
@@ -58,7 +58,7 @@ Política de privacidade: https://ralvarezmar.github.io/veganIOS/
 
 Contacto: r.alvarezmar@gmail.com
 
-**Contagem de caracteres da descrição (sem esta nota): 3.765; dentro do limite de 4.000.**
+**Contagem de caracteres da descrição (sem esta nota): 3.763; dentro do limite de 4.000.**
 
 ## Palavras-chave (≤100 caracteres)
 
