@@ -132,9 +132,8 @@ jobs:
           def find_version(app_identifier):
               response = request(
                   "GET",
-                  f"{API_BASE}/appStoreVersions",
+                  f"{API_BASE}/apps/{app_identifier}/appStoreVersions",
                   params={
-                      "filter[app]": app_identifier,
                       "filter[platform]": "IOS",
                       "limit": "200",
                   },
