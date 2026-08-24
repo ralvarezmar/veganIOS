@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+## [1.4.1 (28)] - 2026-08-24
+
 ### Añadido
 - Se incorpora la mascota de VeganLens como icono y una portada ilustrada rotatoria al iniciar la aplicación.
 
