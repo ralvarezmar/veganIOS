@@ -1022,7 +1022,6 @@ jobs:
                   f"{API_BASE}/apps/{app_identifier}/appStoreVersions",
                   params={
                       "filter[platform]": "IOS",
-                      "filter[versionString]": version_name,
                       "limit": "50",
                   },
               )
@@ -1033,23 +1032,80 @@ jobs:
                   ),
                   reverse=True,
               )
-              if versions:
-                  selected = versions[0]
-                  state = selected.get("attributes", {}).get(
+              editable = next(
+                  (
+                      version
+                      for version in versions
+                      if version.get("attributes", {}).get(
+                          "appStoreState", "UNKNOWN"
+                      )
+                      in EDITABLE_STATES
+                  ),
+                  None,
+              )
+              if editable is not None:
+                  current_version = editable.get("attributes", {}).get(
+                      "versionString", "<unknown>"
+                  )
+                  if current_version != version_name:
+                      try:
+                          request(
+                              "PATCH",
+                              f"{API_BASE}/appStoreVersions/"
+                              f"{editable['id']}",
+                              headers={"Content-Type": "application/json"},
+                              json={
+                                  "data": {
+                                      "type": "appStoreVersions",
+                                      "id": editable["id"],
+                                      "attributes": {
+                                          "versionString": version_name
+                                      },
+                                  }
+                              },
+                          )
+                      except Exception as error:
+                          warn(
+                              f"Could not rename editable App Store version "
+                              f"from {current_version} to {version_name}: "
+                              f"{error}"
+                          )
+                          return None
+                      print(
+                          f"Renamed editable App Store version "
+                          f"{current_version} to {version_name} "
+                          f"({editable['id']}).",
+                          flush=True,
+                      )
+                  else:
+                      state = editable.get("attributes", {}).get(
+                          "appStoreState", "UNKNOWN"
+                      )
+                      print(
+                          f"Reusing editable App Store version {version_name} "
+                          f"({editable['id']}, {state}).",
+                          flush=True,
+                      )
+                  return editable["id"]
+
+              matching = next(
+                  (
+                      version
+                      for version in versions
+                      if version.get("attributes", {}).get("versionString")
+                      == version_name
+                  ),
+                  None,
+              )
+              if matching is not None:
+                  state = matching.get("attributes", {}).get(
                       "appStoreState", "UNKNOWN"
                   )
-                  if state not in EDITABLE_STATES:
-                      warn(
-                          f"App Store version {version_name} exists in state "
-                          f"{state}; leaving it unchanged."
-                      )
-                      return None
-                  print(
-                      f"Reusing editable App Store version {version_name} "
-                      f"({selected['id']}, {state}).",
-                      flush=True,
+                  warn(
+                      f"App Store version {version_name} exists in state "
+                      f"{state}; leaving it unchanged."
                   )
-                  return selected["id"]
+                  return None
 
               payload = {
                   "data": {
@@ -1066,12 +1122,23 @@ jobs:
                       },
                   }
               }
-              created = request(
-                  "POST",
-                  f"{API_BASE}/appStoreVersions",
-                  headers={"Content-Type": "application/json"},
-                  json=payload,
-              ).json()["data"]
+              try:
+                  created = request(
+                      "POST",
+                      f"{API_BASE}/appStoreVersions",
+                      headers={"Content-Type": "application/json"},
+                      json=payload,
+                  ).json()["data"]
+              except Exception as error:
+                  if "HTTP 409" in str(error):
+                      warn(
+                          f"Could not create App Store version "
+                          f"{version_name}: {error}. App Store Connect "
+                          "allows only one editable App Store version per "
+                          "platform at a time."
+                      )
+                      return None
+                  raise
               print(
                   f"Created App Store version {version_name} ({created['id']}).",
                   flush=True,
