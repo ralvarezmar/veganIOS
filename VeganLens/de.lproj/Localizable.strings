@@ -300,6 +300,7 @@
 "photo_reason_animal_additive" = "Ein Zusatzstoff tierischen Ursprungs wurde erkannt.";
 "photo_reason_all_recognized" = "Alle erkannten Segmente sind pflanzlich oder neutral.";
 "photo_reason_unrecognized" = "Einige Segmente konnten nicht sicher erkannt werden.";
+"photo_reason_language_not_recognized" = "Die Sprache des Etiketts konnte nicht erkannt werden. Du kannst den erkannten Text manuell bearbeiten und erneut analysieren.";
 "photo_culprits_title" = "Gründe für das Ergebnis";
 "photo_culprit_ingredient" = "Zutat tierischen Ursprungs";
 "photo_culprit_additive" = "Zusatzstoff tierischen Ursprungs";

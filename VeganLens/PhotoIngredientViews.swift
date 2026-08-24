@@ -220,6 +220,7 @@ struct PhotoIngredientResultView: View {
         case .animalAdditive: return L("photo_reason_animal_additive")
         case .allPlantRecognized: return L("photo_reason_all_recognized")
         case .unrecognizedIngredient: return L("photo_reason_unrecognized")
+        case .languageNotRecognized: return L("photo_reason_language_not_recognized")
         }
     }
 

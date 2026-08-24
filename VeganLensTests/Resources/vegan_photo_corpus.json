@@ -144,6 +144,54 @@
       "rationale": "OCR loses accents and case; recognition must not depend on either.",
       "text": "INGREDIENTES: HARINA DE TRIGO, AZUCAR, ACEITE DE GIRASOL, SAL",
       "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-german-compounds-plant",
+      "rationale": "German compound words must recognize their plant roots.",
+      "text": "Weizenmehl, Zucker, Sonnenblumenöl, Speisesalz",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-german-functional-descriptor-needs-review",
+      "rationale": "A German raising-agent descriptor does not establish plant origin by itself.",
+      "text": "Weizenmehl, Zucker, Sonnenblumenöl, Speisesalz, Backtriebmittel",
+      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["Backtriebmittel"], "traceWarning": false}
+    },
+    {
+      "id": "photo-german-pomegranate-juice-is-plant",
+      "rationale": "German compound fruit juice must not trigger the Spanish animal substring nata.",
+      "text": "Zutaten: Wasser, Zucker, Granatapfelsaft, Zitronensäure",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-spanish-olive-singular-is-plant",
+      "rationale": "The Spanish singular olive must not trigger the animal substring tuna.",
+      "text": "Ingredientes: aceituna",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-german-whole-milk-powder-is-animal",
+      "rationale": "A compositional German dairy compound must remain animal-derived.",
+      "text": "Zutaten: Vollmilchpulver",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalIngredient", "culprits": ["Vollmilchpulver"], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-spanish-list-before-nutrition-table",
+      "rationale": "Nutrition facts after the list are not ingredients and must be excluded.",
+      "text": "Ingredientes: harina, azúcar, sal. Información nutricional: valor energético 100 kcal.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-spanish-list-with-trace-tail",
+      "rationale": "The trace warning after the list must be retained without becoming an ingredient.",
+      "text": "Ingredientes: harina, azúcar, sal. Puede contener leche.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": true}
+    },
+    {
+      "id": "photo-unsupported-dutch-language",
+      "rationale": "An unsupported label language with no recognized ingredient needs an explicit language review reason.",
+      "text": "Ingrediënten: tarwebloem, suiker, zonnebloemolie, zout",
+      "expected": {"status": "review", "reasonSource": "photoLanguageNotRecognized", "culprits": [], "unrecognized": ["Tarwebloem", "Suiker", "Zonnebloemolie", "Zout"], "traceWarning": false}
     }
   ]
 }

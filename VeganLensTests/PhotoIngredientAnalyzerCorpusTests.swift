@@ -56,6 +56,7 @@ final class PhotoIngredientAnalyzerCorpusTests: XCTestCase {
         case "photoAnimalAdditive": return .animalAdditive
         case "photoAllPlantRecognized": return .allPlantRecognized
         case "photoUnrecognizedIngredient": return .unrecognizedIngredient
+        case "photoLanguageNotRecognized": return .languageNotRecognized
         default: fatalError("Unknown photo corpus reason source: \(value)")
         }
     }
