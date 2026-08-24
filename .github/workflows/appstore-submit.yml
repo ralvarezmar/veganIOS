@@ -136,11 +136,16 @@ jobs:
                   params={
                       "filter[app]": app_identifier,
                       "filter[platform]": "IOS",
-                      "sort": "-createdDate",
                       "limit": "200",
                   },
               )
               versions = response.json().get("data", [])
+              versions.sort(
+                  key=lambda item: item.get("attributes", {}).get(
+                      "createdDate", ""
+                  ),
+                  reverse=True,
+              )
               if requested_version:
                   matching = [
                       version
