@@ -10,6 +10,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ### Añadido
 - Veintiocho personajes nuevos de la nueva lámina de ilustraciones se suman a la rotación de la portada, hasta un total de cuarenta y tres.
+- Se mejora la calidad de las ilustraciones de los personajes de la portada y se redibujan sus chapitas «VEGAN».
 
 ## [1.4.1 (28)] - 2026-08-24
 
