@@ -7,6 +7,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 ## [Sin publicar]
 
 ### Añadido
+- Veintiocho personajes nuevos de la nueva lámina de ilustraciones se suman a la rotación de la portada, hasta un total de cuarenta y tres.
+
+## [1.4.1 (28)] - 2026-08-24
+
+### Añadido
 - Se incorpora la mascota de VeganLens como icono y una portada ilustrada rotatoria al iniciar la aplicación.
 
 - El catálogo de aditivos de iOS queda sincronizado con Android, incluidos los códigos E de origen animal e incierto.
