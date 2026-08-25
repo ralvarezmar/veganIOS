@@ -7,7 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 ## [Sin publicar]
 
 ### Añadido
-- Veinte personajes nuevos de la nueva lámina de ilustraciones se suman a la rotación de la portada, hasta un total de treinta y cinco.
+- Veintiocho personajes nuevos de la nueva lámina de ilustraciones se suman a la rotación de la portada, hasta un total de cuarenta y tres.
 
 ## [1.4.1 (28)] - 2026-08-24
 
