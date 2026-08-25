@@ -228,14 +228,31 @@ jobs:
               ),
               None,
           )
-          if selected is None:
-              notes = f"Release {version}"
-          else:
+          notes = ""
+          if selected is not None:
               index = headings.index(selected)
               end = headings[index + 1].start() if index + 1 < len(headings) else len(contents)
               notes = contents[selected.end():end].strip()
-              if not notes:
-                  notes = f"Release {version}"
+          if not notes:
+              unpublished = next(
+                  (
+                      heading
+                      for heading in headings
+                      if heading.group(1).strip().lower() == "sin publicar"
+                  ),
+                  None,
+              )
+              if unpublished is not None:
+                  index = headings.index(unpublished)
+                  end = headings[index + 1].start() if index + 1 < len(headings) else len(contents)
+                  candidate = contents[unpublished.end():end].strip()
+                  if any(
+                      line.strip().startswith(("- ", "### "))
+                      for line in candidate.splitlines()
+                  ):
+                      notes = candidate
+          if not notes:
+              notes = f"Release {version}"
           Path("release-notes.md").write_text(notes + "\n", encoding="utf-8")
           print(f"Prepared GitHub release notes for {version}.")
           PY
