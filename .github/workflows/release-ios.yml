@@ -229,12 +229,13 @@ jobs:
               None,
           )
           if selected is None:
-              raise SystemExit(f"CHANGELOG.md has no section for {version}")
-          index = headings.index(selected)
-          end = headings[index + 1].start() if index + 1 < len(headings) else len(contents)
-          notes = contents[selected.end():end].strip()
-          if not notes:
               notes = f"Release {version}"
+          else:
+              index = headings.index(selected)
+              end = headings[index + 1].start() if index + 1 < len(headings) else len(contents)
+              notes = contents[selected.end():end].strip()
+              if not notes:
+                  notes = f"Release {version}"
           Path("release-notes.md").write_text(notes + "\n", encoding="utf-8")
           print(f"Prepared GitHub release notes for {version}.")
           PY
