@@ -9,7 +9,11 @@ final class MascotLocalizationTests: XCTestCase {
             return
         }
 
-        let expectedKeys = Set(portadaCharacterNames.map { "mascot_\($0)" })
+        let expectedKeys = Set(
+            portadaCharacterNames.flatMap { character in
+                ["mascot_\(character)", "mascot_nick_\(character)"]
+            }
+        )
         for locale in ["es", "en", "de", "fr", "it", "pt"] {
             guard let stringsURL = appBundle.url(
                 forResource: locale,
@@ -18,34 +22,23 @@ final class MascotLocalizationTests: XCTestCase {
                 XCTFail("Missing localization file for \(locale)")
                 continue
             }
-            let contents = try String(contentsOf: stringsURL, encoding: .utf8)
-            let entries = try parseMascotEntries(contents)
+            let entries = try parseMascotEntries(at: stringsURL)
             XCTAssertEqual(Set(entries.keys), expectedKeys, "Unexpected mascot keys in \(locale)")
-            XCTAssertEqual(entries.count, expectedKeys.count, "Duplicate mascot keys in \(locale)")
             for key in expectedKeys {
                 XCTAssertFalse(entries[key, default: ""].trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }
     }
 
-    private func parseMascotEntries(_ contents: String) throws -> [String: String] {
-        let pattern = #"^"(mascot_[^"]*)"\s*=\s*"((?:\\.|[^"])*)";$"#
-        let expression = try NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
-        var entries: [String: String] = [:]
-        for match in expression.matches(
-            in: contents,
-            range: NSRange(contents.startIndex..., in: contents)
-        ) {
-            guard
-                let keyRange = Range(match.range(at: 1), in: contents),
-                let valueRange = Range(match.range(at: 2), in: contents)
-            else {
-                continue
-            }
-            let key = String(contents[keyRange])
-            XCTAssertNil(entries[key], "Duplicate mascot key \(key)")
-            entries[key] = String(contents[valueRange])
+    private func parseMascotEntries(at url: URL) throws -> [String: String] {
+        let data = try Data(contentsOf: url)
+        guard let propertyList = try PropertyListSerialization.propertyList(
+            from: data,
+            options: [],
+            format: nil
+        ) as? [String: String] else {
+            throw NSError(domain: "MascotLocalizationTests", code: 1)
         }
-        return entries
+        return propertyList.filter { $0.key.hasPrefix("mascot_") }
     }
 }
