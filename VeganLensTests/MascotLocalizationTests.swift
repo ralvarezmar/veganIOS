@@ -9,7 +9,11 @@ final class MascotLocalizationTests: XCTestCase {
             return
         }
 
-        let expectedKeys = Set(portadaCharacterNames.map { "mascot_\($0)" })
+        let expectedKeys = Set(
+            portadaCharacterNames.flatMap { character in
+                ["mascot_\(character)", "mascot_nick_\(character)"]
+            }
+        )
         for locale in ["es", "en", "de", "fr", "it", "pt"] {
             guard let stringsURL = appBundle.url(
                 forResource: locale,
