@@ -14,7 +14,7 @@ struct MascotGalleryView: View {
                 }
             }
             .navigationTitle(
-                selectedCharacter.map { mascotName(for: $0) } ?? L("gallery_title")
+                selectedCharacter.map { mascotNickname(for: $0) } ?? L("gallery_title")
             )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -33,6 +33,7 @@ struct MascotGalleryView: View {
         .tint(Color("AccentColor"))
         .background(PortadaColors.background)
         .presentationBackground(PortadaColors.background)
+        .environment(\.colorScheme, .light)
     }
 
     private var mascotGrid: some View {
@@ -43,6 +44,7 @@ struct MascotGalleryView: View {
             ) {
                 ForEach(portadaCharacterNames, id: \.self) { character in
                     let name = mascotName(for: character)
+                    let nickname = mascotNickname(for: character)
                     Button {
                         selectedCharacter = character
                     } label: {
@@ -52,10 +54,14 @@ struct MascotGalleryView: View {
                                 .scaledToFit()
                                 .frame(height: 104)
                                 .accessibilityLabel(name)
-                            Text(name)
+                            Text(nickname)
                                 .appFont(.body)
                                 .multilineTextAlignment(.center)
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(PortadaColors.title)
+                            Text(name)
+                                .appFont(.footnote)
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(PortadaColors.tagline)
                         }
                         .frame(maxWidth: .infinity)
                     }
@@ -77,9 +83,14 @@ struct MascotGalleryView: View {
                 .frame(maxWidth: .infinity, maxHeight: 520)
                 .accessibilityLabel(mascotName(for: character))
 
-            Text(mascotName(for: character))
+            Text(mascotNickname(for: character))
                 .appFont(.title2, weight: .semibold)
                 .multilineTextAlignment(.center)
+                .foregroundStyle(PortadaColors.title)
+            Text(mascotName(for: character))
+                .appFont(.footnote)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(PortadaColors.tagline)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(24)
@@ -88,5 +99,9 @@ struct MascotGalleryView: View {
 
     private func mascotName(for character: String) -> String {
         L("mascot_\(character)")
+    }
+
+    private func mascotNickname(for character: String) -> String {
+        L("mascot_nick_\(character)")
     }
 }

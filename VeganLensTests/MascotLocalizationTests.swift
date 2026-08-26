@@ -9,7 +9,11 @@ final class MascotLocalizationTests: XCTestCase {
             return
         }
 
-        let expectedKeys = Set(portadaCharacterNames.map { "mascot_\($0)" })
+        let expectedKeys = Set(
+            portadaCharacterNames.flatMap { character in
+                ["mascot_\(character)", "mascot_nick_\(character)"]
+            }
+        )
         for locale in ["es", "en", "de", "fr", "it", "pt"] {
             guard let stringsURL = appBundle.url(
                 forResource: locale,
@@ -29,7 +33,7 @@ final class MascotLocalizationTests: XCTestCase {
     }
 
     private func parseMascotEntries(_ contents: String) throws -> [String: String] {
-        let pattern = #"^"(mascot_[^"]*)"\s*=\s*"((?:\\.|[^"])*)";$"#
+        let pattern = #"^"(mascot_(?:nick_)?[^"]*)"\s*=\s*"((?:\\.|[^"])*)";$"#
         let expression = try NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
         var entries: [String: String] = [:]
         for match in expression.matches(
