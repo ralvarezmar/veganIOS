@@ -317,6 +317,8 @@ Fuente: %@
 "gallery_title" = "Galería de mascotas";
 "gallery_close" = "Cerrar";
 "gallery_version" = "%@ %@ (%@)";
+"credits_title" = "Agradecimientos";
+"credits_body" = "Gracias a todas las personas que han probado VeganLens antes de cada versión, han informado de errores y han propuesto mejoras. La aplicación es mejor gracias a vosotros.";
 "mascot_apple" = "Manzana";
 "mascot_artichoke" = "Alcachofa";
 "mascot_artichokehalf" = "Alcachofa cortada";

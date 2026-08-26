@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.modelContext) private var modelContext
     @State private var showingClearCacheConfirmation = false
+    @State private var showingCredits = false
     @State private var showingMascotGallery = false
     @State private var versionTapCount = 0
     @State private var lastVersionTap: Date?
@@ -32,6 +33,18 @@ struct SettingsView: View {
                     }
                 }
                 .accessibilityIdentifier("privacy-policy-row")
+
+                Button {
+                    showingCredits = true
+                } label: {
+                    Label {
+                        Text(L("credits_title"))
+                            .appFont(.body)
+                    } icon: {
+                        Image(systemName: "heart")
+                    }
+                }
+                .accessibilityIdentifier("credits-row")
             } header: {
                 Text(L("privacy_section_title"))
             }
@@ -89,6 +102,12 @@ struct SettingsView: View {
         ) {
             Button(L("clear_cache"), role: .destructive, action: clearCache)
             Button(L("cancel"), role: .cancel) {}
+        }
+        .alert(L("credits_title"), isPresented: $showingCredits) {
+            Button(L("gallery_close"), role: .cancel) {}
+        } message: {
+            Text(L("credits_body"))
+                .appFont(.body)
         }
         .sheet(isPresented: $showingMascotGallery) {
             MascotGalleryView()

@@ -312,6 +312,8 @@
 "gallery_title" = "Mascot gallery";
 "gallery_close" = "Close";
 "gallery_version" = "%@ %@ (%@)";
+"credits_title" = "Acknowledgements";
+"credits_body" = "Thanks to everyone who tested VeganLens before each release, reported bugs and suggested improvements. The app is better because of you.";
 "mascot_apple" = "Apple";
 "mascot_artichoke" = "Artichoke";
 "mascot_artichokehalf" = "Halved artichoke";

@@ -12,6 +12,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 - Veintiocho personajes nuevos de la nueva lámina de ilustraciones se suman a la rotación de la portada, hasta un total de cuarenta y tres.
 - Se mejora la calidad de las ilustraciones de los personajes de la portada y se redibujan sus chapitas «VEGAN».
 - Una pequeña galería oculta de mascotas espera a las personas curiosas que quieran conocer a todos los personajes de la portada.
+- Se añade una fila visible de agradecimientos para las personas que prueban la aplicación antes de cada versión.
 
 ## [1.4.1 (28)] - 2026-08-24
 

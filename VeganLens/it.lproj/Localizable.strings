@@ -312,6 +312,8 @@
 "gallery_title" = "Galleria delle mascotte";
 "gallery_close" = "Chiudi";
 "gallery_version" = "%@ %@ (%@)";
+"credits_title" = "Ringraziamenti";
+"credits_body" = "Grazie a tutte le persone che hanno provato VeganLens prima di ogni versione, segnalato errori e proposto miglioramenti. L'app è migliore grazie a voi.";
 "mascot_apple" = "Mela";
 "mascot_artichoke" = "Carciofo";
 "mascot_artichokehalf" = "Carciofo tagliato";
