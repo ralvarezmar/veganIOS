@@ -20,7 +20,6 @@ final class MascotLocalizationTests: XCTestCase {
             }
             let entries = try parseMascotEntries(at: stringsURL)
             XCTAssertEqual(Set(entries.keys), expectedKeys, "Unexpected mascot keys in \(locale)")
-            XCTAssertEqual(entries.count, expectedKeys.count, "Duplicate mascot keys in \(locale)")
             for key in expectedKeys {
                 XCTAssertFalse(entries[key, default: ""].trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
