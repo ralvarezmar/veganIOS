@@ -5,6 +5,9 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.modelContext) private var modelContext
     @State private var showingClearCacheConfirmation = false
+    @State private var showingMascotGallery = false
+    @State private var versionTapCount = 0
+    @State private var lastVersionTap: Date?
     @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
     @AppStorage(AccessibilityPreferences.textSizeKey) private var textSize = AccessibilityTextSize.normal.rawValue
     @AppStorage(AccessibilityPreferences.highLegibilityFontKey) private var highLegibilityFont = false
@@ -64,6 +67,18 @@ struct SettingsView: View {
             } header: {
                 Text(L("cache_section_title"))
             }
+
+            Section {
+                Text(versionText)
+                    .appFont(.footnote)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.center)
+                    .contentShape(Rectangle())
+                    .accessibilityIdentifier("mascot-gallery-version")
+                    .accessibilityLabel(versionText)
+                    .onTapGesture(perform: registerVersionTap)
+            }
         }
         .navigationTitle(L("settings_title"))
         .navigationBarTitleDisplayMode(.inline)
@@ -74,6 +89,30 @@ struct SettingsView: View {
         ) {
             Button(L("clear_cache"), role: .destructive, action: clearCache)
             Button(L("cancel"), role: .cancel) {}
+        }
+        .sheet(isPresented: $showingMascotGallery) {
+            MascotGalleryView()
+        }
+    }
+
+    private var versionText: String {
+        let info = Bundle.main.infoDictionary ?? [:]
+        let version = info["CFBundleShortVersionString"] as? String ?? "?"
+        let build = info["CFBundleVersion"] as? String ?? "?"
+        return LF("gallery_version", L("app_name"), version, build)
+    }
+
+    private func registerVersionTap() {
+        let now = Date()
+        if let lastVersionTap, now.timeIntervalSince(lastVersionTap) > 2 {
+            versionTapCount = 0
+        }
+        versionTapCount += 1
+        lastVersionTap = now
+        if versionTapCount == 7 {
+            versionTapCount = 0
+            lastVersionTap = nil
+            showingMascotGallery = true
         }
     }
 
