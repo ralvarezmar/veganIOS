@@ -5,6 +5,8 @@ Todos los cambios notables de VeganLens (iOS) se documentan en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
 ## [Sin publicar]
+
+## [1.8.0 (33)] - 2026-08-26
 - Las mascotas de la galería ahora tienen un nombre propio.
 
 ## [1.5.0 (29)] - 2026-08-25
