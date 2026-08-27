@@ -241,7 +241,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ios-ui-screenshots
-          path: build/screenshots/**
+          path: |
+            build/screenshots/**
+            build/xcodebuild-ui-tests.log
           if-no-files-found: warn
 
       - name: Capture App Store screenshots
@@ -570,70 +572,6 @@ jobs:
           name: ios-app-store-screenshots
           path: build/appstore-screenshots/**
           if-no-files-found: warn
-
-      - name: Commit App Store screenshots
-        if: ${{ always() && github.ref == 'refs/heads/main' }}
-        run: |
-          set -euo pipefail
-          for label in iphone-6-9 iphone-6-5 ipad-13; do
-            source_dir="build/appstore-screenshots/$label"
-            files=("$source_dir"/*.png)
-            if [ ! -f "$source_dir/.capture-complete" ] || [ "${#files[@]}" -ne "$EXPECTED_SCREENSHOTS" ]; then
-              echo "Incomplete App Store screenshot set for $label: got ${#files[@]}, expected ${EXPECTED_SCREENSHOTS}; preserving existing files"
-              continue
-            fi
-            destination_dir="store/appstore/screenshots/$label"
-            mkdir -p "$destination_dir"
-            find "$destination_dir" -maxdepth 1 -type f -name "*.png" -delete
-            for file in "${files[@]}"; do
-              [ -f "$file" ] || continue
-              cp "$file" "$destination_dir/"
-            done
-          done
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- store/appstore/screenshots
-          if git diff --cached --quiet; then
-            echo "No App Store screenshot changes to commit"
-            exit 0
-          fi
-
-          git commit -m "chore(ios): update App Store screenshots [skip ci]"
-          pushed=false
-          compact_git_output() {
-            output="$1"
-            output="${output//$'\n'/ }"
-            output="${output//$'\r'/ }"
-            printf '%s' "$output" | tr -s ' '
-          }
-          for attempt in 1 2 3; do
-            if ! fetch_output=$(git fetch origin "$GITHUB_REF_NAME" 2>&1); then
-              echo "::warning::Could not fetch ${GITHUB_REF_NAME} before screenshot push attempt ${attempt}: $(compact_git_output "$fetch_output")"
-              break
-            fi
-            if ! rebase_output=$(git rebase --autostash "origin/${GITHUB_REF_NAME}" 2>&1); then
-              git rebase --abort || true
-              echo "::warning::Could not rebase screenshot changes onto origin/${GITHUB_REF_NAME} (attempt ${attempt}): $(compact_git_output "$rebase_output")"
-              if [ "$attempt" -lt 3 ]; then
-                sleep $((attempt * 10))
-                continue
-              fi
-              break
-            fi
-            if push_output=$(git push origin "HEAD:${GITHUB_REF_NAME}" 2>&1); then
-              pushed=true
-              break
-            else
-              echo "::warning::Screenshot push attempt ${attempt} failed: $(compact_git_output "$push_output")"
-            fi
-            if [ "$attempt" -lt 3 ]; then
-              sleep $((attempt * 10))
-            fi
-          done
-          if [ "$pushed" != true ]; then
-            echo "::warning::Could not push App Store screenshots to ${GITHUB_REF_NAME} after 3 attempts; continuing CI."
-          fi
 
       - name: Surface build failure
         if: failure()

@@ -9,3 +9,5 @@ workflow `iOS CI` (runner macOS), una subcarpeta por clase de dispositivo:
 
 Las carpetas se mantienen vacías en el repo (`.gitkeep`) hasta que el CI genere el set.
 Ver `../ASSETS.md` para el detalle de resoluciones y las pantallas incluidas.
+
+CI ya no commitea las capturas: la fuente autorizada es siempre el artefacto `ios-app-store-screenshots`, y los PNG presentes en el repositorio se actualizan manualmente.

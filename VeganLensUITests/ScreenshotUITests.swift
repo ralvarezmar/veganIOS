@@ -29,10 +29,7 @@ final class ScreenshotUITests: XCTestCase {
         buttonIdentifier: String,
         screenshotName: String
     ) {
-        let button = app.buttons[buttonIdentifier]
-        guard button.waitForExistence(timeout: 5) else { return }
-
-        button.tap()
+        guard app.tapToolbarButton(buttonIdentifier) else { return }
         _ = app.navigationBars.element.waitForExistence(timeout: 5)
         capture(app, named: screenshotName)
         navigateBack(app)
