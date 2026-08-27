@@ -27,35 +27,58 @@ extension XCUIApplication {
     ) -> Bool {
         let navigationBar = navigationBars.firstMatch
         guard waitForHittable(of: element, timeout: timeout) else {
-            print(
-                "UI-DIAG before tap identifier=\(identifier) frame=\(element.frame) " +
-                    "isHittable=\(element.isHittable) exists=\(element.exists) " +
-                    "navigationBarFrame=\(navigationBar.frame)"
+            printTapDiagnostics(
+                phase: "before tap",
+                element: element,
+                identifier: identifier,
+                navigationBar: navigationBar
             )
             return false
         }
-        print(
-            "UI-DIAG before tap identifier=\(identifier) frame=\(element.frame) " +
-                "isHittable=\(element.isHittable) exists=\(element.exists) " +
-                "navigationBarFrame=\(navigationBar.frame)"
+        printTapDiagnostics(
+            phase: "before tap",
+            element: element,
+            identifier: identifier,
+            navigationBar: navigationBar
         )
         element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-        print(
-            "UI-DIAG after tap identifier=\(identifier) frame=\(element.frame) " +
-                "isHittable=\(element.isHittable) exists=\(element.exists) " +
-                "navigationBarFrame=\(navigationBar.frame)"
+        printTapDiagnostics(
+            phase: "after tap",
+            element: element,
+            identifier: identifier,
+            navigationBar: navigationBar
         )
         if navigationBar.exists {
             let navigationBarButtons = navigationBar.buttons
             for index in 0..<navigationBarButtons.count {
                 let button = navigationBarButtons.element(boundBy: index)
+                let buttonExists = button.exists
                 print(
                     "UI-DIAG after tap navigationBarButton[\(index)] " +
-                        "identifier=\(button.identifier) frame=\(button.frame)"
+                        "identifier=\(buttonExists ? button.identifier : \"\") " +
+                        "frame=\(buttonExists ? button.frame : CGRect.zero)"
                 )
             }
         }
         return true
+    }
+
+    private func printTapDiagnostics(
+        phase: String,
+        element: XCUIElement,
+        identifier: String,
+        navigationBar: XCUIElement
+    ) {
+        let elementExists = element.exists
+        let elementFrame = elementExists ? element.frame : CGRect.zero
+        let elementIsHittable = elementExists && element.isHittable
+        let navigationBarExists = navigationBar.exists
+        let navigationBarFrame = navigationBarExists ? navigationBar.frame : CGRect.zero
+        print(
+            "UI-DIAG \(phase) identifier=\(identifier) frame=\(elementFrame) " +
+                "isHittable=\(elementIsHittable) exists=\(elementExists) " +
+                "navigationBarFrame=\(navigationBarFrame)"
+        )
     }
 
     private func waitForSettledFrame(of element: XCUIElement, timeout: TimeInterval) -> Bool {
