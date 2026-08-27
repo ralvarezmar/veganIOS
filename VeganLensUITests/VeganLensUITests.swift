@@ -16,7 +16,7 @@ final class VeganLensUITests: XCTestCase {
         XCTAssertTrue(app.tapToolbarButton("settings-button"))
 
         let privacyPolicyRow = app.descendants(matching: .any)["privacy-policy-row"]
-        XCTAssertTrue(privacyPolicyRow.waitForExistence(timeout: 5))
+        XCTAssertTrue(privacyPolicyRow.waitForExistence(timeout: 5), app.debugDescription)
     }
 
     private func launchApp() -> XCUIApplication {

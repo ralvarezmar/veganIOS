@@ -9,7 +9,7 @@ extension XCUIApplication {
         let button = buttons[identifier]
         guard button.waitForExistence(timeout: timeout) else { return false }
         guard waitForSettledFrame(of: button, timeout: timeout) else { return false }
-        tapVisibleElement(button)
+        tapVisibleElement(button, identifier: identifier)
         return true
     }
 
@@ -18,12 +18,31 @@ extension XCUIApplication {
         let button = navigationBars.buttons.element(boundBy: 0)
         guard button.waitForExistence(timeout: timeout) else { return false }
         guard waitForSettledFrame(of: button, timeout: timeout) else { return false }
-        tapVisibleElement(button)
+        tapVisibleElement(button, identifier: button.identifier)
         return true
     }
 
-    private func tapVisibleElement(_ element: XCUIElement) {
+    private func tapVisibleElement(_ element: XCUIElement, identifier: String) {
+        let navigationBar = navigationBars.element
+        print(
+            "UI-DIAG before tap identifier=\(identifier) frame=\(element.frame) " +
+                "isHittable=\(element.isHittable) exists=\(element.exists) " +
+                "navigationBarFrame=\(navigationBar.frame)"
+        )
         element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        print(
+            "UI-DIAG after tap identifier=\(identifier) frame=\(element.frame) " +
+                "isHittable=\(element.isHittable) exists=\(element.exists) " +
+                "navigationBarFrame=\(navigationBar.frame)"
+        )
+        let navigationBarButtons = navigationBars.buttons
+        for index in 0..<navigationBarButtons.count {
+            let button = navigationBarButtons.element(boundBy: index)
+            print(
+                "UI-DIAG after tap navigationBarButton[\(index)] " +
+                    "identifier=\(button.identifier) frame=\(button.frame)"
+            )
+        }
     }
 
     private func waitForSettledFrame(of element: XCUIElement, timeout: TimeInterval) -> Bool {
