@@ -27,44 +27,18 @@ extension XCUIApplication {
     ) -> Bool {
         let navigationBar = navigationBars.firstMatch
         guard waitForHittable(of: element, timeout: timeout) else {
-            printTapDiagnostics(
-                phase: "before tap",
+            printTapFailureDiagnostics(
                 element: element,
                 identifier: identifier,
                 navigationBar: navigationBar
             )
             return false
         }
-        printTapDiagnostics(
-            phase: "before tap",
-            element: element,
-            identifier: identifier,
-            navigationBar: navigationBar
-        )
         element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-        printTapDiagnostics(
-            phase: "after tap",
-            element: element,
-            identifier: identifier,
-            navigationBar: navigationBar
-        )
-        if navigationBar.exists {
-            let navigationBarButtons = navigationBar.buttons
-            for index in 0..<navigationBarButtons.count {
-                let button = navigationBarButtons.element(boundBy: index)
-                let buttonExists = button.exists
-                print(
-                    "UI-DIAG after tap navigationBarButton[\(index)] " +
-                        "identifier=\(buttonExists ? button.identifier : \"\") " +
-                        "frame=\(buttonExists ? button.frame : CGRect.zero)"
-                )
-            }
-        }
         return true
     }
 
-    private func printTapDiagnostics(
-        phase: String,
+    private func printTapFailureDiagnostics(
         element: XCUIElement,
         identifier: String,
         navigationBar: XCUIElement
@@ -75,7 +49,7 @@ extension XCUIApplication {
         let navigationBarExists = navigationBar.exists
         let navigationBarFrame = navigationBarExists ? navigationBar.frame : CGRect.zero
         print(
-            "UI-DIAG \(phase) identifier=\(identifier) frame=\(elementFrame) " +
+            "UI-DIAG before tap identifier=\(identifier) frame=\(elementFrame) " +
                 "isHittable=\(elementIsHittable) exists=\(elementExists) " +
                 "navigationBarFrame=\(navigationBarFrame)"
         )
