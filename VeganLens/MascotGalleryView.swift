@@ -58,10 +58,6 @@ struct MascotGalleryView: View {
                                 .appFont(.body)
                                 .multilineTextAlignment(.center)
                                 .foregroundStyle(PortadaColors.title)
-                            Text(name)
-                                .appFont(.footnote)
-                                .multilineTextAlignment(.center)
-                                .foregroundStyle(PortadaColors.tagline)
                         }
                         .frame(maxWidth: .infinity)
                     }
@@ -87,10 +83,6 @@ struct MascotGalleryView: View {
                 .appFont(.title2, weight: .semibold)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(PortadaColors.title)
-            Text(mascotName(for: character))
-                .appFont(.footnote)
-                .multilineTextAlignment(.center)
-                .foregroundStyle(PortadaColors.tagline)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(24)
