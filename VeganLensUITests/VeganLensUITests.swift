@@ -12,21 +12,20 @@ final class VeganLensUITests: XCTestCase {
 
     func testSettingsShowsPrivacyPolicyRow() {
         let app = launchApp()
-        let settingsButton = app.buttons["settings-button"]
 
-        XCTAssertTrue(settingsButton.waitForExistence(timeout: 5))
-        settingsButton.tap()
+        XCTAssertTrue(app.tapToolbarButton("settings-button"))
 
         let privacyPolicyRow = app.descendants(matching: .any)["privacy-policy-row"]
-        XCTAssertTrue(privacyPolicyRow.waitForExistence(timeout: 5))
+        XCTAssertTrue(privacyPolicyRow.waitForExistence(timeout: 5), app.debugDescription)
     }
 
     private func launchApp() -> XCUIApplication {
         let app = XCUIApplication()
+        installSystemPermissionMonitor()
         app.launch()
 
         let onboardingDismiss = app.buttons["onboarding-dismiss"]
-        if onboardingDismiss.waitForExistence(timeout: 2) {
+        if onboardingDismiss.waitForExistence(timeout: 15) {
             onboardingDismiss.tap()
         }
 
