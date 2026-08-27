@@ -49,10 +49,7 @@ final class ScreenshotUITests: XCTestCase {
     }
 
     private func navigateBack(_ app: XCUIApplication) {
-        let backButton = app.navigationBars.buttons.element(boundBy: 0)
-        if backButton.waitForExistence(timeout: 2) {
-            backButton.tap()
-        } else {
+        if !app.tapNavigationBackButton(timeout: 2) {
             app.swipeRight()
         }
     }
