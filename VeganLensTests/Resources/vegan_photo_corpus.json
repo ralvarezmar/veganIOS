@@ -231,9 +231,9 @@
     },
     {
       "id": "photo-e1201-is-not-e120",
-      "rationale": "An additive code extension must not be mistaken for the carmine code E120.",
+      "rationale": "An additive code extension must not be mistaken for the carmine code E120: E1201 is a recognised synthetic additive, so the verdict stays vegan instead of turning non-vegan.",
       "text": "Ingredientes: azúcar, E1201",
-      "expected": {"status": "review", "reasonSource": "photoUnrecognizedIngredient", "culprits": [], "unrecognized": ["E1201"], "traceWarning": false}
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
     }
   ]
 }
