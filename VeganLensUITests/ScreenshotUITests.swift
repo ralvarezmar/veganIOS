@@ -6,7 +6,6 @@ final class ScreenshotUITests: XCTestCase {
         let app = XCUIApplication()
         installSystemPermissionMonitor()
         app.launch()
-        app.tap()
 
         let onboardingDismiss = app.buttons["onboarding-dismiss"]
         if onboardingDismiss.waitForExistence(timeout: 3) {
