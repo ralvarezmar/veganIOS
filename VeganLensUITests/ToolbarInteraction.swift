@@ -23,7 +23,7 @@ extension XCUIApplication {
     }
 
     private func tapVisibleElement(_ element: XCUIElement, identifier: String) {
-        let navigationBar = navigationBars.element
+        let navigationBar = navigationBars.firstMatch
         print(
             "UI-DIAG before tap identifier=\(identifier) frame=\(element.frame) " +
                 "isHittable=\(element.isHittable) exists=\(element.exists) " +
@@ -35,13 +35,15 @@ extension XCUIApplication {
                 "isHittable=\(element.isHittable) exists=\(element.exists) " +
                 "navigationBarFrame=\(navigationBar.frame)"
         )
-        let navigationBarButtons = navigationBars.buttons
-        for index in 0..<navigationBarButtons.count {
-            let button = navigationBarButtons.element(boundBy: index)
-            print(
-                "UI-DIAG after tap navigationBarButton[\(index)] " +
-                    "identifier=\(button.identifier) frame=\(button.frame)"
-            )
+        if navigationBar.exists {
+            let navigationBarButtons = navigationBar.buttons
+            for index in 0..<navigationBarButtons.count {
+                let button = navigationBarButtons.element(boundBy: index)
+                print(
+                    "UI-DIAG after tap navigationBarButton[\(index)] " +
+                        "identifier=\(button.identifier) frame=\(button.frame)"
+                )
+            }
         }
     }
 

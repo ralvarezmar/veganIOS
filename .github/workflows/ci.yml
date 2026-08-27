@@ -103,6 +103,8 @@ jobs:
           echo "::notice title=iOS simulator::name=$SIMULATOR_NAME runtime=$SIMULATOR_RUNTIME udid=$SIMULATOR_UDID"
           xcrun simctl boot "$SIMULATOR_UDID" || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b || true
+          xcrun simctl privacy "$SIMULATOR_UDID" grant camera com.ralvarezmar.vcheck ||
+            echo "warn: could not pre-grant camera permission"
           echo "udid=$SIMULATOR_UDID" >> "$GITHUB_OUTPUT"
           echo "name=$SIMULATOR_NAME" >> "$GITHUB_OUTPUT"
           echo "runtime=$SIMULATOR_RUNTIME" >> "$GITHUB_OUTPUT"
@@ -515,6 +517,8 @@ jobs:
             status=0
             xcrun simctl boot "$simulator_udid" || status=$?
             xcrun simctl bootstatus "$simulator_udid" -b || status=$?
+            xcrun simctl privacy "$simulator_udid" grant camera com.ralvarezmar.vcheck ||
+              echo "warn: could not pre-grant camera permission"
             if [ "$status" -eq 0 ]; then
               xcodebuild \
                 -project VeganLens.xcodeproj \
