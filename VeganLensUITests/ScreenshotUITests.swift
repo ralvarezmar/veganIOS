@@ -8,7 +8,7 @@ final class ScreenshotUITests: XCTestCase {
         app.launch()
 
         let onboardingDismiss = app.buttons["onboarding-dismiss"]
-        if onboardingDismiss.waitForExistence(timeout: 3) {
+        if onboardingDismiss.waitForExistence(timeout: 15) {
             capture(app, named: "onboarding")
             onboardingDismiss.tap()
         }

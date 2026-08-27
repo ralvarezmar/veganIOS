@@ -25,7 +25,7 @@ final class VeganLensUITests: XCTestCase {
         app.launch()
 
         let onboardingDismiss = app.buttons["onboarding-dismiss"]
-        if onboardingDismiss.waitForExistence(timeout: 2) {
+        if onboardingDismiss.waitForExistence(timeout: 15) {
             onboardingDismiss.tap()
         }
 

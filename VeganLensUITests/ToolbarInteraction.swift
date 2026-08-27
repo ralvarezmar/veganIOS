@@ -9,8 +9,7 @@ extension XCUIApplication {
         let button = buttons[identifier]
         guard button.waitForExistence(timeout: timeout) else { return false }
         guard waitForSettledFrame(of: button, timeout: timeout) else { return false }
-        tapVisibleElement(button, identifier: identifier)
-        return true
+        return tapVisibleElement(button, identifier: identifier, timeout: timeout)
     }
 
     @discardableResult
@@ -18,12 +17,23 @@ extension XCUIApplication {
         let button = navigationBars.buttons.element(boundBy: 0)
         guard button.waitForExistence(timeout: timeout) else { return false }
         guard waitForSettledFrame(of: button, timeout: timeout) else { return false }
-        tapVisibleElement(button, identifier: button.identifier)
-        return true
+        return tapVisibleElement(button, identifier: button.identifier, timeout: timeout)
     }
 
-    private func tapVisibleElement(_ element: XCUIElement, identifier: String) {
+    private func tapVisibleElement(
+        _ element: XCUIElement,
+        identifier: String,
+        timeout: TimeInterval
+    ) -> Bool {
         let navigationBar = navigationBars.firstMatch
+        guard waitForHittable(of: element, timeout: timeout) else {
+            print(
+                "UI-DIAG before tap identifier=\(identifier) frame=\(element.frame) " +
+                    "isHittable=\(element.isHittable) exists=\(element.exists) " +
+                    "navigationBarFrame=\(navigationBar.frame)"
+            )
+            return false
+        }
         print(
             "UI-DIAG before tap identifier=\(identifier) frame=\(element.frame) " +
                 "isHittable=\(element.isHittable) exists=\(element.exists) " +
@@ -45,6 +55,7 @@ extension XCUIApplication {
                 )
             }
         }
+        return true
     }
 
     private func waitForSettledFrame(of element: XCUIElement, timeout: TimeInterval) -> Bool {
@@ -65,5 +76,16 @@ extension XCUIApplication {
             previous = current
         }
         return !element.frame.isEmpty
+    }
+
+    private func waitForHittable(of element: XCUIElement, timeout: TimeInterval) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if element.exists && element.isHittable {
+                return true
+            }
+            Thread.sleep(forTimeInterval: 0.2)
+        }
+        return element.exists && element.isHittable
     }
 }
