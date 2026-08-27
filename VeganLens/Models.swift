@@ -320,30 +320,110 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         note: ("Vitamina B2 usada como colorante amarillo.", "Vitamin B2 used as a yellow coloring."),
         origin: .synthetic
     ),
+    "E102": LocalizedAdditiveRecord(
+        commonName: ("Tartrazina", "Tartrazine"),
+        note: ("Colorante amarillo azoico de síntesis.", "Synthetic azo yellow colour."),
+        origin: .synthetic
+    ),
+    "E104": LocalizedAdditiveRecord(
+        commonName: ("Amarillo de quinoleína", "Quinoline Yellow"),
+        note: ("Colorante amarillo de síntesis.", "Synthetic yellow colour."),
+        origin: .synthetic
+    ),
+    "E110": LocalizedAdditiveRecord(
+        commonName: ("Amarillo ocaso FCF", "Sunset Yellow FCF"),
+        note: ("Colorante naranja azoico de síntesis.", "Synthetic azo orange colour."),
+        origin: .synthetic
+    ),
     "E120": LocalizedAdditiveRecord(
         commonName: ("Carmín", "Carmine"),
         note: ("Colorante rojo obtenido de la cochinilla.", "Red coloring obtained from cochineal."),
         origin: .animal
+    ),
+    "E122": LocalizedAdditiveRecord(
+        commonName: ("Azorrubina", "Azorubine"),
+        note: ("Colorante rojo azoico de síntesis.", "Synthetic azo red colour."),
+        origin: .synthetic
+    ),
+    "E123": LocalizedAdditiveRecord(
+        commonName: ("Amaranto", "Amaranth"),
+        note: ("Colorante rojo azoico de uso muy limitado.", "Synthetic azo red colour with very limited use."),
+        origin: .synthetic
+    ),
+    "E124": LocalizedAdditiveRecord(
+        commonName: ("Rojo Ponceau 4R", "Ponceau 4R"),
+        note: ("Colorante rojo azoico de síntesis.", "Synthetic azo red colour."),
+        origin: .synthetic
+    ),
+    "E127": LocalizedAdditiveRecord(
+        commonName: ("Eritrosina", "Erythrosine"),
+        note: ("Colorante rojo de síntesis usado en cerezas confitadas.", "Synthetic red colour used in candied cherries."),
+        origin: .synthetic
+    ),
+    "E129": LocalizedAdditiveRecord(
+        commonName: ("Rojo allura AC", "Allura Red AC"),
+        note: ("Colorante rojo azoico de síntesis.", "Synthetic azo red colour."),
+        origin: .synthetic
+    ),
+    "E131": LocalizedAdditiveRecord(
+        commonName: ("Azul patentado V", "Patent Blue V"),
+        note: ("Colorante azul de síntesis.", "Synthetic blue colour."),
+        origin: .synthetic
+    ),
+    "E132": LocalizedAdditiveRecord(
+        commonName: ("Indigotina", "Indigotine"),
+        note: ("Colorante azul de síntesis.", "Synthetic blue colour."),
+        origin: .synthetic
+    ),
+    "E133": LocalizedAdditiveRecord(
+        commonName: ("Azul brillante FCF", "Brilliant Blue FCF"),
+        note: ("Colorante azul de síntesis.", "Synthetic blue colour."),
+        origin: .synthetic
     ),
     "E140": LocalizedAdditiveRecord(
         commonName: ("Clorofilas", "Chlorophylls"),
         note: ("Pigmentos verdes de origen vegetal.", "Green pigments of plant origin."),
         origin: .plant
     ),
+    "E142": LocalizedAdditiveRecord(
+        commonName: ("Verde S", "Green S"),
+        note: ("Colorante verde de síntesis.", "Synthetic green colour."),
+        origin: .synthetic
+    ),
+    "E151": LocalizedAdditiveRecord(
+        commonName: ("Negro brillante BN", "Brilliant Black BN"),
+        note: ("Colorante negro azoico de síntesis.", "Synthetic azo black colour."),
+        origin: .synthetic
+    ),
     "E153": LocalizedAdditiveRecord(
         commonName: ("Carbón vegetal", "Vegetable carbon"),
         note: ("Colorante negro de origen vegetal.", "Black coloring of plant origin."),
         origin: .plant
+    ),
+    "E155": LocalizedAdditiveRecord(
+        commonName: ("Marrón HT", "Brown HT"),
+        note: ("Colorante marrón azoico de síntesis.", "Synthetic azo brown colour."),
+        origin: .synthetic
     ),
     "E160A": LocalizedAdditiveRecord(
         commonName: ("Carotenos", "Carotenes"),
         note: ("Pigmentos anaranjados de origen vegetal.", "Orange pigments of plant origin."),
         origin: .plant
     ),
+    "E161G": LocalizedAdditiveRecord(
+        commonName: ("Cantaxantina", "Canthaxanthin"),
+        note: ("Carotenoide rojo anaranjado obtenido por síntesis.", "Synthetic orange-red carotenoid."),
+        origin: .synthetic
+    ),
     "E163": LocalizedAdditiveRecord(
         commonName: ("Antocianinas", "Anthocyanins"),
         note: ("Pigmentos vegetales rojos y morados.", "Red and purple plant pigments."),
         origin: .plant
+    ),
+    "E180": LocalizedAdditiveRecord(
+        commonName: ("Litolrubina BK", "Lithol Rubine BK"),
+        note: ("Colorante rojo usado en la corteza de quesos.", "Synthetic red colour used on cheese rind."),
+        origin: .synthetic
     ),
     "E200": LocalizedAdditiveRecord(
         commonName: ("Ácido sórbico", "Sorbic acid"),
@@ -365,10 +445,90 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         note: ("Conservante y antioxidante.", "Preservative and antioxidant."),
         origin: .synthetic
     ),
+    "E222": LocalizedAdditiveRecord(
+        commonName: ("Bisulfito sódico", "Sodium bisulphite"),
+        note: ("Conservante y antioxidante sulfitado.", "Sulphite preservative and antioxidant."),
+        origin: .synthetic
+    ),
+    "E227": LocalizedAdditiveRecord(
+        commonName: ("Bisulfito cálcico", "Calcium bisulphite"),
+        note: ("Conservante y antioxidante sulfitado.", "Sulphite preservative and antioxidant."),
+        origin: .synthetic
+    ),
+    "E228": LocalizedAdditiveRecord(
+        commonName: ("Bisulfito potásico", "Potassium bisulphite"),
+        note: ("Conservante y antioxidante sulfitado.", "Sulphite preservative and antioxidant."),
+        origin: .synthetic
+    ),
+    "E242": LocalizedAdditiveRecord(
+        commonName: ("Dicarbonato de dimetilo", "Dimethyl dicarbonate"),
+        note: ("Conservante usado en bebidas.", "Preservative used in beverages."),
+        origin: .synthetic
+    ),
+    "E249": LocalizedAdditiveRecord(
+        commonName: ("Nitrito potásico", "Potassium nitrite"),
+        note: ("Conservante de curado usado en carnes.", "Curing preservative used in meat."),
+        origin: .synthetic
+    ),
+    "E260": LocalizedAdditiveRecord(
+        commonName: ("Ácido acético", "Acetic acid"),
+        note: ("Regulador de acidez y conservante, el ácido del vinagre.", "Acidity regulator and preservative, the acid in vinegar."),
+        origin: .synthetic
+    ),
+    "E261": LocalizedAdditiveRecord(
+        commonName: ("Acetato potásico", "Potassium acetate"),
+        note: ("Conservante y regulador de acidez.", "Preservative and acidity regulator."),
+        origin: .synthetic
+    ),
+    "E262": LocalizedAdditiveRecord(
+        commonName: ("Acetatos de sodio", "Sodium acetates"),
+        note: ("Conservante y regulador de acidez.", "Preservative and acidity regulator."),
+        origin: .synthetic
+    ),
+    "E263": LocalizedAdditiveRecord(
+        commonName: ("Acetato cálcico", "Calcium acetate"),
+        note: ("Conservante y regulador de acidez.", "Preservative and acidity regulator."),
+        origin: .synthetic
+    ),
     "E270": LocalizedAdditiveRecord(
         commonName: ("Ácido láctico", "Lactic acid"),
         note: ("Regulador de acidez; se obtiene casi siempre por fermentación de azúcares vegetales, pero puede proceder de lácteos.", "Acidity regulator; almost always produced by fermenting plant sugars, but it may come from dairy."),
         origin: .uncertain
+    ),
+    "E280": LocalizedAdditiveRecord(
+        commonName: ("Ácido propiónico", "Propionic acid"),
+        note: ("Conservante antifúngico usado en panadería.", "Antifungal preservative used in bakery."),
+        origin: .synthetic
+    ),
+    "E281": LocalizedAdditiveRecord(
+        commonName: ("Propionato sódico", "Sodium propionate"),
+        note: ("Conservante antifúngico usado en panadería.", "Antifungal preservative used in bakery."),
+        origin: .synthetic
+    ),
+    "E282": LocalizedAdditiveRecord(
+        commonName: ("Propionato cálcico", "Calcium propionate"),
+        note: ("Conservante antifúngico usado en panadería.", "Antifungal preservative used in bakery."),
+        origin: .synthetic
+    ),
+    "E283": LocalizedAdditiveRecord(
+        commonName: ("Propionato potásico", "Potassium propionate"),
+        note: ("Conservante antifúngico usado en panadería.", "Antifungal preservative used in bakery."),
+        origin: .synthetic
+    ),
+    "E284": LocalizedAdditiveRecord(
+        commonName: ("Ácido bórico", "Boric acid"),
+        note: ("Conservante de uso muy limitado.", "Preservative with very limited use."),
+        origin: .synthetic
+    ),
+    "E285": LocalizedAdditiveRecord(
+        commonName: ("Tetraborato sódico", "Sodium tetraborate"),
+        note: ("Conservante de uso muy limitado.", "Preservative with very limited use."),
+        origin: .synthetic
+    ),
+    "E290": LocalizedAdditiveRecord(
+        commonName: ("Dióxido de carbono", "Carbon dioxide"),
+        note: ("Gas de envasado y carbonatación.", "Packaging and carbonation gas."),
+        origin: .synthetic
     ),
     "E306": LocalizedAdditiveRecord(
         commonName: ("Extracto rico en tocoferoles", "Tocopherol-rich extract"),
@@ -380,14 +540,104 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         note: ("Puede proceder de soja, girasol o huevo.", "May come from soy, sunflower, or egg."),
         origin: .uncertain
     ),
+    "E325": LocalizedAdditiveRecord(
+        commonName: ("Lactato sódico", "Sodium lactate"),
+        note: ("Sal del ácido láctico; la fermentación puede partir de sustratos lácteos.", "Lactic acid salt; fermentation may start from dairy substrates."),
+        origin: .uncertain
+    ),
+    "E326": LocalizedAdditiveRecord(
+        commonName: ("Lactato potásico", "Potassium lactate"),
+        note: ("Sal del ácido láctico; la fermentación puede partir de sustratos lácteos.", "Lactic acid salt; fermentation may start from dairy substrates."),
+        origin: .uncertain
+    ),
+    "E327": LocalizedAdditiveRecord(
+        commonName: ("Lactato cálcico", "Calcium lactate"),
+        note: ("Sal del ácido láctico; la fermentación puede partir de sustratos lácteos.", "Lactic acid salt; fermentation may start from dairy substrates."),
+        origin: .uncertain
+    ),
     "E330": LocalizedAdditiveRecord(
         commonName: ("Ácido cítrico", "Citric acid"),
         note: ("Regulador de acidez y antioxidante.", "Acidity regulator and antioxidant."),
         origin: .synthetic
     ),
+    "E343": LocalizedAdditiveRecord(
+        commonName: ("Fosfatos de magnesio", "Magnesium phosphates"),
+        note: ("Regulador de acidez y antiaglomerante de origen mineral.", "Mineral acidity regulator and anti-caking agent."),
+        origin: .synthetic
+    ),
+    "E350": LocalizedAdditiveRecord(
+        commonName: ("Malatos de sodio", "Sodium malates"),
+        note: ("Regulador de acidez derivado del ácido málico.", "Acidity regulator derived from malic acid."),
+        origin: .synthetic
+    ),
+    "E351": LocalizedAdditiveRecord(
+        commonName: ("Malato potásico", "Potassium malate"),
+        note: ("Regulador de acidez derivado del ácido málico.", "Acidity regulator derived from malic acid."),
+        origin: .synthetic
+    ),
+    "E352": LocalizedAdditiveRecord(
+        commonName: ("Malatos de calcio", "Calcium malates"),
+        note: ("Regulador de acidez derivado del ácido málico.", "Acidity regulator derived from malic acid."),
+        origin: .synthetic
+    ),
+    "E353": LocalizedAdditiveRecord(
+        commonName: ("Ácido metatartárico", "Metatartaric acid"),
+        note: ("Estabilizante derivado del ácido tartárico usado en vinos.", "Stabiliser derived from tartaric acid, used in wine."),
+        origin: .synthetic
+    ),
+    "E354": LocalizedAdditiveRecord(
+        commonName: ("Tartrato cálcico", "Calcium tartrate"),
+        note: ("Regulador de acidez derivado del ácido tartárico.", "Acidity regulator derived from tartaric acid."),
+        origin: .synthetic
+    ),
+    "E355": LocalizedAdditiveRecord(
+        commonName: ("Ácido adípico", "Adipic acid"),
+        note: ("Regulador de acidez de síntesis.", "Synthetic acidity regulator."),
+        origin: .synthetic
+    ),
+    "E363": LocalizedAdditiveRecord(
+        commonName: ("Ácido succínico", "Succinic acid"),
+        note: ("Regulador de acidez de síntesis.", "Synthetic acidity regulator."),
+        origin: .synthetic
+    ),
+    "E380": LocalizedAdditiveRecord(
+        commonName: ("Citrato triamónico", "Triammonium citrate"),
+        note: ("Regulador de acidez derivado del ácido cítrico.", "Acidity regulator derived from citric acid."),
+        origin: .synthetic
+    ),
+    "E386": LocalizedAdditiveRecord(
+        commonName: ("EDTA disódico", "Disodium EDTA"),
+        note: ("Secuestrante que protege contra la oxidación.", "Sequestrant that protects against oxidation."),
+        origin: .synthetic
+    ),
+    "E400": LocalizedAdditiveRecord(
+        commonName: ("Ácido algínico", "Alginic acid"),
+        note: ("Espesante extraído de algas.", "Thickener extracted from seaweed."),
+        origin: .plant
+    ),
     "E401": LocalizedAdditiveRecord(
         commonName: ("Alginato sódico", "Sodium alginate"),
         note: ("Espesante extraído de algas.", "Thickener extracted from seaweed."),
+        origin: .plant
+    ),
+    "E402": LocalizedAdditiveRecord(
+        commonName: ("Alginato potásico", "Potassium alginate"),
+        note: ("Espesante extraído de algas.", "Thickener extracted from seaweed."),
+        origin: .plant
+    ),
+    "E403": LocalizedAdditiveRecord(
+        commonName: ("Alginato amónico", "Ammonium alginate"),
+        note: ("Espesante extraído de algas.", "Thickener extracted from seaweed."),
+        origin: .plant
+    ),
+    "E404": LocalizedAdditiveRecord(
+        commonName: ("Alginato cálcico", "Calcium alginate"),
+        note: ("Espesante extraído de algas.", "Thickener extracted from seaweed."),
+        origin: .plant
+    ),
+    "E405": LocalizedAdditiveRecord(
+        commonName: ("Alginato de propilenglicol", "Propylene glycol alginate"),
+        note: ("Derivado de alginatos de algas.", "Derived from seaweed alginates."),
         origin: .plant
     ),
     "E406": LocalizedAdditiveRecord(
@@ -405,10 +655,30 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         note: ("Goma natural de la acacia.", "Natural gum from acacia trees."),
         origin: .plant
     ),
+    "E417": LocalizedAdditiveRecord(
+        commonName: ("Goma tara", "Tara gum"),
+        note: ("Espesante de la semilla de tara.", "Thickener from tara seed."),
+        origin: .plant
+    ),
+    "E418": LocalizedAdditiveRecord(
+        commonName: ("Goma gellan", "Gellan gum"),
+        note: ("Espesante producido por fermentación microbiana.", "Thickener produced by microbial fermentation."),
+        origin: .plant
+    ),
     "E422": LocalizedAdditiveRecord(
         commonName: ("Glicerina / glicerol", "Glycerin / glycerol"),
         note: ("Puede ser de origen vegetal, animal o sintético.", "May be of plant, animal, or synthetic origin."),
         origin: .uncertain
+    ),
+    "E426": LocalizedAdditiveRecord(
+        commonName: ("Hemicelulosa de soja", "Soybean hemicellulose"),
+        note: ("Espesante obtenido de la soja.", "Thickener obtained from soybean."),
+        origin: .plant
+    ),
+    "E427": LocalizedAdditiveRecord(
+        commonName: ("Goma cassia", "Cassia gum"),
+        note: ("Espesante de la semilla de casia.", "Thickener from cassia seed."),
+        origin: .plant
     ),
     "E428": LocalizedAdditiveRecord(
         commonName: ("Gelatina", "Gelatine"),
@@ -430,15 +700,80 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         note: ("Emulsionante usado en chocolate y repostería.", "Emulsifier used in chocolate and baking."),
         origin: .synthetic
     ),
+    "E444": LocalizedAdditiveRecord(
+        commonName: ("Acetato isobutirato de sacarosa", "Sucrose acetate isobutyrate"),
+        note: ("Emulsionante usado en bebidas.", "Emulsifier used in beverages."),
+        origin: .synthetic
+    ),
+    "E445": LocalizedAdditiveRecord(
+        commonName: ("Ésteres glicéricos de resina de madera", "Glycerol esters of wood rosin"),
+        note: ("Estabilizante de bebidas obtenido de resina de pino.", "Beverage stabiliser obtained from pine rosin."),
+        origin: .plant
+    ),
+    "E450": LocalizedAdditiveRecord(
+        commonName: ("Difosfatos", "Diphosphates"),
+        note: ("Estabilizante y gasificante de origen mineral.", "Mineral stabiliser and raising agent."),
+        origin: .synthetic
+    ),
+    "E451": LocalizedAdditiveRecord(
+        commonName: ("Trifosfatos", "Triphosphates"),
+        note: ("Estabilizante y regulador de acidez de origen mineral.", "Mineral stabiliser and acidity regulator."),
+        origin: .synthetic
+    ),
+    "E452": LocalizedAdditiveRecord(
+        commonName: ("Polifosfatos", "Polyphosphates"),
+        note: ("Estabilizante y emulsionante de origen mineral.", "Mineral stabiliser and emulsifier."),
+        origin: .synthetic
+    ),
+    "E459": LocalizedAdditiveRecord(
+        commonName: ("Beta-ciclodextrina", "Beta-cyclodextrin"),
+        note: ("Estabilizante obtenido a partir de almidón.", "Stabiliser obtained from starch."),
+        origin: .plant
+    ),
+    "E462": LocalizedAdditiveRecord(
+        commonName: ("Etilcelulosa", "Ethyl cellulose"),
+        note: ("Derivado de la celulosa vegetal.", "Derived from plant cellulose."),
+        origin: .plant
+    ),
+    "E467": LocalizedAdditiveRecord(
+        commonName: ("Etilhidroxietilcelulosa", "Ethyl hydroxyethyl cellulose"),
+        note: ("Derivado de la celulosa vegetal.", "Derived from plant cellulose."),
+        origin: .plant
+    ),
+    "E468": LocalizedAdditiveRecord(
+        commonName: ("Carboximetilcelulosa sódica reticulada", "Crosslinked sodium carboxymethyl cellulose"),
+        note: ("Derivado de la celulosa vegetal.", "Derived from plant cellulose."),
+        origin: .plant
+    ),
+    "E469": LocalizedAdditiveRecord(
+        commonName: ("Carboximetilcelulosa hidrolizada enzimáticamente", "Enzymatically hydrolysed carboxymethyl cellulose"),
+        note: ("Derivado de la celulosa vegetal.", "Derived from plant cellulose."),
+        origin: .plant
+    ),
     "E471": LocalizedAdditiveRecord(
         commonName: ("Mono y diglicéridos de ácidos grasos", "Mono- and diglycerides of fatty acids"),
         note: ("Puede proceder de grasas vegetales o animales.", "May be derived from plant or animal fats."),
         origin: .uncertain
     ),
     "E476": LocalizedAdditiveRecord(
-        commonName: ("Ésteres poliglicéridos de ácidos grasos", "Polyglycerol esters of fatty acids"),
-        note: ("Emulsionante para textura y estabilidad.", "Emulsifier for texture and stability."),
-        origin: .synthetic
+        commonName: ("Polirricinoleato de poliglicerol", "Polyglycerol polyricinoleate"),
+        note: ("Emulsionante del chocolate obtenido de aceite de ricino y glicerol de origen variable.", "Chocolate emulsifier obtained from castor oil and glycerol of variable origin."),
+        origin: .uncertain
+    ),
+    "E477": LocalizedAdditiveRecord(
+        commonName: ("Ésteres de propilenglicol de ácidos grasos", "Propylene glycol esters of fatty acids"),
+        note: ("Emulsionante de origen graso variable.", "Emulsifier with variable fat source."),
+        origin: .uncertain
+    ),
+    "E479B": LocalizedAdditiveRecord(
+        commonName: ("Aceite de soja oxidado térmicamente con mono y diglicéridos", "Thermally oxidised soya bean oil with mono- and diglycerides"),
+        note: ("Emulsionante de origen graso variable.", "Emulsifier with variable fat source."),
+        origin: .uncertain
+    ),
+    "E483": LocalizedAdditiveRecord(
+        commonName: ("Tartrato de estearilo", "Stearyl tartrate"),
+        note: ("Emulsionante de origen graso variable.", "Emulsifier with variable fat source."),
+        origin: .uncertain
     ),
     "E500": LocalizedAdditiveRecord(
         commonName: ("Carbonatos de sodio", "Sodium carbonates"),
@@ -450,20 +785,170 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         note: ("Gasificante usado en repostería.", "Raising agent used in baking."),
         origin: .synthetic
     ),
+    "E535": LocalizedAdditiveRecord(
+        commonName: ("Ferrocianuro sódico", "Sodium ferrocyanide"),
+        note: ("Antiaglomerante de la sal de origen mineral.", "Mineral anti-caking agent used in salt."),
+        origin: .synthetic
+    ),
+    "E536": LocalizedAdditiveRecord(
+        commonName: ("Ferrocianuro potásico", "Potassium ferrocyanide"),
+        note: ("Antiaglomerante de la sal de origen mineral.", "Mineral anti-caking agent used in salt."),
+        origin: .synthetic
+    ),
+    "E538": LocalizedAdditiveRecord(
+        commonName: ("Ferrocianuro cálcico", "Calcium ferrocyanide"),
+        note: ("Antiaglomerante de la sal de origen mineral.", "Mineral anti-caking agent used in salt."),
+        origin: .synthetic
+    ),
+    "E541": LocalizedAdditiveRecord(
+        commonName: ("Fosfato de aluminio y sodio ácido", "Sodium aluminium phosphate, acidic"),
+        note: ("Gasificante de origen mineral usado en repostería.", "Mineral raising agent used in bakery."),
+        origin: .synthetic
+    ),
     "E542": LocalizedAdditiveRecord(
         commonName: ("Fosfato de hueso", "Bone phosphate"),
         note: ("Fosfato obtenido de huesos animales.", "Phosphate obtained from animal bones."),
         origin: .animal
+    ),
+    "E550": LocalizedAdditiveRecord(
+        commonName: ("Silicatos de sodio", "Sodium silicates"),
+        note: ("Antiaglomerante de origen mineral.", "Mineral anti-caking agent."),
+        origin: .synthetic
+    ),
+    "E552": LocalizedAdditiveRecord(
+        commonName: ("Silicato cálcico", "Calcium silicate"),
+        note: ("Antiaglomerante de origen mineral.", "Mineral anti-caking agent."),
+        origin: .synthetic
+    ),
+    "E553A": LocalizedAdditiveRecord(
+        commonName: ("Silicato de magnesio", "Magnesium silicate"),
+        note: ("Antiaglomerante de origen mineral.", "Mineral anti-caking agent."),
+        origin: .synthetic
+    ),
+    "E554": LocalizedAdditiveRecord(
+        commonName: ("Silicato de aluminio y sodio", "Sodium aluminium silicate"),
+        note: ("Antiaglomerante de origen mineral.", "Mineral anti-caking agent."),
+        origin: .synthetic
+    ),
+    "E555": LocalizedAdditiveRecord(
+        commonName: ("Silicato de aluminio y potasio", "Potassium aluminium silicate"),
+        note: ("Antiaglomerante de origen mineral.", "Mineral anti-caking agent."),
+        origin: .synthetic
+    ),
+    "E556": LocalizedAdditiveRecord(
+        commonName: ("Silicato de aluminio y calcio", "Calcium aluminium silicate"),
+        note: ("Antiaglomerante de origen mineral.", "Mineral anti-caking agent."),
+        origin: .synthetic
+    ),
+    "E558": LocalizedAdditiveRecord(
+        commonName: ("Bentonita", "Bentonite"),
+        note: ("Antiaglomerante de origen mineral.", "Mineral anti-caking agent."),
+        origin: .synthetic
+    ),
+    "E559": LocalizedAdditiveRecord(
+        commonName: ("Silicato de aluminio", "Aluminium silicate"),
+        note: ("Antiaglomerante de origen mineral.", "Mineral anti-caking agent."),
+        origin: .synthetic
+    ),
+    "E570": LocalizedAdditiveRecord(
+        commonName: ("Ácidos grasos", "Fatty acids"),
+        note: ("Puede proceder de grasas vegetales o animales.", "May come from plant or animal fats."),
+        origin: .uncertain
+    ),
+    "E574": LocalizedAdditiveRecord(
+        commonName: ("Ácido glucónico", "Gluconic acid"),
+        note: ("Regulador de acidez obtenido por fermentación.", "Acidity regulator obtained by fermentation."),
+        origin: .synthetic
+    ),
+    "E575": LocalizedAdditiveRecord(
+        commonName: ("Glucono-delta-lactona", "Glucono-delta-lactone"),
+        note: ("Regulador de acidez y coagulante obtenido por fermentación.", "Acidity regulator and coagulant obtained by fermentation."),
+        origin: .synthetic
+    ),
+    "E576": LocalizedAdditiveRecord(
+        commonName: ("Gluconato sódico", "Sodium gluconate"),
+        note: ("Secuestrante derivado del ácido glucónico.", "Sequestrant derived from gluconic acid."),
+        origin: .synthetic
+    ),
+    "E577": LocalizedAdditiveRecord(
+        commonName: ("Gluconato potásico", "Potassium gluconate"),
+        note: ("Secuestrante derivado del ácido glucónico.", "Sequestrant derived from gluconic acid."),
+        origin: .synthetic
+    ),
+    "E578": LocalizedAdditiveRecord(
+        commonName: ("Gluconato cálcico", "Calcium gluconate"),
+        note: ("Secuestrante derivado del ácido glucónico.", "Sequestrant derived from gluconic acid."),
+        origin: .synthetic
+    ),
+    "E579": LocalizedAdditiveRecord(
+        commonName: ("Gluconato ferroso", "Ferrous gluconate"),
+        note: ("Estabilizante del color usado en aceitunas.", "Colour stabiliser used in olives."),
+        origin: .synthetic
+    ),
+    "E585": LocalizedAdditiveRecord(
+        commonName: ("Lactato ferroso", "Ferrous lactate"),
+        note: ("Sal del ácido láctico; la fermentación puede partir de sustratos lácteos.", "Lactic acid salt; fermentation may start from dairy substrates."),
+        origin: .uncertain
+    ),
+    "E586": LocalizedAdditiveRecord(
+        commonName: ("4-hexilresorcinol", "4-hexylresorcinol"),
+        note: ("Antioxidante usado en crustáceos frescos.", "Antioxidant used on fresh crustaceans."),
+        origin: .synthetic
+    ),
+    "E626": LocalizedAdditiveRecord(
+        commonName: ("Ácido guanílico", "Guanylic acid"),
+        note: ("Potenciador del sabor de origen variable.", "Flavour enhancer with variable source."),
+        origin: .uncertain
+    ),
+    "E629": LocalizedAdditiveRecord(
+        commonName: ("Guanilato cálcico", "Calcium guanylate"),
+        note: ("Potenciador del sabor de origen variable.", "Flavour enhancer with variable source."),
+        origin: .uncertain
+    ),
+    "E630": LocalizedAdditiveRecord(
+        commonName: ("Ácido inosínico", "Inosinic acid"),
+        note: ("Potenciador del sabor de origen variable.", "Flavour enhancer with variable source."),
+        origin: .uncertain
     ),
     "E631": LocalizedAdditiveRecord(
         commonName: ("Inosinato disódico", "Disodium inosinate"),
         note: ("Potenciador del sabor de origen variable.", "Flavour enhancer with variable origin."),
         origin: .uncertain
     ),
+    "E632": LocalizedAdditiveRecord(
+        commonName: ("Inosinato dipotásico", "Dipotassium inosinate"),
+        note: ("Potenciador del sabor de origen variable.", "Flavour enhancer with variable source."),
+        origin: .uncertain
+    ),
+    "E633": LocalizedAdditiveRecord(
+        commonName: ("Inosinato cálcico", "Calcium inosinate"),
+        note: ("Potenciador del sabor de origen variable.", "Flavour enhancer with variable source."),
+        origin: .uncertain
+    ),
+    "E634": LocalizedAdditiveRecord(
+        commonName: ("Ribonucleótidos cálcicos", "Calcium ribonucleotides"),
+        note: ("Potenciador del sabor de origen variable.", "Flavour enhancer with variable source."),
+        origin: .uncertain
+    ),
     "E635": LocalizedAdditiveRecord(
         commonName: ("Ribonucleótidos disódicos", "Disodium ribonucleotides"),
         note: ("Potenciador del sabor de origen variable.", "Flavour enhancer with variable origin."),
         origin: .uncertain
+    ),
+    "E636": LocalizedAdditiveRecord(
+        commonName: ("Maltol", "Maltol"),
+        note: ("Potenciador del sabor con aroma a caramelo.", "Flavour enhancer with a caramel aroma."),
+        origin: .synthetic
+    ),
+    "E637": LocalizedAdditiveRecord(
+        commonName: ("Etilmaltol", "Ethyl maltol"),
+        note: ("Potenciador del sabor con aroma a caramelo.", "Flavour enhancer with a caramel aroma."),
+        origin: .synthetic
+    ),
+    "E650": LocalizedAdditiveRecord(
+        commonName: ("Acetato de zinc", "Zinc acetate"),
+        note: ("Potenciador del sabor usado en chicles.", "Flavour enhancer used in chewing gum."),
+        origin: .synthetic
     ),
     "E901": LocalizedAdditiveRecord(
         commonName: ("Cera de abejas", "Beeswax"),
@@ -485,6 +970,51 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         note: ("A menudo procede de pelo, plumas o fermentación.", "Often comes from hair, feathers, or fermentation."),
         origin: .uncertain
     ),
+    "E938": LocalizedAdditiveRecord(
+        commonName: ("Argón", "Argon"),
+        note: ("Gas inerte de envasado.", "Inert packaging gas."),
+        origin: .synthetic
+    ),
+    "E939": LocalizedAdditiveRecord(
+        commonName: ("Helio", "Helium"),
+        note: ("Gas inerte de envasado.", "Inert packaging gas."),
+        origin: .synthetic
+    ),
+    "E941": LocalizedAdditiveRecord(
+        commonName: ("Nitrógeno", "Nitrogen"),
+        note: ("Gas inerte de envasado.", "Inert packaging gas."),
+        origin: .synthetic
+    ),
+    "E942": LocalizedAdditiveRecord(
+        commonName: ("Óxido nitroso", "Nitrous oxide"),
+        note: ("Gas propelente usado en nata en espray.", "Propellant gas used in whipped cream."),
+        origin: .synthetic
+    ),
+    "E943A": LocalizedAdditiveRecord(
+        commonName: ("Butano", "Butane"),
+        note: ("Gas propelente de origen petroquímico.", "Petrochemical propellant gas."),
+        origin: .synthetic
+    ),
+    "E943B": LocalizedAdditiveRecord(
+        commonName: ("Isobutano", "Isobutane"),
+        note: ("Gas propelente de origen petroquímico.", "Petrochemical propellant gas."),
+        origin: .synthetic
+    ),
+    "E944": LocalizedAdditiveRecord(
+        commonName: ("Propano", "Propane"),
+        note: ("Gas propelente de origen petroquímico.", "Petrochemical propellant gas."),
+        origin: .synthetic
+    ),
+    "E948": LocalizedAdditiveRecord(
+        commonName: ("Oxígeno", "Oxygen"),
+        note: ("Gas de envasado.", "Packaging gas."),
+        origin: .synthetic
+    ),
+    "E949": LocalizedAdditiveRecord(
+        commonName: ("Hidrógeno", "Hydrogen"),
+        note: ("Gas de envasado.", "Packaging gas."),
+        origin: .synthetic
+    ),
     "E950": LocalizedAdditiveRecord(
         commonName: ("Acesulfamo K", "Acesulfame K"),
         note: ("Edulcorante intenso.", "Intense sweetener."),
@@ -495,10 +1025,70 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         note: ("Edulcorante artificial.", "Artificial sweetener."),
         origin: .synthetic
     ),
+    "E952": LocalizedAdditiveRecord(
+        commonName: ("Ciclamato", "Cyclamate"),
+        note: ("Edulcorante intenso de síntesis.", "Synthetic intense sweetener."),
+        origin: .synthetic
+    ),
+    "E953": LocalizedAdditiveRecord(
+        commonName: ("Isomalt", "Isomalt"),
+        note: ("Poliol obtenido a partir de azúcar de remolacha.", "Polyol obtained from beet sugar."),
+        origin: .plant
+    ),
+    "E954": LocalizedAdditiveRecord(
+        commonName: ("Sacarina", "Saccharin"),
+        note: ("Edulcorante intenso de síntesis.", "Synthetic intense sweetener."),
+        origin: .synthetic
+    ),
+    "E955": LocalizedAdditiveRecord(
+        commonName: ("Sucralosa", "Sucralose"),
+        note: ("Edulcorante intenso obtenido a partir del azúcar.", "Intense sweetener obtained from sugar."),
+        origin: .synthetic
+    ),
+    "E957": LocalizedAdditiveRecord(
+        commonName: ("Taumatina", "Thaumatin"),
+        note: ("Proteína edulcorante de origen vegetal.", "Sweet protein of plant origin."),
+        origin: .plant
+    ),
+    "E959": LocalizedAdditiveRecord(
+        commonName: ("Neohesperidina dihidrochalcona", "Neohesperidin dihydrochalcone"),
+        note: ("Edulcorante derivado de cítricos.", "Sweetener derived from citrus fruit."),
+        origin: .plant
+    ),
     "E960": LocalizedAdditiveRecord(
         commonName: ("Glicósidos de esteviol", "Steviol glycosides"),
         note: ("Edulcorantes extraídos de la estevia.", "Sweeteners extracted from stevia."),
         origin: .plant
+    ),
+    "E961": LocalizedAdditiveRecord(
+        commonName: ("Neotamo", "Neotame"),
+        note: ("Edulcorante intenso de síntesis.", "Synthetic intense sweetener."),
+        origin: .synthetic
+    ),
+    "E962": LocalizedAdditiveRecord(
+        commonName: ("Sal de aspartamo y acesulfamo", "Salt of aspartame-acesulfame"),
+        note: ("Edulcorante intenso de síntesis.", "Synthetic intense sweetener."),
+        origin: .synthetic
+    ),
+    "E964": LocalizedAdditiveRecord(
+        commonName: ("Jarabe de poliglicitol", "Polyglycitol syrup"),
+        note: ("Poliol obtenido a partir de almidón.", "Polyol obtained from starch."),
+        origin: .plant
+    ),
+    "E969": LocalizedAdditiveRecord(
+        commonName: ("Advantamo", "Advantame"),
+        note: ("Edulcorante intenso de síntesis.", "Synthetic intense sweetener."),
+        origin: .synthetic
+    ),
+    "E1000": LocalizedAdditiveRecord(
+        commonName: ("Ácido cólico", "Cholic acid"),
+        note: ("Emulsionante obtenido de la bilis animal.", "Emulsifier obtained from animal bile."),
+        origin: .animal
+    ),
+    "E1103": LocalizedAdditiveRecord(
+        commonName: ("Invertasa", "Invertase"),
+        note: ("Enzima obtenida por fermentación de levaduras.", "Enzyme obtained by yeast fermentation."),
+        origin: .synthetic
     ),
     "E1105": LocalizedAdditiveRecord(
         commonName: ("Lisozima", "Lysozyme"),
@@ -1127,8 +1717,8 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
     ),
     "E640": LocalizedAdditiveRecord(
         commonName: ("Glicina y su sal sódica", "Glicina y su sal sódica"),
-        note: ("Potenciador y corrector del sabor.", "Potenciador y corrector del sabor."),
-        origin: .synthetic
+        note: ("Suele obtenerse por síntesis, pero puede proceder de hidrolizados animales.", "Usually produced synthetically, but may come from animal hydrolysates."),
+        origin: .uncertain
     ),
     "E900": LocalizedAdditiveRecord(
         commonName: ("Dimetilpolisiloxano", "Dimetilpolisiloxano"),
@@ -1184,6 +1774,131 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         commonName: ("Quilaya", "Quilaya"),
         note: ("Extracto vegetal usado como agente espumante.", "Extracto vegetal usado como agente espumante."),
         origin: .plant
+    ),
+    "E1200": LocalizedAdditiveRecord(
+        commonName: ("Polidextrosa", "Polydextrose"),
+        note: ("Agente de carga obtenido a partir de glucosa.", "Bulking agent obtained from glucose."),
+        origin: .plant
+    ),
+    "E1201": LocalizedAdditiveRecord(
+        commonName: ("Polivinilpirrolidona", "Polyvinylpyrrolidone"),
+        note: ("Estabilizante sintético usado en comprimidos.", "Synthetic stabiliser used in tablets."),
+        origin: .synthetic
+    ),
+    "E1202": LocalizedAdditiveRecord(
+        commonName: ("Polivinilpolipirrolidona", "Polyvinylpolypyrrolidone"),
+        note: ("Clarificante sintético usado en bebidas.", "Synthetic clarifying agent used in beverages."),
+        origin: .synthetic
+    ),
+    "E1204": LocalizedAdditiveRecord(
+        commonName: ("Pululano", "Pullulan"),
+        note: ("Agente de recubrimiento obtenido por fermentación.", "Coating agent obtained by fermentation."),
+        origin: .plant
+    ),
+    "E1400": LocalizedAdditiveRecord(
+        commonName: ("Dextrinas", "Dextrins"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1401": LocalizedAdditiveRecord(
+        commonName: ("Almidón tratado con ácido", "Acid-treated starch"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1402": LocalizedAdditiveRecord(
+        commonName: ("Almidón tratado con álcali", "Alkaline-treated starch"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1403": LocalizedAdditiveRecord(
+        commonName: ("Almidón blanqueado", "Bleached starch"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1404": LocalizedAdditiveRecord(
+        commonName: ("Almidón oxidado", "Oxidised starch"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1410": LocalizedAdditiveRecord(
+        commonName: ("Fosfato de monoalmidón", "Monostarch phosphate"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1412": LocalizedAdditiveRecord(
+        commonName: ("Fosfato de dialmidón", "Distarch phosphate"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1413": LocalizedAdditiveRecord(
+        commonName: ("Fosfato de dialmidón fosfatado", "Phosphated distarch phosphate"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1414": LocalizedAdditiveRecord(
+        commonName: ("Fosfato de dialmidón acetilado", "Acetylated distarch phosphate"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1420": LocalizedAdditiveRecord(
+        commonName: ("Almidón acetilado", "Acetylated starch"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1422": LocalizedAdditiveRecord(
+        commonName: ("Adipato de dialmidón acetilado", "Acetylated distarch adipate"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1440": LocalizedAdditiveRecord(
+        commonName: ("Almidón hidroxipropilado", "Hydroxypropyl starch"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1442": LocalizedAdditiveRecord(
+        commonName: ("Fosfato de dialmidón hidroxipropilado", "Hydroxypropyl distarch phosphate"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1450": LocalizedAdditiveRecord(
+        commonName: ("Octenilsuccinato sódico de almidón", "Starch sodium octenyl succinate"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1451": LocalizedAdditiveRecord(
+        commonName: ("Almidón oxidado acetilado", "Acetylated oxidised starch"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1452": LocalizedAdditiveRecord(
+        commonName: ("Octenilsuccinato de almidón y aluminio", "Starch aluminium octenyl succinate"),
+        note: ("Almidón modificado de origen vegetal.", "Plant-based modified starch."),
+        origin: .plant
+    ),
+    "E1505": LocalizedAdditiveRecord(
+        commonName: ("Citrato de trietilo", "Triethyl citrate"),
+        note: ("Disolvente y agente de recubrimiento de síntesis.", "Synthetic solvent and coating agent."),
+        origin: .synthetic
+    ),
+    "E1517": LocalizedAdditiveRecord(
+        commonName: ("Diacetato de glicerilo", "Glyceryl diacetate"),
+        note: ("Disolvente de origen graso variable.", "Solvent with variable fat source."),
+        origin: .uncertain
+    ),
+    "E1518": LocalizedAdditiveRecord(
+        commonName: ("Triacetato de glicerilo", "Glyceryl triacetate"),
+        note: ("Disolvente de origen graso variable.", "Solvent with variable fat source."),
+        origin: .uncertain
+    ),
+    "E1519": LocalizedAdditiveRecord(
+        commonName: ("Alcohol bencílico", "Benzyl alcohol"),
+        note: ("Disolvente de aromas de síntesis.", "Synthetic flavour solvent."),
+        origin: .synthetic
+    ),
+    "E1520": LocalizedAdditiveRecord(
+        commonName: ("Propilenglicol", "Propylene glycol"),
+        note: ("Humectante y disolvente de síntesis.", "Synthetic humectant and solvent."),
+        origin: .synthetic
     ),
 ]
 

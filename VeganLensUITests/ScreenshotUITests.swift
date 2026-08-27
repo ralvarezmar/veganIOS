@@ -4,10 +4,11 @@ import UIKit
 final class ScreenshotUITests: XCTestCase {
     func testCaptureKeyScreens() {
         let app = XCUIApplication()
+        installSystemPermissionMonitor()
         app.launch()
 
         let onboardingDismiss = app.buttons["onboarding-dismiss"]
-        if onboardingDismiss.waitForExistence(timeout: 3) {
+        if onboardingDismiss.waitForExistence(timeout: 15) {
             capture(app, named: "onboarding")
             onboardingDismiss.tap()
         }
@@ -29,10 +30,7 @@ final class ScreenshotUITests: XCTestCase {
         buttonIdentifier: String,
         screenshotName: String
     ) {
-        let button = app.buttons[buttonIdentifier]
-        guard button.waitForExistence(timeout: 5) else { return }
-
-        button.tap()
+        guard app.tapToolbarButton(buttonIdentifier) else { return }
         _ = app.navigationBars.element.waitForExistence(timeout: 5)
         capture(app, named: screenshotName)
         navigateBack(app)
@@ -52,10 +50,7 @@ final class ScreenshotUITests: XCTestCase {
     }
 
     private func navigateBack(_ app: XCUIApplication) {
-        let backButton = app.navigationBars.buttons.element(boundBy: 0)
-        if backButton.waitForExistence(timeout: 2) {
-            backButton.tap()
-        } else {
+        if !app.tapNavigationBackButton(timeout: 2) {
             app.swipeRight()
         }
     }
