@@ -430,6 +430,21 @@ private let additiveCatalog: [String: LocalizedAdditiveRecord] = [
         note: ("Emulsionante usado en chocolate y repostería.", "Emulsifier used in chocolate and baking."),
         origin: .synthetic
     ),
+    "E450": LocalizedAdditiveRecord(
+        commonName: ("Difosfatos", "Diphosphates"),
+        note: ("Estabilizante y gasificante de origen mineral.", "Mineral stabiliser and raising agent."),
+        origin: .synthetic
+    ),
+    "E451": LocalizedAdditiveRecord(
+        commonName: ("Trifosfatos", "Triphosphates"),
+        note: ("Estabilizante y regulador de acidez de origen mineral.", "Mineral stabiliser and acidity regulator."),
+        origin: .synthetic
+    ),
+    "E452": LocalizedAdditiveRecord(
+        commonName: ("Polifosfatos", "Polyphosphates"),
+        note: ("Estabilizante y emulsionante de origen mineral.", "Mineral stabiliser and emulsifier."),
+        origin: .synthetic
+    ),
     "E471": LocalizedAdditiveRecord(
         commonName: ("Mono y diglicéridos de ácidos grasos", "Mono- and diglycerides of fatty acids"),
         note: ("Puede proceder de grasas vegetales o animales.", "May be derived from plant or animal fats."),
