@@ -400,7 +400,7 @@
 
 "green_score_badge_title" = "Green Score";
 "green_score_badge_content_description" = "Green Score %1$@";
-"green_score_value" = "%1$@/100";
+"green_score_value" = "%1$d/100";
 "score_info_green_score_title" = "Green Score";
 "score_info_green_score_body" = "É o novo nome do Eco-Score do Open Food Facts. Estima o impacto ambiental de A (menor impacto) a E (maior impacto), considerando o ciclo de vida, a origem, a embalagem e o transporte.";
 "nutrient_levels_title" = "Níveis de nutrientes segundo o Open Food Facts";
