@@ -27,35 +27,32 @@ extension XCUIApplication {
     ) -> Bool {
         let navigationBar = navigationBars.firstMatch
         guard waitForHittable(of: element, timeout: timeout) else {
-            print(
-                "UI-DIAG before tap identifier=\(identifier) frame=\(element.frame) " +
-                    "isHittable=\(element.isHittable) exists=\(element.exists) " +
-                    "navigationBarFrame=\(navigationBar.frame)"
+            printTapFailureDiagnostics(
+                element: element,
+                identifier: identifier,
+                navigationBar: navigationBar
             )
             return false
         }
-        print(
-            "UI-DIAG before tap identifier=\(identifier) frame=\(element.frame) " +
-                "isHittable=\(element.isHittable) exists=\(element.exists) " +
-                "navigationBarFrame=\(navigationBar.frame)"
-        )
         element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-        print(
-            "UI-DIAG after tap identifier=\(identifier) frame=\(element.frame) " +
-                "isHittable=\(element.isHittable) exists=\(element.exists) " +
-                "navigationBarFrame=\(navigationBar.frame)"
-        )
-        if navigationBar.exists {
-            let navigationBarButtons = navigationBar.buttons
-            for index in 0..<navigationBarButtons.count {
-                let button = navigationBarButtons.element(boundBy: index)
-                print(
-                    "UI-DIAG after tap navigationBarButton[\(index)] " +
-                        "identifier=\(button.identifier) frame=\(button.frame)"
-                )
-            }
-        }
         return true
+    }
+
+    private func printTapFailureDiagnostics(
+        element: XCUIElement,
+        identifier: String,
+        navigationBar: XCUIElement
+    ) {
+        let elementExists = element.exists
+        let elementFrame = elementExists ? element.frame : CGRect.zero
+        let elementIsHittable = elementExists && element.isHittable
+        let navigationBarExists = navigationBar.exists
+        let navigationBarFrame = navigationBarExists ? navigationBar.frame : CGRect.zero
+        print(
+            "UI-DIAG before tap identifier=\(identifier) frame=\(elementFrame) " +
+                "isHittable=\(elementIsHittable) exists=\(elementExists) " +
+                "navigationBarFrame=\(navigationBarFrame)"
+        )
     }
 
     private func waitForSettledFrame(of element: XCUIElement, timeout: TimeInterval) -> Bool {
