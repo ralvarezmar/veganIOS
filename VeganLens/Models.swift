@@ -44,6 +44,11 @@ struct Product: Codable {
     let ecoscoreGrade: String?
     let novaGroup: Int?
     let quantity: String?
+    let environmentalScoreGrade: String?
+    let environmentalScoreScore: Int?
+    let ecoscoreScore: Int?
+    let environmentalScoreData: EnvironmentalScoreData?
+    let nutrientLevels: NutrientLevels?
 
     enum CodingKeys: String, CodingKey {
         case productName = "product_name"
@@ -59,6 +64,11 @@ struct Product: Codable {
         case nutriments
         case nutriscoreGrade = "nutriscore_grade"
         case ecoscoreGrade = "ecoscore_grade"
+        case environmentalScoreGrade = "environmental_score_grade"
+        case environmentalScoreScore = "environmental_score_score"
+        case ecoscoreScore = "ecoscore_score"
+        case environmentalScoreData = "environmental_score_data"
+        case nutrientLevels = "nutrient_levels"
         case novaGroup = "nova_group"
         case quantity
     }
@@ -78,7 +88,12 @@ struct Product: Codable {
         nutriscoreGrade: String?,
         ecoscoreGrade: String?,
         novaGroup: Int?,
-        quantity: String?
+        quantity: String?,
+        environmentalScoreGrade: String? = nil,
+        environmentalScoreScore: Int? = nil,
+        ecoscoreScore: Int? = nil,
+        environmentalScoreData: EnvironmentalScoreData? = nil,
+        nutrientLevels: NutrientLevels? = nil
     ) {
         self.productName = productName
         self.brands = brands
@@ -95,6 +110,11 @@ struct Product: Codable {
         self.ecoscoreGrade = ecoscoreGrade
         self.novaGroup = novaGroup
         self.quantity = quantity
+        self.environmentalScoreGrade = environmentalScoreGrade
+        self.environmentalScoreScore = environmentalScoreScore
+        self.ecoscoreScore = ecoscoreScore
+        self.environmentalScoreData = environmentalScoreData
+        self.nutrientLevels = nutrientLevels
     }
 
     init(from decoder: Decoder) throws {
@@ -112,6 +132,11 @@ struct Product: Codable {
         nutriments = try? container.decodeIfPresent(Nutriments.self, forKey: .nutriments)
         nutriscoreGrade = try? container.decodeIfPresent(String.self, forKey: .nutriscoreGrade)
         ecoscoreGrade = try? container.decodeIfPresent(String.self, forKey: .ecoscoreGrade)
+        environmentalScoreGrade = try? container.decodeIfPresent(String.self, forKey: .environmentalScoreGrade)
+        environmentalScoreScore = container.decodeFlexibleInt(forKey: .environmentalScoreScore)
+        ecoscoreScore = container.decodeFlexibleInt(forKey: .ecoscoreScore)
+        environmentalScoreData = try? container.decodeIfPresent(EnvironmentalScoreData.self, forKey: .environmentalScoreData)
+        nutrientLevels = try? container.decodeIfPresent(NutrientLevels.self, forKey: .nutrientLevels)
         novaGroup = container.decodeFlexibleInt(forKey: .novaGroup)
         quantity = try? container.decodeIfPresent(String.self, forKey: .quantity)
     }
@@ -132,6 +157,8 @@ struct Nutriments: Codable {
     let carbohydrates100g: Double?
     let salt100g: Double?
     let proteins100g: Double?
+    let addedSugars100g: Double?
+    let carbonFootprint100g: Double?
 
     enum CodingKeys: String, CodingKey {
         case energyKcal100g = "energy-kcal_100g"
@@ -142,6 +169,8 @@ struct Nutriments: Codable {
         case carbohydrates100g = "carbohydrates_100g"
         case salt100g = "salt_100g"
         case proteins100g = "proteins_100g"
+        case addedSugars100g = "added-sugars_100g"
+        case carbonFootprint100g = "carbon-footprint_100g"
     }
 
     init(from decoder: Decoder) throws {
@@ -154,6 +183,39 @@ struct Nutriments: Codable {
         carbohydrates100g = try container.decodeFlexibleDouble(forKey: .carbohydrates100g)
         salt100g = try container.decodeFlexibleDouble(forKey: .salt100g)
         proteins100g = try container.decodeFlexibleDouble(forKey: .proteins100g)
+        addedSugars100g = try container.decodeFlexibleDouble(forKey: .addedSugars100g)
+        carbonFootprint100g = try container.decodeFlexibleDouble(forKey: .carbonFootprint100g)
+    }
+}
+
+struct EnvironmentalScoreData: Codable {
+    let agribalyse: Agribalyse?
+}
+
+struct Agribalyse: Codable {
+    let co2Total: Double?
+
+    enum CodingKeys: String, CodingKey {
+        case co2Total = "co2_total"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        co2Total = try container.decodeFlexibleDouble(forKey: .co2Total)
+    }
+}
+
+struct NutrientLevels: Codable {
+    let fat: String?
+    let saturatedFat: String?
+    let sugars: String?
+    let salt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case fat
+        case saturatedFat = "saturated-fat"
+        case sugars
+        case salt
     }
 }
 
@@ -191,13 +253,87 @@ extension Product {
         !(ingredientsText?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true) ||
         !(ingredients?.isEmpty ?? true) ||
         !(ingredientsAnalysisTags?.isEmpty ?? true) ||
-        nutriments != nil
+        nutriments != nil ||
+        greenScoreGrade != nil ||
+        greenScoreValue != nil ||
+        nutrientLevels != nil
     }
 
     var hasVeganData: Bool {
         !(ingredientsAnalysisTags?.isEmpty ?? true) ||
         (ingredients?.contains(where: { !($0.vegan?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true) }) ?? false)
     }
+
+    var greenScoreGrade: String? {
+        let raw = environmentalScoreGrade ?? ecoscoreGrade
+        let normalized = raw?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .uppercased()
+        return normalized.flatMap { ["A", "B", "C", "D", "E"].contains($0) ? $0 : nil }
+    }
+
+    var greenScoreValue: Int? {
+        let value = environmentalScoreScore ?? ecoscoreScore
+        return value.flatMap { (0...100).contains($0) ? $0 : nil }
+    }
+
+    var nutrientLevelEntries: [(key: NutrientLevelKey, level: NutrientLevelValue)] {
+        [
+            (NutrientLevelKey.fat, nutrientLevels?.fat),
+            (NutrientLevelKey.saturatedFat, nutrientLevels?.saturatedFat),
+            (NutrientLevelKey.sugars, nutrientLevels?.sugars),
+            (NutrientLevelKey.salt, nutrientLevels?.salt)
+        ].compactMap { key, raw in
+            guard let normalized = raw?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() else {
+                return nil
+            }
+            let level: NutrientLevelValue?
+            switch normalized {
+            case "low":
+                level = .low
+            case "moderate":
+                level = .moderate
+            case "high":
+                level = .high
+            default:
+                level = nil
+            }
+            return level.map { (key, $0) }
+        }
+    }
+
+    var carbonFootprint: CarbonFootprint? {
+        if let declared = nutriments?.carbonFootprint100g, declared >= 0 {
+            return CarbonFootprint(value: declared, source: .declared)
+        }
+        if let estimated = environmentalScoreData?.agribalyse?.co2Total, estimated >= 0 {
+            return CarbonFootprint(value: estimated * 100, source: .estimated)
+        }
+        return nil
+    }
+}
+
+enum NutrientLevelKey: Equatable {
+    case fat
+    case saturatedFat
+    case sugars
+    case salt
+}
+
+enum NutrientLevelValue: Equatable {
+    case low
+    case moderate
+    case high
+}
+
+enum CarbonFootprintSource: Equatable {
+    case declared
+    case estimated
+}
+
+struct CarbonFootprint {
+    let value: Double
+    let source: CarbonFootprintSource
 }
 
 enum ProductSource: String, CaseIterable, Codable, Hashable {

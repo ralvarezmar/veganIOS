@@ -747,7 +747,7 @@ struct ResultView: View {
                             highlightedKeys: Set(allergenMatches.compactMap(\.key))
                         )
                         SimpleSectionCard(title: L("nutrition_title")) {
-                            NutritionGrid(nutriments: product.nutriments)
+                            NutritionGrid(product: product)
                         }
 
                         if let distribution = MacroDistribution(nutriments: product.nutriments) {
@@ -1911,7 +1911,11 @@ private struct IngredientKindSpec {
 }
 
 private struct NutritionGrid: View {
-    let nutriments: Nutriments?
+    let product: Product
+
+    private var nutriments: Nutriments? {
+        product.nutriments
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -1919,9 +1923,46 @@ private struct NutritionGrid: View {
             NutritionRow(label: L("nutrition_fat"), value: format(nutriments?.fat100g, unit: "g"))
             NutritionRow(label: L("nutrition_saturated_fat"), value: format(nutriments?.saturatedFat100g, unit: "g"))
             NutritionRow(label: L("nutrition_sugars"), value: format(nutriments?.sugars100g, unit: "g"))
+            if let addedSugars = nutriments?.addedSugars100g, addedSugars >= 0 {
+                let formatted = formatNumber(addedSugars)
+                NutritionRow(
+                    label: L("nutrition_added_sugars"),
+                    value: LF("nutrition_added_sugars_value", formatted, formatted)
+                )
+            }
             NutritionRow(label: L("nutrition_salt"), value: format(nutriments?.salt100g, unit: "g"))
             NutritionRow(label: L("nutrition_proteins"), value: format(nutriments?.proteins100g, unit: "g"))
+            if !product.nutrientLevelEntries.isEmpty {
+                Text(L("nutrient_levels_title"))
+                    .appFont(.headline, weight: .semibold)
+                    .foregroundStyle(Color("AccentColor"))
+                    .padding(.top, 4)
+                ForEach(Array(product.nutrientLevelEntries.enumerated()), id: \.offset) { _, entry in
+                    let label = nutrientLevelLabel(entry.key)
+                    let level = nutrientLevelText(entry.level)
+                    HStack {
+                        Text(label)
+                        Spacer()
+                        Text(level)
+                            .appFont(.footnote, weight: .semibold)
+                            .foregroundStyle(nutrientLevelColors(entry.level).foreground)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(nutrientLevelColors(entry.level).background)
+                            .clipShape(Capsule())
+                    }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(LF("nutrient_level_content_description", label, level))
+                }
+            }
         }
+    }
+
+    private func formatNumber(_ value: Double) -> String {
+        if value.rounded() == value {
+            return "\(Int(value))"
+        }
+        return String(format: "%.1f", value)
     }
 
     private func format(_ value: Double?, unit: String) -> String {
@@ -1937,6 +1978,30 @@ private struct NutritionGrid: View {
             return format(energyKcal, unit: "kcal")
         }
         return format(nutriments?.energyKj100g, unit: "kJ")
+    }
+
+    private func nutrientLevelLabel(_ key: NutrientLevelKey) -> String {
+        switch key {
+        case .fat:
+            return L("nutrition_fat")
+        case .saturatedFat:
+            return L("nutrition_saturated_fat")
+        case .sugars:
+            return L("nutrition_sugars")
+        case .salt:
+            return L("nutrition_salt")
+        }
+    }
+
+    private func nutrientLevelText(_ level: NutrientLevelValue) -> String {
+        switch level {
+        case .low:
+            return L("nutrient_level_low")
+        case .moderate:
+            return L("nutrient_level_moderate")
+        case .high:
+            return L("nutrient_level_high")
+        }
     }
 }
 
@@ -2150,11 +2215,13 @@ private struct ScoresCard: View {
 
     var body: some View {
         let nutriScore = normalizedScore(product.nutriscoreGrade)
-        let ecoScore = normalizedScore(product.ecoscoreGrade)
+        let greenScore = product.greenScoreGrade
+        let greenScoreValue = product.greenScoreValue
         let novaGroup = product.novaGroup.flatMap { (1...4).contains($0) ? $0 : nil }
+        let carbonFootprint = product.carbonFootprint
 
         return Group {
-            if nutriScore == nil && ecoScore == nil && novaGroup == nil {
+            if nutriScore == nil && greenScore == nil && novaGroup == nil && carbonFootprint == nil {
                 EmptyView()
             } else {
                 SimpleSectionCard(title: L("product_scores_title")) {
@@ -2176,18 +2243,24 @@ private struct ScoresCard: View {
                             .buttonStyle(.plain)
                             .accessibilityHint(L("score_info_tap_hint"))
                         }
-                        if let ecoScore {
+                        if let greenScore {
                             Button {
                                 onScoreTap(
                                     ScoreExplanation(
-                                        id: "ecoscore",
-                                        titleKey: "score_info_ecoscore_title",
-                                        bodyKey: "score_info_ecoscore_body"
+                                        id: "green-score",
+                                        titleKey: "score_info_green_score_title",
+                                        bodyKey: "score_info_green_score_body"
                                     )
                                 )
                             } label: {
-                                ScoreColumn(label: L("ecoscore_badge_title")) {
-                                    EcoScoreBadgeView(grade: ecoScore)
+                                ScoreColumn(label: L("green_score_badge_title")) {
+                                    VStack(spacing: 6) {
+                                        GreenScoreBadgeView(grade: greenScore)
+                                        if let greenScoreValue {
+                                            Text(LF("green_score_value", greenScoreValue))
+                                                .appFont(.caption)
+                                        }
+                                    }
                                 }
                             }
                             .buttonStyle(.plain)
@@ -2212,6 +2285,40 @@ private struct ScoresCard: View {
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    if let carbonFootprint {
+                        let source = carbonFootprintSourceText(carbonFootprint.source)
+                        let value = LF(
+                            "carbon_footprint_value",
+                            formatCarbonFootprint(carbonFootprint.value)
+                        )
+                        Button {
+                            onScoreTap(
+                                ScoreExplanation(
+                                    id: "carbon-footprint",
+                                    titleKey: "score_info_carbon_footprint_title",
+                                    bodyKey: "score_info_carbon_footprint_body"
+                                )
+                            )
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(L("carbon_footprint_title"))
+                                        .appFont(.footnote, weight: .semibold)
+                                    Text(value)
+                                        .appFont(.subheadline, weight: .semibold)
+                                }
+                                Spacer()
+                                Text(source)
+                                    .appFont(.caption)
+                                    .multilineTextAlignment(.trailing)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(
+                            "\(L("carbon_footprint_title")), \(value), \(source)"
+                        )
+                        .accessibilityHint(L("score_info_tap_hint"))
+                    }
                 }
             }
         }
@@ -2311,6 +2418,47 @@ private func normalizedScore(_ value: String?) -> String? {
     return normalized
 }
 
+private struct NutrientLevelColors {
+    let background: Color
+    let foreground: Color
+}
+
+private func nutrientLevelColors(_ level: NutrientLevelValue) -> NutrientLevelColors {
+    switch level {
+    case .low:
+        return NutrientLevelColors(
+            background: Color(red: 0.180, green: 0.490, blue: 0.196),
+            foreground: .white
+        )
+    case .moderate:
+        return NutrientLevelColors(
+            background: Color(red: 0.976, green: 0.659, blue: 0.145),
+            foreground: Color(red: 0.122, green: 0.161, blue: 0.216)
+        )
+    case .high:
+        return NutrientLevelColors(
+            background: Color(red: 0.776, green: 0.157, blue: 0.157),
+            foreground: .white
+        )
+    }
+}
+
+private func carbonFootprintSourceText(_ source: CarbonFootprintSource) -> String {
+    switch source {
+    case .declared:
+        return L("carbon_footprint_source_declared")
+    case .estimated:
+        return L("carbon_footprint_source_estimated")
+    }
+}
+
+private func formatCarbonFootprint(_ value: Double) -> String {
+    if value >= 10 {
+        return String(format: "%.0f", value)
+    }
+    return String(format: "%.1f", value)
+}
+
 private struct ScoreColumn<Content: View>: View {
     let label: String
     @ViewBuilder let content: Content
@@ -2326,7 +2474,7 @@ private struct ScoreColumn<Content: View>: View {
     }
 }
 
-private struct EcoScoreBadgeView: View {
+private struct GreenScoreBadgeView: View {
     let grade: String
 
     var body: some View {
@@ -2340,7 +2488,7 @@ private struct EcoScoreBadgeView: View {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(colors.background)
             )
-            .accessibilityLabel(LF("ecoscore_badge_content_description", grade))
+            .accessibilityLabel(LF("green_score_badge_content_description", grade))
     }
 }
 
