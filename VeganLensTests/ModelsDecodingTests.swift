@@ -139,7 +139,7 @@ final class ModelsDecodingTests: XCTestCase {
 
         XCTAssertEqual(declared?.carbonFootprint?.value, 18)
         XCTAssertEqual(declared?.carbonFootprint?.source, .declared)
-        XCTAssertEqual(estimated?.carbonFootprint?.value, 230)
+        XCTAssertEqual(estimated?.carbonFootprint?.value ?? -1, 230, accuracy: 0.0001)
         XCTAssertEqual(estimated?.carbonFootprint?.source, .estimated)
         XCTAssertNil(Product(
             productName: nil,
