@@ -6,6 +6,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+### Añadido
+- El resultado del producto muestra el Green Score con su valor numérico, los niveles de nutrientes de Open Food Facts, los azúcares añadidos y la huella de carbono, indicando si está declarada en el envase o estimada a partir de Agribalyse.
+
 ## [1.8.0 (33)] - 2026-08-26
 - Las mascotas de la galería ahora tienen un nombre propio.
 
