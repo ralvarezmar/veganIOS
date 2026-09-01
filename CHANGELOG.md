@@ -6,6 +6,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+### Corregido
+- La huella de carbono también se lee del bloque heredado `ecoscore_data` de Open Food Facts.
+
+## [1.10.0 (35)] - 2026-08-31
+
 ### Añadido
 - El resultado del producto muestra el Green Score con su valor numérico, los niveles de nutrientes de Open Food Facts, los azúcares añadidos y la huella de carbono, indicando si está declarada en el envase o estimada a partir de Agribalyse.
 
