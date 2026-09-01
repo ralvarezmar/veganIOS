@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+## [1.10.1 (36)] - 2026-09-01
+
 ### Corregido
 - La huella de carbono también se lee del bloque heredado `ecoscore_data` de Open Food Facts.
 
