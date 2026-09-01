@@ -197,6 +197,99 @@ final class ModelsDecodingTests: XCTestCase {
         XCTAssertNil(product?.carbonFootprint)
     }
 
+    func testNutritionFactsFallsBackToPreparedValues() throws {
+        let product = try decodeResponse(
+            """
+            {
+              "status":1,
+              "product":{
+                "nutriments":{
+                  "fat_prepared_100g":28.6666666666667,
+                  "carbohydrates_prepared_100g":53.3333333333333,
+                  "proteins_prepared_100g":6,
+                  "energy-kcal_prepared_100g":503.333333333333,
+                  "salt_prepared_100g":0.966666666666667,
+                  "sugars_prepared_100g":3.33333333333333,
+                  "saturated-fat_prepared_100g":2.33333333333333
+                }
+              }
+            }
+            """
+        ).product
+
+        let facts = product?.nutritionFacts
+        XCTAssertEqual(facts?.basis, .prepared)
+        XCTAssertEqual(facts?.fat ?? -1, 28.6666666666667, accuracy: 0.0001)
+        XCTAssertEqual(facts?.carbohydrates ?? -1, 53.3333333333333, accuracy: 0.0001)
+        XCTAssertEqual(facts?.proteins ?? -1, 6, accuracy: 0.0001)
+        XCTAssertEqual(facts?.energyKcal ?? -1, 503.333333333333, accuracy: 0.0001)
+        XCTAssertEqual(facts?.salt ?? -1, 0.966666666666667, accuracy: 0.0001)
+        XCTAssertEqual(facts?.sugars ?? -1, 3.33333333333333, accuracy: 0.0001)
+        XCTAssertEqual(facts?.saturatedFat ?? -1, 2.33333333333333, accuracy: 0.0001)
+    }
+
+    func testNutritionFactsPrefersAsSoldRegardlessOfJSONOrder() throws {
+        let asSoldFirst = try decodeResponse(
+            """
+            {
+              "status":1,
+              "product":{
+                "nutriments":{
+                  "fat_100g":10.0,
+                  "fat_prepared_100g":28.0
+                }
+              }
+            }
+            """
+        ).product?.nutritionFacts
+        let preparedFirst = try decodeResponse(
+            """
+            {
+              "status":1,
+              "product":{
+                "nutriments":{
+                  "fat_prepared_100g":28.0,
+                  "fat_100g":10.0
+                }
+              }
+            }
+            """
+        ).product?.nutritionFacts
+
+        XCTAssertEqual(asSoldFirst?.basis, .asSold)
+        XCTAssertEqual(asSoldFirst?.fat ?? -1, 10, accuracy: 0.0001)
+        XCTAssertEqual(preparedFirst?.basis, .asSold)
+        XCTAssertEqual(preparedFirst?.fat ?? -1, 10, accuracy: 0.0001)
+    }
+
+    func testNutritionFactsReturnsNilWithoutDeterminingValues() throws {
+        let product = try decodeResponse(
+            """
+            {"status":1,"product":{"nutriments":{"carbon-footprint_100g":12.0}}}
+            """
+        ).product
+
+        XCTAssertNil(product?.nutritionFacts)
+    }
+
+    func testNutritionFactsReturnsNilWithoutNutriments() throws {
+        XCTAssertNil(try decodeResponse(
+            """
+            {"status":1,"product":{}}
+            """
+        ).product?.nutritionFacts)
+    }
+
+    func testPreparedAddedSugarsAloneDoesNotDetermineNutritionBasis() throws {
+        let product = try decodeResponse(
+            """
+            {"status":1,"product":{"nutriments":{"added-sugars_prepared_100g":4.0}}}
+            """
+        ).product
+
+        XCTAssertNil(product?.nutritionFacts)
+    }
+
     func testNutrientLevelsKeepRequiredOrderAndIgnoreInvalidValues() throws {
         let response = try decodeResponse(
             """

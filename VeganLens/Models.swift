@@ -164,6 +164,15 @@ struct Nutriments: Codable {
     let proteins100g: Double?
     let addedSugars100g: Double?
     let carbonFootprint100g: Double?
+    let energyKcalPrepared100g: Double?
+    let energyKjPrepared100g: Double?
+    let fatPrepared100g: Double?
+    let saturatedFatPrepared100g: Double?
+    let sugarsPrepared100g: Double?
+    let carbohydratesPrepared100g: Double?
+    let saltPrepared100g: Double?
+    let proteinsPrepared100g: Double?
+    let addedSugarsPrepared100g: Double?
 
     enum CodingKeys: String, CodingKey {
         case energyKcal100g = "energy-kcal_100g"
@@ -176,6 +185,15 @@ struct Nutriments: Codable {
         case proteins100g = "proteins_100g"
         case addedSugars100g = "added-sugars_100g"
         case carbonFootprint100g = "carbon-footprint_100g"
+        case energyKcalPrepared100g = "energy-kcal_prepared_100g"
+        case energyKjPrepared100g = "energy-kj_prepared_100g"
+        case fatPrepared100g = "fat_prepared_100g"
+        case saturatedFatPrepared100g = "saturated-fat_prepared_100g"
+        case sugarsPrepared100g = "sugars_prepared_100g"
+        case carbohydratesPrepared100g = "carbohydrates_prepared_100g"
+        case saltPrepared100g = "salt_prepared_100g"
+        case proteinsPrepared100g = "proteins_prepared_100g"
+        case addedSugarsPrepared100g = "added-sugars_prepared_100g"
     }
 
     init(from decoder: Decoder) throws {
@@ -190,7 +208,34 @@ struct Nutriments: Codable {
         proteins100g = try container.decodeFlexibleDouble(forKey: .proteins100g)
         addedSugars100g = try container.decodeFlexibleDouble(forKey: .addedSugars100g)
         carbonFootprint100g = try container.decodeFlexibleDouble(forKey: .carbonFootprint100g)
+        energyKcalPrepared100g = try container.decodeFlexibleDouble(forKey: .energyKcalPrepared100g)
+        energyKjPrepared100g = try container.decodeFlexibleDouble(forKey: .energyKjPrepared100g)
+        fatPrepared100g = try container.decodeFlexibleDouble(forKey: .fatPrepared100g)
+        saturatedFatPrepared100g = try container.decodeFlexibleDouble(forKey: .saturatedFatPrepared100g)
+        sugarsPrepared100g = try container.decodeFlexibleDouble(forKey: .sugarsPrepared100g)
+        carbohydratesPrepared100g = try container.decodeFlexibleDouble(forKey: .carbohydratesPrepared100g)
+        saltPrepared100g = try container.decodeFlexibleDouble(forKey: .saltPrepared100g)
+        proteinsPrepared100g = try container.decodeFlexibleDouble(forKey: .proteinsPrepared100g)
+        addedSugarsPrepared100g = try container.decodeFlexibleDouble(forKey: .addedSugarsPrepared100g)
     }
+}
+
+enum NutritionBasis: Equatable {
+    case asSold
+    case prepared
+}
+
+struct NutritionFacts {
+    let basis: NutritionBasis
+    let energyKcal: Double?
+    let energyKj: Double?
+    let fat: Double?
+    let saturatedFat: Double?
+    let carbohydrates: Double?
+    let sugars: Double?
+    let addedSugars: Double?
+    let salt: Double?
+    let proteins: Double?
 }
 
 struct EnvironmentalScoreData: Codable {
@@ -253,6 +298,60 @@ private extension KeyedDecodingContainer {
 }
 
 extension Product {
+    var nutritionFacts: NutritionFacts? {
+        guard let n = nutriments else { return nil }
+        let hasAsSoldData = [
+            n.energyKcal100g,
+            n.energyKj100g,
+            n.fat100g,
+            n.saturatedFat100g,
+            n.carbohydrates100g,
+            n.sugars100g,
+            n.salt100g,
+            n.proteins100g
+        ].contains { $0 != nil }
+        if hasAsSoldData {
+            return NutritionFacts(
+                basis: .asSold,
+                energyKcal: n.energyKcal100g,
+                energyKj: n.energyKj100g,
+                fat: n.fat100g,
+                saturatedFat: n.saturatedFat100g,
+                carbohydrates: n.carbohydrates100g,
+                sugars: n.sugars100g,
+                addedSugars: n.addedSugars100g,
+                salt: n.salt100g,
+                proteins: n.proteins100g
+            )
+        }
+
+        let hasPreparedData = [
+            n.energyKcalPrepared100g,
+            n.energyKjPrepared100g,
+            n.fatPrepared100g,
+            n.saturatedFatPrepared100g,
+            n.carbohydratesPrepared100g,
+            n.sugarsPrepared100g,
+            n.saltPrepared100g,
+            n.proteinsPrepared100g
+        ].contains { $0 != nil }
+        if hasPreparedData {
+            return NutritionFacts(
+                basis: .prepared,
+                energyKcal: n.energyKcalPrepared100g,
+                energyKj: n.energyKjPrepared100g,
+                fat: n.fatPrepared100g,
+                saturatedFat: n.saturatedFatPrepared100g,
+                carbohydrates: n.carbohydratesPrepared100g,
+                sugars: n.sugarsPrepared100g,
+                addedSugars: n.addedSugarsPrepared100g,
+                salt: n.saltPrepared100g,
+                proteins: n.proteinsPrepared100g
+            )
+        }
+        return nil
+    }
+
     var hasUsefulData: Bool {
         !(productName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true) ||
         !(ingredientsText?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true) ||

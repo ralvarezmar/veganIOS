@@ -658,6 +658,7 @@ struct ResultView: View {
                     watchedAdditives: WatchlistPreferences.decode(watchedAdditivesStorage),
                     watchedKeywords: WatchlistPreferences.decode(watchedKeywordsStorage)
                 )
+                let facts = product.nutritionFacts
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 16) {
                         VeganBannerView(
@@ -746,11 +747,15 @@ struct ResultView: View {
                             values: allergenItems,
                             highlightedKeys: Set(allergenMatches.compactMap(\.key))
                         )
-                        SimpleSectionCard(title: L("nutrition_title")) {
-                            NutritionGrid(product: product)
+                        SimpleSectionCard(
+                            title: facts?.basis == .prepared
+                                ? L("nutrition_title_prepared")
+                                : L("nutrition_title")
+                        ) {
+                            NutritionGrid(product: product, facts: facts)
                         }
 
-                        if let distribution = MacroDistribution(nutriments: product.nutriments) {
+                        if let distribution = MacroDistribution(facts: facts) {
                             SimpleSectionCard(title: L("macro_distribution_title")) {
                                 MacroDistributionView(distribution: distribution)
                             }
@@ -1912,26 +1917,34 @@ private struct IngredientKindSpec {
 
 private struct NutritionGrid: View {
     let product: Product
-
-    private var nutriments: Nutriments? {
-        product.nutriments
-    }
+    let facts: NutritionFacts?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            NutritionRow(label: L("nutrition_energy"), value: energyRowValue(nutriments))
-            NutritionRow(label: L("nutrition_fat"), value: format(nutriments?.fat100g, unit: "g"))
-            NutritionRow(label: L("nutrition_saturated_fat"), value: format(nutriments?.saturatedFat100g, unit: "g"))
-            NutritionRow(label: L("nutrition_sugars"), value: format(nutriments?.sugars100g, unit: "g"))
-            if let addedSugars = nutriments?.addedSugars100g, addedSugars >= 0 {
-                let formatted = formatNumber(addedSugars)
-                NutritionRow(
-                    label: L("nutrition_added_sugars"),
-                    value: LF("nutrition_added_sugars_value", formatted, formatted)
-                )
+            if facts?.basis == .prepared {
+                Text(L("nutrition_prepared_note"))
+                    .appFont(.body)
+                    .foregroundStyle(.secondary)
             }
-            NutritionRow(label: L("nutrition_salt"), value: format(nutriments?.salt100g, unit: "g"))
-            NutritionRow(label: L("nutrition_proteins"), value: format(nutriments?.proteins100g, unit: "g"))
+            if let facts {
+                NutritionRow(label: L("nutrition_energy"), value: energyRowValue(facts))
+                NutritionRow(label: L("nutrition_fat"), value: format(facts.fat, unit: "g"))
+                NutritionRow(label: L("nutrition_saturated_fat"), value: format(facts.saturatedFat, unit: "g"))
+                NutritionRow(label: L("nutrition_carbohydrates"), value: format(facts.carbohydrates, unit: "g"))
+                NutritionRow(label: L("nutrition_sugars"), value: format(facts.sugars, unit: "g"))
+                if let addedSugars = facts.addedSugars, addedSugars >= 0 {
+                    let formatted = formatNumber(addedSugars)
+                    NutritionRow(
+                        label: L("nutrition_added_sugars"),
+                        value: LF("nutrition_added_sugars_value", formatted, formatted)
+                    )
+                }
+                NutritionRow(label: L("nutrition_salt"), value: format(facts.salt, unit: "g"))
+                NutritionRow(label: L("nutrition_proteins"), value: format(facts.proteins, unit: "g"))
+            } else {
+                Text(L("nutrition_unavailable"))
+                    .appFont(.body)
+            }
             if !product.nutrientLevelEntries.isEmpty {
                 Text(L("nutrient_levels_title"))
                     .appFont(.headline, weight: .semibold)
@@ -1973,11 +1986,11 @@ private struct NutritionGrid: View {
         return String(format: "%.1f %@", value, unit)
     }
 
-    private func energyRowValue(_ nutriments: Nutriments?) -> String {
-        if let energyKcal = nutriments?.energyKcal100g {
+    private func energyRowValue(_ facts: NutritionFacts) -> String {
+        if let energyKcal = facts.energyKcal {
             return format(energyKcal, unit: "kcal")
         }
-        return format(nutriments?.energyKj100g, unit: "kJ")
+        return format(facts.energyKj, unit: "kJ")
     }
 
     private func nutrientLevelLabel(_ key: NutrientLevelKey) -> String {
@@ -2011,11 +2024,11 @@ private struct MacroDistribution {
     let carbohydrates: Double
     let total: Double
 
-    init?(nutriments: Nutriments?) {
+    init?(facts: NutritionFacts?) {
         guard
-            let proteins = nutriments?.proteins100g,
-            let fats = nutriments?.fat100g,
-            let carbohydrates = nutriments?.carbohydrates100g
+            let proteins = facts?.proteins,
+            let fats = facts?.fat,
+            let carbohydrates = facts?.carbohydrates
         else {
             return nil
         }
