@@ -160,6 +160,43 @@ final class ModelsDecodingTests: XCTestCase {
         ).carbonFootprint)
     }
 
+    func testCarbonFootprintFallsBackToLegacyEcoScoreData() throws {
+        let product = try decodeResponse(
+            """
+            {"status":1,"product":{"ecoscore_data":{"agribalyse":{"co2_total":2.3}}}}
+            """
+        ).product
+
+        XCTAssertEqual(product?.carbonFootprint?.value ?? -1, 230, accuracy: 0.0001)
+        XCTAssertEqual(product?.carbonFootprint?.source, .estimated)
+    }
+
+    func testCarbonFootprintPrefersEnvironmentalScoreDataWhenBothKeysExist() throws {
+        let product = try decodeResponse(
+            """
+            {
+              "status":1,
+              "product":{
+                "ecoscore_data":{"agribalyse":{"co2_total":9.0}},
+                "environmental_score_data":{"agribalyse":{"co2_total":1.0}}
+              }
+            }
+            """
+        ).product
+
+        XCTAssertEqual(product?.carbonFootprint?.value ?? -1, 100, accuracy: 0.0001)
+    }
+
+    func testCarbonFootprintReturnsNilForLegacyEcoScoreDataWithoutAgribalyse() throws {
+        let product = try decodeResponse(
+            """
+            {"status":1,"product":{"ecoscore_data":{}}}
+            """
+        ).product
+
+        XCTAssertNil(product?.carbonFootprint)
+    }
+
     func testNutrientLevelsKeepRequiredOrderAndIgnoreInvalidValues() throws {
         let response = try decodeResponse(
             """

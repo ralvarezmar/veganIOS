@@ -49,6 +49,7 @@ struct Product: Codable {
     let ecoscoreScore: Int?
     let environmentalScoreData: EnvironmentalScoreData?
     let nutrientLevels: NutrientLevels?
+    let ecoscoreData: EnvironmentalScoreData?
 
     enum CodingKeys: String, CodingKey {
         case productName = "product_name"
@@ -69,6 +70,7 @@ struct Product: Codable {
         case ecoscoreScore = "ecoscore_score"
         case environmentalScoreData = "environmental_score_data"
         case nutrientLevels = "nutrient_levels"
+        case ecoscoreData = "ecoscore_data"
         case novaGroup = "nova_group"
         case quantity
     }
@@ -93,7 +95,8 @@ struct Product: Codable {
         environmentalScoreScore: Int? = nil,
         ecoscoreScore: Int? = nil,
         environmentalScoreData: EnvironmentalScoreData? = nil,
-        nutrientLevels: NutrientLevels? = nil
+        nutrientLevels: NutrientLevels? = nil,
+        ecoscoreData: EnvironmentalScoreData? = nil
     ) {
         self.productName = productName
         self.brands = brands
@@ -115,6 +118,7 @@ struct Product: Codable {
         self.ecoscoreScore = ecoscoreScore
         self.environmentalScoreData = environmentalScoreData
         self.nutrientLevels = nutrientLevels
+        self.ecoscoreData = ecoscoreData
     }
 
     init(from decoder: Decoder) throws {
@@ -137,6 +141,7 @@ struct Product: Codable {
         ecoscoreScore = container.decodeFlexibleInt(forKey: .ecoscoreScore)
         environmentalScoreData = try? container.decodeIfPresent(EnvironmentalScoreData.self, forKey: .environmentalScoreData)
         nutrientLevels = try? container.decodeIfPresent(NutrientLevels.self, forKey: .nutrientLevels)
+        ecoscoreData = try? container.decodeIfPresent(EnvironmentalScoreData.self, forKey: .ecoscoreData)
         novaGroup = container.decodeFlexibleInt(forKey: .novaGroup)
         quantity = try? container.decodeIfPresent(String.self, forKey: .quantity)
     }
@@ -306,7 +311,7 @@ extension Product {
         if let declared = nutriments?.carbonFootprint100g, declared >= 0 {
             return CarbonFootprint(value: declared, source: .declared)
         }
-        if let estimated = environmentalScoreData?.agribalyse?.co2Total, estimated >= 0 {
+        if let estimated = (environmentalScoreData ?? ecoscoreData)?.agribalyse?.co2Total, estimated >= 0 {
             return CarbonFootprint(value: estimated * 100, source: .estimated)
         }
         return nil
