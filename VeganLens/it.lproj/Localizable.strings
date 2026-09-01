@@ -85,6 +85,9 @@
 "additives_title" = "Additivi";
 "allergens_title" = "Allergeni";
 "nutrition_title" = "Valori nutrizionali di base per 100 g";
+"nutrition_title_prepared" = "Valori nutrizionali di base per 100 g (preparato)";
+"nutrition_prepared_note" = "Open Food Facts ha solo i valori del prodotto preparato secondo la confezione.";
+"nutrition_unavailable" = "Open Food Facts non ha valori nutrizionali per questo prodotto.";
 "macro_distribution_title" = "Distribuzione dei macronutrienti";
 "macro_proteins_label" = "Proteine";
 "macro_fat_label" = "Grassi";

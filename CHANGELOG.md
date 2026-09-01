@@ -6,6 +6,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+### Corregido
+- Los resultados de productos usan los valores nutricionales preparados cuando Open Food Facts no tiene valores del producto tal cual se vende, e indican la base nutricional mostrada.
+
 ## [1.10.1 (36)] - 2026-09-01
 
 ### Corregido
