@@ -240,10 +240,10 @@ func analyzeVegan(
             return VeganReason(source: .additiveAnimal, evidence: additiveMatches.animal)
         }
         if decisiveTag == "en:non-vegan" && !tracesOnly {
-            return VeganReason(source: .decisiveTag, evidence: [decisiveTag])
+            return VeganReason(source: .decisiveTag, evidence: ["en:non-vegan"])
         }
         if decisiveTag == "en:vegan" {
-            return VeganReason(source: .decisiveTag, evidence: [decisiveTag])
+            return VeganReason(source: .decisiveTag, evidence: ["en:vegan"])
         }
         if !doubtful.isEmpty {
             return VeganReason(source: .structuredDoubtfulIngredient, evidence: doubtful)
