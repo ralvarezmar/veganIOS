@@ -258,18 +258,120 @@ struct NutritionFacts {
 
 struct EnvironmentalScoreData: Codable {
     let agribalyse: Agribalyse?
+    let adjustments: EnvironmentalScoreAdjustments?
+
+    init(
+        agribalyse: Agribalyse? = nil,
+        adjustments: EnvironmentalScoreAdjustments? = nil
+    ) {
+        self.agribalyse = agribalyse
+        self.adjustments = adjustments
+    }
 }
 
 struct Agribalyse: Codable {
     let co2Total: Double?
+    let co2Packaging: Double?
+    let co2Transportation: Double?
 
     enum CodingKeys: String, CodingKey {
         case co2Total = "co2_total"
+        case co2Packaging = "co2_packaging"
+        case co2Transportation = "co2_transportation"
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         co2Total = try container.decodeFlexibleDouble(forKey: .co2Total)
+        co2Packaging = try container.decodeFlexibleDouble(forKey: .co2Packaging)
+        co2Transportation = try container.decodeFlexibleDouble(forKey: .co2Transportation)
+    }
+
+    init(
+        co2Total: Double? = nil,
+        co2Packaging: Double? = nil,
+        co2Transportation: Double? = nil
+    ) {
+        self.co2Total = co2Total
+        self.co2Packaging = co2Packaging
+        self.co2Transportation = co2Transportation
+    }
+}
+
+struct EnvironmentalScoreAdjustments: Codable {
+    let packaging: PackagingAdjustments?
+    let originsOfIngredients: OriginsOfIngredientsAdjustments?
+
+    enum CodingKeys: String, CodingKey {
+        case packaging
+        case originsOfIngredients = "origins_of_ingredients"
+    }
+
+    init(
+        packaging: PackagingAdjustments? = nil,
+        originsOfIngredients: OriginsOfIngredientsAdjustments? = nil
+    ) {
+        self.packaging = packaging
+        self.originsOfIngredients = originsOfIngredients
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        packaging = try? container.decodeIfPresent(PackagingAdjustments.self, forKey: .packaging)
+        originsOfIngredients = try? container.decodeIfPresent(
+            OriginsOfIngredientsAdjustments.self,
+            forKey: .originsOfIngredients
+        )
+    }
+}
+
+struct PackagingAdjustments: Codable {
+    let value: Int?
+    let nonRecyclableAndNonBiodegradableMaterials: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case value
+        case nonRecyclableAndNonBiodegradableMaterials = "non_recyclable_and_non_biodegradable_materials"
+    }
+
+    init(
+        value: Int? = nil,
+        nonRecyclableAndNonBiodegradableMaterials: Int? = nil
+    ) {
+        self.value = value
+        self.nonRecyclableAndNonBiodegradableMaterials = nonRecyclableAndNonBiodegradableMaterials
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        value = container.decodeFlexibleInt(forKey: .value)
+        nonRecyclableAndNonBiodegradableMaterials = container.decodeFlexibleInt(
+            forKey: .nonRecyclableAndNonBiodegradableMaterials
+        )
+    }
+}
+
+struct OriginsOfIngredientsAdjustments: Codable {
+    let transportationValue: Int?
+    let warning: String?
+
+    enum CodingKeys: String, CodingKey {
+        case transportationValue = "transportation_value"
+        case warning
+    }
+
+    init(
+        transportationValue: Int? = nil,
+        warning: String? = nil
+    ) {
+        self.transportationValue = transportationValue
+        self.warning = warning
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        transportationValue = container.decodeFlexibleInt(forKey: .transportationValue)
+        warning = try? container.decodeIfPresent(String.self, forKey: .warning)
     }
 }
 
@@ -433,6 +535,36 @@ extension Product {
         }
         return nil
     }
+
+    var carbonFootprintLevel: CarbonFootprintLevel? {
+        guard let value = carbonFootprint?.value else { return nil }
+        if value < 150 {
+            return .low
+        }
+        if value <= 500 {
+            return .moderate
+        }
+        return .high
+    }
+
+    var sustainabilityImpacts: SustainabilityImpacts? {
+        guard let data = environmentalScoreData ?? ecoscoreData else { return nil }
+        let agribalyse = data.agribalyse
+        let packaging = data.adjustments?.packaging
+        let origins = data.adjustments?.originsOfIngredients
+        let originsKnown = origins?.warning?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty != false
+        let impacts = SustainabilityImpacts(
+            packagingCo2Per100g: agribalyse?.co2Packaging.map { $0 * 100 }.flatMap { $0 >= 0 ? $0 : nil },
+            transportCo2Per100g: agribalyse?.co2Transportation.map { $0 * 100 }.flatMap { $0 >= 0 ? $0 : nil },
+            packagingPenalty: packaging?.value.flatMap { $0 < 0 ? $0 : nil },
+            nonRecyclablePackaging: packaging?.nonRecyclableAndNonBiodegradableMaterials.map { $0 > 0 } ?? false,
+            transportPenalty: origins?.transportationValue.flatMap {
+                originsKnown && $0 < 0 ? $0 : nil
+            }
+        )
+        guard impacts.hasAnyValue else { return nil }
+        return impacts
+    }
 }
 
 enum NutrientLevelKey: Equatable {
@@ -453,9 +585,31 @@ enum CarbonFootprintSource: Equatable {
     case estimated
 }
 
+enum CarbonFootprintLevel: Equatable {
+    case low
+    case moderate
+    case high
+}
+
 struct CarbonFootprint {
     let value: Double
     let source: CarbonFootprintSource
+}
+
+struct SustainabilityImpacts: Equatable {
+    let packagingCo2Per100g: Double?
+    let transportCo2Per100g: Double?
+    let packagingPenalty: Int?
+    let nonRecyclablePackaging: Bool
+    let transportPenalty: Int?
+
+    var hasAnyValue: Bool {
+        packagingCo2Per100g != nil ||
+            transportCo2Per100g != nil ||
+            packagingPenalty != nil ||
+            nonRecyclablePackaging ||
+            transportPenalty != nil
+    }
 }
 
 enum ProductSource: String, CaseIterable, Codable, Hashable {
