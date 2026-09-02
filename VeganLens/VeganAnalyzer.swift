@@ -19,6 +19,7 @@ enum VeganReasonSource: Equatable {
     case additiveUncertain
     case tracesOnly
     case sealConflict
+    case unverifiedNonVeganTag
 }
 
 struct VeganReason: Equatable {
@@ -218,10 +219,26 @@ func analyzeVegan(
         )
     }
 
+    let corroboratingAnimalIngredients: [String] = {
+        guard decisiveTag == "en:non-vegan",
+              !tracesOnly,
+              let ingredientsText,
+              !ingredientsText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return []
+        }
+        return detectAnimalIngredients(ingredientsText)
+    }()
+    let nonVeganTagHasNoIngredientData = decisiveTag == "en:non-vegan" &&
+        !tracesOnly &&
+        !hasIngredients &&
+        (ingredientsText?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+
     let status: VeganStatus = {
         if !nonVegan.isEmpty { return .notVegan }
         if !additiveMatches.animal.isEmpty { return .notVegan }
-        if decisiveTag == "en:non-vegan" && !tracesOnly { return .notVegan }
+        if !corroboratingAnimalIngredients.isEmpty { return .notVegan }
+        if nonVeganTagHasNoIngredientData { return .notVegan }
+        if decisiveTag == "en:non-vegan" && !tracesOnly { return .maybe }
         if decisiveStatus == .vegan { return .vegan }
         if !doubtful.isEmpty { return .maybe }
         if !additiveMatches.uncertain.isEmpty { return .maybe }
@@ -239,8 +256,20 @@ func analyzeVegan(
         if !additiveMatches.animal.isEmpty {
             return VeganReason(source: .additiveAnimal, evidence: additiveMatches.animal)
         }
-        if decisiveTag == "en:non-vegan" && !tracesOnly {
+        if !corroboratingAnimalIngredients.isEmpty {
+            return VeganReason(source: .heuristicText, evidence: corroboratingAnimalIngredients)
+        }
+        if nonVeganTagHasNoIngredientData {
             return VeganReason(source: .decisiveTag, evidence: ["en:non-vegan"])
+        }
+        if decisiveTag == "en:non-vegan" && !tracesOnly && !doubtful.isEmpty {
+            return VeganReason(source: .structuredDoubtfulIngredient, evidence: doubtful)
+        }
+        if decisiveTag == "en:non-vegan" && !tracesOnly && !additiveMatches.uncertain.isEmpty {
+            return VeganReason(source: .additiveUncertain, evidence: additiveMatches.uncertain)
+        }
+        if decisiveTag == "en:non-vegan" && !tracesOnly {
+            return VeganReason(source: .unverifiedNonVeganTag)
         }
         if decisiveTag == "en:vegan" {
             return VeganReason(source: .decisiveTag, evidence: ["en:vegan"])
@@ -278,7 +307,9 @@ func analyzeVegan(
         finalStatus = status
         finalReason = reason
     }
-    let reportedNonVeganIngredients = (nonVegan + additiveMatches.animal).orderedUnique()
+    let reportedNonVeganIngredients = corroboratingAnimalIngredients.isEmpty
+        ? (nonVegan + additiveMatches.animal).orderedUnique()
+        : corroboratingAnimalIngredients
     let reportedDoubtfulIngredients = decisiveTag == "en:vegan"
         ? doubtful
         : (doubtful + additiveMatches.uncertain).orderedUnique()
@@ -307,6 +338,7 @@ func analyzeVegan(
         status: finalStatus,
         nonVeganIngredients: reportedNonVeganIngredients,
         doubtfulIngredients: reportedDoubtfulIngredients,
+        heuristic: !corroboratingAnimalIngredients.isEmpty,
         reason: finalReason
     )
 }

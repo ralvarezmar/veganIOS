@@ -218,6 +218,7 @@
 "vegan_reason_additive_uncertain" = "Cause: %@ (uncertain origin according to the additive catalogue).";
 "vegan_reason_traces_only" = "Only traces of %@ from cross-contamination; the product is considered suitable.";
 "vegan_reason_seal_conflict" = "Vegan seal registered in Open Food Facts, but %@ is listed as animal-derived; check the label.";
+"vegan_reason_unverified_non_vegan_tag" = "Open Food Facts marks it as non-vegan, but I cannot find the responsible ingredient in the list; check the label.";
 "vegan_reason_more" = "and %d more";
 "data_source_label" = "Source:";
 "data_source_label_format" = "Source: %@";

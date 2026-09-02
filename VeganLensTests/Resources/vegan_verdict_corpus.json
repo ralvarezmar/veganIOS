@@ -231,11 +231,11 @@
       "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Leche En Polvo"]}
     },
     {
-      "id": "non-vegan-tag-with-doubtful-ingredient-is-not-vegan",
-      "rationale": "A non-vegan analysis tag without a vegan seal must keep condemning the product even when the only structured ingredient is doubtful.",
+      "id": "non-vegan-tag-with-only-doubtful-ingredient-is-doubtful",
+      "rationale": "A non-vegan analysis tag with no corroborating animal ingredient must downgrade to doubtful and name the suspicious ingredient.",
       "ingredientsAnalysisTags": ["en:non-vegan"],
       "ingredients": [{"text": "Aroma", "vegan": "maybe"}],
-      "expected": {"status": "notVegan", "reasonSource": "decisiveTag", "culprits": ["Aroma"]}
+      "expected": {"status": "maybe", "reasonSource": "structuredDoubtfulIngredient", "culprits": ["Aroma"]}
     },
     {
       "id": "taxonomised-animal-ingredient-not-cleared-by-egg-traces",
@@ -243,6 +243,27 @@
       "ingredientsText": "Suero de leche, azúcar. Puede contener trazas de huevo.",
       "ingredients": [{"text": "en:whey", "vegan": "no"}],
       "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Whey"]}
+    },
+    {
+      "id": "non-vegan-tag-without-corroborating-ingredient-is-doubtful",
+      "rationale": "A non-vegan analysis tag must not condemn a product whose ingredient list contains nothing animal.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "ingredientsText": "Harina de trigo, azúcar, aceite de girasol.",
+      "ingredients": [{"text": "Harina de trigo", "vegan": "yes"}],
+      "expected": {"status": "maybe", "reasonSource": "unverifiedNonVeganTag", "culprits": []}
+    },
+    {
+      "id": "non-vegan-tag-without-ingredient-data-stays-not-vegan",
+      "rationale": "With no ingredient data to verify against, the non-vegan analysis tag is all we have and must still condemn.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "expected": {"status": "notVegan", "reasonSource": "decisiveTag", "culprits": []}
+    },
+    {
+      "id": "non-vegan-tag-corroborated-by-text-names-ingredient",
+      "rationale": "A non-vegan analysis tag corroborated by an animal ingredient in free text must condemn and name that ingredient.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "ingredientsText": "Harina de trigo, mantequilla, azúcar.",
+      "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Mantequilla"]}
     }
   ]
 }

@@ -305,6 +305,22 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertEqual(analysis.reason?.source, .veganSeal)
     }
 
+    func testUnverifiedNonVeganTagDowngradesToMaybe() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: ["en:non-vegan"],
+            ingredients: [
+                OffIngredient(text: "Harina de trigo", vegan: "yes", vegetarian: nil)
+            ],
+            ingredientsText: "Harina de trigo, azúcar, aceite de girasol."
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .maybe))
+        XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
+        XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
+        XCTAssertEqual(analysis.reason?.source, .unverifiedNonVeganTag)
+        XCTAssertTrue(analysis.reason?.evidence.isEmpty == true)
+    }
+
     func testTaxonomizedMilkTraceIsFiltered() {
         let analysis = analyzeVegan(
             ingredientsAnalysisTags: ["en:non-vegan"],

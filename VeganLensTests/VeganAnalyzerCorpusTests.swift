@@ -62,6 +62,7 @@ final class VeganAnalyzerCorpusTests: XCTestCase {
         case "additiveUncertain": return .additiveUncertain
         case "tracesOnly": return .tracesOnly
         case "sealConflict": return .sealConflict
+        case "unverifiedNonVeganTag": return .unverifiedNonVeganTag
         default: fatalError("Unknown corpus reason source: \(value)")
         }
     }

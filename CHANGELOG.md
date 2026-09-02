@@ -8,6 +8,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ### Corregido
 - Los sellos veganos tienen prioridad sobre las etiquetas no veganas, las trazas de contaminación cruzada no condenan el producto y se nombran los ingredientes en conflicto.
+- Las etiquetas de análisis no veganas ahora se contrastan con la lista de ingredientes antes de condenar el producto.
 - La galería de mascotas mantiene visibles los apodos del detalle y la última fila frente a las barras del sistema.
 
 ## [1.10.2 (37)] - 2026-09-01
