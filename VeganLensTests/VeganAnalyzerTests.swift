@@ -276,7 +276,7 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertEqual(analysis.reason?.source, .meatAlternativeCategory)
     }
 
-    func testVeganSealDoesNotOverrideStructuredNonVeganIngredient() {
+    func testVeganSealReportsStructuredConflictAsMaybe() {
         let analysis = analyzeVegan(
             ingredientsAnalysisTags: nil,
             ingredients: [
@@ -285,8 +285,90 @@ final class VeganAnalyzerTests: XCTestCase {
             labelsTags: ["en:certified-vegan"]
         )
 
+        XCTAssertTrue(isStatus(analysis.status, .maybe))
+        XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
+        XCTAssertEqual(analysis.doubtfulIngredients, ["Gelatin"])
+        XCTAssertEqual(analysis.reason?.source, .sealConflict)
+    }
+
+    func testVeganSealOverridesNonVeganTagWithoutAnimalIngredient() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: ["en:non-vegan"],
+            ingredients: [
+                OffIngredient(text: "Harina de trigo", vegan: "yes", vegetarian: nil)
+            ],
+            ingredientsText: "Harina de trigo, azúcar",
+            labelsTags: ["en:certified-vegan"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .vegan))
+        XCTAssertEqual(analysis.reason?.source, .veganSeal)
+    }
+
+    func testUnverifiedNonVeganTagDowngradesToMaybe() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: ["en:non-vegan"],
+            ingredients: [
+                OffIngredient(text: "Harina de trigo", vegan: "yes", vegetarian: nil)
+            ],
+            ingredientsText: "Harina de trigo, azúcar, aceite de girasol."
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .maybe))
+        XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
+        XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
+        XCTAssertEqual(analysis.reason?.source, .unverifiedNonVeganTag)
+        XCTAssertTrue(analysis.reason?.evidence.isEmpty == true)
+    }
+
+    func testTaxonomizedMilkTraceIsFiltered() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: ["en:non-vegan"],
+            ingredients: [
+                OffIngredient(text: "en:milk", vegan: "no", vegetarian: nil)
+            ],
+            ingredientsText: "Harina de trigo, azúcar. Puede contener trazas de leche."
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .vegan))
+        XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
+        XCTAssertTrue(analysis.doubtfulIngredients.isEmpty)
+        XCTAssertEqual(analysis.reason?.source, .tracesOnly)
+        XCTAssertEqual(analysis.reason?.evidence, ["Milk"])
+    }
+
+    func testNestedAnimalSubIngredientIsNamed() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: [
+                OffIngredient(
+                    text: "Cobertura de chocolate",
+                    vegan: nil,
+                    vegetarian: nil,
+                    ingredients: [
+                        OffIngredient(text: "Leche en polvo", vegan: "no", vegetarian: nil)
+                    ]
+                )
+            ],
+            ingredientsText: "Cobertura de chocolate (azúcar, leche en polvo)"
+        )
+
         XCTAssertTrue(isStatus(analysis.status, .notVegan))
-        XCTAssertEqual(analysis.reason?.source, .structuredNonVeganIngredient)
+        XCTAssertEqual(analysis.nonVeganIngredients, ["Leche En Polvo"])
+    }
+
+    func testRealGelatinConflictsWithVeganSeal() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: [
+                OffIngredient(text: "en:gelatin", vegan: "no", vegetarian: nil)
+            ],
+            labelsTags: ["en:vegan"]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .maybe))
+        XCTAssertEqual(analysis.doubtfulIngredients, ["Gelatin"])
+        XCTAssertEqual(analysis.reason?.source, .sealConflict)
     }
 
     func testMeatAlternativeCategoryDoesNotOverrideStructuredNonVeganIngredient() {

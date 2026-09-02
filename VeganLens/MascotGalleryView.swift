@@ -66,6 +66,7 @@ struct MascotGalleryView: View {
                 }
             }
             .padding(16)
+            .padding(.bottom, 24)
         }
         .scrollContentBackground(.hidden)
         .background(PortadaColors.background)
@@ -77,11 +78,13 @@ struct MascotGalleryView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity, maxHeight: 520)
+                .layoutPriority(-1)
                 .accessibilityLabel(mascotName(for: character))
 
             Text(mascotNickname(for: character))
                 .appFont(.title2, weight: .semibold)
                 .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
                 .foregroundStyle(PortadaColors.title)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

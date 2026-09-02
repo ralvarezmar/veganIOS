@@ -36,6 +36,7 @@ struct Product: Codable {
     let ingredientsAnalysisTags: [String]?
     let categoriesTags: [String]?
     let labelsTags: [String]?
+    let tracesTags: [String]?
     let ingredients: [OffIngredient]?
     let additivesTags: [String]?
     let allergensTags: [String]?
@@ -59,6 +60,7 @@ struct Product: Codable {
         case ingredientsAnalysisTags = "ingredients_analysis_tags"
         case categoriesTags = "categories_tags"
         case labelsTags = "labels_tags"
+        case tracesTags = "traces_tags"
         case ingredients
         case additivesTags = "additives_tags"
         case allergensTags = "allergens_tags"
@@ -91,6 +93,7 @@ struct Product: Codable {
         ecoscoreGrade: String?,
         novaGroup: Int?,
         quantity: String?,
+        tracesTags: [String]? = nil,
         environmentalScoreGrade: String? = nil,
         environmentalScoreScore: Int? = nil,
         ecoscoreScore: Int? = nil,
@@ -105,6 +108,7 @@ struct Product: Codable {
         self.ingredientsAnalysisTags = ingredientsAnalysisTags
         self.categoriesTags = categoriesTags
         self.labelsTags = labelsTags
+        self.tracesTags = tracesTags
         self.ingredients = ingredients
         self.additivesTags = additivesTags
         self.allergensTags = allergensTags
@@ -130,6 +134,7 @@ struct Product: Codable {
         ingredientsAnalysisTags = try? container.decodeIfPresent([String].self, forKey: .ingredientsAnalysisTags)
         categoriesTags = try? container.decodeIfPresent([String].self, forKey: .categoriesTags)
         labelsTags = try? container.decodeIfPresent([String].self, forKey: .labelsTags)
+        tracesTags = try? container.decodeIfPresent([String].self, forKey: .tracesTags)
         ingredients = try? container.decodeIfPresent([OffIngredient].self, forKey: .ingredients)
         additivesTags = try? container.decodeIfPresent([String].self, forKey: .additivesTags)
         allergensTags = try? container.decodeIfPresent([String].self, forKey: .allergensTags)
@@ -151,6 +156,19 @@ struct OffIngredient: Codable {
     let text: String?
     let vegan: String?
     let vegetarian: String?
+    let ingredients: [OffIngredient]?
+
+    init(
+        text: String?,
+        vegan: String?,
+        vegetarian: String?,
+        ingredients: [OffIngredient]? = nil
+    ) {
+        self.text = text
+        self.vegan = vegan
+        self.vegetarian = vegetarian
+        self.ingredients = ingredients
+    }
 }
 
 struct Nutriments: Codable {
