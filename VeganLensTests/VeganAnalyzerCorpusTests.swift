@@ -14,9 +14,7 @@ final class VeganAnalyzerCorpusTests: XCTestCase {
         for testCase in corpus.cases {
             let analysis = analyzeVegan(
                 ingredientsAnalysisTags: testCase.ingredientsAnalysisTags,
-                ingredients: testCase.ingredients?.map {
-                    OffIngredient(text: $0.text, vegan: $0.vegan, vegetarian: nil)
-                },
+                ingredients: testCase.ingredients?.map(toOffIngredient),
                 ingredientsText: testCase.ingredientsText,
                 additivesTags: testCase.additivesTags,
                 categoriesTags: testCase.categoriesTags,
@@ -62,6 +60,8 @@ final class VeganAnalyzerCorpusTests: XCTestCase {
         case "meatAlternativeCategory": return .meatAlternativeCategory
         case "additiveAnimal": return .additiveAnimal
         case "additiveUncertain": return .additiveUncertain
+        case "tracesOnly": return .tracesOnly
+        case "sealConflict": return .sealConflict
         default: fatalError("Unknown corpus reason source: \(value)")
         }
     }
@@ -82,9 +82,19 @@ private struct CorpusCase: Decodable {
     let expected: CorpusExpected
 }
 
+private func toOffIngredient(_ ingredient: CorpusIngredient) -> OffIngredient {
+    OffIngredient(
+        text: ingredient.text,
+        vegan: ingredient.vegan,
+        vegetarian: nil,
+        ingredients: ingredient.ingredients?.map(toOffIngredient)
+    )
+}
+
 private struct CorpusIngredient: Decodable {
     let text: String?
     let vegan: String?
+    let ingredients: [CorpusIngredient]?
 }
 
 private struct CorpusExpected: Decodable {

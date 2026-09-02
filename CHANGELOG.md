@@ -6,6 +6,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [Sin publicar]
 
+### Corregido
+- Los sellos veganos tienen prioridad sobre las etiquetas no veganas, las trazas de contaminación cruzada no condenan el producto y se nombran los ingredientes en conflicto.
+
 ## [1.10.2 (37)] - 2026-09-01
 
 ### Corregido

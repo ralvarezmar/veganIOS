@@ -216,6 +216,8 @@
 "vegan_reason_meat_category" = "Categoria di sostituto della carne registrata su Open Food Facts.";
 "vegan_reason_additive_animal" = "Causa: %@ (additivo di origine animale secondo il catalogo).";
 "vegan_reason_additive_uncertain" = "Causa: %@ (origine incerta secondo il catalogo degli additivi).";
+"vegan_reason_traces_only" = "Solo tracce di %@ per contaminazione incrociata; il prodotto è considerato adatto.";
+"vegan_reason_seal_conflict" = "Marchio vegano registrato su Open Food Facts, ma %@ risulta di origine animale; controlla l’etichetta.";
 "vegan_reason_more" = "e altri %d";
 "data_source_label" = "Fonte:";
 "data_source_label_format" = "Fuente: %@";

@@ -74,11 +74,11 @@
       "expected": {"status": "vegan", "reasonSource": "meatAlternativeCategory", "culprits": []}
     },
     {
-      "id": "vegan-seal-cannot-hide-animal-ingredient",
-      "rationale": "A vegan seal must never override a structured ingredient explicitly marked no.",
+      "id": "vegan-seal-conflicts-with-animal-ingredient",
+      "rationale": "A vegan seal plus a structured ingredient marked no is a conflict: report it as doubtful and name the suspicious ingredient.",
       "ingredients": [{"text": "en:gelatin", "vegan": "no"}],
       "labelsTags": ["en:certified-vegan"],
-      "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Gelatin"]}
+      "expected": {"status": "maybe", "reasonSource": "sealConflict", "culprits": ["Gelatin"]}
     },
     {
       "id": "uppercase-accent-prefix-html",
@@ -130,9 +130,8 @@
     },
     {
       "id": "decisive-non-vegan-tag",
-      "rationale": "A decisive non-vegan analysis tag must take precedence over other positive evidence.",
+      "rationale": "A decisive non-vegan analysis tag with no vegan seal must still be reported as not vegan.",
       "ingredientsAnalysisTags": ["en:non-vegan"],
-      "labelsTags": ["en:certified-vegan"],
       "expected": {"status": "notVegan", "reasonSource": "decisiveTag", "culprits": []}
     },
     {
@@ -191,6 +190,45 @@
       "rationale": "An uncertain-origin additive present only in the extended catalog must remain doubtful.",
       "additivesTags": ["en:e234"],
       "expected": {"status": "maybe", "reasonSource": "additiveUncertain", "culprits": ["E234"]}
+    },
+    {
+      "id": "vegan-seal-beats-non-vegan-tag",
+      "rationale": "The vegan seal registered in the database is checked first: a non-vegan analysis tag with no identifiable animal ingredient must not override it.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "ingredientsText": "Harina de trigo, azúcar. Puede contener trazas de leche.",
+      "ingredients": [{"text": "Harina de trigo", "vegan": "yes"}, {"text": "Puede contener trazas de leche", "vegan": "no"}],
+      "labelsTags": ["en:vegan"],
+      "expected": {"status": "vegan", "reasonSource": "veganSeal", "culprits": []}
+    },
+    {
+      "id": "milk-traces-only-is-vegan",
+      "rationale": "Milk present only in a may-contain warning is cross-contamination, so the product is suitable even without a vegan seal.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "ingredientsText": "Harina de trigo, azúcar. Puede contener trazas de leche.",
+      "ingredients": [{"text": "Harina de trigo", "vegan": "yes"}, {"text": "Leche", "vegan": "no"}],
+      "expected": {"status": "vegan", "reasonSource": "tracesOnly", "culprits": []}
+    },
+    {
+      "id": "egg-traces-only-is-vegan",
+      "rationale": "Egg present only in a may-contain warning must not condemn the product.",
+      "ingredientsText": "Harina, azúcar. Puede contener trazas de huevo.",
+      "ingredients": [{"text": "Harina", "vegan": "yes"}, {"text": "Huevo", "vegan": "no"}],
+      "expected": {"status": "vegan", "reasonSource": "tracesOnly", "culprits": []}
+    },
+    {
+      "id": "real-milk-ingredient-with-egg-traces-is-not-vegan",
+      "rationale": "Milk listed as a real ingredient still condemns the product, and the named ingredient must be the milk, not the egg trace warning.",
+      "ingredientsText": "Leche desnatada, azúcar. Puede contener trazas de huevo.",
+      "ingredients": [{"text": "Leche desnatada", "vegan": "no"}],
+      "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Leche Desnatada"]}
+    },
+    {
+      "id": "nested-subingredient-is-named",
+      "rationale": "An animal sub-ingredient nested inside a compound ingredient must be identified by name instead of an unnamed verdict.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "ingredientsText": "Cobertura de chocolate (azúcar, manteca de cacao, leche en polvo), harina",
+      "ingredients": [{"text": "Cobertura de chocolate", "ingredients": [{"text": "Azúcar", "vegan": "yes"}, {"text": "Leche en polvo", "vegan": "no"}]}, {"text": "Harina", "vegan": "yes"}],
+      "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Leche En Polvo"]}
     }
   ]
 }

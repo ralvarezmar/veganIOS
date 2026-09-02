@@ -17,6 +17,8 @@ enum VeganReasonSource: Equatable {
     case meatAlternativeCategory
     case additiveAnimal
     case additiveUncertain
+    case tracesOnly
+    case sealConflict
 }
 
 struct VeganReason: Equatable {
@@ -51,6 +53,69 @@ struct VeganAnalysis {
     }
 }
 
+private struct NormalizedIngredient {
+    let status: String
+    let name: String
+    let isTrace: Bool
+}
+
+private struct IngredientTraceParts {
+    let real: [String]
+    let traces: [String]
+}
+
+private func flattenIngredients(_ ingredients: [OffIngredient]?) -> [OffIngredient] {
+    var flattened: [OffIngredient] = []
+
+    func appendAll(_ items: [OffIngredient]?) {
+        for ingredient in items ?? [] {
+            flattened.append(ingredient)
+            appendAll(ingredient.ingredients)
+        }
+    }
+
+    appendAll(ingredients)
+    return flattened
+}
+
+private func traceParts(_ text: String) -> IngredientTraceParts {
+    var real: [String] = []
+    var traces: [String] = []
+    for phrase in cleanFoodFactsMarkup(text).components(separatedBy: CharacterSet(charactersIn: ".!\n")) {
+        let segments = phrase.components(separatedBy: CharacterSet(charactersIn: ",;()/"))
+        guard let traceStart = segments.firstIndex(where: containsTraceWarning) else {
+            real.append(contentsOf: segments)
+            continue
+        }
+        real.append(contentsOf: segments[..<traceStart])
+        traces.append(contentsOf: segments[traceStart...])
+    }
+    return IngredientTraceParts(real: real, traces: traces)
+}
+
+private func isTraceIngredient(_ ingredient: OffIngredient, ingredientsText: String?) -> Bool {
+    if containsTraceWarning(ingredient.text ?? "") {
+        return true
+    }
+    guard let ingredientsText,
+          !ingredientsText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+          let cleanedName = cleanFoodFactsLabel(ingredient.text) else {
+        return false
+    }
+
+    let name = normalizeIngredientSegment(cleanedName)
+    let parts = traceParts(ingredientsText)
+    let appearsInRealIngredients = parts.real.contains {
+        normalizeIngredientSegment($0).contains(name)
+    }
+    if appearsInRealIngredients {
+        return false
+    }
+    return parts.traces.contains {
+        normalizeIngredientSegment($0).contains(name)
+    } || parts.traces.contains(where: containsAnimalIngredient)
+}
+
 func analyzeVegan(_ product: Product) -> VeganAnalysis {
     analyzeVegan(
         ingredientsAnalysisTags: product.ingredientsAnalysisTags,
@@ -70,31 +135,45 @@ func analyzeVegan(
     categoriesTags: [String]? = nil,
     labelsTags: [String]? = nil
 ) -> VeganAnalysis {
-    let ingredientList = ingredients ?? []
-    let normalizedIngredients = ingredientList.compactMap { ingredient -> (String, String)? in
+    let ingredientList = flattenIngredients(ingredients)
+    let normalizedIngredients = ingredientList.compactMap { ingredient -> NormalizedIngredient? in
         guard let vegan = ingredient.vegan?.lowercased(), let cleanedText = cleanFoodFactsLabel(ingredient.text) else {
             return nil
         }
-        return (vegan, cleanedText)
+        return NormalizedIngredient(
+            status: vegan,
+            name: cleanedText,
+            isTrace: ["no", "maybe"].contains(vegan) &&
+                isTraceIngredient(ingredient, ingredientsText: ingredientsText)
+        )
     }
 
     let nonVegan = normalizedIngredients
-        .filter { $0.0 == "no" }
-        .map { $0.1 }
+        .filter { $0.status == "no" && !$0.isTrace }
+        .map(\.name)
         .orderedUnique()
 
     let doubtful = normalizedIngredients
-        .filter { $0.0 == "maybe" }
-        .map { $0.1 }
+        .filter { $0.status == "maybe" && !$0.isTrace }
+        .map(\.name)
         .orderedUnique()
 
-    let hasYesIngredient = normalizedIngredients.contains { $0.0 == "yes" }
+    let traceIngredients = normalizedIngredients
+        .filter { ["no", "maybe"].contains($0.status) && $0.isTrace }
+        .map(\.name)
+        .orderedUnique()
+    let structuredAnimalIngredients = normalizedIngredients.filter {
+        ["no", "maybe"].contains($0.status)
+    }
+    let tracesOnly = !structuredAnimalIngredients.isEmpty &&
+        structuredAnimalIngredients.allSatisfy(\.isTrace)
+    let hasYesIngredient = normalizedIngredients.contains { $0.status == "yes" }
     let additiveMatches = findAdditiveMatches(
         additivesTags: additivesTags,
         ingredientsText: ingredientsText,
-        ingredients: ingredients
+        ingredients: ingredientList
     )
-    let hasIngredients = !(ingredients?.isEmpty ?? true)
+    let hasIngredients = !ingredientList.isEmpty
     let hasTags = !(ingredientsAnalysisTags?.isEmpty ?? true)
 
     let decisiveTag: String? = {
@@ -114,13 +193,35 @@ func analyzeVegan(
         }
     }()
 
+    let hasVeganSeal = labelsTags?.contains(where: isVeganSealTag) == true
+    if hasVeganSeal {
+        let sealConflicts = (nonVegan + additiveMatches.animal).orderedUnique()
+        if !sealConflicts.isEmpty {
+            return VeganAnalysis(
+                status: .maybe,
+                nonVeganIngredients: [],
+                doubtfulIngredients: sealConflicts,
+                reason: VeganReason(source: .sealConflict, evidence: sealConflicts)
+            )
+        }
+        return VeganAnalysis(
+            status: .vegan,
+            nonVeganIngredients: [],
+            doubtfulIngredients: [],
+            reason: VeganReason(
+                source: .veganSeal,
+                evidence: Array(labelsTags?.filter(isVeganSealTag).prefix(1) ?? [])
+            )
+        )
+    }
+
     let status: VeganStatus = {
-        if decisiveTag == "en:non-vegan" { return .notVegan }
         if !nonVegan.isEmpty { return .notVegan }
         if !additiveMatches.animal.isEmpty { return .notVegan }
-        if decisiveTag == "en:vegan" { return .vegan }
+        if decisiveStatus == .vegan { return .vegan }
         if !doubtful.isEmpty { return .maybe }
         if !additiveMatches.uncertain.isEmpty { return .maybe }
+        if tracesOnly { return .vegan }
         if let decisiveStatus { return decisiveStatus }
         if hasYesIngredient { return .vegan }
         if !hasIngredients && !hasTags { return .unknown }
@@ -128,23 +229,23 @@ func analyzeVegan(
     }()
 
     let reason: VeganReason? = {
-        if decisiveTag == "en:non-vegan" {
-            return VeganReason(source: .decisiveTag, evidence: ["en:non-vegan"])
-        }
         if !nonVegan.isEmpty {
             return VeganReason(source: .structuredNonVeganIngredient, evidence: nonVegan)
         }
         if !additiveMatches.animal.isEmpty {
             return VeganReason(source: .additiveAnimal, evidence: additiveMatches.animal)
         }
+        if decisiveTag == "en:vegan" {
+            return VeganReason(source: .decisiveTag, evidence: [decisiveTag])
+        }
         if !doubtful.isEmpty {
             return VeganReason(source: .structuredDoubtfulIngredient, evidence: doubtful)
         }
-        if decisiveTag == "en:vegan" {
-            return VeganReason(source: .decisiveTag, evidence: ["en:vegan"])
-        }
         if !additiveMatches.uncertain.isEmpty {
             return VeganReason(source: .additiveUncertain, evidence: additiveMatches.uncertain)
+        }
+        if tracesOnly {
+            return VeganReason(source: .tracesOnly, evidence: traceIngredients)
         }
         if let decisiveTag {
             return VeganReason(source: .decisiveTag, evidence: [decisiveTag])
@@ -152,7 +253,7 @@ func analyzeVegan(
         if hasYesIngredient {
             return VeganReason(
                 source: .structuredVeganIngredient,
-                evidence: normalizedIngredients.filter { $0.0 == "yes" }.map { $0.1 }
+                evidence: normalizedIngredients.filter { $0.status == "yes" }.map(\.name)
             )
         }
         return nil
@@ -160,16 +261,7 @@ func analyzeVegan(
 
     let finalStatus: VeganStatus
     let finalReason: VeganReason?
-    if status == .notVegan {
-        finalStatus = .notVegan
-        finalReason = reason
-    } else if labelsTags?.contains(where: isVeganSealTag) == true {
-        finalStatus = .vegan
-        finalReason = VeganReason(
-            source: .veganSeal,
-            evidence: Array(labelsTags?.filter(isVeganSealTag).prefix(1) ?? [])
-        )
-    } else if status == .unknown, categoriesTags?.contains(where: isMeatAlternativeCategoryTag) == true {
+    if status == .unknown, categoriesTags?.contains(where: isMeatAlternativeCategoryTag) == true {
         finalStatus = .vegan
         finalReason = VeganReason(
             source: .meatAlternativeCategory,
