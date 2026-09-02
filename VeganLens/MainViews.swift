@@ -2238,9 +2238,11 @@ private struct ScoresCard: View {
         let greenScoreValue = product.greenScoreValue
         let novaGroup = product.novaGroup.flatMap { (1...4).contains($0) ? $0 : nil }
         let carbonFootprint = product.carbonFootprint
+        let sustainabilityImpacts = product.sustainabilityImpacts
 
         return Group {
-            if nutriScore == nil && greenScore == nil && novaGroup == nil && carbonFootprint == nil {
+            if nutriScore == nil && greenScore == nil && novaGroup == nil &&
+                carbonFootprint == nil && sustainabilityImpacts == nil {
                 EmptyView()
             } else {
                 SimpleSectionCard(title: L("product_scores_title")) {
@@ -2306,6 +2308,7 @@ private struct ScoresCard: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     if let carbonFootprint {
                         let source = carbonFootprintSourceText(carbonFootprint.source)
+                        let level = product.carbonFootprintLevel
                         let value = LF(
                             "carbon_footprint_value",
                             formatCarbonFootprint(carbonFootprint.value)
@@ -2325,6 +2328,15 @@ private struct ScoresCard: View {
                                         .appFont(.footnote, weight: .semibold)
                                     Text(value)
                                         .appFont(.subheadline, weight: .semibold)
+                                    if let level {
+                                        Text(carbonFootprintLevelText(level))
+                                            .appFont(.caption, weight: .semibold)
+                                            .foregroundStyle(nutrientLevelColors(level).foreground)
+                                            .padding(.horizontal, 10)
+                                            .padding(.vertical, 6)
+                                            .background(nutrientLevelColors(level).background)
+                                            .clipShape(Capsule())
+                                    }
                                 }
                                 Spacer()
                                 Text(source)
@@ -2334,11 +2346,66 @@ private struct ScoresCard: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel(
-                            "\(L("carbon_footprint_title")), \(value), \(source)"
+                            "\(L("carbon_footprint_title")), \(value), " +
+                                "\(level.map(carbonFootprintLevelText) ?? ""), \(source)"
                         )
                         .accessibilityHint(L("score_info_tap_hint"))
                     }
+                    if let sustainabilityImpacts {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(L("sustainability_impact_title"))
+                                .appFont(.headline, weight: .semibold)
+                                .foregroundStyle(Color("AccentColor"))
+                            if let value = sustainabilityImpacts.packagingCo2Per100g {
+                                SustainabilityImpactRow(
+                                    label: L("sustainability_packaging_label"),
+                                    value: value,
+                                    penalty: sustainabilityImpacts.packagingPenalty,
+                                    penaltyKey: "sustainability_packaging_penalty"
+                                )
+                            }
+                            if let value = sustainabilityImpacts.transportCo2Per100g {
+                                SustainabilityImpactRow(
+                                    label: L("sustainability_transport_label"),
+                                    value: value,
+                                    penalty: sustainabilityImpacts.transportPenalty,
+                                    penaltyKey: "sustainability_transport_penalty"
+                                )
+                            }
+                            Text(L("sustainability_stage_note"))
+                                .appFont(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
+            }
+        }
+    }
+}
+
+private struct SustainabilityImpactRow: View {
+    let label: String
+    let value: Double
+    let penalty: Int?
+    let penaltyKey: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack {
+                Text(label)
+                Spacer()
+                Text(
+                    LF(
+                        "carbon_footprint_value",
+                        formatCarbonFootprint(value)
+                    )
+                )
+                .appFont(.subheadline, weight: .semibold)
+            }
+            if let penalty {
+                Text(LF(penaltyKey, abs(penalty)))
+                    .appFont(.footnote)
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -2468,6 +2535,28 @@ private func carbonFootprintSourceText(_ source: CarbonFootprintSource) -> Strin
         return L("carbon_footprint_source_declared")
     case .estimated:
         return L("carbon_footprint_source_estimated")
+    }
+}
+
+private func carbonFootprintLevelText(_ level: CarbonFootprintLevel) -> String {
+    switch level {
+    case .low:
+        return L("carbon_footprint_level_low")
+    case .moderate:
+        return L("carbon_footprint_level_moderate")
+    case .high:
+        return L("carbon_footprint_level_high")
+    }
+}
+
+private func nutrientLevelColors(_ level: CarbonFootprintLevel) -> NutrientLevelColors {
+    switch level {
+    case .low:
+        return nutrientLevelColors(NutrientLevelValue.low)
+    case .moderate:
+        return nutrientLevelColors(NutrientLevelValue.moderate)
+    case .high:
+        return nutrientLevelColors(NutrientLevelValue.high)
     }
 }
 
