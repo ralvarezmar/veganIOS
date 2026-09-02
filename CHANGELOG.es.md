@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Las notas de las versiones se publican también en inglés, además de en español.
+
 ## [1.10.3 (38)] - 2026-09-02
 
 ### Corregido
