@@ -197,6 +197,87 @@ final class ModelsDecodingTests: XCTestCase {
         XCTAssertNil(product?.carbonFootprint)
     }
 
+    func testCarbonFootprintLevelUsesApprovedBoundaries() throws {
+        let values: [(Double, CarbonFootprintLevel)] = [
+            (149, .low),
+            (150, .moderate),
+            (500, .moderate),
+            (501, .high)
+        ]
+        for (value, expected) in values {
+            let product = try decodeResponse(
+                """
+                {"status":1,"product":{"nutriments":{"carbon-footprint_100g":\(value)}}}
+                """
+            ).product
+            XCTAssertEqual(product?.carbonFootprintLevel, expected)
+        }
+    }
+
+    func testSustainabilityImpactsFallsBackToLegacyEcoScoreDataAndDecodesFlexibleValues() throws {
+        let product = try decodeResponse(
+            """
+            {
+              "status":1,
+              "product":{
+                "ecoscore_data":{
+                  "agribalyse":{
+                    "co2_packaging":"0,174",
+                    "co2_transportation":0.207
+                  },
+                  "adjustments":{
+                    "packaging":{
+                      "value":"-10",
+                      "non_recyclable_and_non_biodegradable_materials":"1"
+                    },
+                    "origins_of_ingredients":{
+                      "transportation_value":"-5"
+                    }
+                  }
+                }
+              }
+            }
+            """
+        ).product
+
+        XCTAssertEqual(product?.sustainabilityImpacts?.packagingCo2Per100g ?? -1, 17.4, accuracy: 0.0001)
+        XCTAssertEqual(product?.sustainabilityImpacts?.transportCo2Per100g ?? -1, 20.7, accuracy: 0.0001)
+        XCTAssertEqual(product?.sustainabilityImpacts?.packagingPenalty, -10)
+        XCTAssertEqual(product?.sustainabilityImpacts?.nonRecyclablePackaging, true)
+        XCTAssertEqual(product?.sustainabilityImpacts?.transportPenalty, -5)
+    }
+
+    func testSustainabilityImpactsHidesTransportPenaltyForUnknownOrigins() throws {
+        let product = try decodeResponse(
+            """
+            {
+              "status":1,
+              "product":{
+                "ecoscore_data":{
+                  "adjustments":{
+                    "origins_of_ingredients":{
+                      "transportation_value":-5,
+                      "warning":"origins_are_100_percent_unknown"
+                    }
+                  }
+                }
+              }
+            }
+            """
+        ).product
+
+        XCTAssertNil(product?.sustainabilityImpacts?.transportPenalty)
+    }
+
+    func testSustainabilityImpactsReturnsNilWithoutStagesOrPenalties() throws {
+        XCTAssertNil(try decodeResponse(#"{"status":1,"product":{}}"#).product?.sustainabilityImpacts)
+        XCTAssertNil(
+            try decodeResponse(
+                #"{"status":1,"product":{"ecoscore_data":{"agribalyse":{"co2_total":1.0}}}}"#
+            ).product?.sustainabilityImpacts
+        )
+    }
+
     func testNutritionFactsFallsBackToPreparedValues() throws {
         let product = try decodeResponse(
             """

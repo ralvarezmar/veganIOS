@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- Los resultados muestran niveles de huella de carbono y estimaciones del impacto del envase y el transporte.
+
 ### Cambiado
 - Las notas de las versiones se publican también en inglés, además de en español.
 

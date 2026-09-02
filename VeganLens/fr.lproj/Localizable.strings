@@ -421,4 +421,13 @@
 "carbon_footprint_source_declared" = "Déclarée sur l’emballage";
 "carbon_footprint_source_estimated" = "Estimation d’Open Food Facts à partir d’Agribalyse";
 "score_info_carbon_footprint_title" = "Empreinte carbone";
-"score_info_carbon_footprint_body" = "Grammes de CO₂ équivalent pour 100 g de produit. Si l’emballage ne l’indique pas, Open Food Facts l’estime avec la base Agribalyse selon la catégorie et les ingrédients : c’est donc une valeur approximative.";
+"score_info_carbon_footprint_body" = "Grammes de CO₂ équivalent pour 100 g de produit. Si l’emballage ne l’indique pas, Open Food Facts l’estime avec la base Agribalyse selon la catégorie et les ingrédients : c’est donc une valeur approximative. Les niveaux Faible, Modérée et Élevée sont des seuils propres à l’application : moins de 150 g, jusqu’à 500 g et plus de 500 g de CO₂e pour 100 g.";
+"carbon_footprint_level_low" = "Faible";
+"carbon_footprint_level_moderate" = "Modérée";
+"carbon_footprint_level_high" = "Élevée";
+"sustainability_impact_title" = "Impact environnemental";
+"sustainability_packaging_label" = "Emballage";
+"sustainability_transport_label" = "Transport";
+"sustainability_packaging_penalty" = "Retire %1$d points au Green Score en raison d’un matériau non recyclable.";
+"sustainability_transport_penalty" = "Retire %1$d points au Green Score en raison de l’origine des ingrédients.";
+"sustainability_stage_note" = "Répartition estimée par Agribalyse selon la catégorie du produit ; elle n’est pas mesurée sur ce produit précis.";

@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- Product results now show carbon-footprint levels and estimated packaging and transportation impacts.
+
 ### Changed
 - Release notes are now published in English as well as Spanish.
 
