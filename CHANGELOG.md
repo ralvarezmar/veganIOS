@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.11.0 (40)] - 2026-09-02
+
 ### Added
 - Product results now show carbon-footprint levels and estimated packaging and transportation impacts.
 

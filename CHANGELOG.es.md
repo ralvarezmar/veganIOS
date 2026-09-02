@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.11.0 (40)] - 2026-09-02
+
 ### Añadido
 - Los resultados muestran niveles de huella de carbono y estimaciones del impacto del envase y el transporte.
 
