@@ -116,62 +116,101 @@ jobs:
           import re
           from pathlib import Path
 
-          changelog = Path("CHANGELOG.md")
           version_label = os.environ["VERSION_LABEL"]
           release_date = os.environ["DATE"]
-          contents = changelog.read_text(encoding="utf-8")
-          headings = list(
-              re.finditer(r"(?mi)^##\s+\[([^\]]+)\][^\r\n]*", contents)
-          )
-          unpublished = next(
-              (
-                  heading
-                  for heading in headings
-                  if heading.group(1).strip().lower() == "sin publicar"
-              ),
-              None,
-          )
-          if unpublished is None:
-              raise RuntimeError("CHANGELOG.md has no [Sin publicar] section")
+          for filename, unpublished_heading in (
+              ("CHANGELOG.md", "unreleased"),
+              ("CHANGELOG.es.md", "sin publicar"),
+          ):
+              changelog = Path(filename)
+              try:
+                  contents = changelog.read_text(encoding="utf-8")
+                  headings = list(
+                      re.finditer(
+                          r"(?mi)^##\s+\[([^\]]+)\][^\r\n]*",
+                          contents,
+                      )
+                  )
+                  unpublished = next(
+                      (
+                          heading
+                          for heading in headings
+                          if heading.group(1).strip().lower()
+                          == unpublished_heading
+                      ),
+                      None,
+                  )
+                  if unpublished is None:
+                      print(
+                          f"::warning::{filename} has no "
+                          f"[{unpublished_heading.title()}] section; "
+                          "continuing release."
+                      )
+                      continue
 
-          next_heading = next(
-              (heading for heading in headings if heading.start() > unpublished.start()),
-              None,
-          )
-          body_end = next_heading.start() if next_heading else len(contents)
-          body = contents[unpublished.end():body_end]
-          has_changes = any(
-              line.strip().startswith("- ") or line.strip().startswith("### ")
-              for line in body.splitlines()
-          )
-          if not has_changes:
-              print("No unpublished CHANGELOG changes; nothing to roll.")
-          else:
-              replacement = (
-                  "## [Sin publicar]\n\n"
-                  f"## [{version_label}] - {release_date}"
-              )
-              changelog.write_text(
-                  contents[:unpublished.start()]
-                  + replacement
-                  + contents[unpublished.end():],
-                  encoding="utf-8",
-              )
-              print(f"Rolled CHANGELOG.md to {version_label} - {release_date}")
+                  next_heading = next(
+                      (
+                          heading
+                          for heading in headings
+                          if heading.start() > unpublished.start()
+                      ),
+                      None,
+                  )
+                  body_end = (
+                      next_heading.start()
+                      if next_heading
+                      else len(contents)
+                  )
+                  body = contents[unpublished.end():body_end]
+                  has_changes = any(
+                      line.strip().startswith("- ")
+                      or line.strip().startswith("### ")
+                      for line in body.splitlines()
+                  )
+                  if not has_changes:
+                      print(
+                          f"No unpublished changes in {filename}; "
+                          "nothing to roll."
+                      )
+                      continue
+
+                  heading_text = (
+                      "Unreleased"
+                      if unpublished_heading == "unreleased"
+                      else "Sin publicar"
+                  )
+                  replacement = (
+                      f"## [{heading_text}]\n\n"
+                      f"## [{version_label}] - {release_date}"
+                  )
+                  changelog.write_text(
+                      contents[:unpublished.start()]
+                      + replacement
+                      + contents[unpublished.end():],
+                      encoding="utf-8",
+                  )
+                  print(
+                      f"Rolled {filename} to {version_label} - "
+                      f"{release_date}"
+                  )
+              except Exception as error:
+                  print(
+                      f"::warning::Could not roll {filename}: {error}; "
+                      "continuing release."
+                  )
           PY
           then
-            echo "::warning::Could not roll CHANGELOG.md; continuing release."
-          else
-            cat > VERSION <<EOF
+            echo "::warning::Could not process changelog files; continuing release."
+          fi
+          cat > VERSION <<EOF
           MARKETING_VERSION=${VERSION_NAME}
           CURRENT_PROJECT_VERSION=${GITHUB_RUN_NUMBER}
           TAG=v${VERSION_NAME}
           EOF
-          fi
-          if ! git diff --quiet -- CHANGELOG.md VERSION; then
+          if ! git diff --quiet -- CHANGELOG.md CHANGELOG.es.md VERSION; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add CHANGELOG.md VERSION
+            git add CHANGELOG.md CHANGELOG.es.md VERSION
             if git commit -m "chore(ios): release changelog ${VERSION_LABEL} [skip ci]"; then
               pushed=false
               for attempt in 1 2 3; do
@@ -198,7 +237,7 @@ jobs:
                 fi
               done
               if [ "$pushed" = true ]; then
-                echo "CHANGELOG.md release commit pushed to development."
+                echo "Changelog release commit pushed to development."
               else
                 echo "::warning::Could not push the CHANGELOG release commit after 3 attempts; continuing release."
               fi
@@ -238,7 +277,7 @@ jobs:
                   (
                       heading
                       for heading in headings
-                      if heading.group(1).strip().lower() == "sin publicar"
+                      if heading.group(1).strip().lower() == "unreleased"
                   ),
                   None,
               )
@@ -651,8 +690,23 @@ jobs:
               )
               return result.stdout.strip() if result.returncode == 0 else ""
 
-          def changelog_notes():
-              changelog = Path("CHANGELOG.md")
+          def commit_notes():
+              last_tag = git_output("describe", "--tags", "--abbrev=0")
+              if last_tag:
+                  return git_output(
+                      "log",
+                      "--pretty=format:%s",
+                      f"{last_tag}..HEAD",
+                  )
+              return git_output(
+                  "log",
+                  "-n",
+                  "20",
+                  "--pretty=format:%s",
+              )
+
+          def changelog_notes(path, unpublished_heading, empty_notes):
+              changelog = Path(path)
               notes = ""
               if changelog.is_file():
                   try:
@@ -668,7 +722,8 @@ jobs:
                               (
                                   heading
                                   for heading in headings
-                                  if heading.group(1).strip().lower() != "sin publicar"
+                                  if heading.group(1).strip().lower()
+                                  not in {"sin publicar", "unreleased"}
                               ),
                               None,
                           )
@@ -678,7 +733,7 @@ jobs:
                                       heading
                                       for heading in headings
                                       if heading.group(1).strip().lower()
-                                      == "sin publicar"
+                                      == unpublished_heading
                                   ),
                                   None,
                               )
@@ -698,31 +753,48 @@ jobs:
                           notes = "\n".join(lines).strip()
                   except Exception as error:
                       print(
-                          f"::warning::Could not read CHANGELOG.md: {error}",
+                          f"::warning::Could not read {path}: {error}",
                           flush=True,
                       )
 
               if not notes:
-                  last_tag = git_output("describe", "--tags", "--abbrev=0")
-                  if last_tag:
-                      notes = git_output(
-                          "log",
-                          "--pretty=format:%s",
-                          f"{last_tag}..HEAD",
-                      )
-                  else:
-                      notes = git_output(
-                          "log",
-                          "-n",
-                          "20",
-                          "--pretty=format:%s",
-                      )
+                  notes = commit_notes()
               if not notes:
-                  notes = "Nueva compilación de prueba."
+                  notes = empty_notes
               return notes[:4000].strip()
 
-          notes = changelog_notes()
-          if not notes:
+          notes_by_locale = {}
+          for locale, path, unpublished_heading, empty_notes in (
+              (
+                  "es-ES",
+                  "CHANGELOG.es.md",
+                  "sin publicar",
+                  "Nueva compilación de prueba.",
+              ),
+              (
+                  "en-US",
+                  "CHANGELOG.md",
+                  "unreleased",
+                  "New test build.",
+              ),
+          ):
+              try:
+                  notes_by_locale[locale] = changelog_notes(
+                      path,
+                      unpublished_heading,
+                      empty_notes,
+                  )
+              except Exception as error:
+                  print(
+                      f"::warning::Could not derive What to Test notes for "
+                      f"{locale} from {path}: {error}",
+                      flush=True,
+                  )
+                  notes_by_locale[locale] = commit_notes()
+                  if not notes_by_locale[locale]:
+                      notes_by_locale[locale] = empty_notes
+
+          if not any(notes_by_locale.values()):
               print(
                   "::warning::Could not derive What to Test notes; skipping beta "
                   "build localizations.",
@@ -747,6 +819,14 @@ jobs:
               else:
                   localizations = localizations_response.json().get("data", [])
                   for locale in ("es-ES", "en-US"):
+                      notes = notes_by_locale.get(locale, "")
+                      if not notes:
+                          print(
+                              f"::warning::No What to Test notes available "
+                              f"for locale {locale}; skipping.",
+                              flush=True,
+                          )
+                          continue
                       existing = next(
                           (
                               localization
@@ -1241,10 +1321,10 @@ jobs:
                   lines.append(line)
               return truncate_notes("\n".join(lines).strip())
 
-          def changelog_notes():
-              path = Path("CHANGELOG.md")
+          def changelog_notes(path):
+              path = Path(path)
               if not path.is_file():
-                  raise RuntimeError("CHANGELOG.md not found")
+                  raise RuntimeError(f"{path} not found")
               contents = path.read_text(encoding="utf-8")
               match = re.search(
                   rf"^##\s+\[{re.escape(version_name)}[^\]]*\]"
@@ -1254,16 +1334,16 @@ jobs:
               )
               if match is None:
                   raise RuntimeError(
-                      f"CHANGELOG.md has no section for {version_name}"
+                      f"{path} has no section for {version_name}"
                   )
               notes = sanitize_notes(match.group("body").strip())
               if not notes:
                   raise RuntimeError(
-                      f"CHANGELOG.md section for {version_name} is empty"
+                      f"{path} section for {version_name} is empty"
                   )
               return notes
 
-          def update_localizations(version_identifier, notes):
+          def update_localizations(version_identifier, notes_by_locale):
               response = request(
                   "GET",
                   f"{API_BASE}/appStoreVersions/"
@@ -1282,23 +1362,14 @@ jobs:
                   ),
                   None,
               )
-              for localization in localizations:
-                  locale = localization.get("attributes", {}).get(
-                      "locale", "<unknown>"
-                  )
-                  if locale != "es-ES":
-                      warn(
-                          f"No changelog is available for App Store locale "
-                          f"{locale}; leaving its whatsNew unchanged."
-                      )
-
-              if spanish is None:
+              spanish_notes = notes_by_locale.get("es-ES", "")
+              if spanish is None and spanish_notes:
                   payload = {
                       "data": {
                           "type": "appStoreVersionLocalizations",
                           "attributes": {
                               "locale": "es-ES",
-                              "whatsNew": notes,
+                              "whatsNew": spanish_notes,
                           },
                           "relationships": {
                               "appStoreVersion": {
@@ -1320,24 +1391,67 @@ jobs:
                       "Created Spanish App Store whatsNew localization.",
                       flush=True,
                   )
-                  return
+              elif spanish is None:
+                  warn(
+                      "No changelog is available for App Store locale "
+                      "es-ES; leaving its whatsNew unchanged."
+                  )
 
-              request(
-                  "PATCH",
-                  f"{API_BASE}/appStoreVersionLocalizations/{spanish['id']}",
-                  headers={"Content-Type": "application/json"},
-                  json={
-                      "data": {
-                          "type": "appStoreVersionLocalizations",
-                          "id": spanish["id"],
-                          "attributes": {"whatsNew": notes},
-                      }
-                  },
-              )
-              print(
-                  "Updated Spanish App Store whatsNew localization.",
-                  flush=True,
-              )
+              if spanish is not None:
+                  if spanish_notes:
+                      request(
+                          "PATCH",
+                          f"{API_BASE}/appStoreVersionLocalizations/"
+                          f"{spanish['id']}",
+                          headers={"Content-Type": "application/json"},
+                          json={
+                              "data": {
+                                  "type": "appStoreVersionLocalizations",
+                                  "id": spanish["id"],
+                                  "attributes": {"whatsNew": spanish_notes},
+                              }
+                          },
+                      )
+                      print(
+                          "Updated Spanish App Store whatsNew localization.",
+                          flush=True,
+                      )
+                  else:
+                      warn(
+                          "No changelog is available for App Store locale "
+                          "es-ES; leaving its whatsNew unchanged."
+                      )
+
+              english_notes = notes_by_locale.get("en-US", "")
+              for localization in localizations:
+                  locale = localization.get("attributes", {}).get(
+                      "locale", "<unknown>"
+                  )
+                  if locale == "es-ES":
+                      continue
+                  if not english_notes:
+                      warn(
+                          f"No changelog is available for App Store locale "
+                          f"{locale}; leaving its whatsNew unchanged."
+                      )
+                      continue
+                  request(
+                      "PATCH",
+                      f"{API_BASE}/appStoreVersionLocalizations/"
+                      f"{localization['id']}",
+                      headers={"Content-Type": "application/json"},
+                      json={
+                          "data": {
+                              "type": "appStoreVersionLocalizations",
+                              "id": localization["id"],
+                              "attributes": {"whatsNew": english_notes},
+                          }
+                      },
+                  )
+                  print(
+                      f"Updated {locale} App Store whatsNew localization.",
+                      flush=True,
+                  )
 
           try:
               identifier = app_id()
@@ -1353,9 +1467,23 @@ jobs:
                           attach_build(version_identifier, build_identifier)
                       except Exception as error:
                           warn(f"Could not attach App Store build: {error}")
+                  notes_by_locale = {}
+                  for locale, path in (
+                      ("es-ES", "CHANGELOG.es.md"),
+                      ("en-US", "CHANGELOG.md"),
+                  ):
+                      try:
+                          notes_by_locale[locale] = changelog_notes(path)
+                      except Exception as error:
+                          warn(
+                              f"Could not read {path} for App Store locale "
+                              f"{locale}: {error}"
+                          )
                   try:
-                      notes = changelog_notes()
-                      update_localizations(version_identifier, notes)
+                      update_localizations(
+                          version_identifier,
+                          notes_by_locale,
+                      )
                   except Exception as error:
                       warn(f"Could not update App Store whatsNew: {error}")
           except Exception as error:
