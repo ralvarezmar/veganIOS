@@ -113,7 +113,10 @@ private func isTraceIngredient(_ ingredient: OffIngredient, ingredientsText: Str
     }
     return parts.traces.contains {
         normalizeIngredientSegment($0).contains(name)
-    } || parts.traces.contains(where: containsAnimalIngredient)
+    } || (
+        parts.traces.contains(where: containsAnimalIngredient) &&
+            !parts.real.contains(where: containsAnimalIngredient)
+        )
 }
 
 func analyzeVegan(_ product: Product) -> VeganAnalysis {
@@ -218,6 +221,7 @@ func analyzeVegan(
     let status: VeganStatus = {
         if !nonVegan.isEmpty { return .notVegan }
         if !additiveMatches.animal.isEmpty { return .notVegan }
+        if decisiveTag == "en:non-vegan" && !tracesOnly { return .notVegan }
         if decisiveStatus == .vegan { return .vegan }
         if !doubtful.isEmpty { return .maybe }
         if !additiveMatches.uncertain.isEmpty { return .maybe }
@@ -234,6 +238,9 @@ func analyzeVegan(
         }
         if !additiveMatches.animal.isEmpty {
             return VeganReason(source: .additiveAnimal, evidence: additiveMatches.animal)
+        }
+        if decisiveTag == "en:non-vegan" && !tracesOnly {
+            return VeganReason(source: .decisiveTag, evidence: [decisiveTag])
         }
         if decisiveTag == "en:vegan" {
             return VeganReason(source: .decisiveTag, evidence: [decisiveTag])

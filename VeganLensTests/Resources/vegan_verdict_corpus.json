@@ -229,6 +229,20 @@
       "ingredientsText": "Cobertura de chocolate (azúcar, manteca de cacao, leche en polvo), harina",
       "ingredients": [{"text": "Cobertura de chocolate", "ingredients": [{"text": "Azúcar", "vegan": "yes"}, {"text": "Leche en polvo", "vegan": "no"}]}, {"text": "Harina", "vegan": "yes"}],
       "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Leche En Polvo"]}
+    },
+    {
+      "id": "non-vegan-tag-with-doubtful-ingredient-is-not-vegan",
+      "rationale": "A non-vegan analysis tag without a vegan seal must keep condemning the product even when the only structured ingredient is doubtful.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "ingredients": [{"text": "Aroma", "vegan": "maybe"}],
+      "expected": {"status": "notVegan", "reasonSource": "decisiveTag", "culprits": ["Aroma"]}
+    },
+    {
+      "id": "taxonomised-animal-ingredient-not-cleared-by-egg-traces",
+      "rationale": "An animal ingredient named in another language than the ingredient text must not be mistaken for a trace just because the may-contain warning mentions an animal.",
+      "ingredientsText": "Suero de leche, azúcar. Puede contener trazas de huevo.",
+      "ingredients": [{"text": "en:whey", "vegan": "no"}],
+      "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Whey"]}
     }
   ]
 }
