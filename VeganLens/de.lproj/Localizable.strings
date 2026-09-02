@@ -216,6 +216,9 @@
 "vegan_reason_meat_category" = "Kategorie für Fleischersatz in Open Food Facts registriert.";
 "vegan_reason_additive_animal" = "Ursache: %@ (Zusatzstoff tierischen Ursprungs laut Katalog).";
 "vegan_reason_additive_uncertain" = "Ursache: %@ (unklare Herkunft laut Zusatzstoffkatalog).";
+"vegan_reason_traces_only" = "Nur Spuren von %@ durch Kreuzkontamination; das Produkt gilt als geeignet.";
+"vegan_reason_seal_conflict" = "Veganes Siegel in Open Food Facts registriert, aber %@ ist als tierischen Ursprungs aufgeführt; prüfe das Etikett.";
+"vegan_reason_unverified_non_vegan_tag" = "Open Food Facts kennzeichnet es als nicht vegan, aber ich finde die verantwortliche Zutat nicht in der Liste; prüfe das Etikett.";
 "vegan_reason_more" = "und %d weitere";
 "data_source_label" = "Quelle:";
 "data_source_label_format" = "Quelle: %@";
