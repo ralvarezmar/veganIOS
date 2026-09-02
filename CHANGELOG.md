@@ -1,160 +1,158 @@
 # Changelog
 
-Todos los cambios notables de VeganLens (iOS) se documentan en este archivo.
+All notable changes to VeganLens (iOS) are documented in this file.
 
-El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
+This is the primary changelog in English. `CHANGELOG.es.md` is its Spanish
+translation. Update both changelog files together when adding or publishing a
+version so that App Store Connect can provide notes in both languages.
 
-## [Sin publicar]
+## [Unreleased]
 
 ## [1.10.3 (38)] - 2026-09-02
 
-### Corregido
-- Los sellos veganos tienen prioridad sobre las etiquetas no veganas, las trazas de contaminación cruzada no condenan el producto y se nombran los ingredientes en conflicto.
-- Las etiquetas de análisis no veganas ahora se contrastan con la lista de ingredientes antes de condenar el producto.
-- La galería de mascotas mantiene visibles los apodos del detalle y la última fila frente a las barras del sistema.
+### Fixed
+- Vegan seals take precedence over non-vegan tags, cross-contamination traces do not condemn the product, and conflicting ingredients are named.
+- Non-vegan analysis tags are now checked against the ingredient list before condemning the product.
+- The mascot gallery keeps detail nicknames and the last row clear of system bars.
 
 ## [1.10.2 (37)] - 2026-09-01
 
-### Corregido
-- Los resultados de productos usan los valores nutricionales preparados cuando Open Food Facts no tiene valores del producto tal cual se vende, e indican la base nutricional mostrada.
+### Fixed
+- Product results use prepared nutrition values when Open Food Facts has no as-sold values, and indicate the nutrition basis shown.
 
 ## [1.10.1 (36)] - 2026-09-01
 
-### Corregido
-- La huella de carbono también se lee del bloque heredado `ecoscore_data` de Open Food Facts.
+### Fixed
+- Carbon-footprint data is now also read from Open Food Facts' legacy `ecoscore_data` block.
 
 ## [1.10.0 (35)] - 2026-08-31
 
-### Añadido
-- El resultado del producto muestra el Green Score con su valor numérico, los niveles de nutrientes de Open Food Facts, los azúcares añadidos y la huella de carbono, indicando si está declarada en el envase o estimada a partir de Agribalyse.
+### Added
+- Product results show the Green Score with its numeric value, Open Food Facts nutrient levels, added sugars, and the carbon footprint, indicating whether it is declared on the packaging or estimated from Agribalyse.
 
 ## [1.8.0 (33)] - 2026-08-26
-- Las mascotas de la galería ahora tienen un nombre propio.
+- Gallery mascots now have their own names.
 
 ## [1.5.0 (29)] - 2026-08-25
 
-### Añadido
-- Veintiocho personajes nuevos de la nueva lámina de ilustraciones se suman a la rotación de la portada, hasta un total de cuarenta y tres.
-- Se mejora la calidad de las ilustraciones de los personajes de la portada y se redibujan sus chapitas «VEGAN».
-- Una pequeña galería oculta de mascotas espera a las personas curiosas que quieran conocer a todos los personajes de la portada.
-- Se añade una fila visible de agradecimientos para las personas que prueban la aplicación antes de cada versión.
+### Added
+- Twenty-eight new characters from the new artwork sheet join the welcome-cover rotation, for a total of forty-three.
+- The welcome-cover character artwork has been improved and its «VEGAN» badges redrawn.
+- A little hidden mascot gallery is waiting for curious people who want to meet all the welcome-cover characters.
+- A visible acknowledgements row thanks the people who test the app before each release.
 
 ## [1.4.1 (28)] - 2026-08-24
 
-### Añadido
-- Se incorpora la mascota de VeganLens como icono y una portada ilustrada rotatoria al iniciar la aplicación.
+### Added
+- The VeganLens mascot is added as the app icon, along with a rotating illustrated welcome cover.
 
-- El catálogo de aditivos de iOS queda sincronizado con Android, incluidos los códigos E de origen animal e incierto.
-- Al compartir un resultado se incluye la imagen del producto cuando está disponible y se conserva el enlace de Open Food Facts.
+- The iOS additive catalogue is synchronized with Android, including E-codes of animal and uncertain origin.
+- Sharing a result includes the product image when available and keeps the Open Food Facts link.
 
-### Cambiado
-- La portada permanece visible hasta cinco segundos y sus recortes, junto con el icono recentrado, usan las ilustraciones revisadas.
-- Se retira el personaje `citrus` de la rotación de la portada.
-- El análisis fotográfico extrae la sección relevante, admite los seis idiomas del OCR y trata con más seguridad los envases multilingües y los compuestos alemanes.
+### Changed
+- The welcome cover remains visible for up to five seconds, and its crops together with the recentered icon use the revised artwork.
+- The `citrus` character is removed from the welcome-cover rotation.
+- Photo ingredient analysis extracts the relevant section, supports all six OCR languages, and handles multilingual packs and German compounds more safely.
 
 ## [1.2.0 (24)] - 2026-08-20
 
-### Añadido
-- Se incorporan los aditivos E270 y E428 al catálogo, con información sobre su origen.
-- Se pueden fotografiar listas de ingredientes y analizarlas localmente con OCR editable, veredictos conservadores y avisos sobre segmentos no reconocidos.
+### Added
+- E270 and E428 are added to the catalogue, with information about their origin.
+- Ingredient lists can be photographed and analyzed locally with editable OCR, conservative verdicts, and warnings about unrecognized segments.
 
-### Cambiado
-- La caché sin conexión conserva los productos durante 14 días antes de considerarlos caducados.
-- Los aditivos identificados como de origen animal hacen que el producto se marque como no vegano y se muestran como causa del veredicto.
+### Changed
+- The offline cache keeps products for 14 days before considering them expired.
+- Ingredients identified as animal-derived cause the product to be marked as non-vegan and are shown as the reason for the verdict.
 
 ## [1.1.0 (23)] - 2026-08-12
 
-### Cambiado
-- El veredicto explica qué ingrediente lo provoca y si la conclusión procede de datos de Open Food Facts o de una detección orientativa en el texto; también reconoce sellos veganos y categorías de sustitutos de carne.
-- Se comprueba con un corpus compartido que los casos clave del motor mantienen resultados coherentes.
-- La normalización de ingredientes elimina el marcado HTML de Open Food Facts antes de resolver sus entidades.
+### Changed
+- The verdict explains which ingredient causes it and whether the conclusion comes from Open Food Facts data or an indicative text detection; it also recognizes vegan seals and meat-substitute categories.
+- A shared corpus checks that the analyzer's key cases continue to produce consistent results.
+- Ingredient normalization removes Open Food Facts HTML markup before resolving its entities.
 
 ## [1.0.1 (22)] - 2026-08-07
 
-### Cambiado
-- Las aportaciones a Open Food Facts se explican correctamente: no requieren cuenta ni inicio de sesión y se publican a través de la cuenta de la aplicación.
-- La caché sin conexión caduca a los 60 días y los datos caducados ya no se muestran.
-- Los datos nutricionales y el veredicto se leen como unidades completas con lectores de pantalla, incluyendo sus valores y unidades.
-- Mejorados los procesos de distribución, pruebas automáticas, localizaciones y capturas de la aplicación; la aplicación y su documentación usan ahora el nombre VeganLens.
+### Changed
+- Open Food Facts contributions are explained correctly: they do not require an account or sign-in and are published through the app account.
+- The offline cache expires after 60 days, and expired data is no longer shown.
+- Nutritional data and the verdict are read as complete units by screen readers, including their values and units.
+- Distribution, automated testing, localization, and screenshot processes are improved; the app and its documentation now use the VeganLens name.
 
 ## [1.0.0 (20)] - 2026-08-06
 
-### Cambiado
-- El changelog y las notas de prueba de TestFlight se dividen por versión publicada.
+### Changed
+- The changelog and TestFlight testing notes are split by published version.
 
 ## [0.1.2] - 2026-08-05
 
-### Añadido
-- Energía en kJ cuando el producto no aporta kilocalorías.
-- Pruebas de decodificación del modelo con respuestas de ejemplo de Open Food Facts.
+### Added
+- Energy is shown in kJ when the product does not provide kilocalories.
+- Model decoding tests use example responses from Open Food Facts.
 
-### Cambiado
-- Ajustado el flujo de CI para asignar correctamente las compilaciones al grupo de TestFlight.
-- Tiempos de espera de red más cortos y un único reintento en las lecturas; las escrituras no se reintentan.
+### Changed
+- The CI flow is adjusted to assign builds to the TestFlight group correctly.
+- Network timeouts are shorter and reads have a single retry; writes are not retried.
 
-### Corregido
-- Decodificación tolerante de respuestas de Open Food Facts: un campo mal formado ya no descarta el producto completo y `nova_group` acepta número o texto.
-- El estado de las contribuciones se interpreta tanto si llega como número como si llega como texto, con mensajes de error más claros.
+### Fixed
+- Tolerant decoding of Open Food Facts responses means a malformed field no longer discards the whole product, and `nova_group` accepts a number or text.
+- Contribution status is interpreted whether it arrives as a number or text, with clearer error messages.
 
 ## [0.1.1] - 2026-08-05
 
-### Corregido
-- Los valores nutricionales no se mostraban en la pantalla de resultado: ahora
-  se solicita el producto completo a Open Food Facts y se aceptan valores
-  numéricos entregados como texto, igual que en Android.
-- Las contribuciones a Open Food Facts fallaban porque OFF ya no acepta envíos anónimos; ahora se autentican con una cuenta compartida de la app configurada por CI.
+### Fixed
+- Nutritional values were not shown on the result screen: the complete product is now requested from Open Food Facts and numeric values delivered as text are accepted, as on Android.
+- Contributions to Open Food Facts failed because OFF no longer accepts anonymous submissions; they are now authenticated with a shared app account configured by CI.
 
 ## [0.1.0] - 2026-08-04
 
-### Añadido
-- Veredicto basado en ingredientes con ajustes de accesibilidad y nuevo icono de la app.
+### Added
+- Ingredient-based verdicts with accessibility improvements and a new app icon.
 
 ## [0.0.2] - 2026-08-04
 
-### Cambiado
-- Ajustes del flujo de firma, exportación y validación de la distribución para el App Store.
+### Changed
+- Signing, export, and distribution-validation flow adjustments for the App Store.
 
 ## [0.0.1] - 2026-08-03
 
-### Añadido
-- Idiomas italiano y portugués, traducción de ingredientes en el dispositivo,
-  explicaciones de puntuaciones, aviso sobre aceite de palma y widget de
-  escaneo en la pantalla de inicio.
-- CI de compilación para macOS en GitHub Actions.
-- Email de contacto, políticas de privacidad en español e inglés en GitHub Pages y enlace desde la app.
-- Renombrada la app a VeganLens, con el identificador actualizado a `com.ralvarezmar.vcheck`.
-- Distribución de macronutrientes y badge de Nutri-Score en la pantalla de resultado.
-- Atribución visible a Open Food Facts (ODbL), accesibilidad con subrayado/lectura de ingredientes señalados, localización completa ES/EN y licencia MIT.
-- Descripción para la App Store en el README (subtítulo, texto promocional y descripción completa).
-- Open Pet Food Facts como cuarta base de datos de respaldo.
-- Estado de carga mientras se consultan las bases de datos.
-- Resaltado por color de los ingredientes de origen animal o dudoso dentro de la lista.
-- Marco de enfoque, texto de ayuda, feedback háptico y confirmación visual en el escáner.
-- Estados vacíos y de error más claros, con botón "Reintentar" ante fallos de red.
-- Historial en tarjetas con miniatura del producto.
-- Mejor soporte de modo oscuro con colores y materiales del sistema.
-- Política de privacidad (`PRIVACY.md` y página en `/docs` para GitHub Pages).
+### Added
+- Italian and Portuguese languages, on-device ingredient translation, score explanations, a palm-oil warning, and a scanning widget on the home screen.
+- macOS build CI in GitHub Actions.
+- A contact email, Spanish and English privacy policies on GitHub Pages, and a link from the app.
+- The app is renamed to VeganLens, with the identifier updated to `com.ralvarezmar.vcheck`.
+- Macronutrient distribution and a Nutri-Score badge on the result screen.
+- Visible attribution to Open Food Facts (ODbL), accessibility with underlining and reading of highlighted ingredients, complete ES/EN localization, and an MIT license.
+- An App Store description in the README (subtitle, promotional text, and full description).
+- Open Pet Food Facts as a fourth fallback database.
+- A loading state while databases are queried.
+- Color highlighting of animal-derived or doubtful ingredients in the list.
+- A focus frame, help text, haptic feedback, and visual confirmation in the scanner.
+- Clearer empty and error states, with a “Retry” button for network failures.
+- History in cards with a product thumbnail.
+- Better dark-mode support with system colors and materials.
+- A privacy policy (`PRIVACY.md` and a `/docs` page for GitHub Pages).
 
-### Cambiado
-- Acento lavanda en el modo oscuro, manteniendo el verde en el modo claro.
-- Renombrada la app a **VeganLens**.
-- Rediseño general de la interfaz: banner de veredicto con subtítulo e indicador de fuente.
-- Lista de ingredientes como texto corrido; solo se resaltan los dudosos y los no aptos.
-- Limpieza más robusta de los nombres de ingredientes (entidades HTML, marcadores y espacios).
-- La búsqueda sigue consultando el resto de bases cuando una fuente no aporta datos veganos; "Sin datos suficientes" solo se muestra si ninguna los aporta.
+### Changed
+- A lavender accent in dark mode while keeping green in light mode.
+- The app is renamed to **VeganLens**.
+- A general interface redesign: a verdict banner with a subtitle and source indicator.
+- The ingredient list is shown as flowing text; only doubtful and unsuitable items are highlighted.
+- More robust ingredient-name cleanup, including HTML entities, markers, and spaces.
+- Search continues querying the remaining databases when one source does not provide vegan data; “Not enough data” is shown only if none of them do.
 
 ## [2026-07-03]
 
-### Añadido
-- App SwiftUI para iOS 17+ con escáner de códigos de barras EAN/UPC vía AVFoundation.
-- Consulta de producto a Open Food Facts (ingredientes, aditivos, alérgenos y nutrición).
-- Veredicto vegano (Apto / No apto / Dudoso / Sin datos) a partir del análisis de ingredientes.
-- Fuentes de respaldo Open Beauty Facts y Open Product Facts.
-- Mensaje con las bases de datos consultadas cuando no hay información suficiente.
-- Historial local de escaneos con SwiftData.
+### Added
+- A SwiftUI app for iOS 17+ with an EAN/UPC barcode scanner using AVFoundation.
+- Product queries to Open Food Facts (ingredients, additives, allergens, and nutrition).
+- A vegan verdict (Suitable / Not suitable / Doubtful / No data) based on ingredient analysis.
+- Open Beauty Facts and Open Product Facts as fallback sources.
+- A message with the databases consulted when there is not enough information.
+- A local scan history with SwiftData.
 
-### Cambiado
-- Redacción del veredicto a "producto apto para veganos".
+### Changed
+- The verdict wording is changed to “product suitable for vegans”.
 
-### Corregido
-- Las respuestas HTTP 404 se tratan como "producto no encontrado" en lugar de error de red.
+### Fixed
+- HTTP 404 responses are treated as “product not found” instead of a network error.
