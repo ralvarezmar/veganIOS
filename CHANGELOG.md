@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Release notes are now published in English as well as Spanish.
+
 ## [1.10.3 (38)] - 2026-09-02
 
 ### Fixed
