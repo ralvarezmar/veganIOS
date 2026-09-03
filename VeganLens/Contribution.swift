@@ -277,11 +277,9 @@ func parseProductImageUploadResponse(
         ))
     }
 
-    let detail = ["error", "status_verbose"].compactMap { key in
-        (json[key] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
-    }.first(where: { !$0.isEmpty })
-        ?? (statusValue as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
-            .flatMap { $0.isEmpty ? nil : $0 }
+    let detail = [json["error"] as? String, json["status_verbose"] as? String, statusValue as? String]
+        .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+        .first { !$0.isEmpty }
         ?? "HTTP \(httpStatus)"
     return .serverError(detail: shortResponseDetail(detail))
 }

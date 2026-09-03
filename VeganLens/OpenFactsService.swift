@@ -257,9 +257,6 @@ func resolveFetchOutcome(
     if sawFailure {
         return .error(L("network_error"))
     }
-    if sawCleanNoData {
-        return .notFound(consultedSources)
-    }
     return .notFound(consultedSources)
 }
 
