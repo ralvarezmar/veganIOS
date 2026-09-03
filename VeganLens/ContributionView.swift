@@ -222,7 +222,7 @@ struct ContributionView: View {
         photoImages[type] = image
         photoStates[type] = .uploading
         guard let data = compressedJPEGData(image) else {
-            photoStates[type] = .error
+            photoStates[type] = .error(detail: nil)
             return
         }
         Task {
@@ -233,7 +233,14 @@ struct ContributionView: View {
                 jpegData: data
             )
             await MainActor.run {
-                photoStates[type] = result.isSuccess ? .success : .error
+                switch result {
+                case .success:
+                    photoStates[type] = .success
+                case .serverError(let detail):
+                    photoStates[type] = .error(detail: detail)
+                case .offline, .networkError:
+                    photoStates[type] = .error(detail: nil)
+                }
             }
         }
     }
@@ -241,7 +248,7 @@ struct ContributionView: View {
     private func loadSelectedPhoto(_ item: PhotosPickerItem, type: ProductImageType) async {
         guard let data = try? await item.loadTransferable(type: Data.self),
               let image = UIImage(data: data) else {
-            await MainActor.run { photoStates[type] = .error }
+            await MainActor.run { photoStates[type] = .error(detail: nil) }
             return
         }
         await MainActor.run { handleImage(image, type: type) }
@@ -287,14 +294,7 @@ private enum PhotoUploadState: Equatable {
     case idle
     case uploading
     case success
-    case error
-}
-
-private extension ProductImageUploadResult {
-    var isSuccess: Bool {
-        if case .success = self { return true }
-        return false
-    }
+    case error(detail: String?)
 }
 
 private struct ProductPhotoRow: View {
@@ -325,7 +325,7 @@ private struct ProductPhotoRow: View {
                     .appFont(.subheadline, weight: .semibold)
                 Text(state.localizedStatus)
                     .appFont(.caption)
-                    .foregroundStyle(state == .error ? .red : .secondary)
+                    .foregroundStyle(state.isError ? .red : .secondary)
             }
             Spacer()
             Menu {
@@ -356,8 +356,19 @@ private extension PhotoUploadState {
         case .idle: return L("contribution_photo_idle")
         case .uploading: return L("contribution_photo_uploading")
         case .success: return L("contribution_photo_uploaded")
-        case .error: return L("contribution_photo_error")
+        case .error(let detail):
+            guard let detail, !detail.isEmpty else {
+                return L("contribution_photo_error")
+            }
+            return String(format: L("contribution_photo_error_detail"), detail)
         }
+    }
+}
+
+private extension PhotoUploadState {
+    var isError: Bool {
+        if case .error = self { return true }
+        return false
     }
 }
 

@@ -281,6 +281,7 @@
 "contribution_photo_uploading" = "A carregar fotografia…";
 "contribution_photo_uploaded" = "Fotografia carregada com sucesso.";
 "contribution_photo_error" = "Não foi possível carregar a fotografia.";
+"contribution_photo_error_detail" = "Erro ao carregar: %@";
 "contribution_scan_ingredients" = "Digitalizar ingredientes";
 "contribution_ocr_no_text" = "Não foi reconhecido texto de ingredientes.";
 "contribution_ocr_error" = "Não foi possível reconhecer o texto de ingredientes.";

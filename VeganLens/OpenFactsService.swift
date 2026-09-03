@@ -59,16 +59,12 @@ final class OpenFactsService {
             }
         }
 
-        if let fallbackCandidate {
-            return .success(fallbackCandidate)
-        }
-        if sawCleanNoData {
-            return .notFound(consultedSources)
-        }
-        if sawFailure {
-            return .error(L("network_error"))
-        }
-        return .notFound(consultedSources)
+        return resolveFetchOutcome(
+            fallbackCandidate: fallbackCandidate,
+            sawCleanNoData: sawCleanNoData,
+            sawFailure: sawFailure,
+            consultedSources: consultedSources
+        )
     }
 
     func searchByName(query: String) async -> SearchByNameResult {
@@ -247,6 +243,24 @@ final class OpenFactsService {
             return try await session.data(for: request)
         }
     }
+}
+
+func resolveFetchOutcome(
+    fallbackCandidate: FetchedProduct?,
+    sawCleanNoData: Bool,
+    sawFailure: Bool,
+    consultedSources: [ProductSource]
+) -> OpenFactsFetchResult {
+    if let fallbackCandidate {
+        return .success(fallbackCandidate)
+    }
+    if sawFailure {
+        return .error(L("network_error"))
+    }
+    if sawCleanNoData {
+        return .notFound(consultedSources)
+    }
+    return .notFound(consultedSources)
 }
 
 private func trimmedNonEmpty(_ value: String?) -> String? {
