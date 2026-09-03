@@ -625,7 +625,7 @@ enum ProductSource: String, CaseIterable, Codable, Hashable {
         case .openBeautyFacts:
             return URL(string: "https://world.openbeautyfacts.org")!
         case .openProductFacts:
-            return URL(string: "https://world.openproductfacts.org")!
+            return URL(string: "https://world.openproductsfacts.org")!
         case .openPetFoodFacts:
             return URL(string: "https://world.openpetfoodfacts.org")!
         }

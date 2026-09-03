@@ -281,6 +281,7 @@
 "contribution_photo_uploading" = "Envoi de la photo…";
 "contribution_photo_uploaded" = "Photo envoyée avec succès.";
 "contribution_photo_error" = "La photo n’a pas pu être envoyée.";
+"contribution_photo_error_detail" = "Échec de l’envoi : %@";
 "contribution_scan_ingredients" = "Scanner les ingrédients";
 "contribution_ocr_no_text" = "Aucun texte d’ingrédients n’a été reconnu.";
 "contribution_ocr_error" = "La reconnaissance du texte des ingrédients a échoué.";

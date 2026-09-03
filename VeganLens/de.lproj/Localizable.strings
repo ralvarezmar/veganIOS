@@ -281,6 +281,7 @@
 "contribution_photo_uploading" = "Foto wird hochgeladen…";
 "contribution_photo_uploaded" = "Foto erfolgreich hochgeladen.";
 "contribution_photo_error" = "Das Foto konnte nicht hochgeladen werden.";
+"contribution_photo_error_detail" = "Upload fehlgeschlagen: %@";
 "contribution_scan_ingredients" = "Zutaten scannen";
 "contribution_ocr_no_text" = "Es wurde kein Zutatentext erkannt.";
 "contribution_ocr_error" = "Die Erkennung des Zutatentextes ist fehlgeschlagen.";

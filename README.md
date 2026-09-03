@@ -81,6 +81,6 @@ xcodegen generate
 
 ## Atribución
 
-La app usa datos de [Open Food Facts](https://world.openfoodfacts.org/), [Open Beauty Facts](https://world.openbeautyfacts.org/) y [Open Product Facts](https://world.openproductfacts.org/).
+La app usa datos de [Open Food Facts](https://world.openfoodfacts.org/), [Open Beauty Facts](https://world.openbeautyfacts.org/) y [Open Product Facts](https://world.openproductsfacts.org/).
 
 La app incluye la fuente Atkinson Hyperlegible © Braille Institute, licenciada bajo SIL Open Font License 1.1. El texto completo de la licencia está en `VeganLens/Fonts/OFL.txt`.

@@ -10,6 +10,13 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Corregido
+- Los fallos de red ya no se confunden con productos inexistentes y se usa la caché offline cuando está disponible.
+- El dominio de Open Products Facts ahora es correcto.
+- Las subidas de fotos ya no muestran errores falsos y explican el motivo cuando fallan.
+
+## [1.11.0 (40)] - 2026-09-02
+
 ### Añadido
 - Los resultados muestran niveles de huella de carbono y estimaciones del impacto del envase y el transporte.
 

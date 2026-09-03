@@ -281,6 +281,7 @@
 "contribution_photo_uploading" = "Caricamento foto…";
 "contribution_photo_uploaded" = "Foto caricata correttamente.";
 "contribution_photo_error" = "Impossibile caricare la foto.";
+"contribution_photo_error_detail" = "Errore di caricamento: %@";
 "contribution_scan_ingredients" = "Scansiona ingredienti";
 "contribution_ocr_no_text" = "Non è stato riconosciuto alcun testo degli ingredienti.";
 "contribution_ocr_error" = "Impossibile riconoscere il testo degli ingredienti.";
