@@ -87,4 +87,80 @@ final class ContributionTests: XCTestCase {
         XCTAssertEqual(jsonStatus(from: Data(#"{"status":1}"#.utf8)), 1)
         XCTAssertEqual(jsonStatus(from: Data(#"{"status":"1"}"#.utf8)), 1)
     }
+
+    func testProductImageUploadAcceptsTextStatusAndNumericImageID() {
+        let result = parseProductImageUploadResponse(
+            httpStatus: 200,
+            data: Data(#"{"status":"status ok","imgid":3}"#.utf8),
+            imageField: "front_es"
+        )
+
+        XCTAssertEqual(
+            result,
+            .success(ProductImageUploadSuccess(imageID: "3", imageField: "front_es"))
+        )
+    }
+
+    func testProductImageUploadAcceptsNumericStatusAndStringImageID() {
+        let result = parseProductImageUploadResponse(
+            httpStatus: 201,
+            data: Data(#"{"status":1,"imgid":"3"}"#.utf8),
+            imageField: "front_es"
+        )
+
+        XCTAssertEqual(
+            result,
+            .success(ProductImageUploadSuccess(imageID: "3", imageField: "front_es"))
+        )
+    }
+
+    func testProductImageUploadReturnsServerDetailForRejectedTextStatus() {
+        let result = parseProductImageUploadResponse(
+            httpStatus: 200,
+            data: Data(#"{"status":"status not ok","error":"Image rejected"}"#.utf8),
+            imageField: "front_es"
+        )
+
+        XCTAssertEqual(result, .serverError(detail: "Image rejected"))
+    }
+
+    func testProductImageUploadReturnsHTTPDetailForFailedResponse() {
+        let result = parseProductImageUploadResponse(
+            httpStatus: 500,
+            data: Data(),
+            imageField: "front_es"
+        )
+
+        XCTAssertEqual(result, .serverError(detail: "HTTP 500"))
+    }
+
+    func testFetchOutcomeFailureTakesPrecedenceOverCleanNoData() {
+        let result = resolveFetchOutcome(
+            fallbackCandidate: nil,
+            sawCleanNoData: true,
+            sawFailure: true,
+            consultedSources: [.openFoodFacts]
+        )
+
+        if case .error = result {
+            return
+        }
+        XCTFail("A source failure must not be reported as not found")
+    }
+
+    func testFetchOutcomeReportsNotFoundWhenAllSourcesHaveNoData() {
+        let sources: [ProductSource] = [.openFoodFacts, .openBeautyFacts]
+        let result = resolveFetchOutcome(
+            fallbackCandidate: nil,
+            sawCleanNoData: true,
+            sawFailure: false,
+            consultedSources: sources
+        )
+
+        if case .notFound(let consultedSources) = result {
+            XCTAssertEqual(consultedSources, sources)
+        } else {
+            XCTFail("Clean no-data responses must be reported as not found")
+        }
+    }
 }

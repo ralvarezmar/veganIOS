@@ -8,6 +8,11 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Fixed
+- Network failures are no longer mistaken for missing products, and the offline cache is used when available.
+- The Open Products Facts domain is now correct.
+- Photo uploads no longer report false errors and explain the reason when they fail.
+
 ## [1.11.0 (40)] - 2026-09-02
 
 ### Added

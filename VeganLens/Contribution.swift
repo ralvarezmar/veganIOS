@@ -158,7 +158,7 @@ enum ProductImageUploadResult: Equatable {
     case success(ProductImageUploadSuccess)
     case offline
     case networkError
-    case serverError
+    case serverError(detail: String?)
 }
 
 final class ContributionService {
@@ -238,19 +238,50 @@ final class ContributionService {
         do {
             let (data, response) = try await session.data(for: request)
             guard let status = response as? HTTPURLResponse else { return .networkError }
-            guard (200..<300).contains(status.statusCode) else { return .serverError }
-            guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                  intStatus(json["status"]) == 1 else {
-                return .serverError
-            }
-            return .success(ProductImageUploadSuccess(
-                imageID: json["imgid"] as? String,
-                imageField: json["imagefield"] as? String ?? field
-            ))
+            return parseProductImageUploadResponse(
+                httpStatus: status.statusCode,
+                data: data,
+                imageField: field
+            )
         } catch {
             return .networkError
         }
     }
+}
+
+func parseProductImageUploadResponse(
+    httpStatus: Int,
+    data: Data,
+    imageField: String
+) -> ProductImageUploadResult {
+    guard (200..<300).contains(httpStatus) else {
+        return .serverError(detail: "HTTP \(httpStatus)")
+    }
+    guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+        return .serverError(detail: "HTTP \(httpStatus)")
+    }
+
+    let statusValue = json["status"]
+    let statusText = (statusValue as? String)?
+        .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    let imageID = imageIDString(json["imgid"])
+    let isSuccess = intStatus(statusValue) == 1 ||
+        (statusText.localizedCaseInsensitiveContains("ok") &&
+            !statusText.localizedCaseInsensitiveContains("not ok")) ||
+        imageID != nil
+
+    if isSuccess {
+        return .success(ProductImageUploadSuccess(
+            imageID: imageID,
+            imageField: (json["imagefield"] as? String) ?? imageField
+        ))
+    }
+
+    let detail = [json["error"] as? String, json["status_verbose"] as? String, statusValue as? String]
+        .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+        .first { !$0.isEmpty }
+        ?? "HTTP \(httpStatus)"
+    return .serverError(detail: shortResponseDetail(detail))
 }
 
 private func formURLEncoded(_ fields: [String: String]) -> Data? {
@@ -299,6 +330,24 @@ private func responseSnippet(from data: Data) -> String? {
         .trimmingCharacters(in: .whitespacesAndNewlines)
     let result = String(snippet.prefix(120))
     return result.isEmpty ? nil : result
+}
+
+private func imageIDString(_ value: Any?) -> String? {
+    if let number = value as? NSNumber {
+        return number.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    if let text = value as? String {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
+    }
+    return nil
+}
+
+private func shortResponseDetail(_ value: String) -> String {
+    String(value
+        .split(whereSeparator: \.isWhitespace)
+        .joined(separator: " ")
+        .prefix(120))
 }
 
 private func multipartBody(
