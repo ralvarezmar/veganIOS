@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.11.1 (41)] - 2026-09-03
+
 ### Corregido
 - Los fallos de red ya no se confunden con productos inexistentes y se usa la caché offline cuando está disponible.
 - El dominio de Open Products Facts ahora es correcto.
