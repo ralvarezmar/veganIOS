@@ -38,19 +38,22 @@ struct VeganAnalysis {
     let doubtfulIngredients: [String]
     let heuristic: Bool
     let reason: VeganReason?
+    let hasIngredientData: Bool
 
     init(
         status: VeganStatus,
         nonVeganIngredients: [String],
         doubtfulIngredients: [String],
         heuristic: Bool = false,
-        reason: VeganReason? = nil
+        reason: VeganReason? = nil,
+        hasIngredientData: Bool = false
     ) {
         self.status = status
         self.nonVeganIngredients = nonVeganIngredients
         self.doubtfulIngredients = doubtfulIngredients
         self.heuristic = heuristic
         self.reason = reason
+        self.hasIngredientData = hasIngredientData
     }
 }
 
@@ -178,6 +181,8 @@ func analyzeVegan(
         ingredients: ingredientList
     )
     let hasIngredients = !ingredientList.isEmpty
+    let hasIngredientData = hasIngredients ||
+        !(ingredientsText?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
     let hasTags = !(ingredientsAnalysisTags?.isEmpty ?? true)
 
     let decisiveTag: String? = {
@@ -205,7 +210,8 @@ func analyzeVegan(
                 status: .maybe,
                 nonVeganIngredients: [],
                 doubtfulIngredients: sealConflicts,
-                reason: VeganReason(source: .sealConflict, evidence: sealConflicts)
+                reason: VeganReason(source: .sealConflict, evidence: sealConflicts),
+                hasIngredientData: hasIngredientData
             )
         }
         return VeganAnalysis(
@@ -215,7 +221,8 @@ func analyzeVegan(
             reason: VeganReason(
                 source: .veganSeal,
                 evidence: Array(labelsTags?.filter(isVeganSealTag).prefix(1) ?? [])
-            )
+            ),
+            hasIngredientData: hasIngredientData
         )
     }
 
@@ -322,7 +329,8 @@ func analyzeVegan(
                 nonVeganIngredients: detected,
                 doubtfulIngredients: [],
                 heuristic: true,
-                reason: VeganReason(source: .heuristicText, evidence: detected)
+                reason: VeganReason(source: .heuristicText, evidence: detected),
+                hasIngredientData: hasIngredientData
             )
         }
         return VeganAnalysis(
@@ -330,7 +338,8 @@ func analyzeVegan(
             nonVeganIngredients: [],
             doubtfulIngredients: [],
             heuristic: true,
-            reason: VeganReason(source: .heuristicText)
+            reason: VeganReason(source: .heuristicText),
+            hasIngredientData: hasIngredientData
         )
     }
 
@@ -339,7 +348,8 @@ func analyzeVegan(
         nonVeganIngredients: reportedNonVeganIngredients,
         doubtfulIngredients: reportedDoubtfulIngredients,
         heuristic: !corroboratingAnimalIngredients.isEmpty,
-        reason: finalReason
+        reason: finalReason,
+        hasIngredientData: hasIngredientData
     )
 }
 
