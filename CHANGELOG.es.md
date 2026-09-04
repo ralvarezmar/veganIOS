@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.12.0 (42)] - 2026-09-04
+
 ### Añadido
 - Las tarjetas de impacto ambiental ahora explican la escala y las etapas de la huella, los ajustes del Green Score, la reciclabilidad del envase y la calidad de los datos.
 

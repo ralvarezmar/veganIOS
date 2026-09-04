@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.12.0 (42)] - 2026-09-04
+
 ### Added
 - Environmental impact cards now explain the footprint scale and stages, Green Score adjustments, packaging recyclability, and data quality.
 
