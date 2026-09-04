@@ -8,6 +8,12 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- Environmental impact cards now explain the footprint scale and stages, Green Score adjustments, packaging recyclability, and data quality.
+
+### Fixed
+- Products without ingredient data now explain why an automatic vegan verdict is unavailable.
+
 ## [1.11.1 (41)] - 2026-09-03
 
 ### Fixed

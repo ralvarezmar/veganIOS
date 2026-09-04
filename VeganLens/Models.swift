@@ -51,6 +51,7 @@ struct Product: Codable {
     let environmentalScoreData: EnvironmentalScoreData?
     let nutrientLevels: NutrientLevels?
     let ecoscoreData: EnvironmentalScoreData?
+    let packagings: [PackagingData]?
 
     enum CodingKeys: String, CodingKey {
         case productName = "product_name"
@@ -75,6 +76,7 @@ struct Product: Codable {
         case ecoscoreData = "ecoscore_data"
         case novaGroup = "nova_group"
         case quantity
+        case packagings
     }
 
     init(
@@ -99,7 +101,8 @@ struct Product: Codable {
         ecoscoreScore: Int? = nil,
         environmentalScoreData: EnvironmentalScoreData? = nil,
         nutrientLevels: NutrientLevels? = nil,
-        ecoscoreData: EnvironmentalScoreData? = nil
+        ecoscoreData: EnvironmentalScoreData? = nil,
+        packagings: [PackagingData]? = nil
     ) {
         self.productName = productName
         self.brands = brands
@@ -123,6 +126,7 @@ struct Product: Codable {
         self.environmentalScoreData = environmentalScoreData
         self.nutrientLevels = nutrientLevels
         self.ecoscoreData = ecoscoreData
+        self.packagings = packagings
     }
 
     init(from decoder: Decoder) throws {
@@ -147,6 +151,7 @@ struct Product: Codable {
         environmentalScoreData = try? container.decodeIfPresent(EnvironmentalScoreData.self, forKey: .environmentalScoreData)
         nutrientLevels = try? container.decodeIfPresent(NutrientLevels.self, forKey: .nutrientLevels)
         ecoscoreData = try? container.decodeIfPresent(EnvironmentalScoreData.self, forKey: .ecoscoreData)
+        packagings = try? container.decodeIfPresent([PackagingData].self, forKey: .packagings)
         novaGroup = container.decodeFlexibleInt(forKey: .novaGroup)
         quantity = try? container.decodeIfPresent(String.self, forKey: .quantity)
     }
@@ -259,60 +264,149 @@ struct NutritionFacts {
 struct EnvironmentalScoreData: Codable {
     let agribalyse: Agribalyse?
     let adjustments: EnvironmentalScoreAdjustments?
+    let score: Int?
+    let grade: String?
+    let scores: [String: Int]?
+    let grades: [String: String]?
+    let status: String?
+    let missing: [String: Int]?
+    let missingDataWarning: Int?
 
     init(
         agribalyse: Agribalyse? = nil,
-        adjustments: EnvironmentalScoreAdjustments? = nil
+        adjustments: EnvironmentalScoreAdjustments? = nil,
+        score: Int? = nil,
+        grade: String? = nil,
+        scores: [String: Int]? = nil,
+        grades: [String: String]? = nil,
+        status: String? = nil,
+        missing: [String: Int]? = nil,
+        missingDataWarning: Int? = nil
     ) {
         self.agribalyse = agribalyse
         self.adjustments = adjustments
+        self.score = score
+        self.grade = grade
+        self.scores = scores
+        self.grades = grades
+        self.status = status
+        self.missing = missing
+        self.missingDataWarning = missingDataWarning
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case agribalyse
+        case adjustments
+        case score
+        case grade
+        case scores
+        case grades
+        case status
+        case missing
+        case missingDataWarning = "missing_data_warning"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        agribalyse = try? container.decodeIfPresent(Agribalyse.self, forKey: .agribalyse)
+        adjustments = try? container.decodeIfPresent(EnvironmentalScoreAdjustments.self, forKey: .adjustments)
+        score = container.decodeFlexibleInt(forKey: .score)
+        grade = try? container.decodeIfPresent(String.self, forKey: .grade)
+        scores = try? container.decodeIfPresent([String: Int].self, forKey: .scores)
+        grades = try? container.decodeIfPresent([String: String].self, forKey: .grades)
+        status = try? container.decodeIfPresent(String.self, forKey: .status)
+        missing = try? container.decodeIfPresent([String: Int].self, forKey: .missing)
+        missingDataWarning = container.decodeFlexibleInt(forKey: .missingDataWarning)
     }
 }
 
 struct Agribalyse: Codable {
     let co2Total: Double?
+    let co2Agriculture: Double?
+    let co2Processing: Double?
     let co2Packaging: Double?
     let co2Transportation: Double?
+    let co2Distribution: Double?
+    let co2Consumption: Double?
+    let score: Int?
+    let nameEn: String?
+    let nameFr: String?
 
     enum CodingKeys: String, CodingKey {
         case co2Total = "co2_total"
+        case co2Agriculture = "co2_agriculture"
+        case co2Processing = "co2_processing"
         case co2Packaging = "co2_packaging"
         case co2Transportation = "co2_transportation"
+        case co2Distribution = "co2_distribution"
+        case co2Consumption = "co2_consumption"
+        case score
+        case nameEn = "name_en"
+        case nameFr = "name_fr"
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         co2Total = try container.decodeFlexibleDouble(forKey: .co2Total)
+        co2Agriculture = try container.decodeFlexibleDouble(forKey: .co2Agriculture)
+        co2Processing = try container.decodeFlexibleDouble(forKey: .co2Processing)
         co2Packaging = try container.decodeFlexibleDouble(forKey: .co2Packaging)
         co2Transportation = try container.decodeFlexibleDouble(forKey: .co2Transportation)
+        co2Distribution = try container.decodeFlexibleDouble(forKey: .co2Distribution)
+        co2Consumption = try container.decodeFlexibleDouble(forKey: .co2Consumption)
+        score = container.decodeFlexibleInt(forKey: .score)
+        nameEn = try? container.decodeIfPresent(String.self, forKey: .nameEn)
+        nameFr = try? container.decodeIfPresent(String.self, forKey: .nameFr)
     }
 
     init(
         co2Total: Double? = nil,
+        co2Agriculture: Double? = nil,
+        co2Processing: Double? = nil,
         co2Packaging: Double? = nil,
-        co2Transportation: Double? = nil
+        co2Transportation: Double? = nil,
+        co2Distribution: Double? = nil,
+        co2Consumption: Double? = nil,
+        score: Int? = nil,
+        nameEn: String? = nil,
+        nameFr: String? = nil
     ) {
         self.co2Total = co2Total
+        self.co2Agriculture = co2Agriculture
+        self.co2Processing = co2Processing
         self.co2Packaging = co2Packaging
         self.co2Transportation = co2Transportation
+        self.co2Distribution = co2Distribution
+        self.co2Consumption = co2Consumption
+        self.score = score
+        self.nameEn = nameEn
+        self.nameFr = nameFr
     }
 }
 
 struct EnvironmentalScoreAdjustments: Codable {
     let packaging: PackagingAdjustments?
     let originsOfIngredients: OriginsOfIngredientsAdjustments?
+    let productionSystem: ProductionSystemAdjustments?
+    let threatenedSpecies: ThreatenedSpeciesAdjustments?
 
     enum CodingKeys: String, CodingKey {
         case packaging
         case originsOfIngredients = "origins_of_ingredients"
+        case productionSystem = "production_system"
+        case threatenedSpecies = "threatened_species"
     }
 
     init(
         packaging: PackagingAdjustments? = nil,
-        originsOfIngredients: OriginsOfIngredientsAdjustments? = nil
+        originsOfIngredients: OriginsOfIngredientsAdjustments? = nil,
+        productionSystem: ProductionSystemAdjustments? = nil,
+        threatenedSpecies: ThreatenedSpeciesAdjustments? = nil
     ) {
         self.packaging = packaging
         self.originsOfIngredients = originsOfIngredients
+        self.productionSystem = productionSystem
+        self.threatenedSpecies = threatenedSpecies
     }
 
     init(from decoder: Decoder) throws {
@@ -322,24 +416,40 @@ struct EnvironmentalScoreAdjustments: Codable {
             OriginsOfIngredientsAdjustments.self,
             forKey: .originsOfIngredients
         )
+        productionSystem = try? container.decodeIfPresent(
+            ProductionSystemAdjustments.self,
+            forKey: .productionSystem
+        )
+        threatenedSpecies = try? container.decodeIfPresent(
+            ThreatenedSpeciesAdjustments.self,
+            forKey: .threatenedSpecies
+        )
     }
 }
 
 struct PackagingAdjustments: Codable {
     let value: Int?
     let nonRecyclableAndNonBiodegradableMaterials: Int?
+    let score: Int?
+    let packagings: [PackagingData]?
 
     enum CodingKeys: String, CodingKey {
         case value
         case nonRecyclableAndNonBiodegradableMaterials = "non_recyclable_and_non_biodegradable_materials"
+        case score
+        case packagings
     }
 
     init(
         value: Int? = nil,
-        nonRecyclableAndNonBiodegradableMaterials: Int? = nil
+        nonRecyclableAndNonBiodegradableMaterials: Int? = nil,
+        score: Int? = nil,
+        packagings: [PackagingData]? = nil
     ) {
         self.value = value
         self.nonRecyclableAndNonBiodegradableMaterials = nonRecyclableAndNonBiodegradableMaterials
+        self.score = score
+        self.packagings = packagings
     }
 
     init(from decoder: Decoder) throws {
@@ -348,30 +458,142 @@ struct PackagingAdjustments: Codable {
         nonRecyclableAndNonBiodegradableMaterials = container.decodeFlexibleInt(
             forKey: .nonRecyclableAndNonBiodegradableMaterials
         )
+        score = container.decodeFlexibleInt(forKey: .score)
+        packagings = try? container.decodeIfPresent([PackagingData].self, forKey: .packagings)
     }
 }
 
 struct OriginsOfIngredientsAdjustments: Codable {
     let transportationValue: Int?
+    let epiValue: Int?
     let warning: String?
+    let aggregatedOrigins: [AggregatedOrigin]?
 
     enum CodingKeys: String, CodingKey {
         case transportationValue = "transportation_value"
+        case epiValue = "epi_value"
         case warning
+        case aggregatedOrigins = "aggregated_origins"
     }
 
     init(
         transportationValue: Int? = nil,
-        warning: String? = nil
+        warning: String? = nil,
+        epiValue: Int? = nil,
+        aggregatedOrigins: [AggregatedOrigin]? = nil
     ) {
         self.transportationValue = transportationValue
+        self.epiValue = epiValue
         self.warning = warning
+        self.aggregatedOrigins = aggregatedOrigins
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         transportationValue = container.decodeFlexibleInt(forKey: .transportationValue)
+        epiValue = container.decodeFlexibleInt(forKey: .epiValue)
         warning = try? container.decodeIfPresent(String.self, forKey: .warning)
+        aggregatedOrigins = try? container.decodeIfPresent([AggregatedOrigin].self, forKey: .aggregatedOrigins)
+    }
+}
+
+struct ProductionSystemAdjustments: Codable {
+    let value: Int?
+    let labels: [String]?
+    let warning: String?
+
+    enum CodingKeys: String, CodingKey {
+        case value
+        case labels
+        case warning
+    }
+
+    init(value: Int? = nil, labels: [String]? = nil, warning: String? = nil) {
+        self.value = value
+        self.labels = labels
+        self.warning = warning
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        value = container.decodeFlexibleInt(forKey: .value)
+        labels = try? container.decodeIfPresent([String].self, forKey: .labels)
+        warning = try? container.decodeIfPresent(String.self, forKey: .warning)
+    }
+}
+
+struct ThreatenedSpeciesAdjustments: Codable {
+    let value: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case value
+    }
+
+    init(value: Int? = nil) {
+        self.value = value
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        value = container.decodeFlexibleInt(forKey: .value)
+    }
+}
+
+struct AggregatedOrigin: Codable {
+    let origin: String?
+    let percent: Double?
+
+    init(origin: String? = nil, percent: Double? = nil) {
+        self.origin = origin
+        self.percent = percent
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case origin
+        case percent
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        origin = try? container.decodeIfPresent(String.self, forKey: .origin)
+        percent = try container.decodeFlexibleDouble(forKey: .percent)
+    }
+}
+
+struct PackagingData: Codable {
+    let material: String?
+    let shape: String?
+    let recycling: String?
+    let nonRecyclableAndNonBiodegradable: String?
+
+    init(
+        material: String? = nil,
+        shape: String? = nil,
+        recycling: String? = nil,
+        nonRecyclableAndNonBiodegradable: String? = nil
+    ) {
+        self.material = material
+        self.shape = shape
+        self.recycling = recycling
+        self.nonRecyclableAndNonBiodegradable = nonRecyclableAndNonBiodegradable
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case material
+        case shape
+        case recycling
+        case nonRecyclableAndNonBiodegradable = "non_recyclable_and_non_biodegradable"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        material = try? container.decodeIfPresent(String.self, forKey: .material)
+        shape = try? container.decodeIfPresent(String.self, forKey: .shape)
+        recycling = try? container.decodeIfPresent(String.self, forKey: .recycling)
+        nonRecyclableAndNonBiodegradable = try? container.decodeIfPresent(
+            String.self,
+            forKey: .nonRecyclableAndNonBiodegradable
+        )
     }
 }
 
@@ -538,33 +760,172 @@ extension Product {
 
     var carbonFootprintLevel: CarbonFootprintLevel? {
         guard let value = carbonFootprint?.value else { return nil }
-        if value < 150 {
-            return .low
-        }
-        if value <= 500 {
-            return .moderate
-        }
-        return .high
+        return carbonFootprintLevelFor(value)
     }
 
-    var sustainabilityImpacts: SustainabilityImpacts? {
-        guard let data = environmentalScoreData ?? ecoscoreData else { return nil }
-        let agribalyse = data.agribalyse
-        let packaging = data.adjustments?.packaging
-        let origins = data.adjustments?.originsOfIngredients
-        let originsKnown = origins?.warning?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty != false
-        let impacts = SustainabilityImpacts(
-            packagingCo2Per100g: agribalyse?.co2Packaging.map { $0 * 100 }.flatMap { $0 >= 0 ? $0 : nil },
-            transportCo2Per100g: agribalyse?.co2Transportation.map { $0 * 100 }.flatMap { $0 >= 0 ? $0 : nil },
-            packagingPenalty: packaging?.value.flatMap { $0 < 0 ? $0 : nil },
-            nonRecyclablePackaging: packaging?.nonRecyclableAndNonBiodegradableMaterials.map { $0 > 0 } ?? false,
-            transportPenalty: origins?.transportationValue.flatMap {
-                originsKnown && $0 < 0 ? $0 : nil
+    var environmentalImpact: EnvironmentalImpact? {
+        let data = environmentalScoreData ?? ecoscoreData
+        let stages = data?.agribalyse?.carbonStages ?? []
+        let categoryName: String? = {
+            switch Locale.current.language.languageCode?.identifier.lowercased() {
+            case "en": return data?.agribalyse?.nameEn
+            case "fr": return data?.agribalyse?.nameFr
+            default: return nil
             }
+        }()
+        let greenScore = data?.greenScoreBreakdown(for: self)
+        let adjustmentPackagings = data?.adjustments?.packaging?.packagings ?? []
+        let packagingData = adjustmentPackagings.isEmpty ? (packagings ?? []) : adjustmentPackagings
+        let packaging = packagingData.compactMap { component -> PackagingComponent? in
+            guard component.material?.isEmpty == false ||
+                component.shape?.isEmpty == false ||
+                component.recycling?.isEmpty == false else {
+                return nil
+            }
+            let raw = component.nonRecyclableAndNonBiodegradable?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            let recyclability: PackagingRecyclability
+            switch raw {
+            case "yes": recyclability = .nonRecyclable
+            case "maybe": recyclability = .maybeNonRecyclable
+            case "no": recyclability = .recyclable
+            default: recyclability = .unknown
+            }
+            return PackagingComponent(
+                materialTag: component.material?.isEmpty == false ? component.material : nil,
+                shapeTag: component.shape?.isEmpty == false ? component.shape : nil,
+                recyclingTag: component.recycling?.isEmpty == false ? component.recycling : nil,
+                recyclability: recyclability
+            )
+        }
+        let dataQuality = data?.environmentalDataQuality
+        guard !stages.isEmpty || greenScore != nil || !packaging.isEmpty || dataQuality != nil else {
+            return nil
+        }
+        return EnvironmentalImpact(
+            stages: stages,
+            categoryName: categoryName,
+            greenScore: greenScore,
+            packaging: packaging,
+            dataQuality: dataQuality
         )
-        guard impacts.hasAnyValue else { return nil }
-        return impacts
     }
+}
+
+private extension Agribalyse {
+    var carbonStages: [CarbonFootprintStage] {
+        let rawValues: [(CarbonStage, Double?)] = [
+            (.agriculture, co2Agriculture),
+            (.processing, co2Processing),
+            (.transport, co2Transportation),
+            (.packaging, co2Packaging),
+            (.distribution, co2Distribution),
+            (.consumption, co2Consumption)
+        ]
+        let values = rawValues.compactMap { stage, value in
+            guard let value, value > 0 else { return nil }
+            return (stage, value * 100)
+        }.sorted { $0.1 > $1.1 }
+        guard values.count >= 2 else { return [] }
+        let total = values.reduce(0) { $0 + $1.1 }
+        let exactShares = values.map { $0.1 / total * 100 }
+        var shares = exactShares.map { Int(floor($0)) }
+        let remaining = 100 - shares.reduce(0, +)
+        exactShares.enumerated()
+            .sorted {
+                let leftFraction = $0.element - floor($0.element)
+                let rightFraction = $1.element - floor($1.element)
+                return leftFraction == rightFraction ? $0.offset < $1.offset : leftFraction > rightFraction
+            }
+            .prefix(remaining)
+            .forEach { shares[$0.offset] += 1 }
+        return values.enumerated().map { index, value in
+            CarbonFootprintStage(stage: value.0, gramsPer100g: value.1, sharePercent: shares[index])
+        }
+    }
+}
+
+private extension EnvironmentalScoreData {
+    func greenScoreBreakdown(for product: Product) -> GreenScoreBreakdown? {
+        let adjustmentData = adjustments
+        var adjustmentValues: [GreenScoreAdjustment] = []
+        if let points = adjustmentData?.packaging?.value, points != 0 {
+            adjustmentValues.append(GreenScoreAdjustment(kind: .packaging, points: points))
+        }
+        if let origins = adjustmentData?.originsOfIngredients {
+            let points: Int
+            if origins.epiValue != nil || origins.transportationValue != nil {
+                points = (origins.epiValue ?? 0) + (origins.transportationValue ?? 0)
+            } else {
+                points = 0
+            }
+            let unknown = !(origins.warning?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+            let unknownPoints = origins.epiValue != nil && origins.transportationValue != nil
+                ? points
+                : origins.transportationValue ?? 0
+            if points != 0 || unknown {
+                adjustmentValues.append(GreenScoreAdjustment(
+                    kind: .origins,
+                    points: unknown ? unknownPoints : points,
+                    unknownOrigin: unknown
+                ))
+            }
+        }
+        if let production = adjustmentData?.productionSystem,
+           (production.value ?? 0) != 0 || production.warning == "no_label" {
+            adjustmentValues.append(GreenScoreAdjustment(
+                kind: .productionSystem,
+                points: production.value ?? 0,
+                noProductionLabel: production.warning == "no_label"
+            ))
+        }
+        if let points = adjustmentData?.threatenedSpecies?.value, points != 0 {
+            adjustmentValues.append(GreenScoreAdjustment(kind: .threatenedSpecies, points: points))
+        }
+        let country = Locale.current.region?.identifier.lowercased() ?? ""
+        let finalScore = (countryValues(scores, country: country) + [score, product.greenScoreValue].compactMap { $0 })
+            .first { (0...100).contains($0) }
+        let finalGrade = (countryValues(grades, country: country) + [grade, product.greenScoreGrade].compactMap { $0 })
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).uppercased() }
+            .first { ["A", "B", "C", "D", "E"].contains($0) }
+        let breakdown = GreenScoreBreakdown(
+            baseScore: agribalyse?.score.flatMap { (0...100).contains($0) ? $0 : nil },
+            finalScore: finalScore.flatMap { (0...100).contains($0) ? $0 : nil },
+            grade: finalGrade,
+            adjustments: adjustmentValues
+        )
+        return breakdown.baseScore != nil ||
+            breakdown.finalScore != nil ||
+            breakdown.grade != nil ||
+            !breakdown.adjustments.isEmpty ? breakdown : nil
+    }
+
+    var environmentalDataQuality: EnvironmentalDataQuality? {
+        let missingFields: [MissingEnvironmentalData] = [
+            ("origins", .origins),
+            ("labels", .labels),
+            ("packagings", .packagings),
+            ("categories", .categories)
+        ].compactMap { key, value in
+            missing?[key].flatMap { $0 > 0 ? value : nil }
+        }
+        let incomplete = (missingDataWarning ?? 0) > 0 || !missingFields.isEmpty
+        return incomplete ? EnvironmentalDataQuality(missing: missingFields, incomplete: true) : nil
+    }
+}
+
+private func countryValues<T>(_ values: [String: T]?, country: String) -> [T] {
+    guard let values else { return [] }
+    let normalized = values.reduce(into: [String: T]()) {
+        $0[$1.key.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()] = $1.value
+    }
+    var result: [T] = []
+    if let value = normalized[country] {
+        result.append(value)
+    }
+    if country != "world", let value = normalized["world"] {
+        result.append(value)
+    }
+    return result
 }
 
 enum NutrientLevelKey: Equatable {
@@ -596,20 +957,92 @@ struct CarbonFootprint {
     let source: CarbonFootprintSource
 }
 
-struct SustainabilityImpacts: Equatable {
-    let packagingCo2Per100g: Double?
-    let transportCo2Per100g: Double?
-    let packagingPenalty: Int?
-    let nonRecyclablePackaging: Bool
-    let transportPenalty: Int?
+func carbonFootprintLevelFor(_ value: Double) -> CarbonFootprintLevel {
+    if value < 150 { return .low }
+    if value <= 500 { return .moderate }
+    return .high
+}
 
-    var hasAnyValue: Bool {
-        packagingCo2Per100g != nil ||
-            transportCo2Per100g != nil ||
-            packagingPenalty != nil ||
-            nonRecyclablePackaging ||
-            transportPenalty != nil
+enum CarbonStage: Equatable {
+    case agriculture
+    case processing
+    case transport
+    case packaging
+    case distribution
+    case consumption
+}
+
+struct CarbonFootprintStage: Equatable {
+    let stage: CarbonStage
+    let gramsPer100g: Double
+    let sharePercent: Int
+}
+
+enum GreenScoreAdjustmentKind: Equatable {
+    case packaging
+    case origins
+    case productionSystem
+    case threatenedSpecies
+}
+
+struct GreenScoreAdjustment: Equatable {
+    let kind: GreenScoreAdjustmentKind
+    let points: Int
+    let unknownOrigin: Bool
+    let noProductionLabel: Bool
+
+    init(
+        kind: GreenScoreAdjustmentKind,
+        points: Int,
+        unknownOrigin: Bool = false,
+        noProductionLabel: Bool = false
+    ) {
+        self.kind = kind
+        self.points = points
+        self.unknownOrigin = unknownOrigin
+        self.noProductionLabel = noProductionLabel
     }
+}
+
+struct GreenScoreBreakdown: Equatable {
+    let baseScore: Int?
+    let finalScore: Int?
+    let grade: String?
+    let adjustments: [GreenScoreAdjustment]
+}
+
+enum PackagingRecyclability: Equatable {
+    case recyclable
+    case maybeNonRecyclable
+    case nonRecyclable
+    case unknown
+}
+
+struct PackagingComponent: Equatable {
+    let materialTag: String?
+    let shapeTag: String?
+    let recyclingTag: String?
+    let recyclability: PackagingRecyclability
+}
+
+enum MissingEnvironmentalData: Equatable {
+    case origins
+    case labels
+    case packagings
+    case categories
+}
+
+struct EnvironmentalDataQuality: Equatable {
+    let missing: [MissingEnvironmentalData]
+    let incomplete: Bool
+}
+
+struct EnvironmentalImpact: Equatable {
+    let stages: [CarbonFootprintStage]
+    let categoryName: String?
+    let greenScore: GreenScoreBreakdown?
+    let packaging: [PackagingComponent]
+    let dataQuality: EnvironmentalDataQuality?
 }
 
 enum ProductSource: String, CaseIterable, Codable, Hashable {
