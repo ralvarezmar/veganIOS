@@ -10,6 +10,12 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- Las tarjetas de impacto ambiental ahora explican la escala y las etapas de la huella, los ajustes del Green Score, la reciclabilidad del envase y la calidad de los datos.
+
+### Corregido
+- Los productos sin datos de ingredientes ahora explican por qué no hay un veredicto vegano automático.
+
 ## [1.11.1 (41)] - 2026-09-03
 
 ### Corregido

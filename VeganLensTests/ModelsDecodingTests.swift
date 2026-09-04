@@ -214,7 +214,7 @@ final class ModelsDecodingTests: XCTestCase {
         }
     }
 
-    func testSustainabilityImpactsFallsBackToLegacyEcoScoreDataAndDecodesFlexibleValues() throws {
+    func testEnvironmentalImpactDecodesStagesGreenScorePackagingAndQuality() throws {
         let product = try decodeResponse(
             """
             {
@@ -222,16 +222,42 @@ final class ModelsDecodingTests: XCTestCase {
               "product":{
                 "ecoscore_data":{
                   "agribalyse":{
-                    "co2_packaging":"0,174",
-                    "co2_transportation":0.207
+                    "co2_agriculture":0.756,
+                    "co2_processing":0.233,
+                    "co2_transportation":0.207,
+                    "co2_packaging":0.174,
+                    "co2_distribution":0.0269,
+                    "score":90,
+                    "name_en":"Potato crisps",
+                    "name_fr":"Chips de pomme de terre"
                   },
+                  "score":75,
+                  "grade":"B",
+                  "scores":{"world":74},
+                  "grades":{"world":"C"},
+                  "missing":{"origins":1,"labels":1},
+                  "missing_data_warning":1,
                   "adjustments":{
                     "packaging":{
-                      "value":"-10",
-                      "non_recyclable_and_non_biodegradable_materials":"1"
+                      "value":-10,
+                      "packagings":[{
+                        "material":"en:plastic",
+                        "shape":"en:bag",
+                        "recycling":"en:recycle-with-plastics-metal-and-bricks",
+                        "non_recyclable_and_non_biodegradable":"maybe"
+                      }]
                     },
                     "origins_of_ingredients":{
-                      "transportation_value":"-5"
+                      "epi_value":0,
+                      "transportation_value":-5,
+                      "warning":"origins_are_100_percent_unknown"
+                    },
+                    "production_system":{
+                      "value":0,
+                      "warning":"no_label"
+                    },
+                    "threatened_species":{
+                      "value":0
                     }
                   }
                 }
@@ -240,25 +266,39 @@ final class ModelsDecodingTests: XCTestCase {
             """
         ).product
 
-        XCTAssertEqual(product?.sustainabilityImpacts?.packagingCo2Per100g ?? -1, 17.4, accuracy: 0.0001)
-        XCTAssertEqual(product?.sustainabilityImpacts?.transportCo2Per100g ?? -1, 20.7, accuracy: 0.0001)
-        XCTAssertEqual(product?.sustainabilityImpacts?.packagingPenalty, -10)
-        XCTAssertEqual(product?.sustainabilityImpacts?.nonRecyclablePackaging, true)
-        XCTAssertEqual(product?.sustainabilityImpacts?.transportPenalty, -5)
+        let impact = try XCTUnwrap(product?.environmentalImpact)
+        XCTAssertEqual(impact.stages.map(\.stage), [.agriculture, .processing, .transport, .packaging, .distribution])
+        XCTAssertEqual(impact.stages.map(\.sharePercent).reduce(0, +), 100)
+        XCTAssertEqual(impact.stages[0].gramsPer100g, 75.6, accuracy: 0.0001)
+        XCTAssertEqual(impact.stages[1].gramsPer100g, 23.3, accuracy: 0.0001)
+        XCTAssertEqual(impact.stages[2].gramsPer100g, 20.7, accuracy: 0.0001)
+        XCTAssertEqual(impact.stages[3].gramsPer100g, 17.4, accuracy: 0.0001)
+        XCTAssertEqual(impact.stages[4].gramsPer100g, 2.69, accuracy: 0.0001)
+        XCTAssertEqual(impact.greenScore?.baseScore, 90)
+        XCTAssertEqual(impact.greenScore?.finalScore, 74)
+        XCTAssertEqual(impact.greenScore?.grade, "C")
+        XCTAssertEqual(impact.greenScore?.adjustments.map(\.kind), [.packaging, .origins, .productionSystem])
+        XCTAssertEqual(impact.greenScore?.adjustments[0].points, -10)
+        XCTAssertEqual(impact.greenScore?.adjustments[1].points, -5)
+        XCTAssertTrue(impact.greenScore?.adjustments[1].unknownOrigin == true)
+        XCTAssertTrue(impact.greenScore?.adjustments[2].noProductionLabel == true)
+        XCTAssertEqual(impact.packaging.first?.materialTag, "en:plastic")
+        XCTAssertEqual(impact.packaging.first?.shapeTag, "en:bag")
+        XCTAssertEqual(impact.packaging.first?.recyclingTag, "en:recycle-with-plastics-metal-and-bricks")
+        XCTAssertEqual(impact.packaging.first?.recyclability, .maybeNonRecyclable)
+        XCTAssertEqual(impact.dataQuality?.missing, [.origins, .labels])
+        XCTAssertTrue(impact.dataQuality?.incomplete == true)
     }
 
-    func testSustainabilityImpactsHidesTransportPenaltyForUnknownOrigins() throws {
+    func testEnvironmentalImpactReturnsNilForSingleStageWithoutOtherData() throws {
         let product = try decodeResponse(
             """
             {
               "status":1,
               "product":{
                 "ecoscore_data":{
-                  "adjustments":{
-                    "origins_of_ingredients":{
-                      "transportation_value":-5,
-                      "warning":"origins_are_100_percent_unknown"
-                    }
+                  "agribalyse":{
+                    "co2_agriculture":0.756
                   }
                 }
               }
@@ -266,16 +306,44 @@ final class ModelsDecodingTests: XCTestCase {
             """
         ).product
 
-        XCTAssertNil(product?.sustainabilityImpacts?.transportPenalty)
+        XCTAssertNil(product?.environmentalImpact)
     }
 
-    func testSustainabilityImpactsReturnsNilWithoutStagesOrPenalties() throws {
-        XCTAssertNil(try decodeResponse(#"{"status":1,"product":{}}"#).product?.sustainabilityImpacts)
-        XCTAssertNil(
-            try decodeResponse(
-                #"{"status":1,"product":{"ecoscore_data":{"agribalyse":{"co2_total":1.0}}}}"#
-            ).product?.sustainabilityImpacts
-        )
+    func testEnvironmentalGreenScoreFallsBackToBlockScoreAndGrade() throws {
+        let product = try decodeResponse(
+            """
+            {"status":1,"product":{"environmental_score_data":{"score":64,"grade":"d"}}}
+            """
+        ).product
+
+        XCTAssertEqual(product?.environmentalImpact?.greenScore?.finalScore, 64)
+        XCTAssertEqual(product?.environmentalImpact?.greenScore?.grade, "D")
+    }
+
+    func testEnvironmentalGreenScoreUsesDeviceCountryBeforeWorld() throws {
+        let country = Locale.current.region?.identifier.lowercased() ?? ""
+        guard !country.isEmpty, country != "world" else {
+            return
+        }
+        let countryKey = country
+        let product = try decodeResponse(
+            """
+            {"status":1,"product":{"environmental_score_data":{"scores":{"\(countryKey)":81,"world":74},"grades":{"\(countryKey)":"A","world":"C"}}}}
+            """
+        ).product
+
+        XCTAssertEqual(product?.environmentalImpact?.greenScore?.finalScore, 81)
+        XCTAssertEqual(product?.environmentalImpact?.greenScore?.grade, "A")
+    }
+
+    func testEnvironmentalImpactReturnsNilWithoutEnvironmentalData() throws {
+        XCTAssertNil(try decodeResponse(#"{"status":1,"product":{}}"#).product?.environmentalImpact)
+        XCTAssertNil(try decodeResponse(#"{"status":1,"product":{"ecoscore_data":{"agribalyse":{"co2_total":1.0}}}}"#).product?.environmentalImpact)
+    }
+
+    func testEnvironmentalTagMapsOmitUnknownTags() {
+        XCTAssertNil(environmentalMaterialLabelKeys["en:unknown"])
+        XCTAssertEqual(environmentalMaterialLabelKeys["en:plastic"], "env_material_plastic")
     }
 
     func testNutritionFactsFallsBackToPreparedValues() throws {

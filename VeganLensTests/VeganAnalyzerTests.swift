@@ -2,6 +2,28 @@ import XCTest
 @testable import VeganLens
 
 final class VeganAnalyzerTests: XCTestCase {
+    func testUnknownWithoutIngredientsReportsNoIngredientData() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            ingredientsText: " \n "
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .unknown))
+        XCTAssertFalse(analysis.hasIngredientData)
+    }
+
+    func testIngredientTextAloneReportsIngredientData() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            ingredientsText: "Harina de trigo, azúcar"
+        )
+
+        XCTAssertTrue(analysis.hasIngredientData)
+        XCTAssertTrue(isStatus(analysis.status, .maybe))
+    }
+
     func testDecisiveVeganTagReturnsVegan() {
         let analysis = analyzeVegan(
             ingredientsAnalysisTags: ["en:vegan"],
