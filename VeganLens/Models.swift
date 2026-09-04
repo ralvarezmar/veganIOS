@@ -821,7 +821,7 @@ private extension Agribalyse {
             (.distribution, co2Distribution),
             (.consumption, co2Consumption)
         ]
-        let values = rawValues.compactMap { stage, value in
+        let values = rawValues.compactMap { (stage, value) -> (CarbonStage, Double)? in
             guard let value, value > 0 else { return nil }
             return (stage, value * 100)
         }.sorted { $0.1 > $1.1 }

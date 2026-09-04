@@ -2512,7 +2512,7 @@ private struct EnvironmentalGreenScore: View {
 private struct EnvironmentalScoreRow: View {
     let label: String
     let points: Int
-    let signed: Bool = true
+    var signed: Bool = true
     let accessibilityLabel: String?
 
     var body: some View {
