@@ -10,7 +10,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ### Changed
 - Environmental impact cards are simplified and omit sections without data.
-- Green Score details are now shown in the badge sheet, and Strawberries now use two strawberries.
+- Green Score details moved to the badge sheet.
+- The Strawberries mascot (Fresados) now shows two strawberries.
 - The mascot gallery detail no longer crops tall characters.
 
 ## [1.12.0 (42)] - 2026-09-04
