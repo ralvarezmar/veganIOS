@@ -773,7 +773,6 @@ extension Product {
             default: return nil
             }
         }()
-        let greenScore = data?.greenScoreBreakdown(for: self)
         let adjustmentPackagings = data?.adjustments?.packaging?.packagings ?? []
         let packagingData = adjustmentPackagings.isEmpty ? (packagings ?? []) : adjustmentPackagings
         let packaging = packagingData.compactMap { component -> PackagingComponent? in
@@ -797,16 +796,13 @@ extension Product {
                 recyclability: recyclability
             )
         }
-        let dataQuality = data?.environmentalDataQuality
-        guard !stages.isEmpty || greenScore != nil || !packaging.isEmpty || dataQuality != nil else {
+        guard !stages.isEmpty || !packaging.isEmpty else {
             return nil
         }
         return EnvironmentalImpact(
             stages: stages,
             categoryName: categoryName,
-            greenScore: greenScore,
-            packaging: packaging,
-            dataQuality: dataQuality
+            packaging: packaging
         )
     }
 }
@@ -842,90 +838,6 @@ private extension Agribalyse {
             CarbonFootprintStage(stage: value.0, gramsPer100g: value.1, sharePercent: shares[index])
         }
     }
-}
-
-private extension EnvironmentalScoreData {
-    func greenScoreBreakdown(for product: Product) -> GreenScoreBreakdown? {
-        let adjustmentData = adjustments
-        var adjustmentValues: [GreenScoreAdjustment] = []
-        if let points = adjustmentData?.packaging?.value, points != 0 {
-            adjustmentValues.append(GreenScoreAdjustment(kind: .packaging, points: points))
-        }
-        if let origins = adjustmentData?.originsOfIngredients {
-            let points: Int
-            if origins.epiValue != nil || origins.transportationValue != nil {
-                points = (origins.epiValue ?? 0) + (origins.transportationValue ?? 0)
-            } else {
-                points = 0
-            }
-            let unknown = !(origins.warning?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
-            let unknownPoints = origins.epiValue != nil && origins.transportationValue != nil
-                ? points
-                : origins.transportationValue ?? 0
-            if points != 0 || unknown {
-                adjustmentValues.append(GreenScoreAdjustment(
-                    kind: .origins,
-                    points: unknown ? unknownPoints : points,
-                    unknownOrigin: unknown
-                ))
-            }
-        }
-        if let production = adjustmentData?.productionSystem,
-           (production.value ?? 0) != 0 || production.warning == "no_label" {
-            adjustmentValues.append(GreenScoreAdjustment(
-                kind: .productionSystem,
-                points: production.value ?? 0,
-                noProductionLabel: production.warning == "no_label"
-            ))
-        }
-        if let points = adjustmentData?.threatenedSpecies?.value, points != 0 {
-            adjustmentValues.append(GreenScoreAdjustment(kind: .threatenedSpecies, points: points))
-        }
-        let country = Locale.current.region?.identifier.lowercased() ?? ""
-        let finalScore = (countryValues(scores, country: country) + [score, product.greenScoreValue].compactMap { $0 })
-            .first { (0...100).contains($0) }
-        let finalGrade = (countryValues(grades, country: country) + [grade, product.greenScoreGrade].compactMap { $0 })
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).uppercased() }
-            .first { ["A", "B", "C", "D", "E"].contains($0) }
-        let breakdown = GreenScoreBreakdown(
-            baseScore: agribalyse?.score.flatMap { (0...100).contains($0) ? $0 : nil },
-            finalScore: finalScore.flatMap { (0...100).contains($0) ? $0 : nil },
-            grade: finalGrade,
-            adjustments: adjustmentValues
-        )
-        return breakdown.baseScore != nil ||
-            breakdown.finalScore != nil ||
-            breakdown.grade != nil ||
-            !breakdown.adjustments.isEmpty ? breakdown : nil
-    }
-
-    var environmentalDataQuality: EnvironmentalDataQuality? {
-        let missingFields: [MissingEnvironmentalData] = [
-            ("origins", .origins),
-            ("labels", .labels),
-            ("packagings", .packagings),
-            ("categories", .categories)
-        ].compactMap { key, value in
-            missing?[key].flatMap { $0 > 0 ? value : nil }
-        }
-        let incomplete = (missingDataWarning ?? 0) > 0 || !missingFields.isEmpty
-        return incomplete ? EnvironmentalDataQuality(missing: missingFields, incomplete: true) : nil
-    }
-}
-
-private func countryValues<T>(_ values: [String: T]?, country: String) -> [T] {
-    guard let values else { return [] }
-    let normalized = values.reduce(into: [String: T]()) {
-        $0[$1.key.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()] = $1.value
-    }
-    var result: [T] = []
-    if let value = normalized[country] {
-        result.append(value)
-    }
-    if country != "world", let value = normalized["world"] {
-        result.append(value)
-    }
-    return result
 }
 
 enum NutrientLevelKey: Equatable {
@@ -978,39 +890,6 @@ struct CarbonFootprintStage: Equatable {
     let sharePercent: Int
 }
 
-enum GreenScoreAdjustmentKind: Equatable {
-    case packaging
-    case origins
-    case productionSystem
-    case threatenedSpecies
-}
-
-struct GreenScoreAdjustment: Equatable {
-    let kind: GreenScoreAdjustmentKind
-    let points: Int
-    let unknownOrigin: Bool
-    let noProductionLabel: Bool
-
-    init(
-        kind: GreenScoreAdjustmentKind,
-        points: Int,
-        unknownOrigin: Bool = false,
-        noProductionLabel: Bool = false
-    ) {
-        self.kind = kind
-        self.points = points
-        self.unknownOrigin = unknownOrigin
-        self.noProductionLabel = noProductionLabel
-    }
-}
-
-struct GreenScoreBreakdown: Equatable {
-    let baseScore: Int?
-    let finalScore: Int?
-    let grade: String?
-    let adjustments: [GreenScoreAdjustment]
-}
-
 enum PackagingRecyclability: Equatable {
     case recyclable
     case maybeNonRecyclable
@@ -1025,24 +904,10 @@ struct PackagingComponent: Equatable {
     let recyclability: PackagingRecyclability
 }
 
-enum MissingEnvironmentalData: Equatable {
-    case origins
-    case labels
-    case packagings
-    case categories
-}
-
-struct EnvironmentalDataQuality: Equatable {
-    let missing: [MissingEnvironmentalData]
-    let incomplete: Bool
-}
-
 struct EnvironmentalImpact: Equatable {
     let stages: [CarbonFootprintStage]
     let categoryName: String?
-    let greenScore: GreenScoreBreakdown?
     let packaging: [PackagingComponent]
-    let dataQuality: EnvironmentalDataQuality?
 }
 
 enum ProductSource: String, CaseIterable, Codable, Hashable {

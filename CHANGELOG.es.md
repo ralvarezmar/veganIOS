@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Las tarjetas de impacto ambiental se simplifican y omiten las secciones sin datos.
+
 ## [1.12.0 (42)] - 2026-09-04
 
 ### Añadido

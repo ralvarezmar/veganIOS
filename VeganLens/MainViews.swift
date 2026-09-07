@@ -730,9 +730,6 @@ struct ResultView: View {
 
                         ScoresCard(
                             product: product,
-                            barcode: barcode,
-                            source: source,
-                            onContribute: onContribute,
                             onScoreTap: { selectedScoreInfo = $0 }
                         )
                         PalmOilCard(tags: product.ingredientsAnalysisTags)
@@ -2235,9 +2232,6 @@ private struct ScoreExplanation: Identifiable {
 
 private struct ScoresCard: View {
     let product: Product
-    let barcode: String
-    let source: ProductSource
-    let onContribute: (String, Product?, ProductSource?) -> Void
     let onScoreTap: (ScoreExplanation) -> Void
 
     var body: some View {
@@ -2374,20 +2368,8 @@ private struct ScoresCard: View {
                             if !environmentalImpact.stages.isEmpty {
                                 EnvironmentalStages(stages: environmentalImpact.stages)
                             }
-                            if let greenScore = environmentalImpact.greenScore {
-                                EnvironmentalGreenScore(breakdown: greenScore)
-                            }
                             if !environmentalImpact.packaging.isEmpty {
                                 EnvironmentalPackagingSection(components: environmentalImpact.packaging)
-                            }
-                            if let quality = environmentalImpact.dataQuality, quality.incomplete {
-                                EnvironmentalDataQualitySection(
-                                    quality: quality,
-                                    barcode: barcode,
-                                    source: source,
-                                    product: product,
-                                    onContribute: onContribute
-                                )
                             }
                         }
                     }
@@ -2483,74 +2465,6 @@ private struct EnvironmentalStages: View {
     }
 }
 
-private struct EnvironmentalGreenScore: View {
-    let breakdown: GreenScoreBreakdown
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(L("env_green_score_breakdown_title"))
-                .appFont(.subheadline, weight: .semibold)
-            if let baseScore = breakdown.baseScore {
-                EnvironmentalScoreRow(
-                    label: L("env_green_score_base"),
-                    points: baseScore,
-                    signed: false,
-                    accessibilityLabel: nil
-                )
-            }
-            ForEach(breakdown.adjustments.indices, id: \.self) { index in
-                EnvironmentalAdjustmentRow(adjustment: breakdown.adjustments[index])
-            }
-            if let finalScore = breakdown.finalScore, let grade = breakdown.grade {
-                Text(LF("env_green_score_total", finalScore, grade))
-                    .appFont(.subheadline, weight: .semibold)
-            }
-        }
-    }
-}
-
-private struct EnvironmentalScoreRow: View {
-    let label: String
-    let points: Int
-    var signed: Bool = true
-    let accessibilityLabel: String?
-
-    var body: some View {
-        HStack {
-            Text(label)
-            Spacer()
-            Text(signed ? signedEnvironmentalPoints(points) : "\(points)")
-                .fontWeight(.semibold)
-        }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(accessibilityLabel ?? "\(label), \(LF("env_green_score_points_a11y", points))")
-    }
-}
-
-private struct EnvironmentalAdjustmentRow: View {
-    let adjustment: GreenScoreAdjustment
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            EnvironmentalScoreRow(
-                label: environmentalAdjustmentName(adjustment.kind),
-                points: adjustment.points,
-                accessibilityLabel: "\(environmentalAdjustmentName(adjustment.kind)), \(LF("env_green_score_points_a11y", adjustment.points))"
-            )
-            if adjustment.unknownOrigin {
-                Text(L("env_green_score_origin_unknown"))
-                    .appFont(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-            if adjustment.noProductionLabel {
-                Text(L("env_green_score_no_label"))
-                    .appFont(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-        }
-    }
-}
-
 private struct EnvironmentalPackagingSection: View {
     let components: [PackagingComponent]
 
@@ -2585,31 +2499,6 @@ private struct EnvironmentalPackagingSection: View {
                     }
                 }
             }
-        }
-    }
-}
-
-private struct EnvironmentalDataQualitySection: View {
-    let quality: EnvironmentalDataQuality
-    let barcode: String
-    let source: ProductSource
-    let product: Product
-    let onContribute: (String, Product?, ProductSource?) -> Void
-
-    var body: some View {
-        let labels = quality.missing.map(environmentalMissingDataName)
-        VStack(alignment: .leading, spacing: 8) {
-            Text(
-                labels.isEmpty
-                    ? L("env_data_quality_incomplete_generic")
-                    : LF("env_data_quality_incomplete", joinEnvironmentalLabels(labels))
-            )
-            Button {
-                onContribute(barcode, product, source)
-            } label: {
-                Text(L("env_data_quality_cta"))
-            }
-            .buttonStyle(.bordered)
         }
     }
 }
@@ -2651,49 +2540,6 @@ private func environmentalStageName(_ stage: CarbonStage) -> String {
     case .distribution: return L("env_stage_distribution")
     case .consumption: return L("env_stage_consumption")
     }
-}
-
-private func environmentalAdjustmentName(_ kind: GreenScoreAdjustmentKind) -> String {
-    switch kind {
-    case .packaging: return L("env_green_score_adjustment_packaging")
-    case .origins: return L("env_green_score_adjustment_origins")
-    case .productionSystem: return L("env_green_score_adjustment_production")
-    case .threatenedSpecies: return L("env_green_score_adjustment_species")
-    }
-}
-
-private func environmentalMissingDataName(_ missing: MissingEnvironmentalData) -> String {
-    switch missing {
-    case .origins: return L("env_data_missing_origins")
-    case .labels: return L("env_data_missing_labels")
-    case .packagings: return L("env_data_missing_packagings")
-    case .categories: return L("env_data_missing_categories")
-    }
-}
-
-private func joinEnvironmentalLabels(_ labels: [String]) -> String {
-    switch labels.count {
-    case 0: return ""
-    case 1: return labels[0]
-    case 2: return "\(labels[0]) \(environmentalConjunction()) \(labels[1])"
-    default: return labels.dropLast().joined(separator: ", ") + " \(environmentalConjunction()) \(labels.last!)"
-    }
-}
-
-private func environmentalConjunction() -> String {
-    switch Locale.current.language.languageCode?.identifier.lowercased() {
-    case "de": return "und"
-    case "en": return "and"
-    case "fr": return "et"
-    case "it", "pt": return "e"
-    default: return "y"
-    }
-}
-
-private func signedEnvironmentalPoints(_ points: Int) -> String {
-    if points > 0 { return "+\(points)" }
-    if points < 0 { return "−\(abs(points))" }
-    return "0"
 }
 
 private struct ScoreInfoSheet: View {

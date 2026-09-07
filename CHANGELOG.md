@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Environmental impact cards are simplified and omit sections without data.
+
 ## [1.12.0 (42)] - 2026-09-04
 
 ### Added
