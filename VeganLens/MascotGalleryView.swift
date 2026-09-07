@@ -73,23 +73,26 @@ struct MascotGalleryView: View {
     }
 
     private func mascotDetail(for character: String) -> some View {
-        VStack(spacing: 20) {
-            Image("portada_\(character)")
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity, maxHeight: 520)
-                .layoutPriority(-1)
-                .accessibilityLabel(mascotName(for: character))
+        GeometryReader { proxy in
+            ScrollView {
+                VStack(spacing: 20) {
+                    Image("portada_\(character)")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: proxy.size.height * 0.8)
+                        .accessibilityLabel(mascotName(for: character))
 
-            Text(mascotNickname(for: character))
-                .appFont(.title2, weight: .semibold)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-                .foregroundStyle(PortadaColors.title)
+                    Text(mascotNickname(for: character))
+                        .appFont(.title2, weight: .semibold)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundStyle(PortadaColors.title)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(24)
+            }
+            .background(PortadaColors.background)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(24)
-        .background(PortadaColors.background)
     }
 
     private func mascotName(for character: String) -> String {

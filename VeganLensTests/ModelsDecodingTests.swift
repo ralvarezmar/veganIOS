@@ -114,6 +114,28 @@ final class ModelsDecodingTests: XCTestCase {
         XCTAssertEqual(response.product?.greenScoreValue, 40)
     }
 
+    func testGreenScoreBreakdownUsesCountryThenWorldAndBlockFallbacks() throws {
+        let response = try decodeResponse(
+            """
+            {
+              "status":1,
+              "product":{
+                "environmental_score_data":{
+                  "agribalyse":{"score":90},
+                  "score":80,
+                  "grade":"b",
+                  "scores":{"es":75,"world":70},
+                  "grades":{"es":"a","world":"c"}
+                }
+              }
+            }
+            """
+        )
+
+        XCTAssertEqual(response.product?.greenScoreBreakdown?.finalScore, 70)
+        XCTAssertEqual(response.product?.greenScoreBreakdown?.grade, "C")
+    }
+
     func testCarbonFootprintPrefersDeclaredAndConvertsEstimatedValue() throws {
         let declared = try decodeResponse(
             """

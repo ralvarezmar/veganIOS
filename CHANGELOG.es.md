@@ -12,6 +12,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ### Cambiado
 - Las tarjetas de impacto ambiental se simplifican y omiten las secciones sin datos.
+- El desglose del Green Score vuelve al sheet del badge y Fresados ahora muestra dos fresas.
+- El detalle de la galería ya no recorta a los personajes altos.
 
 ## [1.12.0 (42)] - 2026-09-04
 

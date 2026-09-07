@@ -432,6 +432,16 @@
 "env_category_reference" = "Média da categoria: %1$@";
 "env_stages_title" = "De onde vem a pegada";
 "env_stage_agriculture" = "Agricultura";
+"env_green_score_breakdown_title" = "Como a nota é composta";
+"env_green_score_base" = "Base Agribalyse";
+"env_green_score_adjustment_packaging" = "Embalagem";
+"env_green_score_adjustment_origins" = "Origem dos ingredientes";
+"env_green_score_adjustment_production" = "Sistema de produção";
+"env_green_score_adjustment_species" = "Espécies ameaçadas";
+"env_green_score_points_a11y" = "%1$d pontos";
+"env_green_score_total" = "Nota final: %1$d/100 (%2$@)";
+"env_green_score_origin_unknown" = "Origem desconhecida: o transporte não pode ser avaliado; isso não significa que seja baixo.";
+"env_green_score_no_label" = "Sem selos de produção reconhecidos.";
 "env_stage_processing" = "Processamento";
 "env_stage_transport" = "Transporte";
 "env_stage_packaging" = "Embalagem";

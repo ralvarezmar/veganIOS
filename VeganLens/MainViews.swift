@@ -767,7 +767,8 @@ struct ResultView: View {
                                     selectedScoreInfo = ScoreExplanation(
                                         id: "nutriscore-detail",
                                         titleKey: "score_info_nutriscore_title",
-                                        bodyKey: "score_info_nutriscore_body"
+                                        bodyKey: "score_info_nutriscore_body",
+                                        greenScoreBreakdown: nil
                                     )
                                 } label: {
                                     NutriScoreBadgeView(grade: grade.uppercased())
@@ -2228,6 +2229,7 @@ private struct ScoreExplanation: Identifiable {
     let id: String
     let titleKey: String
     let bodyKey: String
+    let greenScoreBreakdown: GreenScoreBreakdown?
 }
 
 private struct ScoresCard: View {
@@ -2255,7 +2257,8 @@ private struct ScoresCard: View {
                                     ScoreExplanation(
                                         id: "nutriscore",
                                         titleKey: "score_info_nutriscore_title",
-                                        bodyKey: "score_info_nutriscore_body"
+                                        bodyKey: "score_info_nutriscore_body",
+                                        greenScoreBreakdown: nil
                                     )
                                 )
                             } label: {
@@ -2272,7 +2275,8 @@ private struct ScoresCard: View {
                                     ScoreExplanation(
                                         id: "green-score",
                                         titleKey: "score_info_green_score_title",
-                                        bodyKey: "score_info_green_score_body"
+                                        bodyKey: "score_info_green_score_body",
+                                        greenScoreBreakdown: product.greenScoreBreakdown
                                     )
                                 )
                             } label: {
@@ -2295,7 +2299,8 @@ private struct ScoresCard: View {
                                     ScoreExplanation(
                                         id: "nova",
                                         titleKey: "score_info_nova_title",
-                                        bodyKey: "score_info_nova_body"
+                                        bodyKey: "score_info_nova_body",
+                                        greenScoreBreakdown: nil
                                     )
                                 )
                             } label: {
@@ -2320,7 +2325,8 @@ private struct ScoresCard: View {
                                 ScoreExplanation(
                                     id: "carbon-footprint",
                                     titleKey: "score_info_carbon_footprint_title",
-                                    bodyKey: "score_info_carbon_footprint_body"
+                                    bodyKey: "score_info_carbon_footprint_body",
+                                    greenScoreBreakdown: nil
                                 )
                             )
                         } label: {
@@ -2542,6 +2548,89 @@ private func environmentalStageName(_ stage: CarbonStage) -> String {
     }
 }
 
+private struct EnvironmentalGreenScore: View {
+    let breakdown: GreenScoreBreakdown
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(L("env_green_score_breakdown_title"))
+                .appFont(.subheadline, weight: .semibold)
+            if let baseScore = breakdown.baseScore {
+                EnvironmentalScoreRow(
+                    label: L("env_green_score_base"),
+                    points: baseScore,
+                    signed: false,
+                    accessibilityLabel: nil
+                )
+            }
+            ForEach(breakdown.adjustments.indices, id: \.self) { index in
+                EnvironmentalAdjustmentRow(adjustment: breakdown.adjustments[index])
+            }
+            if let finalScore = breakdown.finalScore, let grade = breakdown.grade {
+                Text(LF("env_green_score_total", finalScore, grade))
+                    .appFont(.subheadline, weight: .semibold)
+            }
+        }
+    }
+}
+
+private struct EnvironmentalScoreRow: View {
+    let label: String
+    let points: Int
+    var signed: Bool = true
+    let accessibilityLabel: String?
+
+    var body: some View {
+        HStack {
+            Text(label)
+            Spacer()
+            Text(signed ? signedEnvironmentalPoints(points) : "\(points)")
+                .fontWeight(.semibold)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(accessibilityLabel ?? "\(label), \(LF("env_green_score_points_a11y", points))")
+    }
+}
+
+private struct EnvironmentalAdjustmentRow: View {
+    let adjustment: GreenScoreAdjustment
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            EnvironmentalScoreRow(
+                label: environmentalAdjustmentName(adjustment.kind),
+                points: adjustment.points,
+                accessibilityLabel: "\(environmentalAdjustmentName(adjustment.kind)), \(LF("env_green_score_points_a11y", adjustment.points))"
+            )
+            if adjustment.unknownOrigin {
+                Text(L("env_green_score_origin_unknown"))
+                    .appFont(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            if adjustment.noProductionLabel {
+                Text(L("env_green_score_no_label"))
+                    .appFont(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
+private func environmentalAdjustmentName(_ kind: GreenScoreAdjustmentKind) -> String {
+    switch kind {
+    case .packaging: return L("env_green_score_adjustment_packaging")
+    case .origins: return L("env_green_score_adjustment_origins")
+    case .productionSystem: return L("env_green_score_adjustment_production")
+    case .threatenedSpecies: return L("env_green_score_adjustment_species")
+    }
+}
+
+private func signedEnvironmentalPoints(_ points: Int) -> String {
+    if points > 0 { return "+\(points)" }
+    if points < 0 { return "−\(abs(points))" }
+    return "0"
+}
+
 private struct ScoreInfoSheet: View {
     let explanation: ScoreExplanation
 
@@ -2549,6 +2638,9 @@ private struct ScoreInfoSheet: View {
         ScrollView {
             SimpleSectionCard(title: L(explanation.titleKey)) {
                 Text(L(explanation.bodyKey))
+                if let breakdown = explanation.greenScoreBreakdown {
+                    EnvironmentalGreenScore(breakdown: breakdown)
+                }
             }
             .padding()
         }

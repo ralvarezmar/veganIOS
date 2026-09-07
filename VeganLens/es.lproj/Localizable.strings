@@ -437,6 +437,16 @@ Fuente: %@
 "env_category_reference" = "Media de la categoría: %1$@";
 "env_stages_title" = "De dónde viene la huella";
 "env_stage_agriculture" = "Agricultura";
+"env_green_score_breakdown_title" = "Cómo se compone la nota";
+"env_green_score_base" = "Base Agribalyse";
+"env_green_score_adjustment_packaging" = "Envase";
+"env_green_score_adjustment_origins" = "Origen de los ingredientes";
+"env_green_score_adjustment_production" = "Sistema de producción";
+"env_green_score_adjustment_species" = "Especies amenazadas";
+"env_green_score_points_a11y" = "%1$d puntos";
+"env_green_score_total" = "Nota final: %1$d/100 (%2$@)";
+"env_green_score_origin_unknown" = "Origen desconocido: el transporte no se puede valorar, no es que sea bajo.";
+"env_green_score_no_label" = "Sin sellos de producción reconocidos.";
 "env_stage_processing" = "Procesado";
 "env_stage_transport" = "Transporte";
 "env_stage_packaging" = "Envase";

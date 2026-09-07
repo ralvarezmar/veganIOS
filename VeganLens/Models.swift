@@ -723,6 +723,10 @@ extension Product {
         return value.flatMap { (0...100).contains($0) ? $0 : nil }
     }
 
+    var greenScoreBreakdown: GreenScoreBreakdown? {
+        (environmentalScoreData ?? ecoscoreData)?.greenScoreBreakdown(for: self)
+    }
+
     var nutrientLevelEntries: [(key: NutrientLevelKey, level: NutrientLevelValue)] {
         [
             (NutrientLevelKey.fat, nutrientLevels?.fat),
@@ -840,6 +844,77 @@ private extension Agribalyse {
     }
 }
 
+private extension EnvironmentalScoreData {
+    func greenScoreBreakdown(for product: Product) -> GreenScoreBreakdown? {
+        let adjustmentData = adjustments
+        var adjustmentValues: [GreenScoreAdjustment] = []
+        if let points = adjustmentData?.packaging?.value, points != 0 {
+            adjustmentValues.append(GreenScoreAdjustment(kind: .packaging, points: points))
+        }
+        if let origins = adjustmentData?.originsOfIngredients {
+            let points: Int
+            if origins.epiValue != nil || origins.transportationValue != nil {
+                points = (origins.epiValue ?? 0) + (origins.transportationValue ?? 0)
+            } else {
+                points = 0
+            }
+            let unknown = !(origins.warning?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+            let unknownPoints = origins.epiValue != nil && origins.transportationValue != nil
+                ? points
+                : origins.transportationValue ?? 0
+            if points != 0 || unknown {
+                adjustmentValues.append(GreenScoreAdjustment(
+                    kind: .origins,
+                    points: unknown ? unknownPoints : points,
+                    unknownOrigin: unknown
+                ))
+            }
+        }
+        if let production = adjustmentData?.productionSystem,
+           (production.value ?? 0) != 0 || production.warning == "no_label" {
+            adjustmentValues.append(GreenScoreAdjustment(
+                kind: .productionSystem,
+                points: production.value ?? 0,
+                noProductionLabel: production.warning == "no_label"
+            ))
+        }
+        if let points = adjustmentData?.threatenedSpecies?.value, points != 0 {
+            adjustmentValues.append(GreenScoreAdjustment(kind: .threatenedSpecies, points: points))
+        }
+        let country = Locale.current.region?.identifier.lowercased() ?? ""
+        let finalScore = (countryValues(scores, country: country) + [score, product.greenScoreValue].compactMap { $0 })
+            .first { (0...100).contains($0) }
+        let finalGrade = (countryValues(grades, country: country) + [grade, product.greenScoreGrade].compactMap { $0 })
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).uppercased() }
+            .first { ["A", "B", "C", "D", "E"].contains($0) }
+        let breakdown = GreenScoreBreakdown(
+            baseScore: agribalyse?.score.flatMap { (0...100).contains($0) ? $0 : nil },
+            finalScore: finalScore.flatMap { (0...100).contains($0) ? $0 : nil },
+            grade: finalGrade,
+            adjustments: adjustmentValues
+        )
+        return breakdown.baseScore != nil ||
+            breakdown.finalScore != nil ||
+            breakdown.grade != nil ||
+            !breakdown.adjustments.isEmpty ? breakdown : nil
+    }
+}
+
+private func countryValues<T>(_ values: [String: T]?, country: String) -> [T] {
+    guard let values else { return [] }
+    let normalized = values.reduce(into: [String: T]()) {
+        $0[$1.key.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()] = $1.value
+    }
+    var result: [T] = []
+    if let value = normalized[country] {
+        result.append(value)
+    }
+    if country != "world", let value = normalized["world"] {
+        result.append(value)
+    }
+    return result
+}
+
 enum NutrientLevelKey: Equatable {
     case fat
     case saturatedFat
@@ -888,6 +963,39 @@ struct CarbonFootprintStage: Equatable {
     let stage: CarbonStage
     let gramsPer100g: Double
     let sharePercent: Int
+}
+
+enum GreenScoreAdjustmentKind: Equatable {
+    case packaging
+    case origins
+    case productionSystem
+    case threatenedSpecies
+}
+
+struct GreenScoreAdjustment: Equatable {
+    let kind: GreenScoreAdjustmentKind
+    let points: Int
+    let unknownOrigin: Bool
+    let noProductionLabel: Bool
+
+    init(
+        kind: GreenScoreAdjustmentKind,
+        points: Int,
+        unknownOrigin: Bool = false,
+        noProductionLabel: Bool = false
+    ) {
+        self.kind = kind
+        self.points = points
+        self.unknownOrigin = unknownOrigin
+        self.noProductionLabel = noProductionLabel
+    }
+}
+
+struct GreenScoreBreakdown: Equatable {
+    let baseScore: Int?
+    let finalScore: Int?
+    let grade: String?
+    let adjustments: [GreenScoreAdjustment]
 }
 
 enum PackagingRecyclability: Equatable {

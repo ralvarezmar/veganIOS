@@ -432,6 +432,16 @@
 "env_category_reference" = "Category average: %1$@";
 "env_stages_title" = "Where the footprint comes from";
 "env_stage_agriculture" = "Agriculture";
+"env_green_score_breakdown_title" = "How the score is calculated";
+"env_green_score_base" = "Agribalyse base";
+"env_green_score_adjustment_packaging" = "Packaging";
+"env_green_score_adjustment_origins" = "Ingredient origins";
+"env_green_score_adjustment_production" = "Production system";
+"env_green_score_adjustment_species" = "Threatened species";
+"env_green_score_points_a11y" = "%1$d points";
+"env_green_score_total" = "Final score: %1$d/100 (%2$@)";
+"env_green_score_origin_unknown" = "Unknown origin: transport cannot be assessed; it does not mean it is low.";
+"env_green_score_no_label" = "No recognised production labels.";
 "env_stage_processing" = "Processing";
 "env_stage_transport" = "Transportation";
 "env_stage_packaging" = "Packaging";
