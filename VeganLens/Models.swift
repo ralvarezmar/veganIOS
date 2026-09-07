@@ -723,6 +723,10 @@ extension Product {
         return value.flatMap { (0...100).contains($0) ? $0 : nil }
     }
 
+    var greenScoreBreakdown: GreenScoreBreakdown? {
+        (environmentalScoreData ?? ecoscoreData)?.greenScoreBreakdown(for: self)
+    }
+
     var nutrientLevelEntries: [(key: NutrientLevelKey, level: NutrientLevelValue)] {
         [
             (NutrientLevelKey.fat, nutrientLevels?.fat),
@@ -773,7 +777,6 @@ extension Product {
             default: return nil
             }
         }()
-        let greenScore = data?.greenScoreBreakdown(for: self)
         let adjustmentPackagings = data?.adjustments?.packaging?.packagings ?? []
         let packagingData = adjustmentPackagings.isEmpty ? (packagings ?? []) : adjustmentPackagings
         let packaging = packagingData.compactMap { component -> PackagingComponent? in
@@ -797,16 +800,13 @@ extension Product {
                 recyclability: recyclability
             )
         }
-        let dataQuality = data?.environmentalDataQuality
-        guard !stages.isEmpty || greenScore != nil || !packaging.isEmpty || dataQuality != nil else {
+        guard !stages.isEmpty || !packaging.isEmpty else {
             return nil
         }
         return EnvironmentalImpact(
             stages: stages,
             categoryName: categoryName,
-            greenScore: greenScore,
-            packaging: packaging,
-            dataQuality: dataQuality
+            packaging: packaging
         )
     }
 }
@@ -897,19 +897,6 @@ private extension EnvironmentalScoreData {
             breakdown.finalScore != nil ||
             breakdown.grade != nil ||
             !breakdown.adjustments.isEmpty ? breakdown : nil
-    }
-
-    var environmentalDataQuality: EnvironmentalDataQuality? {
-        let missingFields: [MissingEnvironmentalData] = [
-            ("origins", .origins),
-            ("labels", .labels),
-            ("packagings", .packagings),
-            ("categories", .categories)
-        ].compactMap { key, value in
-            missing?[key].flatMap { $0 > 0 ? value : nil }
-        }
-        let incomplete = (missingDataWarning ?? 0) > 0 || !missingFields.isEmpty
-        return incomplete ? EnvironmentalDataQuality(missing: missingFields, incomplete: true) : nil
     }
 }
 
@@ -1025,24 +1012,10 @@ struct PackagingComponent: Equatable {
     let recyclability: PackagingRecyclability
 }
 
-enum MissingEnvironmentalData: Equatable {
-    case origins
-    case labels
-    case packagings
-    case categories
-}
-
-struct EnvironmentalDataQuality: Equatable {
-    let missing: [MissingEnvironmentalData]
-    let incomplete: Bool
-}
-
 struct EnvironmentalImpact: Equatable {
     let stages: [CarbonFootprintStage]
     let categoryName: String?
-    let greenScore: GreenScoreBreakdown?
     let packaging: [PackagingComponent]
-    let dataQuality: EnvironmentalDataQuality?
 }
 
 enum ProductSource: String, CaseIterable, Codable, Hashable {

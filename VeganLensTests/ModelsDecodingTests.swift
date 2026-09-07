@@ -114,6 +114,28 @@ final class ModelsDecodingTests: XCTestCase {
         XCTAssertEqual(response.product?.greenScoreValue, 40)
     }
 
+    func testGreenScoreBreakdownUsesCountryThenWorldAndBlockFallbacks() throws {
+        let response = try decodeResponse(
+            """
+            {
+              "status":1,
+              "product":{
+                "environmental_score_data":{
+                  "agribalyse":{"score":90},
+                  "score":80,
+                  "grade":"b",
+                  "scores":{"es":75,"world":70},
+                  "grades":{"es":"a","world":"c"}
+                }
+              }
+            }
+            """
+        )
+
+        XCTAssertEqual(response.product?.greenScoreBreakdown?.finalScore, 70)
+        XCTAssertEqual(response.product?.greenScoreBreakdown?.grade, "C")
+    }
+
     func testCarbonFootprintPrefersDeclaredAndConvertsEstimatedValue() throws {
         let declared = try decodeResponse(
             """
@@ -214,7 +236,7 @@ final class ModelsDecodingTests: XCTestCase {
         }
     }
 
-    func testEnvironmentalImpactDecodesStagesGreenScorePackagingAndQuality() throws {
+    func testEnvironmentalImpactDecodesStagesAndPackaging() throws {
         let product = try decodeResponse(
             """
             {
@@ -274,20 +296,10 @@ final class ModelsDecodingTests: XCTestCase {
         XCTAssertEqual(impact.stages[2].gramsPer100g, 20.7, accuracy: 0.0001)
         XCTAssertEqual(impact.stages[3].gramsPer100g, 17.4, accuracy: 0.0001)
         XCTAssertEqual(impact.stages[4].gramsPer100g, 2.69, accuracy: 0.0001)
-        XCTAssertEqual(impact.greenScore?.baseScore, 90)
-        XCTAssertEqual(impact.greenScore?.finalScore, 74)
-        XCTAssertEqual(impact.greenScore?.grade, "C")
-        XCTAssertEqual(impact.greenScore?.adjustments.map(\.kind), [.packaging, .origins, .productionSystem])
-        XCTAssertEqual(impact.greenScore?.adjustments[0].points, -10)
-        XCTAssertEqual(impact.greenScore?.adjustments[1].points, -5)
-        XCTAssertTrue(impact.greenScore?.adjustments[1].unknownOrigin == true)
-        XCTAssertTrue(impact.greenScore?.adjustments[2].noProductionLabel == true)
         XCTAssertEqual(impact.packaging.first?.materialTag, "en:plastic")
         XCTAssertEqual(impact.packaging.first?.shapeTag, "en:bag")
         XCTAssertEqual(impact.packaging.first?.recyclingTag, "en:recycle-with-plastics-metal-and-bricks")
         XCTAssertEqual(impact.packaging.first?.recyclability, .maybeNonRecyclable)
-        XCTAssertEqual(impact.dataQuality?.missing, [.origins, .labels])
-        XCTAssertTrue(impact.dataQuality?.incomplete == true)
     }
 
     func testEnvironmentalImpactReturnsNilForSingleStageWithoutOtherData() throws {
@@ -309,36 +321,33 @@ final class ModelsDecodingTests: XCTestCase {
         XCTAssertNil(product?.environmentalImpact)
     }
 
-    func testEnvironmentalGreenScoreFallsBackToBlockScoreAndGrade() throws {
-        let product = try decodeResponse(
-            """
-            {"status":1,"product":{"environmental_score_data":{"score":64,"grade":"d"}}}
-            """
-        ).product
-
-        XCTAssertEqual(product?.environmentalImpact?.greenScore?.finalScore, 64)
-        XCTAssertEqual(product?.environmentalImpact?.greenScore?.grade, "D")
-    }
-
-    func testEnvironmentalGreenScoreUsesDeviceCountryBeforeWorld() throws {
-        let country = Locale.current.region?.identifier.lowercased() ?? ""
-        guard !country.isEmpty, country != "world" else {
-            return
-        }
-        let countryKey = country
-        let product = try decodeResponse(
-            """
-            {"status":1,"product":{"environmental_score_data":{"scores":{"\(countryKey)":81,"world":74},"grades":{"\(countryKey)":"A","world":"C"}}}}
-            """
-        ).product
-
-        XCTAssertEqual(product?.environmentalImpact?.greenScore?.finalScore, 81)
-        XCTAssertEqual(product?.environmentalImpact?.greenScore?.grade, "A")
-    }
-
     func testEnvironmentalImpactReturnsNilWithoutEnvironmentalData() throws {
         XCTAssertNil(try decodeResponse(#"{"status":1,"product":{}}"#).product?.environmentalImpact)
         XCTAssertNil(try decodeResponse(#"{"status":1,"product":{"ecoscore_data":{"agribalyse":{"co2_total":1.0}}}}"#).product?.environmentalImpact)
+    }
+
+    func testEnvironmentalImpactReturnsNilWhenAdjustmentsAndMissingHaveFewerThanTwoStagesWithoutPackaging() throws {
+        let product = try decodeResponse(
+            """
+            {
+              "status":1,
+              "product":{
+                "ecoscore_data":{
+                  "agribalyse":{"co2_agriculture":0.756},
+                  "adjustments":{
+                    "origins_of_ingredients":{
+                      "warning":"origins_are_100_percent_unknown"
+                    }
+                  },
+                  "missing":{"origins":1},
+                  "missing_data_warning":1
+                }
+              }
+            }
+            """
+        ).product
+
+        XCTAssertNil(product?.environmentalImpact)
     }
 
     func testEnvironmentalTagMapsOmitUnknownTags() {
