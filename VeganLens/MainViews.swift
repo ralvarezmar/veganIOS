@@ -730,9 +730,6 @@ struct ResultView: View {
 
                         ScoresCard(
                             product: product,
-                            barcode: barcode,
-                            source: source,
-                            onContribute: onContribute,
                             onScoreTap: { selectedScoreInfo = $0 }
                         )
                         PalmOilCard(tags: product.ingredientsAnalysisTags)
@@ -770,7 +767,8 @@ struct ResultView: View {
                                     selectedScoreInfo = ScoreExplanation(
                                         id: "nutriscore-detail",
                                         titleKey: "score_info_nutriscore_title",
-                                        bodyKey: "score_info_nutriscore_body"
+                                        bodyKey: "score_info_nutriscore_body",
+                                        greenScoreBreakdown: nil
                                     )
                                 } label: {
                                     NutriScoreBadgeView(grade: grade.uppercased())
@@ -2231,13 +2229,11 @@ private struct ScoreExplanation: Identifiable {
     let id: String
     let titleKey: String
     let bodyKey: String
+    let greenScoreBreakdown: GreenScoreBreakdown?
 }
 
 private struct ScoresCard: View {
     let product: Product
-    let barcode: String
-    let source: ProductSource
-    let onContribute: (String, Product?, ProductSource?) -> Void
     let onScoreTap: (ScoreExplanation) -> Void
 
     var body: some View {
@@ -2261,7 +2257,8 @@ private struct ScoresCard: View {
                                     ScoreExplanation(
                                         id: "nutriscore",
                                         titleKey: "score_info_nutriscore_title",
-                                        bodyKey: "score_info_nutriscore_body"
+                                        bodyKey: "score_info_nutriscore_body",
+                                        greenScoreBreakdown: nil
                                     )
                                 )
                             } label: {
@@ -2278,7 +2275,8 @@ private struct ScoresCard: View {
                                     ScoreExplanation(
                                         id: "green-score",
                                         titleKey: "score_info_green_score_title",
-                                        bodyKey: "score_info_green_score_body"
+                                        bodyKey: "score_info_green_score_body",
+                                        greenScoreBreakdown: product.greenScoreBreakdown
                                     )
                                 )
                             } label: {
@@ -2301,7 +2299,8 @@ private struct ScoresCard: View {
                                     ScoreExplanation(
                                         id: "nova",
                                         titleKey: "score_info_nova_title",
-                                        bodyKey: "score_info_nova_body"
+                                        bodyKey: "score_info_nova_body",
+                                        greenScoreBreakdown: nil
                                     )
                                 )
                             } label: {
@@ -2326,7 +2325,8 @@ private struct ScoresCard: View {
                                 ScoreExplanation(
                                     id: "carbon-footprint",
                                     titleKey: "score_info_carbon_footprint_title",
-                                    bodyKey: "score_info_carbon_footprint_body"
+                                    bodyKey: "score_info_carbon_footprint_body",
+                                    greenScoreBreakdown: nil
                                 )
                             )
                         } label: {
@@ -2374,20 +2374,8 @@ private struct ScoresCard: View {
                             if !environmentalImpact.stages.isEmpty {
                                 EnvironmentalStages(stages: environmentalImpact.stages)
                             }
-                            if let greenScore = environmentalImpact.greenScore {
-                                EnvironmentalGreenScore(breakdown: greenScore)
-                            }
                             if !environmentalImpact.packaging.isEmpty {
                                 EnvironmentalPackagingSection(components: environmentalImpact.packaging)
-                            }
-                            if let quality = environmentalImpact.dataQuality, quality.incomplete {
-                                EnvironmentalDataQualitySection(
-                                    quality: quality,
-                                    barcode: barcode,
-                                    source: source,
-                                    product: product,
-                                    onContribute: onContribute
-                                )
                             }
                         }
                     }
@@ -2483,6 +2471,83 @@ private struct EnvironmentalStages: View {
     }
 }
 
+private struct EnvironmentalPackagingSection: View {
+    let components: [PackagingComponent]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(L("env_packaging_title"))
+                .appFont(.subheadline, weight: .semibold)
+            ForEach(components.indices, id: \.self) { index in
+                let component = components[index]
+                let shape = component.shapeTag.flatMap { environmentalShapeLabelKeys[$0] }.map { L($0) }
+                let material = component.materialTag.flatMap { environmentalMaterialLabelKeys[$0] }.map { L($0) }
+                let recycling = component.recyclingTag.flatMap { environmentalRecyclingLabelKeys[$0] }.map { L($0) }
+                let name: String? = {
+                    switch (shape, material) {
+                    case let (shape?, material?): return LF("env_packaging_component", shape, material)
+                    case let (shape?, nil): return shape
+                    case let (nil, material?): return material
+                    default: return nil
+                    }
+                }()
+                if let name {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(recycling.map { LF("env_packaging_component_with_recycling", name, $0) } ?? name)
+                        switch component.recyclability {
+                        case .nonRecyclable:
+                            Text(L("env_packaging_non_recyclable")).appFont(.footnote).foregroundStyle(.secondary)
+                        case .maybeNonRecyclable:
+                            Text(L("env_packaging_maybe_non_recyclable")).appFont(.footnote).foregroundStyle(.secondary)
+                        case .recyclable, .unknown:
+                            EmptyView()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+private func carbonFootprintColor(_ level: CarbonFootprintLevel, dark: Bool) -> Color {
+    switch (level, dark) {
+    case (.low, false): return Color(red: 0.22, green: 0.60, blue: 0.28)
+    case (.moderate, false): return Color(red: 0.95, green: 0.67, blue: 0.12)
+    case (.high, false): return Color(red: 0.80, green: 0.20, blue: 0.20)
+    case (.low, true): return Color(red: 0.35, green: 0.75, blue: 0.40)
+    case (.moderate, true): return Color(red: 1.00, green: 0.76, blue: 0.24)
+    case (.high, true): return Color(red: 1.00, green: 0.36, blue: 0.36)
+    }
+}
+
+private func environmentalStageColor(_ stage: CarbonStage, dark: Bool) -> Color {
+    switch (stage, dark) {
+    case (.agriculture, false): return Color(red: 0.25, green: 0.55, blue: 0.28)
+    case (.processing, false): return Color(red: 0.42, green: 0.38, blue: 0.72)
+    case (.transport, false): return Color(red: 0.10, green: 0.45, blue: 0.70)
+    case (.packaging, false): return Color(red: 0.82, green: 0.46, blue: 0.15)
+    case (.distribution, false): return Color(red: 0.65, green: 0.30, blue: 0.58)
+    case (.consumption, false): return Color(red: 0.30, green: 0.48, blue: 0.50)
+    case (.agriculture, true): return Color(red: 0.42, green: 0.78, blue: 0.45)
+    case (.processing, true): return Color(red: 0.65, green: 0.60, blue: 0.95)
+    case (.transport, true): return Color(red: 0.35, green: 0.68, blue: 0.94)
+    case (.packaging, true): return Color(red: 1.00, green: 0.67, blue: 0.30)
+    case (.distribution, true): return Color(red: 0.90, green: 0.48, blue: 0.82)
+    case (.consumption, true): return Color(red: 0.50, green: 0.72, blue: 0.75)
+    }
+}
+
+private func environmentalStageName(_ stage: CarbonStage) -> String {
+    switch stage {
+    case .agriculture: return L("env_stage_agriculture")
+    case .processing: return L("env_stage_processing")
+    case .transport: return L("env_stage_transport")
+    case .packaging: return L("env_stage_packaging")
+    case .distribution: return L("env_stage_distribution")
+    case .consumption: return L("env_stage_consumption")
+    }
+}
+
 private struct EnvironmentalGreenScore: View {
     let breakdown: GreenScoreBreakdown
 
@@ -2551,142 +2616,12 @@ private struct EnvironmentalAdjustmentRow: View {
     }
 }
 
-private struct EnvironmentalPackagingSection: View {
-    let components: [PackagingComponent]
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(L("env_packaging_title"))
-                .appFont(.subheadline, weight: .semibold)
-            ForEach(components.indices, id: \.self) { index in
-                let component = components[index]
-                let shape = component.shapeTag.flatMap { environmentalShapeLabelKeys[$0] }.map { L($0) }
-                let material = component.materialTag.flatMap { environmentalMaterialLabelKeys[$0] }.map { L($0) }
-                let recycling = component.recyclingTag.flatMap { environmentalRecyclingLabelKeys[$0] }.map { L($0) }
-                let name: String? = {
-                    switch (shape, material) {
-                    case let (shape?, material?): return LF("env_packaging_component", shape, material)
-                    case let (shape?, nil): return shape
-                    case let (nil, material?): return material
-                    default: return nil
-                    }
-                }()
-                if let name {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(recycling.map { LF("env_packaging_component_with_recycling", name, $0) } ?? name)
-                        switch component.recyclability {
-                        case .nonRecyclable:
-                            Text(L("env_packaging_non_recyclable")).appFont(.footnote).foregroundStyle(.secondary)
-                        case .maybeNonRecyclable:
-                            Text(L("env_packaging_maybe_non_recyclable")).appFont(.footnote).foregroundStyle(.secondary)
-                        case .recyclable, .unknown:
-                            EmptyView()
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-private struct EnvironmentalDataQualitySection: View {
-    let quality: EnvironmentalDataQuality
-    let barcode: String
-    let source: ProductSource
-    let product: Product
-    let onContribute: (String, Product?, ProductSource?) -> Void
-
-    var body: some View {
-        let labels = quality.missing.map(environmentalMissingDataName)
-        VStack(alignment: .leading, spacing: 8) {
-            Text(
-                labels.isEmpty
-                    ? L("env_data_quality_incomplete_generic")
-                    : LF("env_data_quality_incomplete", joinEnvironmentalLabels(labels))
-            )
-            Button {
-                onContribute(barcode, product, source)
-            } label: {
-                Text(L("env_data_quality_cta"))
-            }
-            .buttonStyle(.bordered)
-        }
-    }
-}
-
-private func carbonFootprintColor(_ level: CarbonFootprintLevel, dark: Bool) -> Color {
-    switch (level, dark) {
-    case (.low, false): return Color(red: 0.22, green: 0.60, blue: 0.28)
-    case (.moderate, false): return Color(red: 0.95, green: 0.67, blue: 0.12)
-    case (.high, false): return Color(red: 0.80, green: 0.20, blue: 0.20)
-    case (.low, true): return Color(red: 0.35, green: 0.75, blue: 0.40)
-    case (.moderate, true): return Color(red: 1.00, green: 0.76, blue: 0.24)
-    case (.high, true): return Color(red: 1.00, green: 0.36, blue: 0.36)
-    }
-}
-
-private func environmentalStageColor(_ stage: CarbonStage, dark: Bool) -> Color {
-    switch (stage, dark) {
-    case (.agriculture, false): return Color(red: 0.25, green: 0.55, blue: 0.28)
-    case (.processing, false): return Color(red: 0.42, green: 0.38, blue: 0.72)
-    case (.transport, false): return Color(red: 0.10, green: 0.45, blue: 0.70)
-    case (.packaging, false): return Color(red: 0.82, green: 0.46, blue: 0.15)
-    case (.distribution, false): return Color(red: 0.65, green: 0.30, blue: 0.58)
-    case (.consumption, false): return Color(red: 0.30, green: 0.48, blue: 0.50)
-    case (.agriculture, true): return Color(red: 0.42, green: 0.78, blue: 0.45)
-    case (.processing, true): return Color(red: 0.65, green: 0.60, blue: 0.95)
-    case (.transport, true): return Color(red: 0.35, green: 0.68, blue: 0.94)
-    case (.packaging, true): return Color(red: 1.00, green: 0.67, blue: 0.30)
-    case (.distribution, true): return Color(red: 0.90, green: 0.48, blue: 0.82)
-    case (.consumption, true): return Color(red: 0.50, green: 0.72, blue: 0.75)
-    }
-}
-
-private func environmentalStageName(_ stage: CarbonStage) -> String {
-    switch stage {
-    case .agriculture: return L("env_stage_agriculture")
-    case .processing: return L("env_stage_processing")
-    case .transport: return L("env_stage_transport")
-    case .packaging: return L("env_stage_packaging")
-    case .distribution: return L("env_stage_distribution")
-    case .consumption: return L("env_stage_consumption")
-    }
-}
-
 private func environmentalAdjustmentName(_ kind: GreenScoreAdjustmentKind) -> String {
     switch kind {
     case .packaging: return L("env_green_score_adjustment_packaging")
     case .origins: return L("env_green_score_adjustment_origins")
     case .productionSystem: return L("env_green_score_adjustment_production")
     case .threatenedSpecies: return L("env_green_score_adjustment_species")
-    }
-}
-
-private func environmentalMissingDataName(_ missing: MissingEnvironmentalData) -> String {
-    switch missing {
-    case .origins: return L("env_data_missing_origins")
-    case .labels: return L("env_data_missing_labels")
-    case .packagings: return L("env_data_missing_packagings")
-    case .categories: return L("env_data_missing_categories")
-    }
-}
-
-private func joinEnvironmentalLabels(_ labels: [String]) -> String {
-    switch labels.count {
-    case 0: return ""
-    case 1: return labels[0]
-    case 2: return "\(labels[0]) \(environmentalConjunction()) \(labels[1])"
-    default: return labels.dropLast().joined(separator: ", ") + " \(environmentalConjunction()) \(labels.last!)"
-    }
-}
-
-private func environmentalConjunction() -> String {
-    switch Locale.current.language.languageCode?.identifier.lowercased() {
-    case "de": return "und"
-    case "en": return "and"
-    case "fr": return "et"
-    case "it", "pt": return "e"
-    default: return "y"
     }
 }
 
@@ -2703,6 +2638,9 @@ private struct ScoreInfoSheet: View {
         ScrollView {
             SimpleSectionCard(title: L(explanation.titleKey)) {
                 Text(L(explanation.bodyKey))
+                if let breakdown = explanation.greenScoreBreakdown {
+                    EnvironmentalGreenScore(breakdown: breakdown)
+                }
             }
             .padding()
         }

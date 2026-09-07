@@ -8,6 +8,14 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Environmental impact cards are simplified and omit sections without data.
+- Green Score details moved to the badge sheet.
+- The Strawberries mascot (Fresados) now shows two strawberries.
+- The mascot gallery detail no longer crops tall characters.
+
+## [1.12.0 (42)] - 2026-09-04
+
 ### Added
 - Environmental impact cards now explain the footprint scale and stages, Green Score adjustments, packaging recyclability, and data quality.
 
