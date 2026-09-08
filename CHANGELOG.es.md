@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.13.0 (44)] - 2026-09-08
+
 - La espera del escaneo muestra la fase actual de consulta y se puede cancelar.
 - La portada muestra un tip vegano distinto en cada arranque.
 
