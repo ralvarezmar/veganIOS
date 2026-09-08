@@ -11,6 +11,11 @@ enum OpenFactsFetchResult {
     case error(String)
 }
 
+enum FetchProgress: Equatable {
+    case querying(ProductSource)
+    case queryingSiblings
+}
+
 enum SearchByNameResult {
     case success([OpenFoodFactsSearchProduct])
     case empty
@@ -32,26 +37,64 @@ final class OpenFactsService {
         self.session = session
     }
 
-    func fetchProduct(barcode: String) async -> OpenFactsFetchResult {
+    func fetchProduct(
+        barcode: String,
+        onProgress: @Sendable @escaping (FetchProgress) -> Void = { _ in }
+    ) async -> OpenFactsFetchResult {
         var sawCleanNoData = false
         var sawFailure = false
         var consultedSources: [ProductSource] = []
         var fallbackCandidate: FetchedProduct?
 
-        for source in ProductSource.allCases {
-            switch await fetchFromSource(source, barcode: barcode) {
+        onProgress(.querying(.openFoodFacts))
+        switch await fetchFromSource(.openFoodFacts, barcode: barcode) {
+        case .success(let product):
+            if product.hasVeganData {
+                return .success(FetchedProduct(product: product, source: .openFoodFacts))
+            }
+            fallbackCandidate = FetchedProduct(product: product, source: .openFoodFacts)
+            consultedSources.append(.openFoodFacts)
+        case .cleanNoData, .notFound:
+            sawCleanNoData = true
+            consultedSources.append(.openFoodFacts)
+        case .failure:
+            sawFailure = true
+        }
+
+        onProgress(.queryingSiblings)
+        let siblingResults = await withTaskGroup(
+            of: (ProductSource, SourceFetchResult).self,
+            returning: [(ProductSource, SourceFetchResult)].self
+        ) { group in
+            for source in ProductSource.allCases.dropFirst() {
+                group.addTask {
+                    (source, await self.fetchFromSource(source, barcode: barcode))
+                }
+            }
+
+            var results: [(ProductSource, SourceFetchResult)] = []
+            for await result in group {
+                results.append(result)
+            }
+            return results
+        }
+
+        var veganCandidate: FetchedProduct?
+        for source in ProductSource.allCases.dropFirst() {
+            guard let result = siblingResults.first(where: { $0.0 == source })?.1 else {
+                continue
+            }
+            switch result {
             case .success(let product):
                 if product.hasVeganData {
-                    return .success(FetchedProduct(product: product, source: source))
-                }
-                if fallbackCandidate == nil {
+                    if veganCandidate == nil {
+                        veganCandidate = FetchedProduct(product: product, source: source)
+                    }
+                } else if fallbackCandidate == nil {
                     fallbackCandidate = FetchedProduct(product: product, source: source)
                 }
                 consultedSources.append(source)
-            case .cleanNoData:
-                sawCleanNoData = true
-                consultedSources.append(source)
-            case .notFound:
+            case .cleanNoData, .notFound:
                 sawCleanNoData = true
                 consultedSources.append(source)
             case .failure:
@@ -60,7 +103,7 @@ final class OpenFactsService {
         }
 
         return resolveFetchOutcome(
-            fallbackCandidate: fallbackCandidate,
+            fallbackCandidate: veganCandidate ?? fallbackCandidate,
             sawCleanNoData: sawCleanNoData,
             sawFailure: sawFailure,
             consultedSources: consultedSources
@@ -196,6 +239,8 @@ final class OpenFactsService {
             }
 
             return .cleanNoData
+        } catch is CancellationError {
+            return .failure
         } catch {
             return .failure
         }
@@ -257,7 +302,10 @@ func resolveFetchOutcome(
     if sawFailure {
         return .error(L("network_error"))
     }
-    return .notFound(consultedSources)
+    if sawCleanNoData {
+        return .notFound(consultedSources)
+    }
+    return .notFound([])
 }
 
 private func trimmedNonEmpty(_ value: String?) -> String? {

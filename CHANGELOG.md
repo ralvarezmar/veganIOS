@@ -8,6 +8,11 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+- Scan loading now shows the current data-source phase and can be cancelled.
+- A different vegan tip appears on the portada at each app start.
+
+## [1.12.1 (43)] - 2026-09-07
+
 ### Changed
 - Environmental impact cards are simplified and omit sections without data.
 - Green Score details moved to the badge sheet.

@@ -10,6 +10,11 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+- La espera del escaneo muestra la fase actual de consulta y se puede cancelar.
+- La portada muestra un tip vegano distinto en cada arranque.
+
+## [1.12.1 (43)] - 2026-09-07
+
 ### Cambiado
 - Las tarjetas de impacto ambiental se simplifican y omiten las secciones sin datos.
 - El desglose del Green Score vuelve al sheet del badge y Fresados ahora muestra dos fresas.
