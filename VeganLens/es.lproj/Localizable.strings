@@ -35,6 +35,8 @@
 "scanner_confirmation" = "Código detectado";
 "scanner_confirmation_subtitle" = "Abriendo el resultado…";
 "loading_product" = "Consultando bases de datos…";
+"loading_product_source" = "Consultando %1$@…";
+"loading_product_siblings" = "Consultando las bases hermanas…";
 "profile_action" = "Perfil";
 "profile_title" = "Perfil";
 "allergen_profile_title" = "Perfil de alérgenos";
@@ -81,6 +83,8 @@ Fuente: %@
 "result_not_found_title" = "Sin datos suficientes 🔍";
 "result_not_found_message" = "No hemos encontrado un producto con información vegana suficiente en las bases consultadas.";
 "network_error_title" = "No hemos podido consultar las bases de datos";
+"result_cancelled_title" = "Búsqueda cancelada";
+"result_cancelled_message" = "Has cancelado la consulta antes de terminar.";
 "retry" = "Reintentar";
 "back" = "Volver";
 "cancel" = "Cancelar";
