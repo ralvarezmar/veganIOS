@@ -538,6 +538,7 @@ struct ResultView: View {
     @AppStorage(WatchlistPreferences.additivesKey) private var watchedAdditivesStorage = ""
     @AppStorage(WatchlistPreferences.ingredientKeywordsKey) private var watchedKeywordsStorage = ""
     @State private var loadState: LoadState = .loading
+    @State private var fetchTask: Task<Void, Never>?
     @State private var retrySeed = UUID()
     @State private var selectedAdditive: AdditiveEntry?
     @State private var selectedScoreInfo: ScoreExplanation?
@@ -580,7 +581,14 @@ struct ResultView: View {
             .navigationTitle(L("result_title"))
             .navigationBarTitleDisplayMode(.inline)
             .task(id: retrySeed) {
-                await loadProduct()
+                let task = Task { @MainActor in
+                    await loadProduct()
+                }
+                fetchTask = task
+                await task.value
+            }
+            .onDisappear {
+                fetchTask?.cancel()
             }
             .toolbar {
                 if case .success = loadState {
@@ -626,8 +634,24 @@ struct ResultView: View {
             Color(.systemBackground).ignoresSafeArea()
 
             switch loadState {
-            case .loading:
-                LoadingStateView()
+            case .loading(let progress):
+                LoadingStateView(
+                    progress: progress,
+                    onCancel: {
+                        fetchTask?.cancel()
+                        loadState = .cancelled
+                    }
+                )
+            case .cancelled:
+                EmptyResultStateView(
+                    icon: "xmark.circle",
+                    title: L("result_cancelled_title"),
+                    message: L("result_cancelled_message"),
+                    primaryActionTitle: L("retry"),
+                    primaryAction: { retrySeed = UUID() },
+                    secondaryActionTitle: L("back"),
+                    secondaryAction: onBack
+                )
             case .notFound(let consultedSources):
                 EmptyResultStateView(
                     icon: "magnifyingglass",
@@ -787,9 +811,17 @@ struct ResultView: View {
 
     @MainActor
     private func loadProduct() async {
+        guard !Task.isCancelled else { return }
         loadState = .loading
         alternativesState = .idle
-        let result = await service.fetchProduct(barcode: barcode)
+        let result = await service.fetchProduct(
+            barcode: barcode,
+            onProgress: { progress in
+                guard !Task.isCancelled else { return }
+                loadState = .loading(progress)
+            }
+        )
+        guard !Task.isCancelled else { return }
         switch result {
         case .success(let fetched):
             saveToHistory(product: fetched.product)
@@ -1017,7 +1049,8 @@ struct ResultView: View {
 }
 
 enum LoadState {
-    case loading
+    case loading(FetchProgress = .querying(.openFoodFacts))
+    case cancelled
     case notFound([ProductSource])
     case networkError(String)
     case success(Product, ProductSource, Bool, Date?)
@@ -1783,15 +1816,20 @@ private struct CapsuleChip: View {
 }
 
 private struct LoadingStateView: View {
+    let progress: FetchProgress
+    let onCancel: () -> Void
+
     var body: some View {
         VStack {
             Spacer()
 
             VStack(spacing: 16) {
                 ProgressView()
-                Text(L("loading_product"))
+                Text(loadingText)
                     .appFont(.headline)
                     .foregroundStyle(.secondary)
+                Button(L("cancel"), action: onCancel)
+                    .buttonStyle(.bordered)
             }
             .padding(28)
             .frame(maxWidth: .infinity)
@@ -1800,6 +1838,15 @@ private struct LoadingStateView: View {
             .padding()
 
             Spacer()
+        }
+    }
+
+    private var loadingText: String {
+        switch progress {
+        case .querying(let source):
+            return LF("loading_product_source", source.displayName)
+        case .queryingSiblings:
+            return L("loading_product_siblings")
         }
     }
 }
