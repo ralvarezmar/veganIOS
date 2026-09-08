@@ -8,7 +8,7 @@ final class OpenFactsServiceTests: XCTestCase {
             let payload = request.url?.host == ProductSource.openFoodFacts.baseURL.host
                 ? #"{"status":1,"product":{"product_name":"Vegan","ingredients_analysis_tags":["en:vegan"]}}"#
                 : #"{"status":0}"#
-            return response(statusCode: 200, body: payload)
+            return self.response(statusCode: 200, body: payload)
         }
         let service = OpenFactsService(session: session)
 
@@ -25,19 +25,19 @@ final class OpenFactsServiceTests: XCTestCase {
         let session = makeSession { request in
             switch request.url?.host {
             case "world.openfoodfacts.org":
-                return response(statusCode: 200, body: #"{"status":0}"#)
+                return self.response(statusCode: 200, body: #"{"status":0}"#)
             case "world.openbeautyfacts.org":
-                return response(
+                return self.response(
                     statusCode: 200,
                     body: #"{"status":1,"product":{"product_name":"Beauty product"}}"#
                 )
             case "world.openproductsfacts.org":
-                return response(
+                return self.response(
                     statusCode: 200,
                     body: #"{"status":1,"product":{"product_name":"Products product"}}"#
                 )
             default:
-                return response(statusCode: 200, body: #"{"status":0}"#)
+                return self.response(statusCode: 200, body: #"{"status":0}"#)
             }
         }
         let service = OpenFactsService(session: session)
@@ -66,7 +66,7 @@ final class OpenFactsServiceTests: XCTestCase {
 
     func testOpenFoodFactsOnlyProgressWhenItResolves() async {
         let session = makeSession { _ in
-            response(
+            self.response(
                 statusCode: 200,
                 body: #"{"status":1,"product":{"product_name":"Vegan","ingredients_analysis_tags":["en:vegan"]}}"#
             )
@@ -82,9 +82,9 @@ final class OpenFactsServiceTests: XCTestCase {
     func testFailureWithCleanSiblingResponsesReturnsNetworkError() async {
         let session = makeSession { request in
             if request.url?.host == "world.openfoodfacts.org" {
-                return response(statusCode: 500, body: #"{"status":0}"#)
+                return self.response(statusCode: 500, body: #"{"status":0}"#)
             }
-            return response(statusCode: 404, body: #"{"status":0}"#)
+            return self.response(statusCode: 404, body: #"{"status":0}"#)
         }
         let service = OpenFactsService(session: session)
 
