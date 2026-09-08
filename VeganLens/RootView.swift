@@ -1,6 +1,7 @@
 import SwiftUI
 
 private let lastPortadaCharacterKey = "last_portada_character"
+private let lastPortadaTipKey = "last_portada_tip"
 
 private enum PortadaSession {
     static var hasShown = false
@@ -18,6 +19,7 @@ struct RootView: View {
     @State private var showingOnboarding = false
     @State private var showingPortada = false
     @State private var portadaCharacter: String?
+    @State private var portadaTipIndex: Int?
 
     private func resetToScanner() {
         path = NavigationPath()
@@ -67,9 +69,10 @@ struct RootView: View {
         ZStack {
             navigationContent
 
-            if showingPortada, let portadaCharacter {
+            if showingPortada, let portadaCharacter, let portadaTipIndex {
                 PortadaSplashView(
                     character: portadaCharacter,
+                    tipIndex: portadaTipIndex,
                     onDismiss: dismissPortada
                 )
                 .transition(.opacity)
@@ -84,10 +87,14 @@ struct RootView: View {
         }
 
         PortadaSession.hasShown = true
-        let previous = UserDefaults.standard.string(forKey: lastPortadaCharacterKey)
-        let selected = selectPortadaCharacter(previous: previous)
-        UserDefaults.standard.set(selected, forKey: lastPortadaCharacterKey)
-        portadaCharacter = selected
+        let previousCharacter = UserDefaults.standard.string(forKey: lastPortadaCharacterKey)
+        let previousTip = UserDefaults.standard.object(forKey: lastPortadaTipKey) as? Int
+        let selectedCharacter = selectPortadaCharacter(previous: previousCharacter)
+        let selectedTip = selectPortadaTip(previous: previousTip)
+        UserDefaults.standard.set(selectedCharacter, forKey: lastPortadaCharacterKey)
+        UserDefaults.standard.set(selectedTip, forKey: lastPortadaTipKey)
+        portadaCharacter = selectedCharacter
+        portadaTipIndex = selectedTip
         showingPortada = true
         scannerRunning = false
         return true
