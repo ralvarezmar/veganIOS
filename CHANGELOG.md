@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+- A different vegan tip appears on the portada at each app start.
+
 ## [1.12.1 (43)] - 2026-09-07
 
 ### Changed

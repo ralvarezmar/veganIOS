@@ -8,6 +8,7 @@ enum PortadaColors {
 
 struct PortadaSplashView: View {
     let character: String
+    let tipIndex: Int
     let onDismiss: () -> Void
 
     var body: some View {
@@ -26,6 +27,11 @@ struct PortadaSplashView: View {
                 Text(L("portada_tagline"))
                     .font(.title3)
                     .foregroundStyle(PortadaColors.tagline)
+
+                Text(L(portadaTipKeys[tipIndex]))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(24)
