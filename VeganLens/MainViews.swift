@@ -812,7 +812,7 @@ struct ResultView: View {
     @MainActor
     private func loadProduct() async {
         guard !Task.isCancelled else { return }
-        loadState = .loading
+        loadState = .loading()
         alternativesState = .idle
         let result = await service.fetchProduct(
             barcode: barcode,
