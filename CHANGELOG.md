@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+- Scan loading now shows the current data-source phase and can be cancelled.
+
 ## [1.12.1 (43)] - 2026-09-07
 
 ### Changed

@@ -19,6 +19,8 @@
 "scanner_confirmation" = "Barcode erkannt";
 "scanner_confirmation_subtitle" = "Ergebnis wird geöffnet…";
 "loading_product" = "Datenbanken werden abgefragt…";
+"loading_product_source" = "Abfrage von %1$@…";
+"loading_product_siblings" = "Verwandte Datenbanken werden abgefragt…";
 "profile_action" = "Profil";
 "profile_title" = "Profil";
 "allergen_profile_title" = "Allergieprofil";
@@ -60,6 +62,8 @@
 "result_not_found_title" = "Nicht genügend Daten 🔍";
 "result_not_found_message" = "Wir konnten in den abgefragten Datenbanken kein Produkt mit genügend Informationen zur veganen Eignung finden.";
 "network_error_title" = "Die Datenbanken konnten nicht abgefragt werden";
+"result_cancelled_title" = "Suche abgebrochen";
+"result_cancelled_message" = "Du hast die Abfrage vor ihrem Abschluss abgebrochen.";
 "retry" = "Erneut versuchen";
 "back" = "Zurück";
 "cancel" = "Abbrechen";
