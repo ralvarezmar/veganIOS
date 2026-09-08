@@ -537,7 +537,7 @@ struct ResultView: View {
     @AppStorage(AllergenPreferences.strictModeKey) private var strictMode = false
     @AppStorage(WatchlistPreferences.additivesKey) private var watchedAdditivesStorage = ""
     @AppStorage(WatchlistPreferences.ingredientKeywordsKey) private var watchedKeywordsStorage = ""
-    @State private var loadState: LoadState = .loading
+    @State private var loadState: LoadState = .loading()
     @State private var fetchTask: Task<Void, Never>?
     @State private var retrySeed = UUID()
     @State private var selectedAdditive: AdditiveEntry?
