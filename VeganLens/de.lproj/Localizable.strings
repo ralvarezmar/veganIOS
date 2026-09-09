@@ -32,6 +32,9 @@
 "permission_unknown_message" = "Der Kamerastatus konnte nicht ermittelt werden.";
 "scan_instruction" = "📷 Richte die Kamera auf den Barcode.";
 "scan_formats_hint" = "EAN- und UPC-Codes werden unterstützt.";
+"scanner_flash_on" = "Taschenlampe einschalten";
+"scanner_flash_off" = "Taschenlampe ausschalten";
+"scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Barcode erkannt";
 "scanner_confirmation_subtitle" = "Ergebnis wird geöffnet…";
 "loading_product" = "Datenbanken werden abgefragt…";

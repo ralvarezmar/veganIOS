@@ -32,6 +32,9 @@
 "permission_unknown_message" = "Impossibile determinare lo stato della fotocamera.";
 "scan_instruction" = "📷 Inquadra il codice a barre.";
 "scan_formats_hint" = "Sono supportati i codici EAN e UPC.";
+"scanner_flash_on" = "Accendi la torcia";
+"scanner_flash_off" = "Spegni la torcia";
+"scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Codice rilevato";
 "scanner_confirmation_subtitle" = "Apertura del risultato…";
 "loading_product" = "Consultazione dei database…";

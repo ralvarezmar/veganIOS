@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+- Scanner: flashlight and zoom, with pinch-to-zoom.
+
 ## [1.13.0 (44)] - 2026-09-08
 
 - Scan loading now shows the current data-source phase and can be cancelled.
