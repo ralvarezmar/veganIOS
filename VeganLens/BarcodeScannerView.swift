@@ -4,7 +4,10 @@ import UIKit
 
 struct BarcodeScannerView: UIViewControllerRepresentable {
     @Binding var isRunning: Bool
+    @Binding var torchOn: Bool
+    @Binding var zoomFactor: CGFloat
     let onDetected: (String) -> Void
+    let onCameraReady: (Bool, CGFloat, CGFloat) -> Void
 
     func makeCoordinator() -> Coordinator {
         Coordinator(onDetected: onDetected)
@@ -15,7 +18,10 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
         controller.onDetected = { code in
             context.coordinator.didDetect(code)
         }
+        controller.onCameraReady = onCameraReady
         controller.setRunning(isRunning)
+        controller.setTorch(torchOn)
+        controller.setZoomFactor(zoomFactor)
         return controller
     }
 
@@ -23,7 +29,10 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
         uiViewController.onDetected = { code in
             context.coordinator.didDetect(code)
         }
+        uiViewController.onCameraReady = onCameraReady
         uiViewController.setRunning(isRunning)
+        uiViewController.setTorch(torchOn)
+        uiViewController.setZoomFactor(zoomFactor)
     }
 
     final class Coordinator {
@@ -50,13 +59,20 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
 
 final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     var onDetected: ((String) -> Void)?
+    var onCameraReady: ((Bool, CGFloat, CGFloat) -> Void)?
 
     private let session = AVCaptureSession()
     private let sessionQueue = DispatchQueue(label: "com.ralvarezmar.vcheck.camera.session")
     private let metadataOutput = AVCaptureMetadataOutput()
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    private var videoDevice: AVCaptureDevice?
     private var isConfigured = false
     private var shouldRunSession = false
+
+    var hasTorch: Bool {
+        guard let videoDevice else { return false }
+        return videoDevice.hasTorch && videoDevice.isTorchAvailable
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,9 +103,35 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
                     self.session.startRunning()
                 }
             } else {
+                self.setTorchLocked(false)
                 if self.session.isRunning {
                     self.session.stopRunning()
                 }
+            }
+        }
+    }
+
+    func setTorch(_ on: Bool) {
+        guard videoDevice != nil else { return }
+        sessionQueue.async { [weak self] in
+            self?.setTorchLocked(on)
+        }
+    }
+
+    func setZoomFactor(_ factor: CGFloat) {
+        guard videoDevice != nil else { return }
+        sessionQueue.async { [weak self] in
+            self?.setZoomFactorLocked(factor)
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        sessionQueue.async { [weak self] in
+            guard let self else { return }
+            self.setTorchLocked(false)
+            if self.session.isRunning {
+                self.session.stopRunning()
             }
         }
     }
@@ -113,6 +155,9 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
               session.canAddInput(videoInput) else {
             return
         }
+        self.videoDevice = videoDevice
+        setTorchLocked(false)
+        setZoomFactorLocked(1)
         session.addInput(videoInput)
 
         guard session.canAddOutput(metadataOutput) else {
@@ -121,6 +166,40 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         session.addOutput(metadataOutput)
         metadataOutput.setMetadataObjectsDelegate(self, queue: .main)
         metadataOutput.metadataObjectTypes = [.ean13, .ean8, .upce]
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.onCameraReady?(
+                self.hasTorch,
+                videoDevice.minAvailableVideoZoomFactor,
+                min(videoDevice.maxAvailableVideoZoomFactor, 5)
+            )
+        }
+    }
+
+    private func setTorchLocked(_ on: Bool) {
+        guard let videoDevice, videoDevice.hasTorch, videoDevice.isTorchAvailable else { return }
+        do {
+            try videoDevice.lockForConfiguration()
+            defer { videoDevice.unlockForConfiguration() }
+            videoDevice.torchMode = on ? .on : .off
+        } catch {
+            return
+        }
+    }
+
+    private func setZoomFactorLocked(_ factor: CGFloat) {
+        guard let videoDevice else { return }
+        do {
+            try videoDevice.lockForConfiguration()
+            defer { videoDevice.unlockForConfiguration() }
+            videoDevice.videoZoomFactor = clampedZoomFactor(
+                factor,
+                deviceMin: videoDevice.minAvailableVideoZoomFactor,
+                deviceMax: min(videoDevice.maxAvailableVideoZoomFactor, 5)
+            )
+        } catch {
+            return
+        }
     }
 
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
@@ -133,7 +212,9 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         }
 
         sessionQueue.async { [weak self] in
-            self?.session.stopRunning()
+            guard let self else { return }
+            self.setTorchLocked(false)
+            self.session.stopRunning()
         }
 
         DispatchQueue.main.async { [weak self] in

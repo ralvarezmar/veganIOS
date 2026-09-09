@@ -32,6 +32,9 @@
 "permission_unknown_message" = "Der Kamerastatus konnte nicht ermittelt werden.";
 "scan_instruction" = "📷 Richte die Kamera auf den Barcode.";
 "scan_formats_hint" = "EAN- und UPC-Codes werden unterstützt.";
+"scanner_flash_on" = "Taschenlampe einschalten";
+"scanner_flash_off" = "Taschenlampe ausschalten";
+"scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Barcode erkannt";
 "scanner_confirmation_subtitle" = "Ergebnis wird geöffnet…";
 "loading_product" = "Datenbanken werden abgefragt…";
@@ -230,6 +233,7 @@
 "cache_age_days" = "vor %d Tagen";
 "vegan_reason_structured_non_vegan" = "Ursache: %@ (tierischen Ursprungs laut Open Food Facts).";
 "vegan_reason_structured_doubtful" = "Ursache: %@ (möglicherweise tierischen Ursprungs laut Open Food Facts).";
+"vegan_reason_flavour_dairy_name" = "Ein Aroma mit Milchbezeichnung bedeutet nicht, dass das Produkt Milch enthält: Es ist fast immer synthetisch oder pflanzlich. Nur der Hersteller kann das bestätigen.";
 "vegan_reason_structured_vegan" = "Open Food Facts kennzeichnet die Zutaten als geeignet.";
 "vegan_reason_decisive_tag" = "Bewertung direkt von Open Food Facts gekennzeichnet.";
 "vegan_reason_heuristic" = "Im Zutatentext erkannt: %@ (nur ein Hinweis, nicht von Open Food Facts bestätigt).";
