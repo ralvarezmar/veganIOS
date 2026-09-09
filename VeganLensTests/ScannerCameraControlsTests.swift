@@ -1,4 +1,5 @@
 import XCTest
+@testable import VeganLens
 
 final class ScannerCameraControlsTests: XCTestCase {
     func testClampedZoomFactorKeepsDesiredValueWithinDeviceRange() {
