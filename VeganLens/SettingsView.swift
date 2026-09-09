@@ -92,8 +92,6 @@ struct SettingsView: View {
                     Text(L("b12_reminder_every_week")).tag(7)
                 }
                 .pickerStyle(.menu)
-            } header: {
-                Text(L("b12_reminder_title"))
             }
             .onChange(of: b12ReminderEnabled) { _, enabled in
                 if enabled {
@@ -177,10 +175,14 @@ struct SettingsView: View {
     private var reminderTime: Binding<Date> {
         Binding(
             get: {
-                var components = DateComponents()
-                components.hour = b12ReminderHour
-                components.minute = b12ReminderMinute
-                return Calendar.current.date(from: components) ?? Date()
+                let calendar = Calendar.current
+                let startOfDay = calendar.startOfDay(for: Date())
+                return calendar.date(
+                    bySettingHour: b12ReminderHour,
+                    minute: b12ReminderMinute,
+                    second: 0,
+                    of: startOfDay
+                ) ?? Date()
             },
             set: { date in
                 let components = Calendar.current.dateComponents([.hour, .minute], from: date)

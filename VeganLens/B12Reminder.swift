@@ -19,7 +19,6 @@ func b12ReminderDates(
 ) -> [Date] {
     guard count > 0 else { return [] }
 
-    var calendar = calendar
     let startOfDay = calendar.startOfDay(for: from)
     guard var nextDate = calendar.date(
         bySettingHour: hour,
