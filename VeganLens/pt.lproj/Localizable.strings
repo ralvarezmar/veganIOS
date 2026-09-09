@@ -507,3 +507,11 @@
 "env_recycling_glass" = "recicle no contentor de vidro";
 "env_recycling_discard" = "deite fora";
 "env_recycling_reuse" = "reutilizável";
+"b12_reminder_title" = "Lembrete de B12";
+"b12_reminder_notification" = "Está na hora do seu lembrete.";
+"b12_reminder_time" = "Hora";
+"b12_reminder_frequency" = "Frequência";
+"b12_reminder_every_day" = "Todos os dias";
+"b12_reminder_every_2_days" = "A cada 2 dias";
+"b12_reminder_every_3_days" = "A cada 3 dias";
+"b12_reminder_every_week" = "Todas as semanas";

@@ -4,6 +4,7 @@ import SwiftData
 @main
 struct VeganLensApp: App {
     @UIApplicationDelegateAdaptor(VeganLensAppDelegate.self) private var appDelegate
+    @Environment(\.scenePhase) private var scenePhase
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([ScanRecord.self, CachedProduct.self, FavoriteProduct.self])
@@ -21,5 +22,10 @@ struct VeganLensApp: App {
             RootView(quickActionRouter: appDelegate.quickActionRouter)
         }
         .modelContainer(sharedModelContainer)
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                B12ReminderScheduler.refreshIfEnabled()
+            }
+        }
     }
 }

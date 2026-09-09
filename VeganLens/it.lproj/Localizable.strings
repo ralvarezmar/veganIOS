@@ -507,3 +507,11 @@
 "env_recycling_glass" = "riciclalo nel contenitore del vetro";
 "env_recycling_discard" = "gettalo";
 "env_recycling_reuse" = "riutilizzabile";
+"b12_reminder_title" = "Promemoria B12";
+"b12_reminder_notification" = "È l’ora del tuo promemoria.";
+"b12_reminder_time" = "Ora";
+"b12_reminder_frequency" = "Frequenza";
+"b12_reminder_every_day" = "Ogni giorno";
+"b12_reminder_every_2_days" = "Ogni 2 giorni";
+"b12_reminder_every_3_days" = "Ogni 3 giorni";
+"b12_reminder_every_week" = "Ogni settimana";

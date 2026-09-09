@@ -512,3 +512,11 @@ Fuente: %@
 "env_recycling_glass" = "recíclalo en el contenedor de vidrio";
 "env_recycling_discard" = "tíralo a la basura";
 "env_recycling_reuse" = "reutilizable";
+"b12_reminder_title" = "Recordatorio de B12";
+"b12_reminder_notification" = "Es la hora de tu recordatorio.";
+"b12_reminder_time" = "Hora";
+"b12_reminder_frequency" = "Cada cuánto";
+"b12_reminder_every_day" = "Cada día";
+"b12_reminder_every_2_days" = "Cada 2 días";
+"b12_reminder_every_3_days" = "Cada 3 días";
+"b12_reminder_every_week" = "Cada semana";
