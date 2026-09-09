@@ -10,6 +10,7 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+- Escáner: linterna y zoom, con zoom por pinza.
 - Los aromas con nombre lácteo ya no dan veredicto no vegano: se informan como dudosos.
 
 ## [1.13.0 (44)] - 2026-09-08

@@ -32,6 +32,9 @@
 "permission_unknown_message" = "No se pudo determinar el estado de la cámara.";
 "scan_instruction" = "📷 Apunta al código de barras";
 "scan_formats_hint" = "Se admiten códigos EAN y UPC.";
+"scanner_flash_on" = "Encender la linterna";
+"scanner_flash_off" = "Apagar la linterna";
+"scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Código detectado";
 "scanner_confirmation_subtitle" = "Abriendo el resultado…";
 "loading_product" = "Consultando bases de datos…";

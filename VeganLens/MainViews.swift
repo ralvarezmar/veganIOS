@@ -38,19 +38,41 @@ struct ScannerView: View {
     @State private var pendingNavigationTask: Task<Void, Never>?
     @State private var showingManualBarcodeEntry = false
     @State private var didSubmitManualBarcode = false
+    @State private var cameraReady = false
+    @State private var hasTorch = false
+    @State private var torchOn = false
+    @State private var zoomFactor: CGFloat = 1
+    @State private var zoomDeviceMin: CGFloat = 1
+    @State private var zoomDeviceMax: CGFloat = 1
+    @State private var zoomGestureStart: CGFloat?
 
     var body: some View {
         ZStack {
             if authorizationStatus == .authorized {
-                BarcodeScannerView(isRunning: $isScannerRunning) { barcode in
-                    handleDetection(barcode)
-                }
+                BarcodeScannerView(
+                    isRunning: $isScannerRunning,
+                    torchOn: $torchOn,
+                    zoomFactor: $zoomFactor,
+                    onDetected: handleDetection,
+                    onCameraReady: { available, deviceMin, deviceMax in
+                        hasTorch = available
+                        zoomDeviceMin = deviceMin
+                        zoomDeviceMax = usableMaxZoomFactor(deviceMax)
+                        cameraReady = true
+                    }
+                )
                 .ignoresSafeArea()
 
                 ScannerOverlayView(
                     showingDetectionConfirmation: showingDetectionConfirmation,
                     onManualEntry: presentManualBarcodeEntry,
-                    onPhotoAnalysis: onPhotoAnalysis
+                    onPhotoAnalysis: onPhotoAnalysis,
+                    cameraReady: cameraReady,
+                    hasTorch: hasTorch,
+                    torchOn: $torchOn,
+                    zoomFactor: $zoomFactor,
+                    zoomDeviceMin: zoomDeviceMin,
+                    zoomDeviceMax: zoomDeviceMax
                 )
                     .ignoresSafeArea()
             } else {
@@ -73,6 +95,17 @@ struct ScannerView: View {
                 detectedBarcode = nil
                 showingDetectionConfirmation = false
                 pendingNavigationTask?.cancel()
+                cameraReady = false
+                hasTorch = false
+                torchOn = false
+                zoomFactor = 1
+                zoomDeviceMin = 1
+                zoomDeviceMax = 1
+                zoomGestureStart = nil
+            } else {
+                torchOn = false
+                zoomFactor = 1
+                zoomGestureStart = nil
             }
         }
         .onChange(of: authorizationStatus) { _, newValue in
@@ -80,7 +113,26 @@ struct ScannerView: View {
         }
         .onDisappear {
             pendingNavigationTask?.cancel()
+            torchOn = false
+            zoomFactor = 1
         }
+        .simultaneousGesture(
+            MagnificationGesture()
+                .onChanged { scale in
+                    if zoomGestureStart == nil {
+                        zoomGestureStart = zoomFactor
+                    }
+                    let start = zoomGestureStart ?? zoomFactor
+                    zoomFactor = clampedZoomFactor(
+                        start * scale,
+                        deviceMin: zoomDeviceMin,
+                        deviceMax: zoomDeviceMax
+                    )
+                }
+                .onEnded { _ in
+                    zoomGestureStart = nil
+                }
+        )
         .sheet(isPresented: $showingManualBarcodeEntry) {
             ManualBarcodeEntrySheet { barcode in
                 handleManualBarcodeEntry(barcode)
@@ -166,6 +218,12 @@ private struct ScannerOverlayView: View {
     let showingDetectionConfirmation: Bool
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
+    let cameraReady: Bool
+    let hasTorch: Bool
+    @Binding var torchOn: Bool
+    @Binding var zoomFactor: CGFloat
+    let zoomDeviceMin: CGFloat
+    let zoomDeviceMax: CGFloat
 
     var body: some View {
         GeometryReader { proxy in
@@ -200,7 +258,13 @@ private struct ScannerOverlayView: View {
 
                     HelperCardView(
                         onManualEntry: onManualEntry,
-                        onPhotoAnalysis: onPhotoAnalysis
+                        onPhotoAnalysis: onPhotoAnalysis,
+                        cameraReady: cameraReady,
+                        hasTorch: hasTorch,
+                        torchOn: $torchOn,
+                        zoomFactor: $zoomFactor,
+                        zoomDeviceMin: zoomDeviceMin,
+                        zoomDeviceMax: zoomDeviceMax
                     )
                         .padding(.horizontal, 20)
                         .padding(.bottom, 20)
@@ -213,6 +277,12 @@ private struct ScannerOverlayView: View {
 private struct HelperCardView: View {
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
+    let cameraReady: Bool
+    let hasTorch: Bool
+    @Binding var torchOn: Bool
+    @Binding var zoomFactor: CGFloat
+    let zoomDeviceMin: CGFloat
+    let zoomDeviceMax: CGFloat
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -221,6 +291,29 @@ private struct HelperCardView: View {
             Text(L("scan_formats_hint"))
                 .appFont(.subheadline)
                 .foregroundStyle(.secondary)
+
+            if cameraReady {
+                HStack(spacing: 10) {
+                    if hasTorch {
+                        Button {
+                            torchOn.toggle()
+                        } label: {
+                            Image(systemName: torchOn ? "bolt.fill" : "bolt.slash.fill")
+                                .frame(width: 30, height: 30)
+                        }
+                        .accessibilityLabel(
+                            Text(L(torchOn ? "scanner_flash_off" : "scanner_flash_on"))
+                        )
+                    }
+
+                    Slider(
+                        value: $zoomFactor,
+                        in: zoomDeviceMin...max(zoomDeviceMax, zoomDeviceMin)
+                    )
+                    .disabled(zoomDeviceMax <= zoomDeviceMin)
+                    .accessibilityLabel(Text(L("scanner_zoom")))
+                }
+            }
 
             Button {
                 onManualEntry()
