@@ -86,6 +86,28 @@ final class PhotoIngredientAnalyzerTests: XCTestCase {
         XCTAssertEqual(review.unrecognizedSegments, ["Backtriebmittel"])
     }
 
+    func testReportsDairyNamedFlavourAsReviewInsteadOfVeganInPhotoAnalysis() {
+        let analysis = analyzePhotoIngredients(
+            "Ingredientes: aroma a mantequilla",
+            preferredLanguage: "es"
+        )
+
+        XCTAssertEqual(analysis.status, .review)
+        XCTAssertEqual(analysis.unrecognizedSegments, ["Aroma A Mantequilla"])
+        XCTAssertNotEqual(analysis.status, .vegan)
+    }
+
+    func testKeepsDairyNamedFlavourInsideTraceWarningAsTraceOnly() {
+        let analysis = analyzePhotoIngredients(
+            "Ingredientes: harina, azúcar. Puede contener aroma de mantequilla.",
+            preferredLanguage: "es"
+        )
+
+        XCTAssertEqual(analysis.status, .vegan)
+        XCTAssertTrue(analysis.traceWarning)
+        XCTAssertTrue(analysis.unrecognizedSegments.isEmpty)
+    }
+
     func testReportsUnsupportedLanguageWhenNothingIsRecognized() {
         let analysis = analyzePhotoIngredients(
             "Ingrediënten: tarwebloem, suiker, zonnebloemolie, zout",

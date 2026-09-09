@@ -1565,6 +1565,8 @@ private func veganReasonText(_ reason: VeganReason?) -> String? {
         return String(format: L("vegan_reason_structured_non_vegan"), evidenceWithRemainder)
     case .structuredDoubtfulIngredient:
         return String(format: L("vegan_reason_structured_doubtful"), evidenceWithRemainder)
+    case .flavourDairyName:
+        return L("vegan_reason_flavour_dairy_name")
     case .structuredVeganIngredient:
         return L("vegan_reason_structured_vegan")
     case .decisiveTag:
