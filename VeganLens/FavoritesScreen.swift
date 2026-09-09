@@ -32,7 +32,8 @@ struct FavoritesScreen: View {
                     icon: "star",
                     title: L("favorites_empty_title"),
                     message: L("favorites_empty_message"),
-                    action: onScanProduct
+                    action: onScanProduct,
+                    mascot: EmptyStateMascots.favorites
                 )
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
@@ -41,7 +42,8 @@ struct FavoritesScreen: View {
                     icon: "star",
                     title: L("favorites_empty_title"),
                     message: L("favorites_no_matches"),
-                    action: nil
+                    action: nil,
+                    mascot: EmptyStateMascots.favorites
                 )
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)

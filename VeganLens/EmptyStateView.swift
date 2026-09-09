@@ -5,14 +5,23 @@ struct EmptyStateView: View {
     let title: String
     let message: String
     let action: (() -> Void)?
+    var mascot: String? = nil
 
     var body: some View {
         VStack(spacing: 14) {
-            Image(systemName: icon)
-                .appIconFont(size: 28, weight: .semibold)
-                .foregroundStyle(.green)
-                .frame(width: 64, height: 64)
-                .background(Color.green.opacity(0.14), in: Circle())
+            if let mascot {
+                Image("portada_\(mascot)")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 96, height: 96)
+                    .accessibilityLabel(L("portada_image_description"))
+            } else {
+                Image(systemName: icon)
+                    .appIconFont(size: 28, weight: .semibold)
+                    .foregroundStyle(.green)
+                    .frame(width: 64, height: 64)
+                    .background(Color.green.opacity(0.14), in: Circle())
+            }
 
             Text(title)
                 .appFont(.title2, weight: .bold)

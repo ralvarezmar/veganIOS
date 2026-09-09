@@ -547,9 +547,12 @@ struct OnboardingView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Image(systemName: "leaf.circle.fill")
-                        .appIconFont(size: 56, weight: .semibold)
-                        .foregroundStyle(veganVerdictColor(for: .vegan, colorblindSafe: colorblindSafePalette))
+                    Image("portada_\(EmptyStateMascots.onboarding)")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 96, height: 96)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .accessibilityLabel(L("portada_image_description"))
 
                     Text(L("onboarding_title"))
                         .appFont(.title, weight: .bold)
@@ -1276,7 +1279,8 @@ struct HistoryView: View {
                     icon: "clock.arrow.circlepath",
                     title: L("history_empty_title"),
                     message: L("history_empty_message"),
-                    action: onScanProduct
+                    action: onScanProduct,
+                    mascot: EmptyStateMascots.history
                 )
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
@@ -1285,7 +1289,8 @@ struct HistoryView: View {
                     icon: "clock.arrow.circlepath",
                     title: L("history_empty_title"),
                     message: L("history_no_matches"),
-                    action: nil
+                    action: nil,
+                    mascot: EmptyStateMascots.history
                 )
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
