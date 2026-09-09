@@ -93,18 +93,7 @@ func detectAnimalIngredients(_ text: String) -> [String] {
         for segment in sentence.components(separatedBy: CharacterSet(charactersIn: ",;()/")) {
             let norm = normalizeIngredientSegment(segment)
             if traceWarningMarkers.contains(where: { norm.contains($0) }) { break }
-            let hasUnambiguousMatch = animalLexemeModes.contains { entry in
-                !ambiguousAnimalLexemes.contains(entry.key) &&
-                    matchesAnimalLexeme(entry.key, mode: entry.value, normalized: norm)
-            }
-            let hasAmbiguousMatch = animalLexemeModes.contains { entry in
-                ambiguousAnimalLexemes.contains(entry.key) &&
-                    matchesAnimalLexeme(entry.key, mode: entry.value, normalized: norm)
-            } && !plantQualifiers.contains { norm.contains($0) }
-            let tokens = ingredientTokens(norm)
-            let hasEggToken = tokens.contains { eggTokens.contains($0) }
-
-            guard hasUnambiguousMatch || hasAmbiguousMatch || hasEggToken,
+            guard containsAnimalIngredient(segment),
                   let cleaned = cleanFoodFactsLabel(segment),
                   seen.insert(cleaned).inserted else {
                 continue
