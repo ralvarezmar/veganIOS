@@ -67,7 +67,6 @@
 "onboarding_message" = "Digitalize um código de barras para verificar se um produto é adequado para veganos.\n\n✅ Adequado · ❌ Não adequado · ⚠️ Origem duvidosa · 🔍 Dados insuficientes.";
 "onboarding_dismiss" = "Entendido";
 "share_action" = "Partilhar";
-"share_footer" = "Analisado com VeganLens";
 "item_deleted_message" = "Elemento eliminado";
 "undo_action" = "Desfazer";
 "share_verdict_apto" = "Adequado ✅";

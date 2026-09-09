@@ -543,6 +543,9 @@ struct ResultView: View {
     @State private var selectedAdditive: AdditiveEntry?
     @State private var selectedScoreInfo: ScoreExplanation?
     @State private var alternativesState: AlternativesState = .idle
+    @State private var showingShareSheet = false
+    @State private var shareTextForPresentation: String?
+    @State private var shareImageForPresentation: UIImage?
 
     private let service = OpenFactsService()
 
@@ -600,7 +603,9 @@ struct ResultView: View {
                 }
                 if let shareText {
                     ToolbarItem(placement: .topBarTrailing) {
-                        ShareLink(item: shareText) {
+                        Button {
+                            prepareShare(text: shareText)
+                        } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
                         .accessibilityLabel(L("share_action"))
@@ -612,6 +617,14 @@ struct ResultView: View {
             }
             .sheet(item: $selectedScoreInfo) { explanation in
                 ScoreInfoSheet(explanation: explanation)
+            }
+            .sheet(isPresented: $showingShareSheet, onDismiss: {
+                shareTextForPresentation = nil
+                shareImageForPresentation = nil
+            }) {
+                ShareSheet(
+                    items: [shareTextForPresentation, shareImageForPresentation].compactMap { $0 }
+                )
             }
     }
 
@@ -980,17 +993,51 @@ struct ResultView: View {
     }
 
     private var shareText: String? {
-        guard case .success(let product, _, _, _) = loadState else {
+        guard case .success(let product, let source, _, _) = loadState else {
             return nil
         }
-        let analysis = analyzeVegan(product)
-        return buildShareText(
-            headline: resultHeadline(for: analysis),
-            productName: product.productName,
-            brand: product.brands,
-            barcode: barcode,
-            footer: L("share_footer")
-        )
+        return buildShareText(product: product, source: source)
+    }
+
+    private func buildShareText(product: Product, source: ProductSource) -> String {
+        let title = product.productName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let shareTitle = (title?.isEmpty == false ? title : nil) ?? barcode
+        let verdict = shareVerdictLabel(for: analyzeVegan(product).status)
+        let url = "https://world.openfoodfacts.org/product/\(barcode)"
+        return String(format: L("share_result_template"), shareTitle, verdict, source.displayName, url)
+    }
+
+    @MainActor
+    private func prepareShare(text: String) {
+        shareTextForPresentation = text
+        shareImageForPresentation = nil
+        showingShareSheet = true
+        guard
+            case .success(let product, _, _, _) = loadState,
+            let imageURLString = product.imageUrl,
+            let imageURL = URL(string: imageURLString)
+        else {
+            return
+        }
+
+        Task { @MainActor in
+            if let (data, _) = try? await URLSession.shared.data(from: imageURL) {
+                shareImageForPresentation = UIImage(data: data)
+            }
+        }
+    }
+
+    private func shareVerdictLabel(for status: VeganStatus) -> String {
+        switch status {
+        case .vegan:
+            return L("share_verdict_apto")
+        case .notVegan:
+            return L("share_verdict_no_apto")
+        case .maybe:
+            return L("share_verdict_dudoso")
+        case .unknown:
+            return L("share_verdict_sin_datos")
+        }
     }
 
     private func consultedSourcesMessage(_ consultedSources: [ProductSource]) -> String {

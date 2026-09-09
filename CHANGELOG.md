@@ -8,7 +8,7 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
-- Undo when deleting from history and favourites, verdict sharing, and the verdict is now announced by screen readers.
+- Undo when deleting from history and favourites, and the verdict is now announced by screen readers.
 
 ## [1.13.0 (44)] - 2026-09-08
 

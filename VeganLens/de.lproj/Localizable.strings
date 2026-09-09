@@ -67,7 +67,6 @@
 "onboarding_message" = "Scanne einen Barcode, um zu prüfen, ob ein Produkt für Veganer geeignet ist.\n\n✅ Geeignet · ❌ Nicht geeignet · ⚠️ Zweifelhafte Herkunft · 🔍 Nicht genügend Daten.";
 "onboarding_dismiss" = "Verstanden";
 "share_action" = "Teilen";
-"share_footer" = "Analysiert mit VeganLens";
 "item_deleted_message" = "Element gelöscht";
 "undo_action" = "Rückgängig";
 "share_verdict_apto" = "Geeignet ✅";
