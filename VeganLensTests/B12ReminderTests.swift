@@ -101,10 +101,19 @@ final class B12ReminderTests: XCTestCase {
     }
 
     private func date(_ value: String) -> Date {
-        let formatter = DateFormatter()
-        formatter.calendar = calendar
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        return formatter.date(from: value)!
+        let parts = value.split(separator: " ")
+        let dateParts = parts[0].split(separator: "-").map { Int($0)! }
+        let timeParts = parts[1].split(separator: ":").map { Int($0)! }
+        return calendar.date(
+            from: DateComponents(
+                calendar: calendar,
+                timeZone: calendar.timeZone,
+                year: dateParts[0],
+                month: dateParts[1],
+                day: dateParts[2],
+                hour: timeParts[0],
+                minute: timeParts[1]
+            )
+        )!
     }
 }
