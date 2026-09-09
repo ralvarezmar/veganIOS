@@ -67,6 +67,9 @@
 "onboarding_message" = "Scan a barcode to check whether a product is suitable for vegans.\n\n✅ Suitable · ❌ Not suitable · ⚠️ Doubtful origin · 🔍 Not enough data.";
 "onboarding_dismiss" = "Got it";
 "share_action" = "Share";
+"share_footer" = "Analysed with VeganLens";
+"item_deleted_message" = "Item deleted";
+"undo_action" = "Undo";
 "share_verdict_apto" = "Suitable ✅";
 "share_verdict_no_apto" = "Not suitable ❌";
 "share_verdict_dudoso" = "Doubtful origin ⚠️";

@@ -543,9 +543,6 @@ struct ResultView: View {
     @State private var selectedAdditive: AdditiveEntry?
     @State private var selectedScoreInfo: ScoreExplanation?
     @State private var alternativesState: AlternativesState = .idle
-    @State private var showingShareSheet = false
-    @State private var shareTextForPresentation: String?
-    @State private var shareImageForPresentation: UIImage?
 
     private let service = OpenFactsService()
 
@@ -603,9 +600,7 @@ struct ResultView: View {
                 }
                 if let shareText {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button {
-                            prepareShare(text: shareText)
-                        } label: {
+                        ShareLink(item: shareText) {
                             Image(systemName: "square.and.arrow.up")
                         }
                         .accessibilityLabel(L("share_action"))
@@ -617,14 +612,6 @@ struct ResultView: View {
             }
             .sheet(item: $selectedScoreInfo) { explanation in
                 ScoreInfoSheet(explanation: explanation)
-            }
-            .sheet(isPresented: $showingShareSheet, onDismiss: {
-                shareTextForPresentation = nil
-                shareImageForPresentation = nil
-            }) {
-                ShareSheet(
-                    items: [shareTextForPresentation, shareImageForPresentation].compactMap { $0 }
-                )
             }
     }
 
@@ -827,6 +814,12 @@ struct ResultView: View {
             saveToHistory(product: fetched.product)
             saveToCache(product: fetched.product, source: fetched.source)
             loadState = .success(fetched.product, fetched.source, false, nil)
+            if UIAccessibility.isVoiceOverRunning {
+                UIAccessibility.post(
+                    notification: .announcement,
+                    argument: verdictAnnouncement(for: fetched.product)
+                )
+            }
             await loadAlternatives(for: fetched.product, source: fetched.source)
         case .notFound(let consultedSources):
             loadState = .notFound(consultedSources)
@@ -987,51 +980,17 @@ struct ResultView: View {
     }
 
     private var shareText: String? {
-        guard case .success(let product, let source, _, _) = loadState else {
+        guard case .success(let product, _, _, _) = loadState else {
             return nil
         }
-        return buildShareText(product: product, source: source)
-    }
-
-    private func buildShareText(product: Product, source: ProductSource) -> String {
-        let title = product.productName?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let shareTitle = (title?.isEmpty == false ? title : nil) ?? barcode
-        let verdict = shareVerdictLabel(for: analyzeVegan(product).status)
-        let url = "https://world.openfoodfacts.org/product/\(barcode)"
-        return String(format: L("share_result_template"), shareTitle, verdict, source.displayName, url)
-    }
-
-    @MainActor
-    private func prepareShare(text: String) {
-        shareTextForPresentation = text
-        shareImageForPresentation = nil
-        showingShareSheet = true
-        guard
-            case .success(let product, _, _, _) = loadState,
-            let imageURLString = product.imageUrl,
-            let imageURL = URL(string: imageURLString)
-        else {
-            return
-        }
-
-        Task { @MainActor in
-            if let (data, _) = try? await URLSession.shared.data(from: imageURL) {
-                shareImageForPresentation = UIImage(data: data)
-            }
-        }
-    }
-
-    private func shareVerdictLabel(for status: VeganStatus) -> String {
-        switch status {
-        case .vegan:
-            return L("share_verdict_apto")
-        case .notVegan:
-            return L("share_verdict_no_apto")
-        case .maybe:
-            return L("share_verdict_dudoso")
-        case .unknown:
-            return L("share_verdict_sin_datos")
-        }
+        let analysis = analyzeVegan(product)
+        return buildShareText(
+            headline: resultHeadline(for: analysis),
+            productName: product.productName,
+            brand: product.brands,
+            barcode: barcode,
+            footer: L("share_footer")
+        )
     }
 
     private func consultedSourcesMessage(_ consultedSources: [ProductSource]) -> String {
@@ -1152,6 +1111,8 @@ struct HistoryView: View {
     @State private var query = ""
     @State private var sortOrder: ListSortOrder = .mostRecent
     @State private var showingClearConfirmation = false
+    @State private var pendingUndo: DeletedScanSnapshot?
+    @State private var pendingUndoID: UUID?
 
     let onSelectBarcode: (String) -> Void
     let onScanProduct: () -> Void
@@ -1238,6 +1199,22 @@ struct HistoryView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle(L("history_title"))
         .navigationBarTitleDisplayMode(.inline)
+        .overlay(alignment: .bottom) {
+            if pendingUndo != nil {
+                UndoBanner(
+                    message: L("item_deleted_message"),
+                    actionLabel: L("undo_action"),
+                    onUndo: restorePendingScan
+                )
+            }
+        }
+        .task(id: pendingUndoID) {
+            guard pendingUndoID != nil else { return }
+            try? await Task.sleep(for: .seconds(5))
+            guard !Task.isCancelled else { return }
+            pendingUndo = nil
+            pendingUndoID = nil
+        }
     }
 
     private var sortMenu: some View {
@@ -1254,8 +1231,25 @@ struct HistoryView: View {
 
     @MainActor
     private func delete(_ record: ScanRecord) {
+        pendingUndo = DeletedScanSnapshot(
+            barcode: record.barcode,
+            productName: record.productName,
+            brand: record.brand,
+            imageURL: record.imageURL,
+            timestamp: record.timestamp
+        )
+        pendingUndoID = UUID()
         modelContext.delete(record)
         try? modelContext.save()
+    }
+
+    @MainActor
+    private func restorePendingScan() {
+        guard let pendingUndo else { return }
+        modelContext.insert(makeScanRecord(from: pendingUndo))
+        try? modelContext.save()
+        self.pendingUndo = nil
+        pendingUndoID = nil
     }
 
     @MainActor
@@ -1404,6 +1398,13 @@ private struct VeganBannerView: View {
         .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
         .shadow(color: spec.background.opacity(0.24), radius: 12, x: 0, y: 8)
         .accessibilityElement(children: .combine)
+        .accessibilityLabel(
+            verdictAccessibilityText(
+                headline: spec.headline,
+                subtitle: spec.subtitle,
+                explanation: veganReasonText(analysis.reason)
+            )
+        )
     }
 
     private var bannerSpec: VeganBannerSpec {
@@ -1450,6 +1451,49 @@ private struct VeganBannerView: View {
             )
         }
     }
+}
+
+private func resultHeadline(for analysis: VeganAnalysis) -> String {
+    switch analysis.status {
+    case .vegan:
+        return L("vegan_headline_vegan")
+    case .notVegan:
+        return L("vegan_headline_not_vegan")
+    case .maybe:
+        return analysis.heuristic
+            ? L("vegan_headline_maybe_heuristic")
+            : L("vegan_headline_maybe")
+    case .unknown:
+        return L("vegan_headline_unknown")
+    }
+}
+
+private func resultSubtitle(for analysis: VeganAnalysis) -> String {
+    switch analysis.status {
+    case .vegan:
+        return L("vegan_verdict_vegan_subtitle")
+    case .notVegan:
+        return analysis.heuristic
+            ? L("vegan_verdict_not_vegan_heuristic_subtitle")
+            : L("vegan_verdict_not_vegan_subtitle")
+    case .maybe:
+        return analysis.heuristic
+            ? L("vegan_verdict_maybe_heuristic_subtitle")
+            : L("vegan_verdict_maybe_subtitle")
+    case .unknown:
+        return analysis.hasIngredientData
+            ? L("vegan_verdict_unknown_subtitle")
+            : L("vegan_verdict_unknown_no_ingredients_subtitle")
+    }
+}
+
+private func verdictAnnouncement(for product: Product) -> String {
+    let analysis = analyzeVegan(product)
+    return verdictAccessibilityText(
+        headline: resultHeadline(for: analysis),
+        subtitle: resultSubtitle(for: analysis),
+        explanation: veganReasonText(analysis.reason)
+    )
 }
 
 private func veganReasonText(_ reason: VeganReason?) -> String? {
