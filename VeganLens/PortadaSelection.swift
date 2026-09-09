@@ -46,6 +46,15 @@ let portadaCharacterNames = [
     "zucchini"
 ]
 
+enum EmptyStateMascots {
+    static let history = "carrot"
+    static let favorites = "strawberry"
+    static let search = "kiwi"
+    static let onboarding = "broccoli"
+
+    static let all = [history, favorites, search, onboarding]
+}
+
 let portadaTipKeys = [
     "portada_tip_01",
     "portada_tip_02",

@@ -38,19 +38,41 @@ struct ScannerView: View {
     @State private var pendingNavigationTask: Task<Void, Never>?
     @State private var showingManualBarcodeEntry = false
     @State private var didSubmitManualBarcode = false
+    @State private var cameraReady = false
+    @State private var hasTorch = false
+    @State private var torchOn = false
+    @State private var zoomFactor: CGFloat = 1
+    @State private var zoomDeviceMin: CGFloat = 1
+    @State private var zoomDeviceMax: CGFloat = 1
+    @State private var zoomGestureStart: CGFloat?
 
     var body: some View {
         ZStack {
             if authorizationStatus == .authorized {
-                BarcodeScannerView(isRunning: $isScannerRunning) { barcode in
-                    handleDetection(barcode)
-                }
+                BarcodeScannerView(
+                    isRunning: $isScannerRunning,
+                    torchOn: $torchOn,
+                    zoomFactor: $zoomFactor,
+                    onDetected: handleDetection,
+                    onCameraReady: { available, deviceMin, deviceMax in
+                        hasTorch = available
+                        zoomDeviceMin = deviceMin
+                        zoomDeviceMax = usableMaxZoomFactor(deviceMax)
+                        cameraReady = true
+                    }
+                )
                 .ignoresSafeArea()
 
                 ScannerOverlayView(
                     showingDetectionConfirmation: showingDetectionConfirmation,
                     onManualEntry: presentManualBarcodeEntry,
-                    onPhotoAnalysis: onPhotoAnalysis
+                    onPhotoAnalysis: onPhotoAnalysis,
+                    cameraReady: cameraReady,
+                    hasTorch: hasTorch,
+                    torchOn: $torchOn,
+                    zoomFactor: $zoomFactor,
+                    zoomDeviceMin: zoomDeviceMin,
+                    zoomDeviceMax: zoomDeviceMax
                 )
                     .ignoresSafeArea()
             } else {
@@ -73,6 +95,17 @@ struct ScannerView: View {
                 detectedBarcode = nil
                 showingDetectionConfirmation = false
                 pendingNavigationTask?.cancel()
+                cameraReady = false
+                hasTorch = false
+                torchOn = false
+                zoomFactor = 1
+                zoomDeviceMin = 1
+                zoomDeviceMax = 1
+                zoomGestureStart = nil
+            } else {
+                torchOn = false
+                zoomFactor = 1
+                zoomGestureStart = nil
             }
         }
         .onChange(of: authorizationStatus) { _, newValue in
@@ -80,7 +113,26 @@ struct ScannerView: View {
         }
         .onDisappear {
             pendingNavigationTask?.cancel()
+            torchOn = false
+            zoomFactor = 1
         }
+        .simultaneousGesture(
+            MagnificationGesture()
+                .onChanged { scale in
+                    if zoomGestureStart == nil {
+                        zoomGestureStart = zoomFactor
+                    }
+                    let start = zoomGestureStart ?? zoomFactor
+                    zoomFactor = clampedZoomFactor(
+                        start * scale,
+                        deviceMin: zoomDeviceMin,
+                        deviceMax: zoomDeviceMax
+                    )
+                }
+                .onEnded { _ in
+                    zoomGestureStart = nil
+                }
+        )
         .sheet(isPresented: $showingManualBarcodeEntry) {
             ManualBarcodeEntrySheet { barcode in
                 handleManualBarcodeEntry(barcode)
@@ -166,6 +218,12 @@ private struct ScannerOverlayView: View {
     let showingDetectionConfirmation: Bool
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
+    let cameraReady: Bool
+    let hasTorch: Bool
+    @Binding var torchOn: Bool
+    @Binding var zoomFactor: CGFloat
+    let zoomDeviceMin: CGFloat
+    let zoomDeviceMax: CGFloat
 
     var body: some View {
         GeometryReader { proxy in
@@ -200,7 +258,13 @@ private struct ScannerOverlayView: View {
 
                     HelperCardView(
                         onManualEntry: onManualEntry,
-                        onPhotoAnalysis: onPhotoAnalysis
+                        onPhotoAnalysis: onPhotoAnalysis,
+                        cameraReady: cameraReady,
+                        hasTorch: hasTorch,
+                        torchOn: $torchOn,
+                        zoomFactor: $zoomFactor,
+                        zoomDeviceMin: zoomDeviceMin,
+                        zoomDeviceMax: zoomDeviceMax
                     )
                         .padding(.horizontal, 20)
                         .padding(.bottom, 20)
@@ -213,6 +277,12 @@ private struct ScannerOverlayView: View {
 private struct HelperCardView: View {
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
+    let cameraReady: Bool
+    let hasTorch: Bool
+    @Binding var torchOn: Bool
+    @Binding var zoomFactor: CGFloat
+    let zoomDeviceMin: CGFloat
+    let zoomDeviceMax: CGFloat
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -221,6 +291,29 @@ private struct HelperCardView: View {
             Text(L("scan_formats_hint"))
                 .appFont(.subheadline)
                 .foregroundStyle(.secondary)
+
+            if cameraReady {
+                HStack(spacing: 10) {
+                    if hasTorch {
+                        Button {
+                            torchOn.toggle()
+                        } label: {
+                            Image(systemName: torchOn ? "bolt.fill" : "bolt.slash.fill")
+                                .frame(width: 30, height: 30)
+                        }
+                        .accessibilityLabel(
+                            Text(L(torchOn ? "scanner_flash_off" : "scanner_flash_on"))
+                        )
+                    }
+
+                    Slider(
+                        value: $zoomFactor,
+                        in: zoomDeviceMin...max(zoomDeviceMax, zoomDeviceMin)
+                    )
+                    .disabled(zoomDeviceMax <= zoomDeviceMin)
+                    .accessibilityLabel(Text(L("scanner_zoom")))
+                }
+            }
 
             Button {
                 onManualEntry()
@@ -454,9 +547,12 @@ struct OnboardingView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Image(systemName: "leaf.circle.fill")
-                        .appIconFont(size: 56, weight: .semibold)
-                        .foregroundStyle(veganVerdictColor(for: .vegan, colorblindSafe: colorblindSafePalette))
+                    Image("portada_\(EmptyStateMascots.onboarding)")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 96, height: 96)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .accessibilityLabel(L("portada_image_description"))
 
                     Text(L("onboarding_title"))
                         .appFont(.title, weight: .bold)
@@ -827,6 +923,12 @@ struct ResultView: View {
             saveToHistory(product: fetched.product)
             saveToCache(product: fetched.product, source: fetched.source)
             loadState = .success(fetched.product, fetched.source, false, nil)
+            if UIAccessibility.isVoiceOverRunning {
+                UIAccessibility.post(
+                    notification: .announcement,
+                    argument: verdictAnnouncement(for: fetched.product)
+                )
+            }
             await loadAlternatives(for: fetched.product, source: fetched.source)
         case .notFound(let consultedSources):
             loadState = .notFound(consultedSources)
@@ -1152,6 +1254,8 @@ struct HistoryView: View {
     @State private var query = ""
     @State private var sortOrder: ListSortOrder = .mostRecent
     @State private var showingClearConfirmation = false
+    @State private var pendingUndo: DeletedScanSnapshot?
+    @State private var pendingUndoID: UUID?
 
     let onSelectBarcode: (String) -> Void
     let onScanProduct: () -> Void
@@ -1175,7 +1279,8 @@ struct HistoryView: View {
                     icon: "clock.arrow.circlepath",
                     title: L("history_empty_title"),
                     message: L("history_empty_message"),
-                    action: onScanProduct
+                    action: onScanProduct,
+                    mascot: EmptyStateMascots.history
                 )
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
@@ -1184,7 +1289,8 @@ struct HistoryView: View {
                     icon: "clock.arrow.circlepath",
                     title: L("history_empty_title"),
                     message: L("history_no_matches"),
-                    action: nil
+                    action: nil,
+                    mascot: EmptyStateMascots.history
                 )
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
@@ -1238,6 +1344,22 @@ struct HistoryView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle(L("history_title"))
         .navigationBarTitleDisplayMode(.inline)
+        .overlay(alignment: .bottom) {
+            if pendingUndo != nil {
+                UndoBanner(
+                    message: L("item_deleted_message"),
+                    actionLabel: L("undo_action"),
+                    onUndo: restorePendingScan
+                )
+            }
+        }
+        .task(id: pendingUndoID) {
+            guard pendingUndoID != nil else { return }
+            try? await Task.sleep(for: .seconds(5))
+            guard !Task.isCancelled else { return }
+            pendingUndo = nil
+            pendingUndoID = nil
+        }
     }
 
     private var sortMenu: some View {
@@ -1254,8 +1376,25 @@ struct HistoryView: View {
 
     @MainActor
     private func delete(_ record: ScanRecord) {
+        pendingUndo = DeletedScanSnapshot(
+            barcode: record.barcode,
+            productName: record.productName,
+            brand: record.brand,
+            imageURL: record.imageURL,
+            timestamp: record.timestamp
+        )
+        pendingUndoID = UUID()
         modelContext.delete(record)
         try? modelContext.save()
+    }
+
+    @MainActor
+    private func restorePendingScan() {
+        guard let pendingUndo else { return }
+        modelContext.insert(makeScanRecord(from: pendingUndo))
+        try? modelContext.save()
+        self.pendingUndo = nil
+        pendingUndoID = nil
     }
 
     @MainActor
@@ -1404,6 +1543,13 @@ private struct VeganBannerView: View {
         .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
         .shadow(color: spec.background.opacity(0.24), radius: 12, x: 0, y: 8)
         .accessibilityElement(children: .combine)
+        .accessibilityLabel(
+            verdictAccessibilityText(
+                headline: spec.headline,
+                subtitle: spec.subtitle,
+                explanation: veganReasonText(analysis.reason)
+            )
+        )
     }
 
     private var bannerSpec: VeganBannerSpec {
@@ -1452,6 +1598,49 @@ private struct VeganBannerView: View {
     }
 }
 
+private func resultHeadline(for analysis: VeganAnalysis) -> String {
+    switch analysis.status {
+    case .vegan:
+        return L("vegan_headline_vegan")
+    case .notVegan:
+        return L("vegan_headline_not_vegan")
+    case .maybe:
+        return analysis.heuristic
+            ? L("vegan_headline_maybe_heuristic")
+            : L("vegan_headline_maybe")
+    case .unknown:
+        return L("vegan_headline_unknown")
+    }
+}
+
+private func resultSubtitle(for analysis: VeganAnalysis) -> String {
+    switch analysis.status {
+    case .vegan:
+        return L("vegan_verdict_vegan_subtitle")
+    case .notVegan:
+        return analysis.heuristic
+            ? L("vegan_verdict_not_vegan_heuristic_subtitle")
+            : L("vegan_verdict_not_vegan_subtitle")
+    case .maybe:
+        return analysis.heuristic
+            ? L("vegan_verdict_maybe_heuristic_subtitle")
+            : L("vegan_verdict_maybe_subtitle")
+    case .unknown:
+        return analysis.hasIngredientData
+            ? L("vegan_verdict_unknown_subtitle")
+            : L("vegan_verdict_unknown_no_ingredients_subtitle")
+    }
+}
+
+private func verdictAnnouncement(for product: Product) -> String {
+    let analysis = analyzeVegan(product)
+    return verdictAccessibilityText(
+        headline: resultHeadline(for: analysis),
+        subtitle: resultSubtitle(for: analysis),
+        explanation: veganReasonText(analysis.reason)
+    )
+}
+
 private func veganReasonText(_ reason: VeganReason?) -> String? {
     guard let reason else { return nil }
     let visibleEvidence = Array(reason.evidence.prefix(3))
@@ -1472,6 +1661,8 @@ private func veganReasonText(_ reason: VeganReason?) -> String? {
         return String(format: L("vegan_reason_structured_non_vegan"), evidenceWithRemainder)
     case .structuredDoubtfulIngredient:
         return String(format: L("vegan_reason_structured_doubtful"), evidenceWithRemainder)
+    case .flavourDairyName:
+        return L("vegan_reason_flavour_dairy_name")
     case .structuredVeganIngredient:
         return L("vegan_reason_structured_vegan")
     case .decisiveTag:

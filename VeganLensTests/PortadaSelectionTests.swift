@@ -3,6 +3,12 @@ import UIKit
 @testable import VeganLens
 
 final class PortadaSelectionTests: XCTestCase {
+    func testEmptyStateMascotsAreKnownPortadaCharacters() {
+        for mascot in EmptyStateMascots.all {
+            XCTAssertTrue(portadaCharacterNames.contains(mascot))
+        }
+    }
+
     func testSelectionUsesOnlyKnownCharacters() {
         for _ in 0..<100 {
             XCTAssertTrue(portadaCharacterNames.contains(selectPortadaCharacter(previous: nil)))
