@@ -72,6 +72,8 @@
 ✅ Apto · ❌ No apto · ⚠ Origen dudoso · 🔍 Sin datos suficientes.";
 "onboarding_dismiss" = "Entendido";
 "share_action" = "Compartir";
+"item_deleted_message" = "Elemento eliminado";
+"undo_action" = "Deshacer";
 "share_verdict_apto" = "Apto ✅";
 "share_verdict_no_apto" = "No apto ❌";
 "share_verdict_dudoso" = "Origen dudoso ⚠️";

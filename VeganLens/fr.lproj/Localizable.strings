@@ -70,6 +70,8 @@
 "onboarding_message" = "Scannez un code-barres pour vérifier si un produit convient aux végétaliens.\n\n✅ Convient · ❌ Ne convient pas · ⚠️ Origine douteuse · 🔍 Données insuffisantes.";
 "onboarding_dismiss" = "Compris";
 "share_action" = "Partager";
+"item_deleted_message" = "Élément supprimé";
+"undo_action" = "Annuler";
 "share_verdict_apto" = "Convient ✅";
 "share_verdict_no_apto" = "Ne convient pas ❌";
 "share_verdict_dudoso" = "Origine douteuse ⚠️";

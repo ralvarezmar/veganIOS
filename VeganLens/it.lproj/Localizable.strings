@@ -70,6 +70,8 @@
 "onboarding_message" = "Scansiona un codice a barre per verificare se un prodotto è adatto ai vegani.\n\n✅ Adatto · ❌ Non adatto · ⚠️ Origine dubbia · 🔍 Dati insufficienti.";
 "onboarding_dismiss" = "Ho capito";
 "share_action" = "Condividi";
+"item_deleted_message" = "Elemento eliminato";
+"undo_action" = "Annulla";
 "share_verdict_apto" = "Adatto ✅";
 "share_verdict_no_apto" = "Non adatto ❌";
 "share_verdict_dudoso" = "Origine dubbia ⚠️";
