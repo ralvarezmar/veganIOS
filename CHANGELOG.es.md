@@ -11,6 +11,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 - Personajes ilustrados en el onboarding y en los estados vacíos.
+- Deshacer al borrar en historial y favoritos, y el veredicto ya se anuncia con lector de pantalla.
+- Escáner: linterna y zoom, con zoom por pinza.
+- Los aromas con nombre lácteo ya no dan veredicto no vegano: se informan como dudosos.
 
 ## [1.13.0 (44)] - 2026-09-08
 

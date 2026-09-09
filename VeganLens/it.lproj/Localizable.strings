@@ -32,6 +32,9 @@
 "permission_unknown_message" = "Impossibile determinare lo stato della fotocamera.";
 "scan_instruction" = "📷 Inquadra il codice a barre.";
 "scan_formats_hint" = "Sono supportati i codici EAN e UPC.";
+"scanner_flash_on" = "Accendi la torcia";
+"scanner_flash_off" = "Spegni la torcia";
+"scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Codice rilevato";
 "scanner_confirmation_subtitle" = "Apertura del risultato…";
 "loading_product" = "Consultazione dei database…";
@@ -67,6 +70,8 @@
 "onboarding_message" = "Scansiona un codice a barre per verificare se un prodotto è adatto ai vegani.\n\n✅ Adatto · ❌ Non adatto · ⚠️ Origine dubbia · 🔍 Dati insufficienti.";
 "onboarding_dismiss" = "Ho capito";
 "share_action" = "Condividi";
+"item_deleted_message" = "Elemento eliminato";
+"undo_action" = "Annulla";
 "share_verdict_apto" = "Adatto ✅";
 "share_verdict_no_apto" = "Non adatto ❌";
 "share_verdict_dudoso" = "Origine dubbia ⚠️";
@@ -228,6 +233,7 @@
 "cache_age_days" = "Aggiornato %d giorni fa";
 "vegan_reason_structured_non_vegan" = "Causa: %@ (origine animale secondo Open Food Facts).";
 "vegan_reason_structured_doubtful" = "Causa: %@ (possibile origine animale secondo Open Food Facts).";
+"vegan_reason_flavour_dairy_name" = "Un aroma dal nome lattiero non significa che il prodotto contenga latte: è quasi sempre sintetico o vegetale. Solo il produttore può confermarlo.";
 "vegan_reason_structured_vegan" = "Open Food Facts indica gli ingredienti come adatti.";
 "vegan_reason_decisive_tag" = "Verdetto indicato direttamente da Open Food Facts.";
 "vegan_reason_heuristic" = "Rilevato nel testo degli ingredienti: %@ (indicativo, non confermato da Open Food Facts).";

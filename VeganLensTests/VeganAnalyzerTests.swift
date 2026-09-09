@@ -265,6 +265,78 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertTrue(analysis.heuristic)
     }
 
+    func testDairyNamedFlavoursAreReportedAsDoubtful() {
+        let doubtful = [
+            "aroma a mantequilla",
+            "aroma natural de mantequilla",
+            "butter flavouring",
+            "arôme beurre",
+            "Butteraroma",
+            "aroma de queso"
+        ]
+
+        for text in doubtful {
+            let analysis = analyzeVegan(
+                ingredientsAnalysisTags: nil,
+                ingredients: nil,
+                ingredientsText: text
+            )
+
+            XCTAssertTrue(isStatus(analysis.status, .maybe))
+            XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
+            XCTAssertEqual(analysis.doubtfulIngredients, [cleanFoodFactsLabel(text)!])
+            XCTAssertEqual(analysis.reason?.source, .flavourDairyName)
+        }
+    }
+
+    func testAnimalSignalsRemainNotVeganAndPlantQualifiersRemainVegan() {
+        for text in [
+            "aroma de mantequilla (lactosuero)",
+            "aroma de mantequilla y gelatina",
+            "mantequilla",
+            "leche entera"
+        ] {
+            let analysis = analyzeVegan(
+                ingredientsAnalysisTags: nil,
+                ingredients: nil,
+                ingredientsText: text
+            )
+
+            XCTAssertTrue(isStatus(analysis.status, .notVegan))
+        }
+        XCTAssertEqual(
+            analyzeVegan(
+                ingredientsAnalysisTags: nil,
+                ingredients: nil,
+                ingredientsText: "aroma de mantequilla (lactosuero)"
+            ).doubtfulIngredients,
+            ["Aroma De Mantequilla"]
+        )
+
+        let plantQualified = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: [
+                OffIngredient(text: "mantequilla de cacahuete", vegan: "yes", vegetarian: nil)
+            ]
+        )
+        XCTAssertTrue(isStatus(plantQualified.status, .vegan))
+        XCTAssertTrue(plantQualified.nonVeganIngredients.isEmpty)
+    }
+
+    func testStructuredDairyNamedFlavourIsReclassifiedAsDoubtful() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: [
+                OffIngredient(text: "aroma de mantequilla", vegan: "no", vegetarian: nil)
+            ]
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .maybe))
+        XCTAssertTrue(analysis.nonVeganIngredients.isEmpty)
+        XCTAssertEqual(analysis.doubtfulIngredients, ["Aroma De Mantequilla"])
+        XCTAssertEqual(analysis.reason?.source, .flavourDairyName)
+    }
+
     func testDecisiveVeganTagIsNeverOverriddenByHeuristic() {
         let analysis = analyzeVegan(
             ingredientsAnalysisTags: ["en:vegan"],
