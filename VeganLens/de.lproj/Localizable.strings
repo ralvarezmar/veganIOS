@@ -32,6 +32,9 @@
 "permission_unknown_message" = "Der Kamerastatus konnte nicht ermittelt werden.";
 "scan_instruction" = "📷 Richte die Kamera auf den Barcode.";
 "scan_formats_hint" = "EAN- und UPC-Codes werden unterstützt.";
+"scanner_flash_on" = "Taschenlampe einschalten";
+"scanner_flash_off" = "Taschenlampe ausschalten";
+"scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Barcode erkannt";
 "scanner_confirmation_subtitle" = "Ergebnis wird geöffnet…";
 "loading_product" = "Datenbanken werden abgefragt…";
@@ -67,6 +70,8 @@
 "onboarding_message" = "Scanne einen Barcode, um zu prüfen, ob ein Produkt für Veganer geeignet ist.\n\n✅ Geeignet · ❌ Nicht geeignet · ⚠️ Zweifelhafte Herkunft · 🔍 Nicht genügend Daten.";
 "onboarding_dismiss" = "Verstanden";
 "share_action" = "Teilen";
+"item_deleted_message" = "Element gelöscht";
+"undo_action" = "Rückgängig";
 "share_verdict_apto" = "Geeignet ✅";
 "share_verdict_no_apto" = "Nicht geeignet ❌";
 "share_verdict_dudoso" = "Zweifelhafte Herkunft ⚠️";
@@ -228,6 +233,7 @@
 "cache_age_days" = "vor %d Tagen";
 "vegan_reason_structured_non_vegan" = "Ursache: %@ (tierischen Ursprungs laut Open Food Facts).";
 "vegan_reason_structured_doubtful" = "Ursache: %@ (möglicherweise tierischen Ursprungs laut Open Food Facts).";
+"vegan_reason_flavour_dairy_name" = "Ein Aroma mit Milchbezeichnung bedeutet nicht, dass das Produkt Milch enthält: Es ist fast immer synthetisch oder pflanzlich. Nur der Hersteller kann das bestätigen.";
 "vegan_reason_structured_vegan" = "Open Food Facts kennzeichnet die Zutaten als geeignet.";
 "vegan_reason_decisive_tag" = "Bewertung direkt von Open Food Facts gekennzeichnet.";
 "vegan_reason_heuristic" = "Im Zutatentext erkannt: %@ (nur ein Hinweis, nicht von Open Food Facts bestätigt).";
@@ -501,3 +507,11 @@
 "env_recycling_glass" = "im Altglascontainer recyceln";
 "env_recycling_discard" = "wegwerfen";
 "env_recycling_reuse" = "wiederverwendbar";
+"b12_reminder_title" = "B12-Erinnerung";
+"b12_reminder_notification" = "Es ist Zeit für deine Erinnerung.";
+"b12_reminder_time" = "Zeit";
+"b12_reminder_frequency" = "Wie oft";
+"b12_reminder_every_day" = "Jeden Tag";
+"b12_reminder_every_2_days" = "Alle 2 Tage";
+"b12_reminder_every_3_days" = "Alle 3 Tage";
+"b12_reminder_every_week" = "Jede Woche";

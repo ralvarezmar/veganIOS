@@ -32,6 +32,9 @@
 "permission_unknown_message" = "No se pudo determinar el estado de la cámara.";
 "scan_instruction" = "📷 Apunta al código de barras";
 "scan_formats_hint" = "Se admiten códigos EAN y UPC.";
+"scanner_flash_on" = "Encender la linterna";
+"scanner_flash_off" = "Apagar la linterna";
+"scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Código detectado";
 "scanner_confirmation_subtitle" = "Abriendo el resultado…";
 "loading_product" = "Consultando bases de datos…";
@@ -69,6 +72,8 @@
 ✅ Apto · ❌ No apto · ⚠ Origen dudoso · 🔍 Sin datos suficientes.";
 "onboarding_dismiss" = "Entendido";
 "share_action" = "Compartir";
+"item_deleted_message" = "Elemento eliminado";
+"undo_action" = "Deshacer";
 "share_verdict_apto" = "Apto ✅";
 "share_verdict_no_apto" = "No apto ❌";
 "share_verdict_dudoso" = "Origen dudoso ⚠️";
@@ -233,6 +238,7 @@ Fuente: %@
 "cache_age_days" = "Actualizado hace %d días";
 "vegan_reason_structured_non_vegan" = "Causa: %@ (origen animal según Open Food Facts).";
 "vegan_reason_structured_doubtful" = "Causa: %@ (posible origen animal según Open Food Facts).";
+"vegan_reason_flavour_dairy_name" = "Un aroma con nombre lácteo no implica que lleve leche: casi siempre es sintético o vegetal. Solo el fabricante lo confirma.";
 "vegan_reason_structured_vegan" = "Open Food Facts marca los ingredientes como aptos.";
 "vegan_reason_decisive_tag" = "Veredicto marcado directamente por Open Food Facts.";
 "vegan_reason_heuristic" = "Detectado en el texto de ingredientes: %@ (orientativo, no confirmado por Open Food Facts).";
@@ -506,3 +512,11 @@ Fuente: %@
 "env_recycling_glass" = "recíclalo en el contenedor de vidrio";
 "env_recycling_discard" = "tíralo a la basura";
 "env_recycling_reuse" = "reutilizable";
+"b12_reminder_title" = "Recordatorio de B12";
+"b12_reminder_notification" = "Es la hora de tu recordatorio.";
+"b12_reminder_time" = "Hora";
+"b12_reminder_frequency" = "Cada cuánto";
+"b12_reminder_every_day" = "Cada día";
+"b12_reminder_every_2_days" = "Cada 2 días";
+"b12_reminder_every_3_days" = "Cada 3 días";
+"b12_reminder_every_week" = "Cada semana";

@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UserNotifications
 
 struct SettingsView: View {
     @Environment(\.openURL) private var openURL
@@ -12,6 +13,10 @@ struct SettingsView: View {
     @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
     @AppStorage(AccessibilityPreferences.textSizeKey) private var textSize = AccessibilityTextSize.normal.rawValue
     @AppStorage(AccessibilityPreferences.highLegibilityFontKey) private var highLegibilityFont = false
+    @AppStorage(B12ReminderSettings.enabledKey) private var b12ReminderEnabled = false
+    @AppStorage(B12ReminderSettings.hourKey) private var b12ReminderHour = 9
+    @AppStorage(B12ReminderSettings.minuteKey) private var b12ReminderMinute = 0
+    @AppStorage(B12ReminderSettings.intervalDaysKey) private var b12ReminderIntervalDays = 7
 
     private let privacyURL = URL(string: "https://ralvarezmar.github.io/veganIOS/")!
 
@@ -72,6 +77,59 @@ struct SettingsView: View {
             }
 
             Section {
+                Toggle(L("b12_reminder_title"), isOn: $b12ReminderEnabled)
+
+                DatePicker(
+                    L("b12_reminder_time"),
+                    selection: reminderTime,
+                    displayedComponents: [.hourAndMinute]
+                )
+
+                Picker(L("b12_reminder_frequency"), selection: $b12ReminderIntervalDays) {
+                    Text(L("b12_reminder_every_day")).tag(1)
+                    Text(L("b12_reminder_every_2_days")).tag(2)
+                    Text(L("b12_reminder_every_3_days")).tag(3)
+                    Text(L("b12_reminder_every_week")).tag(7)
+                }
+                .pickerStyle(.menu)
+            }
+            .onChange(of: b12ReminderEnabled) { _, enabled in
+                if enabled {
+                    Task {
+                        let granted = (try? await UNUserNotificationCenter.current().requestAuthorization(
+                            options: [.alert, .sound]
+                        )) == true
+                        if granted {
+                            await B12ReminderScheduler.refresh()
+                        } else {
+                            await MainActor.run {
+                                b12ReminderEnabled = false
+                            }
+                        }
+                    }
+                } else {
+                    Task {
+                        await B12ReminderScheduler.removePendingReminders()
+                    }
+                }
+            }
+            .onChange(of: b12ReminderHour) { _, _ in
+                if b12ReminderEnabled {
+                    B12ReminderScheduler.refreshIfEnabled()
+                }
+            }
+            .onChange(of: b12ReminderMinute) { _, _ in
+                if b12ReminderEnabled {
+                    B12ReminderScheduler.refreshIfEnabled()
+                }
+            }
+            .onChange(of: b12ReminderIntervalDays) { _, _ in
+                if b12ReminderEnabled {
+                    B12ReminderScheduler.refreshIfEnabled()
+                }
+            }
+
+            Section {
                 Button(role: .destructive) {
                     showingClearCacheConfirmation = true
                 } label: {
@@ -112,6 +170,26 @@ struct SettingsView: View {
         .sheet(isPresented: $showingMascotGallery) {
             MascotGalleryView()
         }
+    }
+
+    private var reminderTime: Binding<Date> {
+        Binding(
+            get: {
+                let calendar = Calendar.current
+                let startOfDay = calendar.startOfDay(for: Date())
+                return calendar.date(
+                    bySettingHour: b12ReminderHour,
+                    minute: b12ReminderMinute,
+                    second: 0,
+                    of: startOfDay
+                ) ?? Date()
+            },
+            set: { date in
+                let components = Calendar.current.dateComponents([.hour, .minute], from: date)
+                b12ReminderHour = components.hour ?? b12ReminderHour
+                b12ReminderMinute = components.minute ?? b12ReminderMinute
+            }
+        )
     }
 
     private var versionText: String {

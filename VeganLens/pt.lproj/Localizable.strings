@@ -32,6 +32,9 @@
 "permission_unknown_message" = "Não foi possível determinar o estado da câmara.";
 "scan_instruction" = "📷 Aponte para o código de barras.";
 "scan_formats_hint" = "São suportados códigos EAN e UPC.";
+"scanner_flash_on" = "Ligar a lanterna";
+"scanner_flash_off" = "Desligar a lanterna";
+"scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Código detetado";
 "scanner_confirmation_subtitle" = "A abrir o resultado…";
 "loading_product" = "A consultar bases de dados…";
@@ -67,6 +70,8 @@
 "onboarding_message" = "Digitalize um código de barras para verificar se um produto é adequado para veganos.\n\n✅ Adequado · ❌ Não adequado · ⚠️ Origem duvidosa · 🔍 Dados insuficientes.";
 "onboarding_dismiss" = "Entendido";
 "share_action" = "Partilhar";
+"item_deleted_message" = "Elemento eliminado";
+"undo_action" = "Desfazer";
 "share_verdict_apto" = "Adequado ✅";
 "share_verdict_no_apto" = "Não adequado ❌";
 "share_verdict_dudoso" = "Origem duvidosa ⚠️";
@@ -228,6 +233,7 @@
 "cache_age_days" = "Atualizado há %d dias";
 "vegan_reason_structured_non_vegan" = "Causa: %@ (origem animal segundo o Open Food Facts).";
 "vegan_reason_structured_doubtful" = "Causa: %@ (possível origem animal segundo o Open Food Facts).";
+"vegan_reason_flavour_dairy_name" = "Um aroma com nome lácteo não significa que o produto contenha leite: é quase sempre sintético ou de origem vegetal. Só o fabricante pode confirmar.";
 "vegan_reason_structured_vegan" = "O Open Food Facts marca os ingredientes como adequados.";
 "vegan_reason_decisive_tag" = "Avaliação marcada diretamente pelo Open Food Facts.";
 "vegan_reason_heuristic" = "Detetado no texto dos ingredientes: %@ (apenas indicativo, não confirmado pelo Open Food Facts).";
@@ -501,3 +507,11 @@
 "env_recycling_glass" = "recicle no contentor de vidro";
 "env_recycling_discard" = "deite fora";
 "env_recycling_reuse" = "reutilizável";
+"b12_reminder_title" = "Lembrete de B12";
+"b12_reminder_notification" = "Está na hora do seu lembrete.";
+"b12_reminder_time" = "Hora";
+"b12_reminder_frequency" = "Frequência";
+"b12_reminder_every_day" = "Todos os dias";
+"b12_reminder_every_2_days" = "A cada 2 dias";
+"b12_reminder_every_3_days" = "A cada 3 dias";
+"b12_reminder_every_week" = "Todas as semanas";

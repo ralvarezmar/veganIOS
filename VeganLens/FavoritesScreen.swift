@@ -7,6 +7,8 @@ struct FavoritesScreen: View {
     @State private var query = ""
     @State private var sortOrder: ListSortOrder = .mostRecent
     @State private var showingClearConfirmation = false
+    @State private var pendingUndo: DeletedFavoriteSnapshot?
+    @State private var pendingUndoID: UUID?
 
     let onSelectBarcode: (String) -> Void
     let onScanProduct: () -> Void
@@ -30,7 +32,8 @@ struct FavoritesScreen: View {
                     icon: "star",
                     title: L("favorites_empty_title"),
                     message: L("favorites_empty_message"),
-                    action: onScanProduct
+                    action: onScanProduct,
+                    mascot: EmptyStateMascots.favorites
                 )
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
@@ -39,7 +42,8 @@ struct FavoritesScreen: View {
                     icon: "star",
                     title: L("favorites_empty_title"),
                     message: L("favorites_no_matches"),
-                    action: nil
+                    action: nil,
+                    mascot: EmptyStateMascots.favorites
                 )
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
@@ -93,6 +97,22 @@ struct FavoritesScreen: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle(L("favorites_title"))
         .navigationBarTitleDisplayMode(.inline)
+        .overlay(alignment: .bottom) {
+            if pendingUndo != nil {
+                UndoBanner(
+                    message: L("item_deleted_message"),
+                    actionLabel: L("undo_action"),
+                    onUndo: restorePendingFavorite
+                )
+            }
+        }
+        .task(id: pendingUndoID) {
+            guard pendingUndoID != nil else { return }
+            try? await Task.sleep(for: .seconds(5))
+            guard !Task.isCancelled else { return }
+            pendingUndo = nil
+            pendingUndoID = nil
+        }
     }
 
     private var sortMenu: some View {
@@ -109,8 +129,25 @@ struct FavoritesScreen: View {
 
     @MainActor
     private func delete(_ item: FavoriteProduct) {
+        pendingUndo = DeletedFavoriteSnapshot(
+            barcode: item.barcode,
+            productName: item.productName,
+            brand: item.brand,
+            imageURL: item.imageURL,
+            addedAt: item.addedAt
+        )
+        pendingUndoID = UUID()
         modelContext.delete(item)
         try? modelContext.save()
+    }
+
+    @MainActor
+    private func restorePendingFavorite() {
+        guard let pendingUndo else { return }
+        modelContext.insert(makeFavoriteProduct(from: pendingUndo))
+        try? modelContext.save()
+        self.pendingUndo = nil
+        pendingUndoID = nil
     }
 
     @MainActor

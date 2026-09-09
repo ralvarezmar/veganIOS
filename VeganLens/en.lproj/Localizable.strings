@@ -32,6 +32,9 @@
 "permission_unknown_message" = "We could not determine the camera status.";
 "scan_instruction" = "📷 Point at the barcode";
 "scan_formats_hint" = "EAN and UPC codes are supported.";
+"scanner_flash_on" = "Turn on the flashlight";
+"scanner_flash_off" = "Turn off the flashlight";
+"scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Barcode detected";
 "scanner_confirmation_subtitle" = "Opening the result…";
 "loading_product" = "Querying databases…";
@@ -67,6 +70,8 @@
 "onboarding_message" = "Scan a barcode to check whether a product is suitable for vegans.\n\n✅ Suitable · ❌ Not suitable · ⚠️ Doubtful origin · 🔍 Not enough data.";
 "onboarding_dismiss" = "Got it";
 "share_action" = "Share";
+"item_deleted_message" = "Item deleted";
+"undo_action" = "Undo";
 "share_verdict_apto" = "Suitable ✅";
 "share_verdict_no_apto" = "Not suitable ❌";
 "share_verdict_dudoso" = "Doubtful origin ⚠️";
@@ -228,6 +233,7 @@
 "cache_age_days" = "Updated %d days ago";
 "vegan_reason_structured_non_vegan" = "Cause: %@ (animal origin according to Open Food Facts).";
 "vegan_reason_structured_doubtful" = "Cause: %@ (possible animal origin according to Open Food Facts).";
+"vegan_reason_flavour_dairy_name" = "A dairy-named flavouring does not mean the product contains milk: it is almost always synthetic or plant-based. Only the manufacturer can confirm it.";
 "vegan_reason_structured_vegan" = "Open Food Facts marks the ingredients as suitable.";
 "vegan_reason_decisive_tag" = "Verdict marked directly by Open Food Facts.";
 "vegan_reason_heuristic" = "Detected in the ingredient text: %@ (guidance only, not confirmed by Open Food Facts).";
@@ -501,3 +507,11 @@
 "env_recycling_glass" = "recycle in the glass bin";
 "env_recycling_discard" = "throw it away";
 "env_recycling_reuse" = "reusable";
+"b12_reminder_title" = "B12 reminder";
+"b12_reminder_notification" = "It is time for your reminder.";
+"b12_reminder_time" = "Time";
+"b12_reminder_frequency" = "How often";
+"b12_reminder_every_day" = "Every day";
+"b12_reminder_every_2_days" = "Every 2 days";
+"b12_reminder_every_3_days" = "Every 3 days";
+"b12_reminder_every_week" = "Every week";

@@ -8,6 +8,14 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+- Optional local B12 reminder, with the time and frequency you choose.
+- Illustrated characters in onboarding and empty states.
+- Undo when deleting from history and favourites, and the verdict is now announced by screen readers.
+- Scanner: flashlight and zoom, with pinch-to-zoom.
+- Dairy-named flavourings no longer trigger a non-vegan verdict; they are reported as doubtful.
+
+## [1.13.0 (44)] - 2026-09-08
+
 - Scan loading now shows the current data-source phase and can be cancelled.
 - A different vegan tip appears on the portada at each app start.
 

@@ -131,7 +131,8 @@ private func SearchEmptyState(query: String) -> some View {
     EmptyStateCard(
         icon: "magnifyingglass",
         title: L("search_empty_title"),
-        message: query.isEmpty ? L("search_empty_message") : String(format: L("search_no_results_message"), query)
+        message: query.isEmpty ? L("search_empty_message") : String(format: L("search_no_results_message"), query),
+        mascot: EmptyStateMascots.search
     )
 }
 
@@ -156,6 +157,7 @@ private struct EmptyStateCard: View {
     let loading: Bool
     let actionTitle: String?
     let action: (() -> Void)?
+    let mascot: String?
 
     init(
         icon: String?,
@@ -163,7 +165,8 @@ private struct EmptyStateCard: View {
         message: String?,
         loading: Bool = false,
         actionTitle: String? = nil,
-        action: (() -> Void)? = nil
+        action: (() -> Void)? = nil,
+        mascot: String? = nil
     ) {
         self.icon = icon
         self.title = title
@@ -171,12 +174,19 @@ private struct EmptyStateCard: View {
         self.loading = loading
         self.actionTitle = actionTitle
         self.action = action
+        self.mascot = mascot
     }
 
     var body: some View {
         VStack(spacing: 14) {
             if loading {
                 ProgressView()
+            } else if let mascot {
+                Image("portada_\(mascot)")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 96, height: 96)
+                    .accessibilityLabel(L("portada_image_description"))
             } else if let icon {
                 Image(systemName: icon)
                     .appIconFont(size: 42, weight: .semibold)
