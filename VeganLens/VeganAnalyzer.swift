@@ -10,6 +10,7 @@ enum VeganStatus: Equatable {
 enum VeganReasonSource: Equatable {
     case structuredNonVeganIngredient
     case structuredDoubtfulIngredient
+    case flavourDairyName
     case structuredVeganIngredient
     case decisiveTag
     case heuristicText
@@ -155,14 +156,27 @@ func analyzeVegan(
         )
     }
 
+    let structuredDairyFlavourIngredients = normalizedIngredients
+        .filter {
+            $0.status == "no" &&
+                !$0.isTrace &&
+                containsDoubtfulFlavourIngredient($0.name)
+        }
+        .map(\.name)
+        .orderedUnique()
     let nonVegan = normalizedIngredients
-        .filter { $0.status == "no" && !$0.isTrace }
+        .filter {
+            $0.status == "no" &&
+                !$0.isTrace &&
+                !structuredDairyFlavourIngredients.contains($0.name)
+        }
         .map(\.name)
         .orderedUnique()
 
     let doubtful = normalizedIngredients
         .filter { $0.status == "maybe" && !$0.isTrace }
         .map(\.name)
+        .plus(structuredDairyFlavourIngredients)
         .orderedUnique()
 
     let traceIngredients = normalizedIngredients
@@ -235,6 +249,15 @@ func analyzeVegan(
         }
         return detectAnimalIngredients(ingredientsText)
     }()
+    let corroboratingDoubtfulFlavourIngredients: [String] = {
+        guard decisiveTag == "en:non-vegan",
+              !tracesOnly,
+              let ingredientsText,
+              !ingredientsText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return []
+        }
+        return detectDoubtfulFlavourIngredients(ingredientsText)
+    }()
     let nonVeganTagHasNoIngredientData = decisiveTag == "en:non-vegan" &&
         !tracesOnly &&
         !hasIngredients &&
@@ -265,6 +288,15 @@ func analyzeVegan(
         }
         if !corroboratingAnimalIngredients.isEmpty {
             return VeganReason(source: .heuristicText, evidence: corroboratingAnimalIngredients)
+        }
+        if !corroboratingDoubtfulFlavourIngredients.isEmpty {
+            return VeganReason(
+                source: .flavourDairyName,
+                evidence: corroboratingDoubtfulFlavourIngredients
+            )
+        }
+        if !structuredDairyFlavourIngredients.isEmpty {
+            return VeganReason(source: .flavourDairyName, evidence: structuredDairyFlavourIngredients)
         }
         if nonVeganTagHasNoIngredientData {
             return VeganReason(source: .decisiveTag, evidence: ["en:non-vegan"])
@@ -319,17 +351,32 @@ func analyzeVegan(
         : corroboratingAnimalIngredients
     let reportedDoubtfulIngredients = decisiveTag == "en:vegan"
         ? doubtful
-        : (doubtful + additiveMatches.uncertain).orderedUnique()
+        : (
+            doubtful +
+                corroboratingDoubtfulFlavourIngredients +
+                additiveMatches.uncertain
+        ).orderedUnique()
 
     if finalStatus == .unknown, let ingredientsText, !ingredientsText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        let doubtfulFlavour = detectDoubtfulFlavourIngredients(ingredientsText)
         let detected = detectAnimalIngredients(ingredientsText)
         if !detected.isEmpty {
             return VeganAnalysis(
                 status: .notVegan,
                 nonVeganIngredients: detected,
-                doubtfulIngredients: [],
+                doubtfulIngredients: doubtfulFlavour,
                 heuristic: true,
                 reason: VeganReason(source: .heuristicText, evidence: detected),
+                hasIngredientData: hasIngredientData
+            )
+        }
+        if !doubtfulFlavour.isEmpty {
+            return VeganAnalysis(
+                status: .maybe,
+                nonVeganIngredients: [],
+                doubtfulIngredients: doubtfulFlavour,
+                heuristic: true,
+                reason: VeganReason(source: .flavourDairyName, evidence: doubtfulFlavour),
                 hasIngredientData: hasIngredientData
             )
         }
@@ -347,7 +394,8 @@ func analyzeVegan(
         status: finalStatus,
         nonVeganIngredients: reportedNonVeganIngredients,
         doubtfulIngredients: reportedDoubtfulIngredients,
-        heuristic: !corroboratingAnimalIngredients.isEmpty,
+        heuristic: !corroboratingAnimalIngredients.isEmpty ||
+            !corroboratingDoubtfulFlavourIngredients.isEmpty,
         reason: finalReason,
         hasIngredientData: hasIngredientData
     )

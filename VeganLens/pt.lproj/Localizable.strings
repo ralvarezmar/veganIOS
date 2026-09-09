@@ -228,6 +228,7 @@
 "cache_age_days" = "Atualizado há %d dias";
 "vegan_reason_structured_non_vegan" = "Causa: %@ (origem animal segundo o Open Food Facts).";
 "vegan_reason_structured_doubtful" = "Causa: %@ (possível origem animal segundo o Open Food Facts).";
+"vegan_reason_flavour_dairy_name" = "Um aroma com nome lácteo não significa que o produto contenha leite: é quase sempre sintético ou de origem vegetal. Só o fabricante pode confirmar.";
 "vegan_reason_structured_vegan" = "O Open Food Facts marca os ingredientes como adequados.";
 "vegan_reason_decisive_tag" = "Avaliação marcada diretamente pelo Open Food Facts.";
 "vegan_reason_heuristic" = "Detetado no texto dos ingredientes: %@ (apenas indicativo, não confirmado pelo Open Food Facts).";

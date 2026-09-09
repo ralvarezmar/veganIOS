@@ -49,6 +49,18 @@ let ambiguousAnimalLexemes: Set<String> = [
     "obers", "rahm"
 ]
 
+let flavourDescriptors: Set<String> = [
+    "aroma", "aromas", "aromat", "aromatizante", "aromatisant", "arome",
+    "aromes", "aromi", "aromen", "aromastoff", "sabor", "sabores",
+    "saborizante", "flavour", "flavor", "flavouring", "flavoring",
+    "geschmack", "gusto", "gout"
+]
+
+let degradableDairyLexemes: Set<String> = ambiguousAnimalLexemes.union([
+    "queso", "cheese", "kase", "fromage", "formagg", "parmesan", "parmigian",
+    "mozzarella", "cheddar", "gouda", "emmental"
+])
+
 let plantQualifiers = [
     "coco", "coconut", "kokos", "almendra", "almend", "almond", "mandel", "amande",
     "soja", "soy", "soya", "avena", "oat", "hafer", "avoine", "arroz", "rice", "reis",
@@ -117,6 +129,7 @@ func containsTraceWarning(_ segment: String) -> Bool {
 
 func containsAnimalIngredient(_ segment: String) -> Bool {
     let normalized = normalizeIngredientSegment(segment)
+    if containsDoubtfulFlavourIngredient(segment) { return false }
     let hasUnambiguousMatch = animalLexemeModes.contains { entry in
         !ambiguousAnimalLexemes.contains(entry.key) &&
             matchesAnimalLexeme(entry.key, mode: entry.value, normalized: normalized)
@@ -129,6 +142,49 @@ func containsAnimalIngredient(_ segment: String) -> Bool {
     let tokens = ingredientTokens(normalized)
     let hasEggToken = tokens.contains { eggTokens.contains($0) }
     return hasUnambiguousMatch || hasAmbiguousMatch || hasEggToken
+}
+
+func containsDoubtfulFlavourIngredient(_ segment: String) -> Bool {
+    guard !containsTraceWarning(segment) else { return false }
+    let normalized = normalizeIngredientSegment(segment)
+    guard !plantQualifiers.contains(where: { normalized.contains($0) }) else { return false }
+    let tokens = ingredientTokens(normalized)
+    let hasFlavourDescriptor = tokens.contains { token in
+        flavourDescriptors.contains { descriptor in
+            token.hasPrefix(descriptor) ||
+                (descriptor == "aroma" && token.hasSuffix(descriptor))
+        }
+    }
+    guard hasFlavourDescriptor else { return false }
+    let matchedAnimalLexemes = Set(animalLexemeModes.compactMap { entry in
+        matchesAnimalLexeme(entry.key, mode: entry.value, normalized: normalized)
+            ? entry.key
+            : nil
+    })
+    let hasEggToken = tokens.contains { eggTokens.contains($0) }
+    return !matchedAnimalLexemes.isEmpty &&
+        matchedAnimalLexemes.allSatisfy { degradableDairyLexemes.contains($0) } &&
+        !hasEggToken
+}
+
+func detectDoubtfulFlavourIngredients(_ text: String) -> [String] {
+    guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return [] }
+
+    var results: [String] = []
+    var seen = Set<String>()
+    let textWithoutMarkup = cleanFoodFactsMarkup(text)
+    for sentence in textWithoutMarkup.components(separatedBy: CharacterSet(charactersIn: ".!\n")) {
+        for segment in sentence.components(separatedBy: CharacterSet(charactersIn: ",;()/")) {
+            if containsTraceWarning(segment) { break }
+            guard containsDoubtfulFlavourIngredient(segment),
+                  let cleaned = cleanFoodFactsLabel(segment),
+                  seen.insert(cleaned).inserted else {
+                continue
+            }
+            results.append(cleaned)
+        }
+    }
+    return results
 }
 
 func ingredientTokens(_ normalized: String) -> [String] {
