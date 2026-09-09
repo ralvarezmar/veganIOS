@@ -5,7 +5,7 @@ struct EmptyStateView: View {
     let title: String
     let message: String
     let action: (() -> Void)?
-    let mascot: String? = nil
+    var mascot: String? = nil
 
     var body: some View {
         VStack(spacing: 14) {

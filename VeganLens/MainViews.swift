@@ -457,7 +457,7 @@ struct OnboardingView: View {
                     Image("portada_\(EmptyStateMascots.onboarding)")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 56, height: 56)
+                        .frame(width: 96, height: 96)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .accessibilityLabel(L("portada_image_description"))
 
