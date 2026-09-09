@@ -501,3 +501,11 @@
 "env_recycling_glass" = "à recycler dans le bac à verre";
 "env_recycling_discard" = "à jeter";
 "env_recycling_reuse" = "réutilisable";
+"b12_reminder_title" = "Rappel B12";
+"b12_reminder_notification" = "C’est l’heure de votre rappel.";
+"b12_reminder_time" = "Heure";
+"b12_reminder_frequency" = "Fréquence";
+"b12_reminder_every_day" = "Chaque jour";
+"b12_reminder_every_2_days" = "Tous les 2 jours";
+"b12_reminder_every_3_days" = "Tous les 3 jours";
+"b12_reminder_every_week" = "Chaque semaine";

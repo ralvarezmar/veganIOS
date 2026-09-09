@@ -501,3 +501,11 @@
 "env_recycling_glass" = "im Altglascontainer recyceln";
 "env_recycling_discard" = "wegwerfen";
 "env_recycling_reuse" = "wiederverwendbar";
+"b12_reminder_title" = "B12-Erinnerung";
+"b12_reminder_notification" = "Es ist Zeit für deine Erinnerung.";
+"b12_reminder_time" = "Zeit";
+"b12_reminder_frequency" = "Wie oft";
+"b12_reminder_every_day" = "Jeden Tag";
+"b12_reminder_every_2_days" = "Alle 2 Tage";
+"b12_reminder_every_3_days" = "Alle 3 Tage";
+"b12_reminder_every_week" = "Jede Woche";

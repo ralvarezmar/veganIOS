@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+- Recordatorio local opcional de B12, con la hora y la frecuencia que elijas.
+
 ## [1.13.0 (44)] - 2026-09-08
 
 - La espera del escaneo muestra la fase actual de consulta y se puede cancelar.
