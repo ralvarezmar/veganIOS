@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.14.0 (45)] - 2026-09-09
+
 - Recordatorio local opcional de B12, con la hora y la frecuencia que elijas.
 - Personajes ilustrados en el onboarding y en los estados vacíos.
 - Deshacer al borrar en historial y favoritos, y el veredicto ya se anuncia con lector de pantalla.
