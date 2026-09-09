@@ -173,10 +173,12 @@ func analyzeVegan(
         .map(\.name)
         .orderedUnique()
 
-    let doubtful = normalizedIngredients
-        .filter { $0.status == "maybe" && !$0.isTrace }
-        .map(\.name)
-        .plus(structuredDairyFlavourIngredients)
+    let doubtful = (
+        normalizedIngredients
+            .filter { $0.status == "maybe" && !$0.isTrace }
+            .map(\.name) +
+            structuredDairyFlavourIngredients
+    )
         .orderedUnique()
 
     let traceIngredients = normalizedIngredients
