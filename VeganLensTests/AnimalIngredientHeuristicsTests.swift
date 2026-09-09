@@ -35,4 +35,38 @@ final class AnimalIngredientHeuristicsTests: XCTestCase {
             ["Leche Entera"]
         )
     }
+
+    func testDetectsDairyNamedFlavourSegmentsAsDoubtfulIncludingGermanCompound() {
+        let doubtful = [
+            "aroma a mantequilla",
+            "aroma natural de mantequilla",
+            "butter flavouring",
+            "arôme beurre",
+            "Butteraroma",
+            "aroma de queso"
+        ]
+
+        for segment in doubtful {
+            XCTAssertTrue(containsDoubtfulFlavourIngredient(segment))
+            XCTAssertFalse(containsAnimalIngredient(segment))
+        }
+        XCTAssertEqual(
+            detectDoubtfulFlavourIngredients("Butteraroma"),
+            ["Butteraroma"]
+        )
+    }
+
+    func testGermanButteraromaCompoundUsesAromaSuffixWithoutBroadFalsePositive() {
+        XCTAssertTrue(containsDoubtfulFlavourIngredient("Butteraroma"))
+        XCTAssertFalse(containsDoubtfulFlavourIngredient("Butter"))
+        XCTAssertFalse(containsDoubtfulFlavourIngredient("Buttercreme"))
+    }
+
+    func testKeepsAdditionalAnimalSignalsAndPlantQualifiersDecisive() {
+        XCTAssertFalse(containsDoubtfulFlavourIngredient("aroma de mantequilla (lactosuero)"))
+        XCTAssertTrue(containsAnimalIngredient("aroma de mantequilla (lactosuero)"))
+        XCTAssertFalse(containsDoubtfulFlavourIngredient("aroma de mantequilla y gelatina"))
+        XCTAssertTrue(containsAnimalIngredient("aroma de mantequilla y gelatina"))
+        XCTAssertFalse(containsAnimalIngredient("mantequilla de cacahuete"))
+    }
 }

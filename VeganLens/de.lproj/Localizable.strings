@@ -228,6 +228,7 @@
 "cache_age_days" = "vor %d Tagen";
 "vegan_reason_structured_non_vegan" = "Ursache: %@ (tierischen Ursprungs laut Open Food Facts).";
 "vegan_reason_structured_doubtful" = "Ursache: %@ (möglicherweise tierischen Ursprungs laut Open Food Facts).";
+"vegan_reason_flavour_dairy_name" = "Ein Aroma mit Milchbezeichnung bedeutet nicht, dass das Produkt Milch enthält: Es ist fast immer synthetisch oder pflanzlich. Nur der Hersteller kann das bestätigen.";
 "vegan_reason_structured_vegan" = "Open Food Facts kennzeichnet die Zutaten als geeignet.";
 "vegan_reason_decisive_tag" = "Bewertung direkt von Open Food Facts gekennzeichnet.";
 "vegan_reason_heuristic" = "Im Zutatentext erkannt: %@ (nur ein Hinweis, nicht von Open Food Facts bestätigt).";

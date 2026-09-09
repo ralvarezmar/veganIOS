@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+- Dairy-named flavourings no longer trigger a non-vegan verdict; they are reported as doubtful.
+
 ## [1.13.0 (44)] - 2026-09-08
 
 - Scan loading now shows the current data-source phase and can be cancelled.
