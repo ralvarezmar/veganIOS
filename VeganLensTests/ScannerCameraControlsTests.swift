@@ -14,6 +14,10 @@ final class ScannerCameraControlsTests: XCTestCase {
             clampedZoomFactor(2, deviceMin: 1, deviceMax: 5),
             2
         )
+        XCTAssertEqual(
+            clampedZoomFactor(1, deviceMin: 2, deviceMax: 1),
+            2
+        )
         let once = clampedZoomFactor(3, deviceMin: 1, deviceMax: 5)
         XCTAssertEqual(
             clampedZoomFactor(once, deviceMin: 1, deviceMax: 5),
