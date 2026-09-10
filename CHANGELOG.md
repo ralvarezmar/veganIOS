@@ -8,6 +8,10 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- The reason for a doubtful verdict names the ingredient and asks you to check its origin.
+- The scanner viewfinder is no longer stuck to the help card.
+
 ## [1.14.0 (45)] - 2026-09-09
 
 - Optional local B12 reminder, with the time and frequency you choose.
