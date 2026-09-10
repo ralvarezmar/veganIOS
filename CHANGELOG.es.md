@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.16.0 (47)] - 2026-09-10
+
 ### Cambiado
 - El historial y los favoritos guardan el veredicto vegano y se pueden filtrar por veredicto.
 - Seguir escaneando muestra una lista limitada y sin duplicados, y el historial conserva los 300 escaneos más recientes.
