@@ -353,6 +353,7 @@ private struct ChainScanResultsOverlay: View {
     let onEntrySelected: (String) -> Void
     let onRetry: (String) -> Void
     let onClear: () -> Void
+    @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -382,7 +383,7 @@ private struct ChainScanResultsOverlay: View {
                                                 .fill(
                                                     veganVerdictColor(
                                                         for: entry.verdict ?? .unknown,
-                                                        colorblindSafe: false
+                                                        colorblindSafe: colorblindSafePalette
                                                     )
                                                 )
                                         case .error:
@@ -1443,13 +1444,15 @@ struct HistoryView: View {
 
     var body: some View {
         List {
-            Section {
-                VerdictFilterControls(selectedVerdicts: $selectedVerdicts)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 4, trailing: 16))
-                Text(LF("history_count_label", records.count, maxHistoryEntries))
-                    .appFont(.caption)
-                    .foregroundStyle(.secondary)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
+            if !records.isEmpty {
+                Section {
+                    VerdictFilterControls(selectedVerdicts: $selectedVerdicts)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 4, trailing: 16))
+                    Text(LF("history_count_label", records.count, maxHistoryEntries))
+                        .appFont(.caption)
+                        .foregroundStyle(.secondary)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
+                }
             }
             if records.isEmpty {
                 EmptyStateView(

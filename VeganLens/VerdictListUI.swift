@@ -25,6 +25,7 @@ struct VerdictChip: View {
 
 struct VerdictFilterControls: View {
     @Binding var selectedVerdicts: Set<VeganStatus>
+    @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
 
     private let statuses: [VeganStatus] = [.vegan, .maybe, .notVegan, .unknown]
 
@@ -42,7 +43,12 @@ struct VerdictFilterControls: View {
                     } label: {
                         HStack(spacing: 6) {
                             Circle()
-                                .fill(veganVerdictColor(for: status, colorblindSafe: false))
+                                .fill(
+                                    veganVerdictColor(
+                                        for: status,
+                                        colorblindSafe: colorblindSafePalette
+                                    )
+                                )
                                 .frame(width: 8, height: 8)
                             Text(verdictFilterLabel(for: status))
                                 .appFont(.caption, weight: .semibold)
