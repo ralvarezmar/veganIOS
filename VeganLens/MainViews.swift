@@ -224,14 +224,23 @@ private struct ScannerOverlayView: View {
     @Binding var zoomFactor: CGFloat
     let zoomDeviceMin: CGFloat
     let zoomDeviceMax: CGFloat
+    @State private var helperCardHeight: CGFloat = 0
 
     var body: some View {
         GeometryReader { proxy in
             let frameWidth = min(proxy.size.width * 0.82, 320)
             let frameHeight = frameWidth * 0.62
+            let frameCenterY: CGFloat = {
+                guard helperCardHeight > 0 else {
+                    return proxy.size.height / 2
+                }
+                let availableHeight = proxy.size.height - helperCardHeight - 24
+                let top = max(16, (availableHeight - frameHeight) / 2)
+                return top + frameHeight / 2
+            }()
             let frameRect = CGRect(
                 x: (proxy.size.width - frameWidth) / 2,
-                y: (proxy.size.height - frameHeight) / 2,
+                y: frameCenterY - frameHeight / 2,
                 width: frameWidth,
                 height: frameHeight
             )
@@ -246,7 +255,7 @@ private struct ScannerOverlayView: View {
                 RoundedRectangle(cornerRadius: 28, style: .continuous)
                     .strokeBorder(Color.white.opacity(0.9), lineWidth: 3)
                     .frame(width: frameWidth, height: frameHeight)
-                    .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
+                    .position(x: proxy.size.width / 2, y: frameCenterY)
 
                 VStack {
                     Spacer()
@@ -267,10 +276,30 @@ private struct ScannerOverlayView: View {
                         zoomDeviceMax: zoomDeviceMax
                     )
                         .padding(.horizontal, 20)
+                        .padding(.top, 24)
                         .padding(.bottom, 20)
+                        .background(
+                            GeometryReader { cardProxy in
+                                Color.clear.preference(
+                                    key: ScannerHelperCardHeightKey.self,
+                                    value: cardProxy.size.height
+                                )
+                            }
+                        )
                 }
             }
+            .onPreferenceChange(ScannerHelperCardHeightKey.self) {
+                helperCardHeight = $0
+            }
         }
+    }
+}
+
+private struct ScannerHelperCardHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
     }
 }
 
@@ -1577,7 +1606,9 @@ private struct VeganBannerView: View {
                 headline: analysis.heuristic
                     ? L("vegan_headline_maybe_heuristic")
                     : L("vegan_headline_maybe"),
-                subtitle: analysis.heuristic
+                subtitle: analysis.reason?.evidence.isEmpty == false
+                    ? L("vegan_verdict_maybe_origin_subtitle")
+                    : analysis.heuristic
                     ? L("vegan_verdict_maybe_heuristic_subtitle")
                     : L("vegan_verdict_maybe_subtitle"),
                 background: veganVerdictColor(for: .maybe, colorblindSafe: colorblindSafePalette),
@@ -1622,6 +1653,9 @@ private func resultSubtitle(for analysis: VeganAnalysis) -> String {
             ? L("vegan_verdict_not_vegan_heuristic_subtitle")
             : L("vegan_verdict_not_vegan_subtitle")
     case .maybe:
+        if analysis.reason?.evidence.isEmpty == false {
+            return L("vegan_verdict_maybe_origin_subtitle")
+        }
         return analysis.heuristic
             ? L("vegan_verdict_maybe_heuristic_subtitle")
             : L("vegan_verdict_maybe_subtitle")
@@ -1641,6 +1675,16 @@ private func verdictAnnouncement(for product: Product) -> String {
     )
 }
 
+func reasonNeedsOriginHint(_ source: VeganReasonSource, evidenceCount: Int) -> Bool {
+    guard evidenceCount > 0 else { return false }
+    switch source {
+    case .flavourDairyName, .structuredDoubtfulIngredient, .additiveUncertain:
+        return true
+    default:
+        return false
+    }
+}
+
 private func veganReasonText(_ reason: VeganReason?) -> String? {
     guard let reason else { return nil }
     let visibleEvidence = Array(reason.evidence.prefix(3))
@@ -1656,36 +1700,46 @@ private func veganReasonText(_ reason: VeganReason?) -> String? {
         evidenceWithRemainder = evidence
     }
 
+    let reasonText: String
     switch reason.source {
     case .structuredNonVeganIngredient:
-        return String(format: L("vegan_reason_structured_non_vegan"), evidenceWithRemainder)
+        reasonText = String(format: L("vegan_reason_structured_non_vegan"), evidenceWithRemainder)
     case .structuredDoubtfulIngredient:
-        return String(format: L("vegan_reason_structured_doubtful"), evidenceWithRemainder)
+        reasonText = String(format: L("vegan_reason_structured_doubtful"), evidenceWithRemainder)
     case .flavourDairyName:
-        return L("vegan_reason_flavour_dairy_name")
+        reasonText = evidenceWithRemainder.isEmpty
+            ? L("vegan_reason_flavour_dairy_name")
+            : String(format: L("vegan_reason_flavour_dairy_name_named"), evidenceWithRemainder)
     case .structuredVeganIngredient:
-        return L("vegan_reason_structured_vegan")
+        reasonText = L("vegan_reason_structured_vegan")
     case .decisiveTag:
-        return L("vegan_reason_decisive_tag")
+        reasonText = L("vegan_reason_decisive_tag")
     case .heuristicText:
-        return evidenceWithRemainder.isEmpty
+        reasonText = evidenceWithRemainder.isEmpty
             ? L("vegan_reason_heuristic_uncertain")
             : String(format: L("vegan_reason_heuristic"), evidenceWithRemainder)
     case .veganSeal:
-        return L("vegan_reason_vegan_seal")
+        reasonText = L("vegan_reason_vegan_seal")
     case .meatAlternativeCategory:
-        return L("vegan_reason_meat_category")
+        reasonText = L("vegan_reason_meat_category")
     case .additiveAnimal:
-        return String(format: L("vegan_reason_additive_animal"), evidenceWithRemainder)
+        reasonText = String(format: L("vegan_reason_additive_animal"), evidenceWithRemainder)
     case .additiveUncertain:
-        return String(format: L("vegan_reason_additive_uncertain"), evidenceWithRemainder)
+        reasonText = String(format: L("vegan_reason_additive_uncertain"), evidenceWithRemainder)
     case .tracesOnly:
-        return String(format: L("vegan_reason_traces_only"), evidenceWithRemainder)
+        reasonText = String(format: L("vegan_reason_traces_only"), evidenceWithRemainder)
     case .sealConflict:
-        return String(format: L("vegan_reason_seal_conflict"), evidenceWithRemainder)
+        reasonText = String(format: L("vegan_reason_seal_conflict"), evidenceWithRemainder)
     case .unverifiedNonVeganTag:
-        return L("vegan_reason_unverified_non_vegan_tag")
+        reasonText = L("vegan_reason_unverified_non_vegan_tag")
     }
+    guard reasonNeedsOriginHint(reason.source, evidenceCount: reason.evidence.count) else {
+        return reasonText
+    }
+    let originKey = reason.evidence.count == 1
+        ? "vegan_reason_check_origin_one"
+        : "vegan_reason_check_origin_other"
+    return "\(reasonText) \(L(originKey))"
 }
 
 private struct VeganBannerSpec {
