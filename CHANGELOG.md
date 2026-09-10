@@ -9,6 +9,12 @@ version so that App Store Connect can provide notes in both languages.
 ## [Unreleased]
 
 ### Changed
+- History and favourites now keep the vegan verdict and can be filtered by verdict.
+- Keep scanning now shows a capped, deduplicated list of results and history keeps the 300 most recent scans.
+
+## [1.15.0 (46)] - 2026-09-10
+
+### Changed
 - The reason for a doubtful verdict names the ingredient and asks you to check its origin.
 - The scanner viewfinder is no longer stuck to the help card.
 

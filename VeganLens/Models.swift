@@ -1058,13 +1058,22 @@ final class ScanRecord {
     var brand: String?
     var imageURL: String?
     var timestamp: Date
+    var verdict: String?
 
-    init(barcode: String, productName: String?, brand: String?, imageURL: String?, timestamp: Date = Date()) {
+    init(
+        barcode: String,
+        productName: String?,
+        brand: String?,
+        imageURL: String?,
+        timestamp: Date = Date(),
+        verdict: String? = nil
+    ) {
         self.barcode = barcode
         self.productName = productName
         self.brand = brand
         self.imageURL = imageURL
         self.timestamp = timestamp
+        self.verdict = verdict
     }
 }
 
@@ -1090,13 +1099,22 @@ final class FavoriteProduct {
     var brand: String?
     var imageURL: String?
     var addedAt: Date
+    var verdict: String?
 
-    init(barcode: String, productName: String?, brand: String?, imageURL: String?, addedAt: Date = Date()) {
+    init(
+        barcode: String,
+        productName: String?,
+        brand: String?,
+        imageURL: String?,
+        addedAt: Date = Date(),
+        verdict: String? = nil
+    ) {
         self.barcode = barcode
         self.productName = productName
         self.brand = brand
         self.imageURL = imageURL
         self.addedAt = addedAt
+        self.verdict = verdict
     }
 }
 

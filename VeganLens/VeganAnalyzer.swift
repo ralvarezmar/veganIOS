@@ -1,10 +1,36 @@
 import Foundation
 
-enum VeganStatus: Equatable {
+enum VeganStatus: Equatable, Hashable {
     case vegan
     case notVegan
     case maybe
     case unknown
+
+    var persistedValue: String {
+        switch self {
+        case .vegan:
+            return "VEGAN"
+        case .notVegan:
+            return "NOT_VEGAN"
+        case .maybe:
+            return "MAYBE"
+        case .unknown:
+            return "UNKNOWN"
+        }
+    }
+
+    init(persisted value: String?) {
+        switch value?.uppercased() {
+        case "VEGAN":
+            self = .vegan
+        case "NOT_VEGAN":
+            self = .notVegan
+        case "MAYBE":
+            self = .maybe
+        default:
+            self = .unknown
+        }
+    }
 }
 
 enum VeganReasonSource: Equatable {

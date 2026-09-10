@@ -11,6 +11,12 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 ### Cambiado
+- El historial y los favoritos guardan el veredicto vegano y se pueden filtrar por veredicto.
+- Seguir escaneando muestra una lista limitada y sin duplicados, y el historial conserva los 300 escaneos más recientes.
+
+## [1.15.0 (46)] - 2026-09-10
+
+### Cambiado
 - El motivo de un veredicto dudoso nombra el ingrediente y pide revisar su procedencia.
 - El visor del escáner ya no queda pegado a la tarjeta de ayuda.
 
