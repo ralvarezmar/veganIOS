@@ -1433,11 +1433,11 @@ struct HistoryView: View {
             records,
             query: query,
             sortOrder: sortOrder,
+            selectedVerdicts: selectedVerdicts,
             productName: { $0.productName },
             brand: { $0.brand },
             barcode: { $0.barcode },
             timestamp: { $0.timestamp },
-            selectedVerdicts: selectedVerdicts,
             verdict: { VeganStatus(persisted: $0.verdict) }
         )
     }
