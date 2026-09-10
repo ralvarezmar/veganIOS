@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.15.0 (46)] - 2026-09-10
+
 ### Cambiado
 - El motivo de un veredicto dudoso nombra el ingrediente y pide revisar su procedencia.
 - El visor del escáner ya no queda pegado a la tarjeta de ayuda.

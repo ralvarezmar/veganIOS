@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.15.0 (46)] - 2026-09-10
+
 ### Changed
 - The reason for a doubtful verdict names the ingredient and asks you to check its origin.
 - The scanner viewfinder is no longer stuck to the help card.
