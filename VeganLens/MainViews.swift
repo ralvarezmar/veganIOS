@@ -28,7 +28,13 @@ private func cacheAgeText(_ date: Date) -> String {
 
 struct ScannerView: View {
     @Binding var isScannerRunning: Bool
+    @Binding var chainScanningEnabled: Bool
+    @ObservedObject var chainSession: ChainScanSession
     let onDetectedBarcode: (String) -> Void
+    let onChainDetected: (String) -> Void
+    let onChainRetry: (String) -> Void
+    let onChainClear: () -> Void
+    let onChainEntrySelected: (String) -> Void
     let onPhotoAnalysis: () -> Void
 
     @State private var authorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
@@ -65,6 +71,11 @@ struct ScannerView: View {
 
                 ScannerOverlayView(
                     showingDetectionConfirmation: showingDetectionConfirmation,
+                    chainScanningEnabled: $chainScanningEnabled,
+                    chainEntries: chainSession.entries,
+                    onChainEntrySelected: onChainEntrySelected,
+                    onChainRetry: onChainRetry,
+                    onChainClear: onChainClear,
                     onManualEntry: presentManualBarcodeEntry,
                     onPhotoAnalysis: onPhotoAnalysis,
                     cameraReady: cameraReady,
@@ -146,6 +157,17 @@ struct ScannerView: View {
     }
 
     private func handleDetection(_ barcode: String) {
+        if chainScanningEnabled {
+            guard chainSession.register(barcode: barcode) else { return }
+            let notification = UINotificationFeedbackGenerator()
+            notification.notificationOccurred(.success)
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            onChainDetected(barcode)
+            detectedBarcode = nil
+            isScannerRunning = true
+            return
+        }
+
         guard detectedBarcode == nil else { return }
         detectedBarcode = barcode
         isScannerRunning = false
@@ -194,9 +216,14 @@ struct ScannerView: View {
 
     private func handleManualBarcodeEntry(_ barcode: String) {
         didSubmitManualBarcode = true
-        isScannerRunning = false
+        isScannerRunning = !chainScanningEnabled
         showingManualBarcodeEntry = false
-        onDetectedBarcode(barcode)
+        if chainScanningEnabled {
+            guard chainSession.register(barcode: barcode) else { return }
+            onChainDetected(barcode)
+        } else {
+            onDetectedBarcode(barcode)
+        }
     }
 
     private func presentManualBarcodeEntry() {
@@ -216,6 +243,11 @@ struct ScannerView: View {
 
 private struct ScannerOverlayView: View {
     let showingDetectionConfirmation: Bool
+    @Binding var chainScanningEnabled: Bool
+    let chainEntries: [ChainScanEntry]
+    let onChainEntrySelected: (String) -> Void
+    let onChainRetry: (String) -> Void
+    let onChainClear: () -> Void
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
     let cameraReady: Bool
@@ -245,7 +277,7 @@ private struct ScannerOverlayView: View {
                 height: frameHeight
             )
 
-            ZStack {
+            ZStack(alignment: .top) {
                 Path { path in
                     path.addRect(CGRect(origin: .zero, size: proxy.size))
                     path.addRoundedRect(in: frameRect, cornerSize: CGSize(width: 28, height: 28))
@@ -256,6 +288,18 @@ private struct ScannerOverlayView: View {
                     .strokeBorder(Color.white.opacity(0.9), lineWidth: 3)
                     .frame(width: frameWidth, height: frameHeight)
                     .position(x: proxy.size.width / 2, y: frameCenterY)
+
+                if !chainEntries.isEmpty {
+                    ChainScanResultsOverlay(
+                        entries: chainEntries,
+                        onEntrySelected: onChainEntrySelected,
+                        onRetry: onChainRetry,
+                        onClear: onChainClear
+                    )
+                    .frame(maxWidth: .infinity, alignment: .top)
+                    .padding(.top, 24)
+                    .padding(.horizontal, 20)
+                }
 
                 VStack {
                     Spacer()
@@ -268,6 +312,7 @@ private struct ScannerOverlayView: View {
                     HelperCardView(
                         onManualEntry: onManualEntry,
                         onPhotoAnalysis: onPhotoAnalysis,
+                        chainScanningEnabled: $chainScanningEnabled,
                         cameraReady: cameraReady,
                         hasTorch: hasTorch,
                         torchOn: $torchOn,
@@ -303,9 +348,109 @@ private struct ScannerHelperCardHeightKey: PreferenceKey {
     }
 }
 
+private struct ChainScanResultsOverlay: View {
+    let entries: [ChainScanEntry]
+    let onEntrySelected: (String) -> Void
+    let onRetry: (String) -> Void
+    let onClear: () -> Void
+    @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(L("scanner_chain_title"))
+                    .appFont(.headline, weight: .semibold)
+                Spacer()
+                Button(L("scanner_chain_clear"), action: onClear)
+                    .appFont(.caption, weight: .semibold)
+            }
+            .foregroundStyle(.primary)
+
+            ScrollView(.vertical, showsIndicators: true) {
+                VStack(spacing: 8) {
+                    ForEach(entries) { entry in
+                        HStack(spacing: 10) {
+                            Button {
+                                onEntrySelected(entry.barcode)
+                            } label: {
+                                HStack(spacing: 10) {
+                                    Group {
+                                        switch entry.state {
+                                        case .loading:
+                                            ProgressView()
+                                        case .done:
+                                            Circle()
+                                                .fill(
+                                                    veganVerdictColor(
+                                                        for: entry.verdict ?? .unknown,
+                                                        colorblindSafe: colorblindSafePalette
+                                                    )
+                                                )
+                                        case .error:
+                                            Image(systemName: "exclamationmark.triangle.fill")
+                                                .foregroundStyle(.orange)
+                                        }
+                                    }
+                                    .frame(width: 18, height: 18)
+
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(entry.productName ?? entry.barcode)
+                                            .appFont(.subheadline, weight: .semibold)
+                                            .foregroundStyle(.primary)
+                                            .lineLimit(1)
+                                        if entry.state == .error {
+                                            Text(L("scanner_chain_error"))
+                                                .appFont(.caption)
+                                                .foregroundStyle(.secondary)
+                                        } else if entry.state == .loading {
+                                            Text(L("scanner_chain_loading"))
+                                                .appFont(.caption)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                    }
+
+                                    Spacer(minLength: 4)
+
+                                    if entry.state != .error {
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption.weight(.semibold))
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                            .buttonStyle(.plain)
+
+                            if entry.state == .error {
+                                Button(L("scanner_chain_retry")) {
+                                    onRetry(entry.barcode)
+                                }
+                                .appFont(.caption, weight: .semibold)
+                                .buttonStyle(.borderless)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 9)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    }
+                }
+            }
+            .frame(maxHeight: 170)
+        }
+        .padding(12)
+        .frame(maxHeight: 220)
+        .frame(maxWidth: 720)
+        .background(.regularMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .shadow(color: .black.opacity(0.18), radius: 10, y: 4)
+    }
+}
+
 private struct HelperCardView: View {
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
+    @Binding var chainScanningEnabled: Bool
     let cameraReady: Bool
     let hasTorch: Bool
     @Binding var torchOn: Bool
@@ -320,6 +465,9 @@ private struct HelperCardView: View {
             Text(L("scan_formats_hint"))
                 .appFont(.subheadline)
                 .foregroundStyle(.secondary)
+
+            Toggle(L("scanner_chain_title"), isOn: $chainScanningEnabled)
+                .tint(Color("AccentColor"))
 
             if cameraReady {
                 HStack(spacing: 10) {
@@ -949,7 +1097,8 @@ struct ResultView: View {
         guard !Task.isCancelled else { return }
         switch result {
         case .success(let fetched):
-            saveToHistory(product: fetched.product)
+            let analysis = analyzeVegan(fetched.product)
+            saveToHistory(product: fetched.product, verdict: analysis.status)
             saveToCache(product: fetched.product, source: fetched.source)
             loadState = .success(fetched.product, fetched.source, false, nil)
             if UIAccessibility.isVoiceOverRunning {
@@ -963,7 +1112,8 @@ struct ResultView: View {
             loadState = .notFound(consultedSources)
         case .error(let message):
             if let cached = loadCachedProduct() {
-                saveToHistory(product: cached.product)
+                let analysis = analyzeVegan(cached.product)
+                saveToHistory(product: cached.product, verdict: analysis.status)
                 loadState = .success(cached.product, cached.source, true, cached.cachedAt)
                 await loadAlternatives(for: cached.product, source: cached.source)
             } else {
@@ -990,27 +1140,13 @@ struct ResultView: View {
     }
 
     @MainActor
-    private func saveToHistory(product: Product) {
-        do {
-            let descriptor = FetchDescriptor<ScanRecord>(predicate: #Predicate { $0.barcode == barcode })
-            if let existing = try modelContext.fetch(descriptor).first {
-                existing.productName = product.productName
-                existing.brand = product.brands
-                existing.imageURL = product.imageUrl
-                existing.timestamp = Date()
-            } else {
-                modelContext.insert(ScanRecord(
-                    barcode: barcode,
-                    productName: product.productName,
-                    brand: product.brands,
-                    imageURL: product.imageUrl,
-                    timestamp: Date()
-                ))
-            }
-            try modelContext.save()
-        } catch {
-            print("No se pudo guardar el historial: \(error)")
-        }
+    private func saveToHistory(product: Product, verdict: VeganStatus?) {
+        saveScanRecord(
+            barcode: barcode,
+            product: product,
+            verdict: verdict,
+            in: modelContext
+        )
     }
 
     @MainActor
@@ -1103,12 +1239,14 @@ struct ResultView: View {
             if let favoriteProduct {
                 modelContext.delete(favoriteProduct)
             } else {
+                let analysis = analyzeVegan(product)
                 modelContext.insert(FavoriteProduct(
                     barcode: barcode,
                     productName: product.productName,
                     brand: product.brands,
                     imageURL: product.imageUrl,
-                    addedAt: Date()
+                    addedAt: Date(),
+                    verdict: analysis.status.persistedValue
                 ))
             }
             try modelContext.save()
@@ -1282,6 +1420,7 @@ struct HistoryView: View {
     @Query(sort: \ScanRecord.timestamp, order: .reverse) private var records: [ScanRecord]
     @State private var query = ""
     @State private var sortOrder: ListSortOrder = .mostRecent
+    @State private var selectedVerdicts: Set<VeganStatus> = []
     @State private var showingClearConfirmation = false
     @State private var pendingUndo: DeletedScanSnapshot?
     @State private var pendingUndoID: UUID?
@@ -1294,15 +1433,27 @@ struct HistoryView: View {
             records,
             query: query,
             sortOrder: sortOrder,
+            selectedVerdicts: selectedVerdicts,
             productName: { $0.productName },
             brand: { $0.brand },
             barcode: { $0.barcode },
-            timestamp: { $0.timestamp }
+            timestamp: { $0.timestamp },
+            verdict: { VeganStatus(persisted: $0.verdict) }
         )
     }
 
     var body: some View {
         List {
+            if !records.isEmpty {
+                Section {
+                    VerdictFilterControls(selectedVerdicts: $selectedVerdicts)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 4, trailing: 16))
+                    Text(LF("history_count_label", records.count, maxHistoryEntries))
+                        .appFont(.caption)
+                        .foregroundStyle(.secondary)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
+                }
+            }
             if records.isEmpty {
                 EmptyStateView(
                     icon: "clock.arrow.circlepath",
@@ -1410,7 +1561,8 @@ struct HistoryView: View {
             productName: record.productName,
             brand: record.brand,
             imageURL: record.imageURL,
-            timestamp: record.timestamp
+            timestamp: record.timestamp,
+            verdict: record.verdict
         )
         pendingUndoID = UUID()
         modelContext.delete(record)
@@ -1460,7 +1612,12 @@ private struct HistoryRow: View {
 
             Spacer(minLength: 8)
 
-            CapsuleChip(text: L("history_chip_open_result"), tint: .green)
+            VStack(alignment: .trailing, spacing: 6) {
+                if let verdict = record.verdict.map({ VeganStatus(persisted: $0) }) {
+                    VerdictChip(status: verdict)
+                }
+                CapsuleChip(text: L("history_chip_open_result"), tint: .green)
+            }
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)

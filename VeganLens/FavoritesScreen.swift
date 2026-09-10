@@ -6,6 +6,7 @@ struct FavoritesScreen: View {
     @Environment(\.modelContext) private var modelContext
     @State private var query = ""
     @State private var sortOrder: ListSortOrder = .mostRecent
+    @State private var selectedVerdicts: Set<VeganStatus> = []
     @State private var showingClearConfirmation = false
     @State private var pendingUndo: DeletedFavoriteSnapshot?
     @State private var pendingUndoID: UUID?
@@ -18,15 +19,23 @@ struct FavoritesScreen: View {
             favorites,
             query: query,
             sortOrder: sortOrder,
+            selectedVerdicts: selectedVerdicts,
             productName: { $0.productName },
             brand: { $0.brand },
             barcode: { $0.barcode },
-            timestamp: { $0.addedAt }
+            timestamp: { $0.addedAt },
+            verdict: { VeganStatus(persisted: $0.verdict) }
         )
     }
 
     var body: some View {
         List {
+            if !favorites.isEmpty {
+                Section {
+                    VerdictFilterControls(selectedVerdicts: $selectedVerdicts)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                }
+            }
             if favorites.isEmpty {
                 EmptyStateView(
                     icon: "star",
@@ -134,7 +143,8 @@ struct FavoritesScreen: View {
             productName: item.productName,
             brand: item.brand,
             imageURL: item.imageURL,
-            addedAt: item.addedAt
+            addedAt: item.addedAt,
+            verdict: item.verdict
         )
         pendingUndoID = UUID()
         modelContext.delete(item)
@@ -184,7 +194,12 @@ private struct FavoriteRow: View {
 
             Spacer(minLength: 8)
 
-            CapsuleBadge(text: L("favorites_chip_open_result"), tint: .green)
+            VStack(alignment: .trailing, spacing: 6) {
+                if let verdict = item.verdict.map({ VeganStatus(persisted: $0) }) {
+                    VerdictChip(status: verdict)
+                }
+                CapsuleBadge(text: L("favorites_chip_open_result"), tint: .green)
+            }
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
