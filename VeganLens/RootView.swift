@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 private let lastPortadaCharacterKey = "last_portada_character"
 private let lastPortadaTipKey = "last_portada_tip"
@@ -9,10 +10,13 @@ private enum PortadaSession {
 
 struct RootView: View {
     @ObservedObject var quickActionRouter: QuickActionRouter
+    @Environment(\.modelContext) private var modelContext
     @State private var path = NavigationPath()
 
     @State private var scannerRunning = false
+    @StateObject private var chainSession = ChainScanSession()
     @State private var contributionProduct: Product?
+    @AppStorage("chain_scanning_enabled") private var chainScanningEnabled = false
     @AppStorage("onboarding_seen") private var onboardingSeen = false
     @AppStorage(AccessibilityPreferences.textSizeKey) private var textSize = AccessibilityTextSize.normal.rawValue
     @AppStorage(AccessibilityPreferences.highLegibilityFontKey) private var highLegibilityFont = false
@@ -113,7 +117,16 @@ struct RootView: View {
         NavigationStack(path: $path) {
             ScannerView(
                 isScannerRunning: $scannerRunning,
+                chainScanningEnabled: $chainScanningEnabled,
+                chainSession: chainSession,
                 onDetectedBarcode: { barcode in
+                    scannerRunning = false
+                    path.append(Route.result(barcode))
+                },
+                onChainDetected: resolveChainScan,
+                onChainRetry: retryChainScan,
+                onChainClear: chainSession.clear,
+                onChainEntrySelected: { barcode in
                     scannerRunning = false
                     path.append(Route.result(barcode))
                 },
@@ -219,6 +232,40 @@ struct RootView: View {
                 }
             }
         }
+    }
+
+    private func resolveChainScan(_ barcode: String) {
+        Task { @MainActor in
+            let result = await OpenFactsService().fetchProduct(barcode: barcode)
+            switch result {
+            case .success(let fetched):
+                let analysis = analyzeVegan(fetched.product)
+                saveScanRecord(
+                    barcode: barcode,
+                    product: fetched.product,
+                    verdict: analysis.status,
+                    in: modelContext
+                )
+                chainSession.update(
+                    barcode: barcode,
+                    productName: fetched.product.productName,
+                    verdict: analysis.status,
+                    state: .done
+                )
+            case .notFound, .error(_):
+                chainSession.update(
+                    barcode: barcode,
+                    productName: nil,
+                    verdict: nil,
+                    state: .error
+                )
+            }
+        }
+    }
+
+    private func retryChainScan(_ barcode: String) {
+        chainSession.retry(barcode: barcode)
+        resolveChainScan(barcode)
     }
 
     @ToolbarContentBuilder

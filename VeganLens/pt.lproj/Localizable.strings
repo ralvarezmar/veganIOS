@@ -519,3 +519,14 @@
 "b12_reminder_every_2_days" = "A cada 2 dias";
 "b12_reminder_every_3_days" = "A cada 3 dias";
 "b12_reminder_every_week" = "Todas as semanas";
+
+"history_count_label" = "%d de %d digitalizações guardadas";
+"filter_verdict_vegan" = "Adequados";
+"filter_verdict_maybe" = "Possivelmente adequados";
+"filter_verdict_not_vegan" = "Não adequados";
+"filter_verdict_unknown" = "Sem dados";
+"scanner_chain_title" = "Continuar a digitalizar";
+"scanner_chain_clear" = "Limpar";
+"scanner_chain_loading" = "A carregar o resultado…";
+"scanner_chain_error" = "Não foi possível carregar este produto.";
+"scanner_chain_retry" = "Tentar novamente";

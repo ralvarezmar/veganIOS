@@ -9,7 +9,8 @@ final class UndoDeletionTests: XCTestCase {
             productName: "Product",
             brand: "Brand",
             imageURL: "https://example.test/image",
-            timestamp: date
+            timestamp: date,
+            verdict: VeganStatus.maybe.persistedValue
         )
 
         let record = makeScanRecord(from: snapshot)
@@ -19,6 +20,7 @@ final class UndoDeletionTests: XCTestCase {
         XCTAssertEqual(record.brand, snapshot.brand)
         XCTAssertEqual(record.imageURL, snapshot.imageURL)
         XCTAssertEqual(record.timestamp, date)
+        XCTAssertEqual(record.verdict, VeganStatus.maybe.persistedValue)
     }
 
     func testFavoriteFactoryPreservesAllFields() {
@@ -28,7 +30,8 @@ final class UndoDeletionTests: XCTestCase {
             productName: "Product",
             brand: "Brand",
             imageURL: "https://example.test/image",
-            addedAt: date
+            addedAt: date,
+            verdict: VeganStatus.vegan.persistedValue
         )
 
         let favorite = makeFavoriteProduct(from: snapshot)
@@ -38,5 +41,6 @@ final class UndoDeletionTests: XCTestCase {
         XCTAssertEqual(favorite.brand, snapshot.brand)
         XCTAssertEqual(favorite.imageURL, snapshot.imageURL)
         XCTAssertEqual(favorite.addedAt, date)
+        XCTAssertEqual(favorite.verdict, VeganStatus.vegan.persistedValue)
     }
 }

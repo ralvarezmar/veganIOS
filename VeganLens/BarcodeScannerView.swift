@@ -39,7 +39,7 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
         private let onDetected: (String) -> Void
         private var lastDetectedBarcode: String?
         private var lastDetectionDate: Date = .distantPast
-        private let cooldown: TimeInterval = 2.0
+        private let cooldown: TimeInterval = 3.0
 
         init(onDetected: @escaping (String) -> Void) {
             self.onDetected = onDetected

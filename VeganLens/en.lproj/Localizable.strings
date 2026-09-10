@@ -519,3 +519,14 @@
 "b12_reminder_every_2_days" = "Every 2 days";
 "b12_reminder_every_3_days" = "Every 3 days";
 "b12_reminder_every_week" = "Every week";
+
+"history_count_label" = "%d of %d scans saved";
+"filter_verdict_vegan" = "Suitable";
+"filter_verdict_maybe" = "Possibly suitable";
+"filter_verdict_not_vegan" = "Not suitable";
+"filter_verdict_unknown" = "No data";
+"scanner_chain_title" = "Keep scanning";
+"scanner_chain_clear" = "Clear";
+"scanner_chain_loading" = "Loading result…";
+"scanner_chain_error" = "This product could not be loaded.";
+"scanner_chain_retry" = "Retry";

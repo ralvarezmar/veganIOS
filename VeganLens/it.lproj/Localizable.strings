@@ -519,3 +519,14 @@
 "b12_reminder_every_2_days" = "Ogni 2 giorni";
 "b12_reminder_every_3_days" = "Ogni 3 giorni";
 "b12_reminder_every_week" = "Ogni settimana";
+
+"history_count_label" = "%d scansioni salvate su %d";
+"filter_verdict_vegan" = "Adatti";
+"filter_verdict_maybe" = "Possibilmente adatti";
+"filter_verdict_not_vegan" = "Non adatti";
+"filter_verdict_unknown" = "Nessun dato";
+"scanner_chain_title" = "Continua a scansionare";
+"scanner_chain_clear" = "Cancella";
+"scanner_chain_loading" = "Caricamento del risultato…";
+"scanner_chain_error" = "Impossibile caricare questo prodotto.";
+"scanner_chain_retry" = "Riprova";
