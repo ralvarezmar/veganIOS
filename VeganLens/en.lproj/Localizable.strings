@@ -193,6 +193,7 @@
 "vegan_verdict_maybe" = "Doubtful origin ⚠️ — contains ingredients of uncertain provenance";
 "vegan_headline_maybe" = "DOUBTFUL · UNCERTAIN ORIGIN";
 "vegan_verdict_maybe_subtitle" = "Open Food Facts marks ingredients with doubtful origin.";
+"vegan_verdict_maybe_origin_subtitle" = "There are ingredients whose origin we cannot confirm.";
 "vegan_headline_maybe_heuristic" = "POSSIBLY SUITABLE · BASED ON INGREDIENTS";
 "vegan_verdict_maybe_heuristic_subtitle" = "We didn't detect any animal-derived ingredients in the list, but Open Food Facts hasn't confirmed it. Check the label.";
 "vegan_verdict_unknown" = "Not enough data 🔍";
@@ -234,6 +235,9 @@
 "vegan_reason_structured_non_vegan" = "Cause: %@ (animal origin according to Open Food Facts).";
 "vegan_reason_structured_doubtful" = "Cause: %@ (possible animal origin according to Open Food Facts).";
 "vegan_reason_flavour_dairy_name" = "A dairy-named flavouring does not mean the product contains milk: it is almost always synthetic or plant-based. Only the manufacturer can confirm it.";
+"vegan_reason_flavour_dairy_name_named" = "Cause: %@ — a dairy-named flavouring is almost always synthetic or plant-based, not milk.";
+"vegan_reason_check_origin_one" = "Check the origin of this ingredient with the manufacturer.";
+"vegan_reason_check_origin_other" = "Check the origin of these ingredients with the manufacturer.";
 "vegan_reason_structured_vegan" = "Open Food Facts marks the ingredients as suitable.";
 "vegan_reason_decisive_tag" = "Verdict marked directly by Open Food Facts.";
 "vegan_reason_heuristic" = "Detected in the ingredient text: %@ (guidance only, not confirmed by Open Food Facts).";

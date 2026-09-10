@@ -193,6 +193,7 @@
 "vegan_verdict_maybe" = "Origine dubbia ⚠️ — contiene ingredienti di provenienza incerta";
 "vegan_headline_maybe" = "DUBBIO · ORIGINE INCERTA";
 "vegan_verdict_maybe_subtitle" = "Open Food Facts segnala ingredienti di origine dubbia.";
+"vegan_verdict_maybe_origin_subtitle" = "Ci sono ingredienti di cui non possiamo confermare l’origine.";
 "vegan_headline_maybe_heuristic" = "FORSE ADATTO · IN BASE AGLI INGREDIENTI";
 "vegan_verdict_maybe_heuristic_subtitle" = "Non abbiamo rilevato ingredienti di origine animale nell'elenco, ma Open Food Facts non lo conferma. Controlla l'etichetta.";
 "vegan_verdict_unknown" = "Dati insufficienti 🔍";
@@ -234,6 +235,9 @@
 "vegan_reason_structured_non_vegan" = "Causa: %@ (origine animale secondo Open Food Facts).";
 "vegan_reason_structured_doubtful" = "Causa: %@ (possibile origine animale secondo Open Food Facts).";
 "vegan_reason_flavour_dairy_name" = "Un aroma dal nome lattiero non significa che il prodotto contenga latte: è quasi sempre sintetico o vegetale. Solo il produttore può confermarlo.";
+"vegan_reason_flavour_dairy_name_named" = "Causa: %@ — un aroma dal nome lattiero è quasi sempre sintetico o vegetale, non latte.";
+"vegan_reason_check_origin_one" = "Verifica l’origine di questo ingrediente con il produttore.";
+"vegan_reason_check_origin_other" = "Verifica l’origine di questi ingredienti con il produttore.";
 "vegan_reason_structured_vegan" = "Open Food Facts indica gli ingredienti come adatti.";
 "vegan_reason_decisive_tag" = "Verdetto indicato direttamente da Open Food Facts.";
 "vegan_reason_heuristic" = "Rilevato nel testo degli ingredienti: %@ (indicativo, non confermato da Open Food Facts).";
