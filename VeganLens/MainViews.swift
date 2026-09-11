@@ -1503,7 +1503,7 @@ struct HistoryView: View {
         List {
             if !records.isEmpty {
                 Section {
-                    VerdictFilterControls(
+                    ListFilterControls(
                         selectedVerdicts: $selectedVerdicts,
                         selectedCategories: $selectedCategories,
                         availableCategories: availableCategories

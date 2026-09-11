@@ -41,7 +41,7 @@ struct FavoritesScreen: View {
         List {
             if !favorites.isEmpty {
                 Section {
-                    VerdictFilterControls(
+                    ListFilterControls(
                         selectedVerdicts: $selectedVerdicts,
                         selectedCategories: $selectedCategories,
                         availableCategories: availableCategories

@@ -62,6 +62,14 @@ private let productCategoryTags: [String: ProductCategory] = {
     return map
 }()
 
+private func normalizedTag(_ tag: String) -> String {
+    tag.trimmingCharacters(in: .whitespacesAndNewlines)
+        .lowercased()
+        .split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
+        .last
+        .map(String.init) ?? ""
+}
+
 func categoryFor(source: ProductSource, categoriesTags: [String]?) -> ProductCategory {
     switch source {
     case .openBeautyFacts:
@@ -73,14 +81,7 @@ func categoryFor(source: ProductSource, categoriesTags: [String]?) -> ProductCat
     case .openFoodFacts:
         return categoriesTags?
             .reversed()
-            .compactMap { tag in
-                productCategoryTags[tag.trimmingCharacters(in: .whitespacesAndNewlines)
-                    .lowercased()
-                    .split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
-                    .last
-                    .map(String.init)]
-            }
-            .compactMap { productCategoryTags[$0] }
+            .compactMap { productCategoryTags[normalizedTag($0)] }
             .first ?? .other
     }
 }

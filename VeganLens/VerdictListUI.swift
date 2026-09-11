@@ -23,10 +23,11 @@ struct VerdictChip: View {
     }
 }
 
-struct VerdictFilterControls: View {
+struct ListFilterControls: View {
     @Binding var selectedVerdicts: Set<VeganStatus>
     @Binding var selectedCategories: Set<ProductCategory>
     let availableCategories: [ProductCategory]
+    @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
     @State private var isPresented = false
 
     private let statuses: [VeganStatus] = [.vegan, .maybe, .notVegan, .unknown]
@@ -56,7 +57,8 @@ struct VerdictFilterControls: View {
                             ForEach(statuses, id: \.persistedValue) { status in
                                 filterChip(
                                     title: verdictFilterLabel(for: status),
-                                    selected: selectedVerdicts.contains(status)
+                                    selected: selectedVerdicts.contains(status),
+                                    verdict: status
                                 ) {
                                     if selectedVerdicts.contains(status) {
                                         selectedVerdicts.remove(status)
@@ -107,11 +109,19 @@ struct VerdictFilterControls: View {
     private func filterChip(
         title: String,
         selected: Bool,
+        verdict: VeganStatus? = nil,
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
-            Text(title)
-                .appFont(.caption, weight: .semibold)
+            HStack(spacing: 6) {
+                if let verdict {
+                    Circle()
+                        .fill(veganVerdictColor(for: verdict, colorblindSafe: colorblindSafePalette))
+                        .frame(width: 8, height: 8)
+                }
+                Text(title)
+                    .appFont(.caption, weight: .semibold)
+            }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 8)

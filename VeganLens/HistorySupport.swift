@@ -27,12 +27,7 @@ func saveScanRecord(
     timestamp: Date = Date()
 ) {
     do {
-        let derivedCategory: ProductCategory? = if source == .openFoodFacts &&
-            (product.categoriesTags?.isEmpty ?? true) {
-            nil
-        } else {
-            categoryFor(source: source, categoriesTags: product.categoriesTags)
-        }
+        let derivedCategory = categoryFor(source: source, categoriesTags: product.categoriesTags)
         let descriptor = FetchDescriptor<ScanRecord>(predicate: #Predicate { $0.barcode == barcode })
         if let existing = try modelContext.fetch(descriptor).first {
             existing.productName = product.productName
@@ -42,9 +37,7 @@ func saveScanRecord(
             if let verdict {
                 existing.verdict = verdict.persistedValue
             }
-            if let derivedCategory {
-                existing.category = derivedCategory.rawValue
-            }
+            existing.category = derivedCategory.rawValue
         } else {
             modelContext.insert(
                 ScanRecord(
@@ -54,7 +47,7 @@ func saveScanRecord(
                     imageURL: product.imageUrl,
                     timestamp: timestamp,
                     verdict: verdict?.persistedValue,
-                    category: (derivedCategory ?? .other).rawValue
+                    category: derivedCategory.rawValue
                 )
             )
         }
