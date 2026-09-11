@@ -8,6 +8,10 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Stale cached products remain available offline with their cache age shown.
+- Cache eviction now protects favourite products.
+
 ## [1.16.0 (47)] - 2026-09-10
 
 ### Changed
