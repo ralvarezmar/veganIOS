@@ -7,6 +7,7 @@ struct FavoritesScreen: View {
     @State private var query = ""
     @State private var sortOrder: ListSortOrder = .mostRecent
     @State private var selectedVerdicts: Set<VeganStatus> = []
+    @State private var selectedCategories: Set<ProductCategory> = []
     @State private var showingClearConfirmation = false
     @State private var pendingUndo: DeletedFavoriteSnapshot?
     @State private var pendingUndoID: UUID?
@@ -20,19 +21,31 @@ struct FavoritesScreen: View {
             query: query,
             sortOrder: sortOrder,
             selectedVerdicts: selectedVerdicts,
+            selectedCategories: selectedCategories,
             productName: { $0.productName },
             brand: { $0.brand },
             barcode: { $0.barcode },
             timestamp: { $0.addedAt },
-            verdict: { VeganStatus(persisted: $0.verdict) }
+            verdict: { VeganStatus(persisted: $0.verdict) },
+            category: { $0.category.persistedProductCategory() }
         )
+    }
+
+    private var availableCategories: [ProductCategory] {
+        ProductCategory.allCases.filter { category in
+            favorites.contains { $0.category.persistedProductCategory() == category }
+        }
     }
 
     var body: some View {
         List {
             if !favorites.isEmpty {
                 Section {
-                    VerdictFilterControls(selectedVerdicts: $selectedVerdicts)
+                    ListFilterControls(
+                        selectedVerdicts: $selectedVerdicts,
+                        selectedCategories: $selectedCategories,
+                        availableCategories: availableCategories
+                    )
                         .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                 }
             }
@@ -144,7 +157,8 @@ struct FavoritesScreen: View {
             brand: item.brand,
             imageURL: item.imageURL,
             addedAt: item.addedAt,
-            verdict: item.verdict
+            verdict: item.verdict,
+            category: item.category
         )
         pendingUndoID = UUID()
         modelContext.delete(item)
@@ -195,7 +209,14 @@ private struct FavoriteRow: View {
                     .appFont(.caption)
                     .foregroundStyle(.secondary)
                 if let verdict = item.verdict.map({ VeganStatus(persisted: $0) }) {
-                    VerdictChip(status: verdict)
+                    HStack(spacing: 6) {
+                        VerdictChip(status: verdict)
+                        if let category = item.category {
+                            ProductCategoryChip(category: item.category.persistedProductCategory())
+                        }
+                    }
+                } else if let category = item.category {
+                    ProductCategoryChip(category: item.category.persistedProductCategory())
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

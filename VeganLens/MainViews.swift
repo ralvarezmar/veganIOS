@@ -1142,7 +1142,7 @@ struct ResultView: View {
         switch result {
         case .success(let fetched):
             let analysis = analyzeVegan(fetched.product)
-            saveToHistory(product: fetched.product, verdict: analysis.status)
+            saveToHistory(product: fetched.product, source: fetched.source, verdict: analysis.status)
             saveToCache(product: fetched.product, source: fetched.source)
             loadState = .success(fetched.product, fetched.source, false, nil)
             if UIAccessibility.isVoiceOverRunning {
@@ -1157,7 +1157,7 @@ struct ResultView: View {
         case .error(let message):
             if let cached = loadCachedProduct() {
                 let analysis = analyzeVegan(cached.product)
-                saveToHistory(product: cached.product, verdict: analysis.status)
+                saveToHistory(product: cached.product, source: cached.source, verdict: analysis.status)
                 loadState = .success(cached.product, cached.source, true, cached.cachedAt)
                 await loadAlternatives(for: cached.product, source: cached.source)
             } else {
@@ -1184,10 +1184,11 @@ struct ResultView: View {
     }
 
     @MainActor
-    private func saveToHistory(product: Product, verdict: VeganStatus?) {
+    private func saveToHistory(product: Product, source: ProductSource, verdict: VeganStatus?) {
         saveScanRecord(
             barcode: barcode,
             product: product,
+            source: source,
             verdict: verdict,
             in: modelContext
         )
@@ -1277,7 +1278,7 @@ struct ResultView: View {
 
     @MainActor
     private func toggleFavorite() {
-        guard case .success(let product, _, _, _) = loadState else {
+        guard case .success(let product, let source, _, _) = loadState else {
             return
         }
 
@@ -1292,7 +1293,8 @@ struct ResultView: View {
                     brand: product.brands,
                     imageURL: product.imageUrl,
                     addedAt: Date(),
-                    verdict: analysis.status.persistedValue
+                    verdict: analysis.status.persistedValue,
+                    category: categoryFor(source: source, categoriesTags: product.categoriesTags).rawValue
                 ))
             }
             try modelContext.save()
@@ -1467,6 +1469,7 @@ struct HistoryView: View {
     @State private var query = ""
     @State private var sortOrder: ListSortOrder = .mostRecent
     @State private var selectedVerdicts: Set<VeganStatus> = []
+    @State private var selectedCategories: Set<ProductCategory> = []
     @State private var showingClearConfirmation = false
     @State private var pendingUndo: DeletedScanSnapshot?
     @State private var pendingUndoID: UUID?
@@ -1480,21 +1483,39 @@ struct HistoryView: View {
             query: query,
             sortOrder: sortOrder,
             selectedVerdicts: selectedVerdicts,
+            selectedCategories: selectedCategories,
             productName: { $0.productName },
             brand: { $0.brand },
             barcode: { $0.barcode },
             timestamp: { $0.timestamp },
-            verdict: { VeganStatus(persisted: $0.verdict) }
+            verdict: { VeganStatus(persisted: $0.verdict) },
+            category: { $0.category.persistedProductCategory() }
         )
+    }
+
+    private var availableCategories: [ProductCategory] {
+        ProductCategory.allCases.filter { category in
+            records.contains { $0.category.persistedProductCategory() == category }
+        }
     }
 
     var body: some View {
         List {
             if !records.isEmpty {
                 Section {
-                    VerdictFilterControls(selectedVerdicts: $selectedVerdicts)
+                    ListFilterControls(
+                        selectedVerdicts: $selectedVerdicts,
+                        selectedCategories: $selectedCategories,
+                        availableCategories: availableCategories
+                    )
                         .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 4, trailing: 16))
-                    Text(LF("history_count_label", records.count, maxHistoryEntries))
+                    Text(
+                        query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+                            selectedVerdicts.isEmpty &&
+                            selectedCategories.isEmpty
+                            ? LF("history_count_label", records.count, maxHistoryEntries)
+                            : LF("history_count_filtered_label", displayedRecords.count, records.count)
+                    )
                         .appFont(.caption)
                         .foregroundStyle(.secondary)
                         .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
@@ -1608,7 +1629,8 @@ struct HistoryView: View {
             brand: record.brand,
             imageURL: record.imageURL,
             timestamp: record.timestamp,
-            verdict: record.verdict
+            verdict: record.verdict,
+            category: record.category
         )
         pendingUndoID = UUID()
         modelContext.delete(record)
@@ -1659,7 +1681,14 @@ private struct HistoryRow: View {
                     .appFont(.caption)
                     .foregroundStyle(.secondary)
                 if let verdict = record.verdict.map({ VeganStatus(persisted: $0) }) {
-                    VerdictChip(status: verdict)
+                    HStack(spacing: 6) {
+                        VerdictChip(status: verdict)
+                        if let category = record.category {
+                            ProductCategoryChip(category: record.category.persistedProductCategory())
+                        }
+                    }
+                } else if let category = record.category {
+                    ProductCategoryChip(category: record.category.persistedProductCategory())
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

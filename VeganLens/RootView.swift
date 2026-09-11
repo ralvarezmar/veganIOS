@@ -243,6 +243,7 @@ struct RootView: View {
                 saveScanRecord(
                     barcode: barcode,
                     product: fetched.product,
+                    source: fetched.source,
                     verdict: analysis.status,
                     in: modelContext
                 )

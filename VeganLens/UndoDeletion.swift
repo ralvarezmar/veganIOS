@@ -8,6 +8,7 @@ struct DeletedScanSnapshot {
     let imageURL: String?
     let timestamp: Date
     let verdict: String?
+    let category: String?
 }
 
 struct DeletedFavoriteSnapshot {
@@ -17,6 +18,7 @@ struct DeletedFavoriteSnapshot {
     let imageURL: String?
     let addedAt: Date
     let verdict: String?
+    let category: String?
 }
 
 func makeScanRecord(from snapshot: DeletedScanSnapshot) -> ScanRecord {
@@ -26,7 +28,8 @@ func makeScanRecord(from snapshot: DeletedScanSnapshot) -> ScanRecord {
         brand: snapshot.brand,
         imageURL: snapshot.imageURL,
         timestamp: snapshot.timestamp,
-        verdict: snapshot.verdict
+        verdict: snapshot.verdict,
+        category: snapshot.category
     )
 }
 
@@ -37,7 +40,8 @@ func makeFavoriteProduct(from snapshot: DeletedFavoriteSnapshot) -> FavoriteProd
         brand: snapshot.brand,
         imageURL: snapshot.imageURL,
         addedAt: snapshot.addedAt,
-        verdict: snapshot.verdict
+        verdict: snapshot.verdict,
+        category: snapshot.category
     )
 }
 
