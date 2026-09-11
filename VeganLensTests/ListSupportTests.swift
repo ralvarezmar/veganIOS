@@ -10,10 +10,10 @@ final class ListSupportTests: XCTestCase {
     }
 
     private let items = [
-        Item(name: "Vegan", verdict: .vegan, timestamp: Date(timeIntervalSince1970: 1), category: .sweetSnacks),
-        Item(name: "Maybe", verdict: .maybe, timestamp: Date(timeIntervalSince1970: 2), category: .beverages),
-        Item(name: "Not vegan", verdict: .notVegan, timestamp: Date(timeIntervalSince1970: 3), category: .other),
-        Item(name: "Unknown", verdict: nil, timestamp: Date(timeIntervalSince1970: 4), category: nil)
+        Item(name: "Vegan", verdict: .vegan, category: .sweetSnacks, timestamp: Date(timeIntervalSince1970: 1)),
+        Item(name: "Maybe", verdict: .maybe, category: .beverages, timestamp: Date(timeIntervalSince1970: 2)),
+        Item(name: "Not vegan", verdict: .notVegan, category: .other, timestamp: Date(timeIntervalSince1970: 3)),
+        Item(name: "Unknown", verdict: nil, category: nil, timestamp: Date(timeIntervalSince1970: 4))
     ]
 
     func testEmptySelectionReturnsAllItems() {
