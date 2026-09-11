@@ -10,11 +10,13 @@ func filterAndSortItems<T>(
     query: String,
     sortOrder: ListSortOrder,
     selectedVerdicts: Set<VeganStatus> = [],
+    selectedCategories: Set<ProductCategory> = [],
     productName: (T) -> String?,
     brand: (T) -> String?,
     barcode: (T) -> String,
     timestamp: (T) -> Date,
-    verdict: (T) -> VeganStatus? = { _ in nil }
+    verdict: (T) -> VeganStatus? = { _ in nil },
+    category: (T) -> ProductCategory? = { _ in nil }
 ) -> [T] {
     let normalizedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     let filtered = items.filter { item in
@@ -24,7 +26,9 @@ func filterAndSortItems<T>(
                 .contains { $0.contains(normalizedQuery) }
         let matchesVerdict = selectedVerdicts.isEmpty ||
             selectedVerdicts.contains(verdict(item) ?? .unknown)
-        return matchesQuery && matchesVerdict
+        let matchesCategory = selectedCategories.isEmpty ||
+            selectedCategories.contains(category(item) ?? .other)
+        return matchesQuery && matchesVerdict && matchesCategory
     }
 
     switch sortOrder {
