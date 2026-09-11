@@ -5,14 +5,15 @@ final class ListSupportTests: XCTestCase {
     private struct Item {
         let name: String
         let verdict: VeganStatus?
+        let category: ProductCategory?
         let timestamp: Date
     }
 
     private let items = [
-        Item(name: "Vegan", verdict: .vegan, timestamp: Date(timeIntervalSince1970: 1)),
-        Item(name: "Maybe", verdict: .maybe, timestamp: Date(timeIntervalSince1970: 2)),
-        Item(name: "Not vegan", verdict: .notVegan, timestamp: Date(timeIntervalSince1970: 3)),
-        Item(name: "Unknown", verdict: nil, timestamp: Date(timeIntervalSince1970: 4))
+        Item(name: "Vegan", verdict: .vegan, category: .sweetSnacks, timestamp: Date(timeIntervalSince1970: 1)),
+        Item(name: "Maybe", verdict: .maybe, category: .beverages, timestamp: Date(timeIntervalSince1970: 2)),
+        Item(name: "Not vegan", verdict: .notVegan, category: .other, timestamp: Date(timeIntervalSince1970: 3)),
+        Item(name: "Unknown", verdict: nil, category: nil, timestamp: Date(timeIntervalSince1970: 4))
     ]
 
     func testEmptySelectionReturnsAllItems() {
@@ -40,6 +41,16 @@ final class ListSupportTests: XCTestCase {
         XCTAssertEqual(result.map(\.name), ["Unknown"])
     }
 
+    func testCategoryAndVerdictAndSearchAreCombined() {
+        let result = filter(
+            items,
+            selectedVerdicts: [.maybe],
+            selectedCategories: [.beverages],
+            query: "may"
+        )
+        XCTAssertEqual(result.map(\.name), ["Maybe"])
+    }
+
     func testPersistedVerdictsUseStableValuesAndTolerateUnknownInput() {
         XCTAssertEqual(VeganStatus.vegan.persistedValue, "VEGAN")
         XCTAssertEqual(VeganStatus.notVegan.persistedValue, "NOT_VEGAN")
@@ -51,18 +62,22 @@ final class ListSupportTests: XCTestCase {
 
     private func filter(
         _ items: [Item],
-        selectedVerdicts: Set<VeganStatus>
+        selectedVerdicts: Set<VeganStatus>,
+        selectedCategories: Set<ProductCategory> = [],
+        query: String = ""
     ) -> [Item] {
         filterAndSortItems(
             items,
-            query: "",
+            query: query,
             sortOrder: .mostRecent,
             selectedVerdicts: selectedVerdicts,
+            selectedCategories: selectedCategories,
             productName: { $0.name },
             brand: { _ in nil },
             barcode: { $0.name },
             timestamp: { $0.timestamp },
-            verdict: { $0.verdict }
+            verdict: { $0.verdict },
+            category: { $0.category }
         )
     }
 }

@@ -23,52 +23,128 @@ struct VerdictChip: View {
     }
 }
 
-struct VerdictFilterControls: View {
+struct ListFilterControls: View {
     @Binding var selectedVerdicts: Set<VeganStatus>
+    @Binding var selectedCategories: Set<ProductCategory>
+    let availableCategories: [ProductCategory]
     @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
+    @State private var isPresented = false
 
     private let statuses: [VeganStatus] = [.vegan, .maybe, .notVegan, .unknown]
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(statuses, id: \.persistedValue) { status in
-                    let isSelected = selectedVerdicts.contains(status)
-                    Button {
-                        if isSelected {
-                            selectedVerdicts.remove(status)
-                        } else {
-                            selectedVerdicts.insert(status)
-                        }
-                    } label: {
-                        HStack(spacing: 6) {
-                            Circle()
-                                .fill(
-                                    veganVerdictColor(
-                                        for: status,
-                                        colorblindSafe: colorblindSafePalette
-                                    )
-                                )
-                                .frame(width: 8, height: 8)
-                            Text(verdictFilterLabel(for: status))
-                                .appFont(.caption, weight: .semibold)
-                        }
-                        .foregroundStyle(isSelected ? .white : .primary)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 7)
-                        .background(isSelected ? Color.accentColor : Color(.secondarySystemBackground))
-                        .clipShape(Capsule())
-                        .overlay {
-                            Capsule()
-                                .strokeBorder(Color.secondary.opacity(isSelected ? 0 : 0.25), lineWidth: 1)
+        Button {
+            isPresented = true
+        } label: {
+            Label(
+                selectedVerdicts.count + selectedCategories.count == 0
+                    ? L("filters_label")
+                    : LF("filters_button", selectedVerdicts.count + selectedCategories.count),
+                systemImage: "line.3.horizontal.decrease.circle"
+            )
+        }
+        .buttonStyle(.bordered)
+        .accessibilityLabel(
+            selectedVerdicts.count + selectedCategories.count == 0
+                ? L("filters_label")
+                : LF("filters_button", selectedVerdicts.count + selectedCategories.count)
+        )
+        .sheet(isPresented: $isPresented) {
+            NavigationStack {
+                Form {
+                    Section(L("filter_verdict_section")) {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 130))], alignment: .leading) {
+                            ForEach(statuses, id: \.persistedValue) { status in
+                                filterChip(
+                                    title: verdictFilterLabel(for: status),
+                                    selected: selectedVerdicts.contains(status),
+                                    verdict: status
+                                ) {
+                                    if selectedVerdicts.contains(status) {
+                                        selectedVerdicts.remove(status)
+                                    } else {
+                                        selectedVerdicts.insert(status)
+                                    }
+                                }
+                            }
                         }
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(isSelected ? .isSelected : [])
+                    if !availableCategories.isEmpty {
+                        Section(L("filter_category_section")) {
+                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 130))], alignment: .leading) {
+                                ForEach(availableCategories, id: \.rawValue) { category in
+                                    filterChip(
+                                        title: category.localizedName,
+                                        selected: selectedCategories.contains(category)
+                                    ) {
+                                        if selectedCategories.contains(category) {
+                                            selectedCategories.remove(category)
+                                        } else {
+                                            selectedCategories.insert(category)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if !selectedVerdicts.isEmpty || !selectedCategories.isEmpty {
+                        Section {
+                            Button(L("clear_filters")) {
+                                selectedVerdicts.removeAll()
+                                selectedCategories.removeAll()
+                            }
+                        }
+                    }
+                }
+                .navigationTitle(L("filters_title"))
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(L("done")) { isPresented = false }
+                    }
                 }
             }
-            .padding(.horizontal, 1)
         }
+    }
+
+    private func filterChip(
+        title: String,
+        selected: Bool,
+        verdict: VeganStatus? = nil,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            HStack(spacing: 6) {
+                if let verdict {
+                    Circle()
+                        .fill(veganVerdictColor(for: verdict, colorblindSafe: colorblindSafePalette))
+                        .frame(width: 8, height: 8)
+                }
+                Text(title)
+                    .appFont(.caption, weight: .semibold)
+            }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
+                .background(selected ? Color.accentColor : Color(.secondarySystemBackground))
+                .foregroundStyle(selected ? .white : .primary)
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+}
+
+struct ProductCategoryChip: View {
+    let category: ProductCategory
+
+    var body: some View {
+        Text(category.localizedName)
+            .appFont(.caption, weight: .semibold)
+            .foregroundStyle(Color(.secondaryLabel))
+            .padding(.horizontal, 9)
+            .padding(.vertical, 6)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(Capsule())
     }
 }
 

@@ -21,11 +21,13 @@ func historyBarcodesToTrim(
 func saveScanRecord(
     barcode: String,
     product: Product,
+    source: ProductSource,
     verdict: VeganStatus?,
     in modelContext: ModelContext,
     timestamp: Date = Date()
 ) {
     do {
+        let derivedCategory = categoryFor(source: source, categoriesTags: product.categoriesTags)
         let descriptor = FetchDescriptor<ScanRecord>(predicate: #Predicate { $0.barcode == barcode })
         if let existing = try modelContext.fetch(descriptor).first {
             existing.productName = product.productName
@@ -35,6 +37,7 @@ func saveScanRecord(
             if let verdict {
                 existing.verdict = verdict.persistedValue
             }
+            existing.category = derivedCategory.rawValue
         } else {
             modelContext.insert(
                 ScanRecord(
@@ -43,7 +46,8 @@ func saveScanRecord(
                     brand: product.brands,
                     imageURL: product.imageUrl,
                     timestamp: timestamp,
-                    verdict: verdict?.persistedValue
+                    verdict: verdict?.persistedValue,
+                    category: derivedCategory.rawValue
                 )
             )
         }
