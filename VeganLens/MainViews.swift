@@ -1489,13 +1489,13 @@ struct HistoryView: View {
             barcode: { $0.barcode },
             timestamp: { $0.timestamp },
             verdict: { VeganStatus(persisted: $0.verdict) },
-            category: { $0.category?.persistedProductCategory() }
+            category: { $0.category.persistedProductCategory() }
         )
     }
 
     private var availableCategories: [ProductCategory] {
         ProductCategory.allCases.filter { category in
-            records.contains { ($0.category?.persistedProductCategory() ?? .other) == category }
+            records.contains { $0.category.persistedProductCategory() == category }
         }
     }
 
@@ -1684,11 +1684,11 @@ private struct HistoryRow: View {
                     HStack(spacing: 6) {
                         VerdictChip(status: verdict)
                         if let category = record.category {
-                            ProductCategoryChip(category: category.persistedProductCategory())
+                            ProductCategoryChip(category: record.category.persistedProductCategory())
                         }
                     }
                 } else if let category = record.category {
-                    ProductCategoryChip(category: category.persistedProductCategory())
+                    ProductCategoryChip(category: record.category.persistedProductCategory())
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

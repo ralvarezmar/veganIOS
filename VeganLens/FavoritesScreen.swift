@@ -27,13 +27,13 @@ struct FavoritesScreen: View {
             barcode: { $0.barcode },
             timestamp: { $0.addedAt },
             verdict: { VeganStatus(persisted: $0.verdict) },
-            category: { $0.category?.persistedProductCategory() }
+            category: { $0.category.persistedProductCategory() }
         )
     }
 
     private var availableCategories: [ProductCategory] {
         ProductCategory.allCases.filter { category in
-            favorites.contains { ($0.category?.persistedProductCategory() ?? .other) == category }
+            favorites.contains { $0.category.persistedProductCategory() == category }
         }
     }
 
@@ -212,11 +212,11 @@ private struct FavoriteRow: View {
                     HStack(spacing: 6) {
                         VerdictChip(status: verdict)
                         if let category = item.category {
-                            ProductCategoryChip(category: category.persistedProductCategory())
+                            ProductCategoryChip(category: item.category.persistedProductCategory())
                         }
                     }
                 } else if let category = item.category {
-                    ProductCategoryChip(category: category.persistedProductCategory())
+                    ProductCategoryChip(category: item.category.persistedProductCategory())
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
