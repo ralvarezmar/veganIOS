@@ -1223,11 +1223,6 @@ struct ResultView: View {
             guard let cached = try modelContext.fetch(descriptor).first else {
                 return nil
             }
-            if isCacheEntryExpired(cachedAt: cached.cachedAt) {
-                modelContext.delete(cached)
-                try modelContext.save()
-                return nil
-            }
             let product = try JSONDecoder().decode(Product.self, from: cached.productData)
             let source = ProductSource(rawValue: cached.sourceName) ?? .openFoodFacts
             return (product, source, cached.cachedAt)
@@ -1244,7 +1239,14 @@ struct ResultView: View {
             let metadata = entries.map {
                 CacheEntryMetadata(barcode: $0.barcode, cachedAt: $0.cachedAt)
             }
-            let barcodes = cacheBarcodesToEvict(entries: metadata)
+            let favoriteBarcodes = Set(
+                try modelContext.fetch(FetchDescriptor<FavoriteProduct>())
+                    .map(\.barcode)
+            )
+            let barcodes = cacheBarcodesToEvict(
+                entries: metadata,
+                protectedBarcodes: favoriteBarcodes
+            )
             entries.filter { barcodes.contains($0.barcode) }.forEach(modelContext.delete)
             if !barcodes.isEmpty {
                 try modelContext.save()

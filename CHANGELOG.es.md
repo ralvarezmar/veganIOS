@@ -10,6 +10,10 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Los productos guardados en caché siguen disponibles sin conexión y muestran su antigüedad.
+- El desalojo de la caché protege los productos favoritos.
+
 ### Corregido
 - Las tarjetas de ayuda del escáner mantienen un tamaño compacto y dejan libre el visor con fuentes grandes.
 
