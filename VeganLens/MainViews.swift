@@ -1684,11 +1684,11 @@ private struct HistoryRow: View {
                     HStack(spacing: 6) {
                         VerdictChip(status: verdict)
                         if let category = record.category {
-                            ProductCategoryChip(category: record.category.persistedProductCategory())
+                            ProductCategoryChip(category: category.productCategory())
                         }
                     }
                 } else if let category = record.category {
-                    ProductCategoryChip(category: record.category.persistedProductCategory())
+                    ProductCategoryChip(category: category.productCategory())
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

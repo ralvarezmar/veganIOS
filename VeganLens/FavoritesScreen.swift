@@ -212,11 +212,11 @@ private struct FavoriteRow: View {
                     HStack(spacing: 6) {
                         VerdictChip(status: verdict)
                         if let category = item.category {
-                            ProductCategoryChip(category: item.category.persistedProductCategory())
+                            ProductCategoryChip(category: category.productCategory())
                         }
                     }
                 } else if let category = item.category {
-                    ProductCategoryChip(category: item.category.persistedProductCategory())
+                    ProductCategoryChip(category: category.productCategory())
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
