@@ -257,6 +257,7 @@ private struct ScannerOverlayView: View {
     let zoomDeviceMin: CGFloat
     let zoomDeviceMax: CGFloat
     @State private var helperCardHeight: CGFloat = 0
+    @State private var helperCardContentHeight: CGFloat = 0
 
     var body: some View {
         GeometryReader { proxy in
@@ -340,26 +341,49 @@ private struct ScannerOverlayView: View {
                             zoomDeviceMin: zoomDeviceMin,
                             zoomDeviceMax: zoomDeviceMax
                         )
-                    }
-                    .scrollBounceBehavior(.basedOnSize)
-                    .frame(maxHeight: proxy.size.height * 0.45)
-                        .padding(.horizontal, 20)
-                        .padding(.top, 24)
-                        .padding(.bottom, 20)
                         .background(
-                            GeometryReader { cardProxy in
+                            GeometryReader { contentProxy in
                                 Color.clear.preference(
-                                    key: ScannerHelperCardHeightKey.self,
-                                    value: cardProxy.size.height
+                                    key: ScannerHelperCardContentHeightKey.self,
+                                    value: contentProxy.size.height
                                 )
                             }
                         )
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    .frame(
+                        height: helperCardContentHeight > 0
+                            ? min(helperCardContentHeight, proxy.size.height * 0.45)
+                            : nil
+                    )
+                    .padding(.horizontal, 20)
+                    .padding(.top, 24)
+                    .padding(.bottom, 20)
+                    .background(
+                        GeometryReader { cardProxy in
+                            Color.clear.preference(
+                                key: ScannerHelperCardHeightKey.self,
+                                value: cardProxy.size.height
+                            )
+                        }
+                    )
                 }
             }
             .onPreferenceChange(ScannerHelperCardHeightKey.self) {
                 helperCardHeight = $0
             }
+            .onPreferenceChange(ScannerHelperCardContentHeightKey.self) {
+                helperCardContentHeight = $0
+            }
         }
+    }
+}
+
+private struct ScannerHelperCardContentHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
     }
 }
 
