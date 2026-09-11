@@ -11,6 +11,9 @@ version so that App Store Connect can provide notes in both languages.
 ### Fixed
 - Scanner help cards stay compact and keep the viewfinder clear with large fonts.
 
+### Fixed
+- History and favourite cards keep their compact layout when verdict filters show long labels.
+
 ## [1.16.0 (47)] - 2026-09-10
 
 ### Changed
