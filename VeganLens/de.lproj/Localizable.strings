@@ -31,7 +31,6 @@
 "permission_restricted_message" = "Der Kamerazugriff ist auf diesem Gerät eingeschränkt.";
 "permission_unknown_message" = "Der Kamerastatus konnte nicht ermittelt werden.";
 "scan_instruction" = "📷 Richte die Kamera auf den Barcode.";
-"scan_formats_hint" = "EAN- und UPC-Codes werden unterstützt.";
 "scanner_flash_on" = "Taschenlampe einschalten";
 "scanner_flash_off" = "Taschenlampe ausschalten";
 "scanner_zoom" = "Zoom";

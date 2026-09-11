@@ -180,26 +180,27 @@ private struct FavoriteRow: View {
                 Text(item.productName?.isEmpty == false ? item.productName! : item.barcode)
                     .appFont(.headline, weight: .semibold)
                     .foregroundStyle(.primary)
+                    .lineLimit(2)
+                    .truncationMode(.tail)
 
                 if let brand = item.brand, !brand.isEmpty {
                     Text(brand)
                         .appFont(.subheadline)
                         .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                 }
 
                 Text(item.addedAt.formatted(date: .abbreviated, time: .shortened))
                     .appFont(.caption)
                     .foregroundStyle(.secondary)
-            }
-
-            Spacer(minLength: 8)
-
-            VStack(alignment: .trailing, spacing: 6) {
                 if let verdict = item.verdict.map({ VeganStatus(persisted: $0) }) {
                     VerdictChip(status: verdict)
                 }
-                CapsuleBadge(text: L("favorites_chip_open_result"), tint: .green)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            CapsuleBadge(text: L("favorites_chip_open_result"), tint: .green)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)

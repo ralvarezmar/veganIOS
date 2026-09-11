@@ -9,6 +9,18 @@ version so that App Store Connect can provide notes in both languages.
 ## [Unreleased]
 
 ### Changed
+- Stale cached products remain available offline with their cache age shown.
+- Cache eviction now protects favourite products.
+
+### Fixed
+- Scanner help cards stay compact and keep the viewfinder clear with large fonts.
+
+### Fixed
+- History and favourite cards keep their compact layout when verdict filters show long labels.
+
+## [1.16.0 (47)] - 2026-09-10
+
+### Changed
 - History and favourites now keep the vegan verdict and can be filtered by verdict.
 - Keep scanning now shows a capped, deduplicated list of results and history keeps the 300 most recent scans.
 

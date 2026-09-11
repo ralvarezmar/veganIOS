@@ -11,6 +11,18 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 ### Cambiado
+- Los productos guardados en caché siguen disponibles sin conexión y muestran su antigüedad.
+- El desalojo de la caché protege los productos favoritos.
+
+### Corregido
+- Las tarjetas de ayuda del escáner mantienen un tamaño compacto y dejan libre el visor con fuentes grandes.
+
+### Corregido
+- Las tarjetas de historial y favoritos mantienen su diseño compacto al mostrar etiquetas largas de los filtros de veredicto.
+
+## [1.16.0 (47)] - 2026-09-10
+
+### Cambiado
 - El historial y los favoritos guardan el veredicto vegano y se pueden filtrar por veredicto.
 - Seguir escaneando muestra una lista limitada y sin duplicados, y el historial conserva los 300 escaneos más recientes.
 
