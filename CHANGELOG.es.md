@@ -14,6 +14,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 - Los productos guardados en caché siguen disponibles sin conexión y muestran su antigüedad.
 - El desalojo de la caché protege los productos favoritos.
 
+### Corregido
+- Las tarjetas de historial y favoritos mantienen su diseño compacto al mostrar etiquetas largas de los filtros de veredicto.
+
 ## [1.16.0 (47)] - 2026-09-10
 
 ### Cambiado

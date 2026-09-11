@@ -12,6 +12,9 @@ version so that App Store Connect can provide notes in both languages.
 - Stale cached products remain available offline with their cache age shown.
 - Cache eviction now protects favourite products.
 
+### Fixed
+- History and favourite cards keep their compact layout when verdict filters show long labels.
+
 ## [1.16.0 (47)] - 2026-09-10
 
 ### Changed

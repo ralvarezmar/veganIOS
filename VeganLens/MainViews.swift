@@ -1600,26 +1600,27 @@ private struct HistoryRow: View {
                 Text(record.productName?.isEmpty == false ? record.productName! : record.barcode)
                     .appFont(.headline, weight: .semibold)
                     .foregroundStyle(.primary)
+                    .lineLimit(2)
+                    .truncationMode(.tail)
 
                 if let brand = record.brand, !brand.isEmpty {
                     Text(brand)
                         .appFont(.subheadline)
                         .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                 }
 
                 Text(record.timestamp.formatted(date: .abbreviated, time: .shortened))
                     .appFont(.caption)
                     .foregroundStyle(.secondary)
-            }
-
-            Spacer(minLength: 8)
-
-            VStack(alignment: .trailing, spacing: 6) {
                 if let verdict = record.verdict.map({ VeganStatus(persisted: $0) }) {
                     VerdictChip(status: verdict)
                 }
-                CapsuleChip(text: L("history_chip_open_result"), tint: .green)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            CapsuleChip(text: L("history_chip_open_result"), tint: .green)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
