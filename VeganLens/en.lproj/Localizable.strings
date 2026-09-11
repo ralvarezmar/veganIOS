@@ -31,7 +31,6 @@
 "permission_restricted_message" = "Camera access is restricted on this device.";
 "permission_unknown_message" = "We could not determine the camera status.";
 "scan_instruction" = "📷 Point at the barcode";
-"scan_formats_hint" = "EAN and UPC codes are supported.";
 "scanner_flash_on" = "Turn on the flashlight";
 "scanner_flash_off" = "Turn off the flashlight";
 "scanner_zoom" = "Zoom";

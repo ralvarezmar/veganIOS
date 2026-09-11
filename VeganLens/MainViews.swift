@@ -257,23 +257,43 @@ private struct ScannerOverlayView: View {
     let zoomDeviceMin: CGFloat
     let zoomDeviceMax: CGFloat
     @State private var helperCardHeight: CGFloat = 0
+    @State private var helperCardContentHeight: CGFloat = 0
 
     var body: some View {
         GeometryReader { proxy in
             let frameWidth = min(proxy.size.width * 0.82, 320)
-            let frameHeight = frameWidth * 0.62
+            let nominalFrameHeight = frameWidth * 0.62
+            let gap: CGFloat = 24
+            let minTop: CGFloat = 16
+            let minFrameHeight: CGFloat = 96
+            let availableHeight = max(0, proxy.size.height - helperCardHeight - gap)
+            let frameHeight: CGFloat = {
+                guard helperCardHeight > 0 else {
+                    return nominalFrameHeight
+                }
+                let heightLimit = availableHeight - 32
+                if heightLimit >= minFrameHeight {
+                    return min(nominalFrameHeight, heightLimit)
+                }
+                return min(nominalFrameHeight, availableHeight)
+            }()
+            let frameScale = nominalFrameHeight > 0 ? frameHeight / nominalFrameHeight : 1
+            let actualFrameWidth = frameWidth * frameScale
             let frameCenterY: CGFloat = {
                 guard helperCardHeight > 0 else {
                     return proxy.size.height / 2
                 }
-                let availableHeight = proxy.size.height - helperCardHeight - 24
-                let top = max(16, (availableHeight - frameHeight) / 2)
+                let freeHeight = max(0, availableHeight - frameHeight)
+                let centeredTop = (availableHeight - frameHeight) / 2
+                let top = freeHeight >= minTop
+                    ? min(max(centeredTop, minTop), freeHeight)
+                    : freeHeight
                 return top + frameHeight / 2
             }()
             let frameRect = CGRect(
-                x: (proxy.size.width - frameWidth) / 2,
+                x: (proxy.size.width - actualFrameWidth) / 2,
                 y: frameCenterY - frameHeight / 2,
-                width: frameWidth,
+                width: actualFrameWidth,
                 height: frameHeight
             )
 
@@ -286,7 +306,7 @@ private struct ScannerOverlayView: View {
 
                 RoundedRectangle(cornerRadius: 28, style: .continuous)
                     .strokeBorder(Color.white.opacity(0.9), lineWidth: 3)
-                    .frame(width: frameWidth, height: frameHeight)
+                    .frame(width: actualFrameWidth, height: frameHeight)
                     .position(x: proxy.size.width / 2, y: frameCenterY)
 
                 if !chainEntries.isEmpty {
@@ -309,34 +329,61 @@ private struct ScannerOverlayView: View {
                             .padding(.bottom, 24)
                     }
 
-                    HelperCardView(
-                        onManualEntry: onManualEntry,
-                        onPhotoAnalysis: onPhotoAnalysis,
-                        chainScanningEnabled: $chainScanningEnabled,
-                        cameraReady: cameraReady,
-                        hasTorch: hasTorch,
-                        torchOn: $torchOn,
-                        zoomFactor: $zoomFactor,
-                        zoomDeviceMin: zoomDeviceMin,
-                        zoomDeviceMax: zoomDeviceMax
-                    )
-                        .padding(.horizontal, 20)
-                        .padding(.top, 24)
-                        .padding(.bottom, 20)
+                    ScrollView(.vertical, showsIndicators: true) {
+                        HelperCardView(
+                            onManualEntry: onManualEntry,
+                            onPhotoAnalysis: onPhotoAnalysis,
+                            chainScanningEnabled: $chainScanningEnabled,
+                            cameraReady: cameraReady,
+                            hasTorch: hasTorch,
+                            torchOn: $torchOn,
+                            zoomFactor: $zoomFactor,
+                            zoomDeviceMin: zoomDeviceMin,
+                            zoomDeviceMax: zoomDeviceMax
+                        )
                         .background(
-                            GeometryReader { cardProxy in
+                            GeometryReader { contentProxy in
                                 Color.clear.preference(
-                                    key: ScannerHelperCardHeightKey.self,
-                                    value: cardProxy.size.height
+                                    key: ScannerHelperCardContentHeightKey.self,
+                                    value: contentProxy.size.height
                                 )
                             }
                         )
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    .frame(
+                        height: helperCardContentHeight > 0
+                            ? min(helperCardContentHeight, proxy.size.height * 0.45)
+                            : nil
+                    )
+                    .padding(.horizontal, 20)
+                    .padding(.top, 24)
+                    .padding(.bottom, 20)
+                    .background(
+                        GeometryReader { cardProxy in
+                            Color.clear.preference(
+                                key: ScannerHelperCardHeightKey.self,
+                                value: cardProxy.size.height
+                            )
+                        }
+                    )
                 }
             }
             .onPreferenceChange(ScannerHelperCardHeightKey.self) {
                 helperCardHeight = $0
             }
+            .onPreferenceChange(ScannerHelperCardContentHeightKey.self) {
+                helperCardContentHeight = $0
+            }
         }
+    }
+}
+
+private struct ScannerHelperCardContentHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
     }
 }
 
@@ -462,9 +509,6 @@ private struct HelperCardView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text(L("scan_instruction"))
                 .appFont(.headline, weight: .semibold)
-            Text(L("scan_formats_hint"))
-                .appFont(.subheadline)
-                .foregroundStyle(.secondary)
 
             Toggle(L("scanner_chain_title"), isOn: $chainScanningEnabled)
                 .tint(Color("AccentColor"))
