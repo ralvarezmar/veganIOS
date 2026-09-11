@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Fixed
+- Scanner help cards stay compact and keep the viewfinder clear with large fonts.
+
 ## [1.16.0 (47)] - 2026-09-10
 
 ### Changed

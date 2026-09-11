@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Corregido
+- Las tarjetas de ayuda del escáner mantienen un tamaño compacto y dejan libre el visor con fuentes grandes.
+
 ## [1.16.0 (47)] - 2026-09-10
 
 ### Cambiado
