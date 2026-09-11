@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.17.0 (48)] - 2026-09-11
+
 ### Cambiado
 - Los productos guardados en caché siguen disponibles sin conexión y muestran su antigüedad.
 - El desalojo de la caché protege los productos favoritos.
