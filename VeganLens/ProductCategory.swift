@@ -94,3 +94,9 @@ extension Optional where Wrapped == String {
         return category
     }
 }
+
+extension String {
+    func productCategory() -> ProductCategory {
+        ProductCategory(rawValue: self) ?? .other
+    }
+}
