@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.20.0 (51)] - 2026-09-14
+
 ### Cambiado
 - Los consejos de la portada ahora ofrecen trucos de cocina y nutrición vegana, y vuelven a mostrarse en español.
 
