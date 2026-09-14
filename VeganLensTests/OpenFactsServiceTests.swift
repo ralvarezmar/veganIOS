@@ -95,6 +95,20 @@ final class OpenFactsServiceTests: XCTestCase {
         }
     }
 
+    func testAllSourcesRateLimitedReturnsServerBusyError() async {
+        let session = makeSession { _ in
+            self.response(statusCode: 429, body: #"{"status":0}"#)
+        }
+        let service = OpenFactsService(session: session)
+
+        let result = await service.fetchProduct(barcode: "123")
+
+        guard case .error(let message) = result else {
+            return XCTFail("Expected a server busy error")
+        }
+        XCTAssertEqual(message, L("server_busy_error"))
+    }
+
     private func makeSession(
         handler: @escaping (URLRequest) -> (HTTPURLResponse, Data)
     ) -> URLSession {

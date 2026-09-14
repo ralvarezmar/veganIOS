@@ -15,6 +15,8 @@ struct RootView: View {
 
     @State private var scannerRunning = false
     @StateObject private var chainSession = ChainScanSession()
+    @State private var chainScanService = OpenFactsService()
+    @State private var chainScanQueue: ChainScanQueue?
     @State private var contributionProduct: Product?
     @AppStorage("chain_scanning_enabled") private var chainScanningEnabled = false
     @AppStorage("onboarding_seen") private var onboardingSeen = false
@@ -43,6 +45,7 @@ struct RootView: View {
         }
         .environment(\.highLegibilityFont, highLegibilityFont)
         .onAppear {
+            configureChainScanQueue()
             let didShowPortada = showPortadaIfNeeded()
             if quickActionRouter.requestID > 0 {
                 resetToScanner()
@@ -235,38 +238,74 @@ struct RootView: View {
     }
 
     private func resolveChainScan(_ barcode: String) {
-        Task { @MainActor in
-            let result = await OpenFactsService().fetchProduct(barcode: barcode)
-            switch result {
-            case .success(let fetched):
-                let analysis = analyzeVegan(fetched.product)
-                saveScanRecord(
-                    barcode: barcode,
-                    product: fetched.product,
-                    source: fetched.source,
-                    verdict: analysis.status,
-                    in: modelContext
-                )
-                chainSession.update(
-                    barcode: barcode,
-                    productName: fetched.product.productName,
-                    verdict: analysis.status,
-                    state: .done
-                )
-            case .notFound, .error(_):
-                chainSession.update(
-                    barcode: barcode,
-                    productName: nil,
-                    verdict: nil,
-                    state: .error
-                )
-            }
+        let queue = configureChainScanQueue()
+        Task {
+            await queue.enqueue(barcode)
         }
     }
 
     private func retryChainScan(_ barcode: String) {
         chainSession.retry(barcode: barcode)
         resolveChainScan(barcode)
+    }
+
+    @discardableResult
+    private func configureChainScanQueue() -> ChainScanQueue {
+        if let chainScanQueue {
+            return chainScanQueue
+        }
+        let service = chainScanService
+        let session = chainSession
+        let context = modelContext
+        let queue = ChainScanQueue { barcode in
+            await Self.processChainScan(
+                barcode,
+                service: service,
+                session: session,
+                context: context
+            )
+        }
+        chainScanQueue = queue
+        return queue
+    }
+
+    @MainActor
+    private static func processChainScan(
+        _ barcode: String,
+        service: OpenFactsService,
+        session: ChainScanSession,
+        context: ModelContext
+    ) async {
+        var result = await service.fetchProduct(barcode: barcode)
+        if case .error = result {
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            result = await service.fetchProduct(barcode: barcode)
+        }
+
+        switch result {
+        case .success(let fetched):
+            let analysis = analyzeVegan(fetched.product)
+            saveScanRecord(
+                barcode: barcode,
+                product: fetched.product,
+                source: fetched.source,
+                verdict: analysis.status,
+                in: context
+            )
+            session.update(
+                barcode: barcode,
+                productName: fetched.product.productName,
+                verdict: analysis.status,
+                state: .done
+            )
+        case .notFound, .error:
+            session.update(
+                barcode: barcode,
+                productName: nil,
+                verdict: nil,
+                state: .error
+            )
+        }
     }
 
     @ToolbarContentBuilder
