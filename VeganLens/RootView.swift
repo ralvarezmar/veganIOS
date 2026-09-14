@@ -238,10 +238,7 @@ struct RootView: View {
     }
 
     private func resolveChainScan(_ barcode: String) {
-        if chainScanQueue == nil {
-            configureChainScanQueue()
-        }
-        guard let queue = chainScanQueue else { return }
+        let queue = configureChainScanQueue()
         Task {
             await queue.enqueue(barcode)
         }
@@ -252,12 +249,15 @@ struct RootView: View {
         resolveChainScan(barcode)
     }
 
-    private func configureChainScanQueue() {
-        guard chainScanQueue == nil else { return }
+    @discardableResult
+    private func configureChainScanQueue() -> ChainScanQueue {
+        if let chainScanQueue {
+            return chainScanQueue
+        }
         let service = chainScanService
         let session = chainSession
         let context = modelContext
-        chainScanQueue = ChainScanQueue { barcode in
+        let queue = ChainScanQueue { barcode in
             await Self.processChainScan(
                 barcode,
                 service: service,
@@ -265,6 +265,8 @@ struct RootView: View {
                 context: context
             )
         }
+        chainScanQueue = queue
+        return queue
     }
 
     @MainActor
