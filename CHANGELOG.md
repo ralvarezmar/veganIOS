@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Cover tips now share cooking and vegan nutrition tricks, and Spanish devices display them again.
+
 ## [1.19.0 (50)] - 2026-09-14
 
 ### Fixed
