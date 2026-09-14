@@ -1,5 +1,7 @@
 import SwiftUI
 
+internal let portadaAutoDismissDelayNanoseconds: UInt64 = 7_000_000_000
+
 enum PortadaColors {
     static let background = Color(red: 0.992, green: 0.988, blue: 0.949)
     static let title = Color(red: 0.106, green: 0.369, blue: 0.125)
@@ -42,7 +44,7 @@ struct PortadaSplashView: View {
         .ignoresSafeArea()
         .accessibilityHint(L("portada_dismiss"))
         .task {
-            try? await Task.sleep(nanoseconds: 5_000_000_000)
+            try? await Task.sleep(nanoseconds: portadaAutoDismissDelayNanoseconds)
             guard !Task.isCancelled else { return }
             onDismiss()
         }
