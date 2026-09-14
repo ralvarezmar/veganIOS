@@ -10,6 +10,11 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Los consejos de la portada ahora ofrecen trucos de cocina y nutrición vegana, y vuelven a mostrarse en español.
+
+## [1.19.0 (50)] - 2026-09-14
+
 ### Corregido
 - El modo «seguir escaneando» resuelve los productos de uno en uno, así que escanear varios seguidos ya no falla con un error de conexión.
 - Cuando el servidor de Open Food Facts está ocupado se avisa de eso, en vez de dar un error de conexión genérico.
