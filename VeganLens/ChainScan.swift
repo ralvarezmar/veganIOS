@@ -1,6 +1,37 @@
 import Foundation
 import Combine
 
+actor ChainScanQueue {
+    private var pending: [String] = []
+    private var draining = false
+    private let gapNanoseconds: UInt64
+    private let handler: @MainActor @Sendable (String) async -> Void
+
+    init(
+        gapNanoseconds: UInt64 = 350_000_000,
+        handler: @escaping @MainActor @Sendable (String) async -> Void
+    ) {
+        self.gapNanoseconds = gapNanoseconds
+        self.handler = handler
+    }
+
+    func enqueue(_ barcode: String) {
+        pending.append(barcode)
+        guard !draining else { return }
+        draining = true
+        Task { await drain() }
+    }
+
+    private func drain() async {
+        while !pending.isEmpty {
+            let barcode = pending.removeFirst()
+            await handler(barcode)
+            try? await Task.sleep(nanoseconds: gapNanoseconds)
+        }
+        draining = false
+    }
+}
+
 enum ChainScanState: Equatable {
     case loading
     case done

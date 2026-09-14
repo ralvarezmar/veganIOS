@@ -84,6 +84,7 @@ Fuente: %@
 "product_not_found" = "Producto no encontrado en Open Food Facts";
 "product_not_found_sources" = "No se ha encontrado información suficiente en ninguna de las bases consultadas: %@.";
 "network_error" = "Sin conexión / error de red";
+"server_busy_error" = "El servidor está ocupado ahora mismo. Espera unos segundos y vuelve a intentarlo.";
 "result_not_found_title" = "Sin datos suficientes 🔍";
 "result_not_found_message" = "No hemos encontrado un producto con información vegana suficiente en las bases consultadas.";
 "network_error_title" = "No hemos podido consultar las bases de datos";

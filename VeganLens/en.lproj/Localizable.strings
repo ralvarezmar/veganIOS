@@ -79,6 +79,7 @@
 "product_not_found" = "Product not found in Open Food Facts";
 "product_not_found_sources" = "We could not find enough information in any of the consulted bases: %@.";
 "network_error" = "No connection / network error";
+"server_busy_error" = "The server is busy right now. Wait a few seconds and try again.";
 "result_not_found_title" = "Not enough data 🔍";
 "result_not_found_message" = "We could not find a product with enough vegan information in the consulted databases.";
 "network_error_title" = "We could not query the databases";
