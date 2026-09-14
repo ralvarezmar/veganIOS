@@ -43,6 +43,7 @@ final class OpenFactsService {
     ) async -> OpenFactsFetchResult {
         var sawCleanNoData = false
         var sawFailure = false
+        var sawRateLimit = false
         var consultedSources: [ProductSource] = []
         var fallbackCandidate: FetchedProduct?
 
@@ -57,6 +58,9 @@ final class OpenFactsService {
         case .cleanNoData, .notFound:
             sawCleanNoData = true
             consultedSources.append(.openFoodFacts)
+        case .rateLimited:
+            sawFailure = true
+            sawRateLimit = true
         case .failure:
             sawFailure = true
         }
@@ -97,6 +101,9 @@ final class OpenFactsService {
             case .cleanNoData, .notFound:
                 sawCleanNoData = true
                 consultedSources.append(source)
+            case .rateLimited:
+                sawFailure = true
+                sawRateLimit = true
             case .failure:
                 sawFailure = true
             }
@@ -106,6 +113,7 @@ final class OpenFactsService {
             fallbackCandidate: veganCandidate ?? fallbackCandidate,
             sawCleanNoData: sawCleanNoData,
             sawFailure: sawFailure,
+            sawRateLimit: sawRateLimit,
             consultedSources: consultedSources
         )
     }
@@ -196,6 +204,7 @@ final class OpenFactsService {
         case success(Product)
         case notFound
         case cleanNoData
+        case rateLimited
         case failure
     }
 
@@ -215,11 +224,16 @@ final class OpenFactsService {
 
         do {
             let (data, response) = try await requestData(request)
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200..<300).contains(httpResponse.statusCode) || httpResponse.statusCode == 404 else {
+            guard let httpResponse = response as? HTTPURLResponse else {
                 return .failure
             }
 
+            if httpResponse.statusCode == 429 || httpResponse.statusCode == 503 {
+                return .rateLimited
+            }
+            guard (200..<300).contains(httpResponse.statusCode) || httpResponse.statusCode == 404 else {
+                return .failure
+            }
             if httpResponse.statusCode == 404 {
                 return .notFound
             }
@@ -294,13 +308,14 @@ func resolveFetchOutcome(
     fallbackCandidate: FetchedProduct?,
     sawCleanNoData: Bool,
     sawFailure: Bool,
+    sawRateLimit: Bool = false,
     consultedSources: [ProductSource]
 ) -> OpenFactsFetchResult {
     if let fallbackCandidate {
         return .success(fallbackCandidate)
     }
     if sawFailure {
-        return .error(L("network_error"))
+        return .error(L(sawRateLimit ? "server_busy_error" : "network_error"))
     }
     if sawCleanNoData {
         return .notFound(consultedSources)
