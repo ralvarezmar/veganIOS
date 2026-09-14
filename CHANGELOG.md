@@ -8,6 +8,10 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Fixed
+- Keep scanning now resolves products one at a time, so scanning several products in a row no longer fails with a connection error.
+- A busy Open Food Facts server is now reported as such instead of a generic connection error.
+
 ## [1.17.0 (48)] - 2026-09-11
 
 ### Changed
