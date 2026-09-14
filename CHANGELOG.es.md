@@ -10,6 +10,10 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Corregido
+- El modo «seguir escaneando» resuelve los productos de uno en uno, así que escanear varios seguidos ya no falla con un error de conexión.
+- Cuando el servidor de Open Food Facts está ocupado se avisa de eso, en vez de dar un error de conexión genérico.
+
 ## [1.17.0 (48)] - 2026-09-11
 
 ### Cambiado
