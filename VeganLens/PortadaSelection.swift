@@ -71,7 +71,21 @@ let portadaTipKeys = [
     "portada_tip_13",
     "portada_tip_14",
     "portada_tip_15",
-    "portada_tip_16"
+    "portada_tip_16",
+    "portada_tip_17",
+    "portada_tip_18",
+    "portada_tip_19",
+    "portada_tip_20",
+    "portada_tip_21",
+    "portada_tip_22",
+    "portada_tip_23",
+    "portada_tip_24",
+    "portada_tip_25",
+    "portada_tip_26",
+    "portada_tip_27",
+    "portada_tip_28",
+    "portada_tip_29",
+    "portada_tip_30"
 ]
 
 func selectPortadaCharacter(
