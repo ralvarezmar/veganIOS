@@ -8,10 +8,6 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
-### Changed
-- The portada now offers 30 cooking and vegan nutrition tips instead of 16.
-- The portada stays visible for 7 seconds so there is more time to read each tip.
-
 ## [1.21.0 (52)] - 2026-09-17
 
 ### Changed
