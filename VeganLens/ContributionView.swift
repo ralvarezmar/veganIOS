@@ -199,6 +199,11 @@ struct ContributionView: View {
                         takePhoto: {
                             pendingPhotoType = type
                             showingCamera = true
+                        },
+                        retry: {
+                            if let image = photoImages[type] {
+                                handleImage(image, type: type)
+                            }
                         }
                     )
                 }
@@ -286,7 +291,7 @@ private struct ContributionCard<Content: View>: View {
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 }
 
@@ -303,6 +308,7 @@ private struct ProductPhotoRow: View {
     let state: PhotoUploadState
     let choosePhoto: () -> Void
     let takePhoto: () -> Void
+    let retry: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
@@ -323,17 +329,35 @@ private struct ProductPhotoRow: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(type.localizedTitle)
                     .appFont(.subheadline, weight: .semibold)
-                Text(state.localizedStatus)
-                    .appFont(.caption)
-                    .foregroundStyle(state.isError ? .red : .secondary)
+                HStack(spacing: 5) {
+                    Image(systemName: state.symbolName)
+                        .foregroundStyle(state.isError ? .red : .secondary)
+                    Text(state.localizedStatus)
+                        .appFont(.caption)
+                        .foregroundStyle(state.isError ? .red : .secondary)
+                }
+                if state.isError {
+                    Button(L("retry"), action: retry)
+                        .font(.caption.weight(.semibold))
+                }
             }
             Spacer()
-            Menu {
-                Button(L("contribution_photo_choose"), action: choosePhoto)
-                Button(L("contribution_photo_take"), action: takePhoto)
-            } label: {
-                Image(systemName: "ellipsis.circle")
-                    .appFont(.title3)
+            VStack(alignment: .trailing, spacing: 6) {
+                Button {
+                    takePhoto()
+                } label: {
+                    Label(L("contribution_photo_take"), systemImage: "camera")
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+
+                Button {
+                    choosePhoto()
+                } label: {
+                    Label(L("contribution_photo_choose"), systemImage: "photo.on.rectangle")
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
             }
         }
     }
@@ -351,6 +375,15 @@ private extension ProductImageType {
 }
 
 private extension PhotoUploadState {
+    var symbolName: String {
+        switch self {
+        case .idle: return "photo"
+        case .uploading: return "arrow.up.circle"
+        case .success: return "checkmark.circle.fill"
+        case .error: return "exclamationmark.triangle.fill"
+        }
+    }
+
     var localizedStatus: String {
         switch self {
         case .idle: return L("contribution_photo_idle")

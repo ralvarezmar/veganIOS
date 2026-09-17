@@ -1698,9 +1698,9 @@ private struct HistoryRow: View {
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .strokeBorder(Color.secondary.opacity(0.10), lineWidth: 1)
         )
     }
@@ -1802,7 +1802,7 @@ private struct VeganBannerView: View {
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(spec.background)
-        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .shadow(color: spec.background.opacity(0.24), radius: 12, x: 0, y: 8)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(
