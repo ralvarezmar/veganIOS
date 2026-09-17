@@ -10,9 +10,12 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.21.0 (52)] - 2026-09-17
+
 ### Cambiado
-- La portada ahora ofrece 30 consejos de cocina y nutrición vegana en lugar de 16.
-- La portada se muestra durante 7 segundos para dar tiempo a leer cada consejo.
+- Los ajustes de alérgenos se agrupan en una única sección y el modo estricto presenta juntos su descripción y su interruptor.
+- Las aportaciones de fotos muestran acciones de cámara y galería, además del estado de subida y la opción de reintento.
+- Se refinan las superficies, los radios de las tarjetas y la jerarquía del veredicto para un diseño más coherente.
 
 ## [1.20.0 (51)] - 2026-09-14
 
