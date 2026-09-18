@@ -2,6 +2,26 @@ import XCTest
 @testable import VeganLens
 
 final class VeganAnalyzerCorpusTests: XCTestCase {
+    func testPortugueseArticleIsIgnoredButEggIngredientIsKept() {
+        let articleAnalysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: [
+                OffIngredient(text: "pt:os", vegan: "no")
+            ]
+        )
+        XCTAssertEqual(articleAnalysis.status, .unknown)
+        XCTAssertTrue(articleAnalysis.nonVeganIngredients.isEmpty)
+
+        let eggAnalysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: [
+                OffIngredient(text: "pt:ovos", vegan: "no")
+            ]
+        )
+        XCTAssertEqual(eggAnalysis.status, .notVegan)
+        XCTAssertEqual(eggAnalysis.nonVeganIngredients, ["Ovos"])
+    }
+
     func testSharedCorpusMatchesExpectedVerdicts() throws {
         let url = try XCTUnwrap(
             Bundle(for: type(of: self)).url(

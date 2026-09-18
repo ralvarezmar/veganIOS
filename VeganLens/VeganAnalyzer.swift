@@ -174,6 +174,9 @@ func analyzeVegan(
         guard let vegan = ingredient.vegan?.lowercased(), let cleanedText = cleanFoodFactsLabel(ingredient.text) else {
             return nil
         }
+        guard !isIngredientConnector(cleanedText) else {
+            return nil
+        }
         return NormalizedIngredient(
             status: vegan,
             name: cleanedText,
@@ -427,6 +430,26 @@ func analyzeVegan(
         reason: finalReason,
         hasIngredientData: hasIngredientData
     )
+}
+
+private func isIngredientConnector(_ name: String) -> Bool {
+    [
+        "a",
+        "as",
+        "da",
+        "das",
+        "de",
+        "do",
+        "dos",
+        "e",
+        "em",
+        "na",
+        "nas",
+        "no",
+        "nos",
+        "o",
+        "os"
+    ].contains(normalizeIngredientSegment(name))
 }
 
 private struct AdditiveMatches {
