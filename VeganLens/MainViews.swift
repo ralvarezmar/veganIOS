@@ -1659,41 +1659,43 @@ private struct HistoryRow: View {
     let record: ScanRecord
 
     var body: some View {
-        HStack(spacing: 14) {
-            HistoryThumbnail(imageURLString: record.imageURL)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 14) {
+                HistoryThumbnail(imageURLString: record.imageURL)
 
-            VStack(alignment: .leading, spacing: 5) {
-                Text(record.productName?.isEmpty == false ? record.productName! : record.barcode)
-                    .appFont(.headline, weight: .semibold)
-                    .foregroundStyle(.primary)
-                    .lineLimit(2)
-                    .truncationMode(.tail)
-
-                if let brand = record.brand, !brand.isEmpty {
-                    Text(brand)
-                        .appFont(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(record.productName?.isEmpty == false ? record.productName! : record.barcode)
+                        .appFont(.headline, weight: .semibold)
+                        .foregroundStyle(.primary)
+                        .lineLimit(2)
                         .truncationMode(.tail)
-                }
 
-                Text(record.timestamp.formatted(date: .abbreviated, time: .shortened))
-                    .appFont(.caption)
-                    .foregroundStyle(.secondary)
-                if let verdict = record.verdict.map({ VeganStatus(persisted: $0) }) {
-                    HStack(spacing: 6) {
-                        VerdictChip(status: verdict)
-                        if let category = record.category {
-                            ProductCategoryChip(category: category.productCategory())
-                        }
+                    if let brand = record.brand, !brand.isEmpty {
+                        Text(brand)
+                            .appFont(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
                     }
-                } else if let category = record.category {
+
+                    Text(record.timestamp.formatted(date: .abbreviated, time: .shortened))
+                        .appFont(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                CapsuleChip(text: L("history_chip_open_result"), tint: .green)
+            }
+
+            HStack(spacing: 6) {
+                if let verdict = record.verdict.map({ VeganStatus(persisted: $0) }) {
+                    VerdictChip(status: verdict)
+                }
+                if let category = record.category {
                     ProductCategoryChip(category: category.productCategory())
                 }
+                Spacer(minLength: 0)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            CapsuleChip(text: L("history_chip_open_result"), tint: .green)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
