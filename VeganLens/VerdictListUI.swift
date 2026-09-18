@@ -11,6 +11,8 @@ struct VerdictChip: View {
                 .frame(width: 8, height: 8)
             Text(verdictLabel(for: status))
                 .appFont(.caption, weight: .semibold)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
         .foregroundStyle(veganVerdictColor(for: status, colorblindSafe: colorblindSafePalette))
         .padding(.horizontal, 9)
@@ -141,9 +143,15 @@ struct ProductCategoryChip: View {
         Text(category.localizedName)
             .appFont(.caption, weight: .semibold)
             .foregroundStyle(Color(.secondaryLabel))
+            .lineLimit(1)
+            .minimumScaleFactor(0.78)
             .padding(.horizontal, 9)
             .padding(.vertical, 6)
             .background(Color(.secondarySystemBackground))
+            .overlay(
+                Capsule()
+                    .stroke(Color.secondary.opacity(0.12), lineWidth: 1)
+            )
             .clipShape(Capsule())
     }
 }
