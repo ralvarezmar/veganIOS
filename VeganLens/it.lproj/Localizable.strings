@@ -50,6 +50,11 @@
 "scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Codice rilevato";
 "scanner_confirmation_subtitle" = "Apertura del risultato…";
+"scanner_feedback_title" = "Feedback dello scanner";
+"scanner_haptics_title" = "Vibrazione al rilevamento";
+"scanner_sound_title" = "Suono al rilevamento";
+"scanner_feedback_description" = "Scegli vibrazione e suono opzionali quando il codice viene rilevato automaticamente.";
+"scanner_retry" = "Riprova scanner";
 "loading_product" = "Consultazione dei database…";
 "loading_product_source" = "Consultazione di %1$@…";
 "loading_product_siblings" = "Consultazione dei database collegati…";

@@ -3,6 +3,7 @@ import SwiftUI
 import Charts
 import SwiftData
 import AVFoundation
+import AudioToolbox
 import UIKit
 import Translation
 
@@ -52,6 +53,8 @@ struct ScannerView: View {
     @State private var zoomDeviceMin: CGFloat = 1
     @State private var zoomDeviceMax: CGFloat = 1
     @State private var zoomGestureStart: CGFloat?
+    @AppStorage(ScannerPreferences.hapticsEnabledKey) private var scannerHapticsEnabled = true
+    @AppStorage(ScannerPreferences.soundEnabledKey) private var scannerSoundEnabled = false
 
     var body: some View {
         ZStack {
@@ -77,6 +80,7 @@ struct ScannerView: View {
                     onChainEntrySelected: onChainEntrySelected,
                     onChainRetry: onChainRetry,
                     onChainClear: onChainClear,
+                    onRetryScanner: retryScanner,
                     onManualEntry: presentManualBarcodeEntry,
                     onPhotoAnalysis: onPhotoAnalysis,
                     onDishPhoto: onDishPhoto,
@@ -85,7 +89,9 @@ struct ScannerView: View {
                     torchOn: $torchOn,
                     zoomFactor: $zoomFactor,
                     zoomDeviceMin: zoomDeviceMin,
-                    zoomDeviceMax: zoomDeviceMax
+                    zoomDeviceMax: zoomDeviceMax,
+                    hapticsEnabled: scannerHapticsEnabled,
+                    soundEnabled: scannerSoundEnabled
                 )
                     .ignoresSafeArea()
             } else {
@@ -162,9 +168,7 @@ struct ScannerView: View {
     private func handleDetection(_ barcode: String) {
         if chainScanningEnabled {
             guard chainSession.register(barcode: barcode) else { return }
-            let notification = UINotificationFeedbackGenerator()
-            notification.notificationOccurred(.success)
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            playScanFeedback()
             onChainDetected(barcode)
             detectedBarcode = nil
             isScannerRunning = true
@@ -173,6 +177,7 @@ struct ScannerView: View {
 
         guard detectedBarcode == nil else { return }
         detectedBarcode = barcode
+        playScanFeedback()
         isScannerRunning = false
         withAnimation(.easeInOut(duration: 0.2)) {
             showingDetectionConfirmation = true
@@ -242,6 +247,28 @@ struct ScannerView: View {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url)
     }
+
+    private func retryScanner() {
+        pendingNavigationTask?.cancel()
+        detectedBarcode = nil
+        showingDetectionConfirmation = false
+        isScannerRunning = false
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(150))
+            guard authorizationStatus == .authorized else { return }
+            isScannerRunning = true
+        }
+    }
+
+    private func playScanFeedback() {
+        if scannerHapticsEnabled {
+            let notification = UINotificationFeedbackGenerator()
+            notification.notificationOccurred(.success)
+        }
+        if scannerSoundEnabled {
+            AudioServicesPlaySystemSound(SystemSoundID(1057))
+        }
+    }
 }
 
 private struct ScannerOverlayView: View {
@@ -251,6 +278,7 @@ private struct ScannerOverlayView: View {
     let onChainEntrySelected: (String) -> Void
     let onChainRetry: (String) -> Void
     let onChainClear: () -> Void
+    let onRetryScanner: () -> Void
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
     let onDishPhoto: () -> Void
@@ -260,6 +288,8 @@ private struct ScannerOverlayView: View {
     @Binding var zoomFactor: CGFloat
     let zoomDeviceMin: CGFloat
     let zoomDeviceMax: CGFloat
+    let hapticsEnabled: Bool
+    let soundEnabled: Bool
     @State private var helperCardHeight: CGFloat = 0
     @State private var helperCardContentHeight: CGFloat = 0
 
@@ -338,13 +368,16 @@ private struct ScannerOverlayView: View {
                             onManualEntry: onManualEntry,
                             onPhotoAnalysis: onPhotoAnalysis,
                             onDishPhoto: onDishPhoto,
+                            onRetryScanner: onRetryScanner,
                             chainScanningEnabled: $chainScanningEnabled,
                             cameraReady: cameraReady,
                             hasTorch: hasTorch,
                             torchOn: $torchOn,
                             zoomFactor: $zoomFactor,
                             zoomDeviceMin: zoomDeviceMin,
-                            zoomDeviceMax: zoomDeviceMax
+                            zoomDeviceMax: zoomDeviceMax,
+                            hapticsEnabled: hapticsEnabled,
+                            soundEnabled: soundEnabled
                         )
                         .background(
                             GeometryReader { contentProxy in
@@ -503,6 +536,7 @@ private struct HelperCardView: View {
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
     let onDishPhoto: () -> Void
+    let onRetryScanner: () -> Void
     @Binding var chainScanningEnabled: Bool
     let cameraReady: Bool
     let hasTorch: Bool
@@ -510,6 +544,8 @@ private struct HelperCardView: View {
     @Binding var zoomFactor: CGFloat
     let zoomDeviceMin: CGFloat
     let zoomDeviceMax: CGFloat
+    let hapticsEnabled: Bool
+    let soundEnabled: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -518,6 +554,10 @@ private struct HelperCardView: View {
 
             Toggle(L("scanner_chain_title"), isOn: $chainScanningEnabled)
                 .tint(Color("AccentColor"))
+
+            Text(L("scanner_feedback_description"))
+                .appFont(.caption)
+                .foregroundStyle(.secondary)
 
             if cameraReady {
                 HStack(spacing: 10) {
@@ -564,6 +604,14 @@ private struct HelperCardView: View {
                 onDishPhoto()
             } label: {
                 Label(L("dish_photo_action"), systemImage: "fork.knife")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+
+            Button {
+                onRetryScanner()
+            } label: {
+                Label(L("scanner_retry"), systemImage: "arrow.clockwise")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)

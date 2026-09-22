@@ -8,16 +8,21 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
-### Added
-- Product analyses now expose explicit high, medium, or low confidence.
-- A separate experimental dish-photo flow reports probable visible foods and a deliberately broad calorie range.
-- Eight 1080×1920 Google Play screenshots and a 1024×500 feature graphic are included as store assets.
+## [1.22.0 (53)] - 2026-09-22
 
-## [1.21.0 (52)] - 2026-09-14
+### Added
+- Scanner feedback can optionally use vibration or sound when a barcode is detected.
+- The scanner includes a clear retry action for restarting automatic detection.
 
 ### Changed
-- The portada now offers 30 cooking and vegan nutrition tips instead of 16.
-- The portada stays visible for 7 seconds so there is more time to read each tip.
+- Barcode detection remains automatic and now gives immediate, configurable feedback before opening the result.
+
+## [1.21.0 (52)] - 2026-09-17
+
+### Changed
+- Allergen settings are grouped into one profile section and strict mode is presented with its description and toggle.
+- Product photo contributions expose camera and gallery actions and show upload status with retry.
+- Card surfaces, corner radii, and verdict hierarchy are refined for a more consistent visual design.
 
 ## [1.20.0 (51)] - 2026-09-14
 

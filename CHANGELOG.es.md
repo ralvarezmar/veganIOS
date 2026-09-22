@@ -10,16 +10,21 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
-### Añadido
-- Los análisis de productos muestran ahora una confianza explícita alta, media o baja.
-- Un flujo experimental separado de foto de plato muestra alimentos probables y un rango calórico deliberadamente amplio.
-- Se incluyen ocho capturas 1080×1920 para Google Play y una gráfica destacada 1024×500 como recursos de tienda.
+## [1.22.0 (53)] - 2026-09-22
 
-## [1.21.0 (52)] - 2026-09-14
+### Añadido
+- El escáner permite activar opcionalmente vibración o sonido al detectar un código.
+- El escáner incluye una acción clara para reiniciar la detección automática.
 
 ### Cambiado
-- La portada ahora ofrece 30 consejos de cocina y nutrición vegana en lugar de 16.
-- La portada se muestra durante 7 segundos para dar tiempo a leer cada consejo.
+- La detección de códigos sigue siendo automática y ahora ofrece una respuesta inmediata y configurable antes de abrir el resultado.
+
+## [1.21.0 (52)] - 2026-09-17
+
+### Cambiado
+- Los ajustes de alérgenos se agrupan en una única sección y el modo estricto presenta juntos su descripción y su interruptor.
+- Las aportaciones de fotos muestran acciones de cámara y galería, además del estado de subida y la opción de reintento.
+- Se refinan las superficies, los radios de las tarjetas y la jerarquía del veredicto para un diseño más coherente.
 
 ## [1.20.0 (51)] - 2026-09-14
 

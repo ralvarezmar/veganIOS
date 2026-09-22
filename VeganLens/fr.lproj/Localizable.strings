@@ -50,6 +50,11 @@
 "scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Code-barres détecté";
 "scanner_confirmation_subtitle" = "Ouverture du résultat…";
+"scanner_feedback_title" = "Retour du scanner";
+"scanner_haptics_title" = "Vibration à la détection";
+"scanner_sound_title" = "Son à la détection";
+"scanner_feedback_description" = "Choisissez une vibration et un son optionnels lorsqu’un code est détecté automatiquement.";
+"scanner_retry" = "Réessayer le scanner";
 "loading_product" = "Interrogation des bases de données…";
 "loading_product_source" = "Interrogation de %1$@…";
 "loading_product_siblings" = "Interrogation des bases associées…";
