@@ -36,6 +36,7 @@ struct ScannerView: View {
     let onChainClear: () -> Void
     let onChainEntrySelected: (String) -> Void
     let onPhotoAnalysis: () -> Void
+    let onDishPhoto: () -> Void
 
     @State private var authorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
     @State private var isRequestingAccess = false
@@ -78,6 +79,7 @@ struct ScannerView: View {
                     onChainClear: onChainClear,
                     onManualEntry: presentManualBarcodeEntry,
                     onPhotoAnalysis: onPhotoAnalysis,
+                    onDishPhoto: onDishPhoto,
                     cameraReady: cameraReady,
                     hasTorch: hasTorch,
                     torchOn: $torchOn,
@@ -93,7 +95,8 @@ struct ScannerView: View {
                     onRequestAccess: requestCameraAccess,
                     onOpenSettings: openSettings,
                     onManualEntry: presentManualBarcodeEntry,
-                    onPhotoAnalysis: onPhotoAnalysis
+                    onPhotoAnalysis: onPhotoAnalysis,
+                    onDishPhoto: onDishPhoto
                 )
                 .padding()
             }
@@ -250,6 +253,7 @@ private struct ScannerOverlayView: View {
     let onChainClear: () -> Void
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
+    let onDishPhoto: () -> Void
     let cameraReady: Bool
     let hasTorch: Bool
     @Binding var torchOn: Bool
@@ -333,6 +337,7 @@ private struct ScannerOverlayView: View {
                         HelperCardView(
                             onManualEntry: onManualEntry,
                             onPhotoAnalysis: onPhotoAnalysis,
+                            onDishPhoto: onDishPhoto,
                             chainScanningEnabled: $chainScanningEnabled,
                             cameraReady: cameraReady,
                             hasTorch: hasTorch,
@@ -497,6 +502,7 @@ private struct ChainScanResultsOverlay: View {
 private struct HelperCardView: View {
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
+    let onDishPhoto: () -> Void
     @Binding var chainScanningEnabled: Bool
     let cameraReady: Bool
     let hasTorch: Bool
@@ -553,6 +559,14 @@ private struct HelperCardView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
+
+            Button {
+                onDishPhoto()
+            } label: {
+                Label(L("dish_photo_action"), systemImage: "fork.knife")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
@@ -593,6 +607,7 @@ private struct CameraPermissionView: View {
     let onOpenSettings: () -> Void
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
+    let onDishPhoto: () -> Void
 
     var body: some View {
         VStack(spacing: 20) {
@@ -638,6 +653,14 @@ private struct CameraPermissionView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
+
+                    Button {
+                        onDishPhoto()
+                    } label: {
+                        Label(L("dish_photo_action"), systemImage: "fork.knife")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
                 } else {
                     Button {
                         onOpenSettings()
@@ -660,6 +683,14 @@ private struct CameraPermissionView: View {
                         onPhotoAnalysis()
                     } label: {
                         Label(L("photo_ingredients_action"), systemImage: "text.viewfinder")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+
+                    Button {
+                        onDishPhoto()
+                    } label: {
+                        Label(L("dish_photo_action"), systemImage: "fork.knife")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
@@ -1659,48 +1690,50 @@ private struct HistoryRow: View {
     let record: ScanRecord
 
     var body: some View {
-        HStack(spacing: 14) {
-            HistoryThumbnail(imageURLString: record.imageURL)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 14) {
+                HistoryThumbnail(imageURLString: record.imageURL)
 
-            VStack(alignment: .leading, spacing: 5) {
-                Text(record.productName?.isEmpty == false ? record.productName! : record.barcode)
-                    .appFont(.headline, weight: .semibold)
-                    .foregroundStyle(.primary)
-                    .lineLimit(2)
-                    .truncationMode(.tail)
-
-                if let brand = record.brand, !brand.isEmpty {
-                    Text(brand)
-                        .appFont(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(record.productName?.isEmpty == false ? record.productName! : record.barcode)
+                        .appFont(.headline, weight: .semibold)
+                        .foregroundStyle(.primary)
+                        .lineLimit(2)
                         .truncationMode(.tail)
-                }
 
-                Text(record.timestamp.formatted(date: .abbreviated, time: .shortened))
-                    .appFont(.caption)
-                    .foregroundStyle(.secondary)
-                if let verdict = record.verdict.map({ VeganStatus(persisted: $0) }) {
-                    HStack(spacing: 6) {
-                        VerdictChip(status: verdict)
-                        if let category = record.category {
-                            ProductCategoryChip(category: category.productCategory())
-                        }
+                    if let brand = record.brand, !brand.isEmpty {
+                        Text(brand)
+                            .appFont(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
                     }
-                } else if let category = record.category {
+
+                    Text(record.timestamp.formatted(date: .abbreviated, time: .shortened))
+                        .appFont(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                CapsuleChip(text: L("history_chip_open_result"), tint: .green)
+            }
+
+            HStack(spacing: 6) {
+                if let verdict = record.verdict.map({ VeganStatus(persisted: $0) }) {
+                    VerdictChip(status: verdict)
+                }
+                if let category = record.category {
                     ProductCategoryChip(category: category.productCategory())
                 }
+                Spacer(minLength: 0)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            CapsuleChip(text: L("history_chip_open_result"), tint: .green)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .strokeBorder(Color.secondary.opacity(0.10), lineWidth: 1)
         )
     }
@@ -1767,6 +1800,7 @@ private struct VeganBannerView: View {
                         .foregroundStyle(spec.foreground)
                         .minimumScaleFactor(0.8)
                         .lineLimit(2)
+                        .accessibilityAddTraits(.isHeader)
 
                     Text(spec.subtitle)
                         .appFont(.subheadline)
@@ -1781,6 +1815,11 @@ private struct VeganBannerView: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityLabel(explanation)
             }
+
+            SourceCapsule(
+                text: LF("vegan_confidence_label", veganConfidenceText(analysis.confidence)),
+                foreground: spec.foreground
+            )
 
             SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
 
@@ -1802,14 +1841,15 @@ private struct VeganBannerView: View {
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(spec.background)
-        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .shadow(color: spec.background.opacity(0.24), radius: 12, x: 0, y: 8)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(
             verdictAccessibilityText(
                 headline: spec.headline,
                 subtitle: spec.subtitle,
-                explanation: veganReasonText(analysis.reason)
+                explanation: veganReasonText(analysis.reason),
+                confidence: veganConfidenceText(analysis.confidence)
             )
         )
     }
@@ -1899,12 +1939,24 @@ private func resultSubtitle(for analysis: VeganAnalysis) -> String {
     }
 }
 
+private func veganConfidenceText(_ confidence: VeganConfidence) -> String {
+    switch confidence {
+    case .high:
+        return L("vegan_confidence_high")
+    case .medium:
+        return L("vegan_confidence_medium")
+    case .low:
+        return L("vegan_confidence_low")
+    }
+}
+
 private func verdictAnnouncement(for product: Product) -> String {
     let analysis = analyzeVegan(product)
     return verdictAccessibilityText(
         headline: resultHeadline(for: analysis),
         subtitle: resultSubtitle(for: analysis),
-        explanation: veganReasonText(analysis.reason)
+        explanation: veganReasonText(analysis.reason),
+        confidence: veganConfidenceText(analysis.confidence)
     )
 }
 

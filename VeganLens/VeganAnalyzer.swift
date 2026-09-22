@@ -33,6 +33,12 @@ enum VeganStatus: Equatable, Hashable {
     }
 }
 
+enum VeganConfidence: Equatable {
+    case high
+    case medium
+    case low
+}
+
 enum VeganReasonSource: Equatable {
     case structuredNonVeganIngredient
     case structuredDoubtfulIngredient
@@ -66,6 +72,20 @@ struct VeganAnalysis {
     let heuristic: Bool
     let reason: VeganReason?
     let hasIngredientData: Bool
+
+    var confidence: VeganConfidence {
+        if status == .unknown {
+            return .low
+        }
+        switch reason?.source {
+        case .structuredNonVeganIngredient, .structuredVeganIngredient, .veganSeal:
+            return .high
+        case .heuristicText, .unverifiedNonVeganTag, .additiveUncertain:
+            return .low
+        default:
+            return heuristic ? .low : .medium
+        }
+    }
 
     init(
         status: VeganStatus,
@@ -172,6 +192,9 @@ func analyzeVegan(
     let ingredientList = flattenIngredients(ingredients)
     let normalizedIngredients = ingredientList.compactMap { ingredient -> NormalizedIngredient? in
         guard let vegan = ingredient.vegan?.lowercased(), let cleanedText = cleanFoodFactsLabel(ingredient.text) else {
+            return nil
+        }
+        guard !isIngredientConnector(cleanedText) else {
             return nil
         }
         return NormalizedIngredient(
@@ -427,6 +450,26 @@ func analyzeVegan(
         reason: finalReason,
         hasIngredientData: hasIngredientData
     )
+}
+
+private func isIngredientConnector(_ name: String) -> Bool {
+    [
+        "a",
+        "as",
+        "da",
+        "das",
+        "de",
+        "do",
+        "dos",
+        "e",
+        "em",
+        "na",
+        "nas",
+        "no",
+        "nos",
+        "o",
+        "os"
+    ].contains(normalizeIngredientSegment(name))
 }
 
 private struct AdditiveMatches {
