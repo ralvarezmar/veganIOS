@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+- The promotional set now includes a complete positive-result screen with verdict, confidence, evidence, ingredients, and allergens.
+
 - iOS store screenshots now use the requested 1242×2688 px dimensions, and the scanner artwork uses the VeganLens name.
 
 ### Changed
