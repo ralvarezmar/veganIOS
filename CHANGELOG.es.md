@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+- El conjunto promocional incluye ahora una pantalla completa de resultado apto, con veredicto, confianza, evidencia, ingredientes y alérgenos.
+
 - Las capturas de tienda de iOS usan ahora las dimensiones solicitadas de 1242×2688 px y el arte del escáner utiliza el nombre VeganLens.
 
 ### Cambiado
