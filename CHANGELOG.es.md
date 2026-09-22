@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Las capturas de tienda de iOS usan ahora una composición más promocional, con beneficios más claros, mejor jerarquía y un mensaje de privacidad coherente.
+
 ### Añadido
 - Los análisis de productos muestran ahora una confianza explícita alta, media o baja.
 - Un flujo experimental separado de foto de plato muestra alimentos probables y un rango calórico deliberadamente amplio.
