@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- The iOS store screenshots now use a more promotional layout with clearer benefits, stronger hierarchy, and consistent privacy messaging.
+
 ### Added
 - Product analyses now expose explicit high, medium, or low confidence.
 - A separate experimental dish-photo flow reports probable visible foods and a deliberately broad calorie range.
