@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+- The scanner screenshot now highlights faster barcode detection with an in-flow analysis state.
+
 - The scanner store artwork now uses a clean VeganLens header instead of overlaying text on the older screenshot.
 
 - The promotional set now includes a complete positive-result screen with verdict, confidence, evidence, ingredients, and allergens.
