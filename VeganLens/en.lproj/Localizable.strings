@@ -50,6 +50,11 @@
 "scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Barcode detected";
 "scanner_confirmation_subtitle" = "Opening the result…";
+"scanner_feedback_title" = "Scanner feedback";
+"scanner_haptics_title" = "Vibration on detection";
+"scanner_sound_title" = "Sound on detection";
+"scanner_feedback_description" = "Choose optional vibration and sound when a barcode is detected automatically.";
+"scanner_retry" = "Retry scanner";
 "loading_product" = "Querying databases…";
 "loading_product_source" = "Querying %1$@…";
 "loading_product_siblings" = "Querying the related databases…";

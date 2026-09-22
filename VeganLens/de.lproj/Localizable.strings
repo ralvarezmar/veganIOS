@@ -50,6 +50,11 @@
 "scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Barcode erkannt";
 "scanner_confirmation_subtitle" = "Ergebnis wird geöffnet…";
+"scanner_feedback_title" = "Scanner-Rückmeldung";
+"scanner_haptics_title" = "Vibration bei Erkennung";
+"scanner_sound_title" = "Ton bei Erkennung";
+"scanner_feedback_description" = "Optionale Vibration und Töne bei der automatischen Barcode-Erkennung auswählen.";
+"scanner_retry" = "Scanner erneut versuchen";
 "loading_product" = "Datenbanken werden abgefragt…";
 "loading_product_source" = "Abfrage von %1$@…";
 "loading_product_siblings" = "Verwandte Datenbanken werden abgefragt…";
