@@ -10,6 +10,11 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- Los análisis de productos muestran ahora una confianza explícita alta, media o baja.
+- Un flujo experimental separado de foto de plato muestra alimentos probables y un rango calórico deliberadamente amplio.
+- Se incluyen ocho capturas 1080×1920 para Google Play y una gráfica destacada 1024×500 como recursos de tienda.
+
 ## [1.21.0 (52)] - 2026-09-14
 
 ### Cambiado

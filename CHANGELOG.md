@@ -8,6 +8,11 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- Product analyses now expose explicit high, medium, or low confidence.
+- A separate experimental dish-photo flow reports probable visible foods and a deliberately broad calorie range.
+- Eight 1080×1920 Google Play screenshots and a 1024×500 feature graphic are included as store assets.
+
 ## [1.21.0 (52)] - 2026-09-14
 
 ### Changed
