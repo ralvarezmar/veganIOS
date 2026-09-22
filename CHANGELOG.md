@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+- iOS store screenshots now use the requested 1242×2688 px dimensions, and the scanner artwork uses the VeganLens name.
+
 ### Changed
 - The iOS store screenshots now use a more promotional layout with clearer benefits, stronger hierarchy, and consistent privacy messaging.
 

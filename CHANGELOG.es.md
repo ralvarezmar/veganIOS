@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+- Las capturas de tienda de iOS usan ahora las dimensiones solicitadas de 1242×2688 px y el arte del escáner utiliza el nombre VeganLens.
+
 ### Cambiado
 - Las capturas de tienda de iOS usan ahora una composición más promocional, con beneficios más claros, mejor jerarquía y un mensaje de privacidad coherente.
 
