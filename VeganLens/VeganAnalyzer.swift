@@ -33,6 +33,12 @@ enum VeganStatus: Equatable, Hashable {
     }
 }
 
+enum VeganConfidence: Equatable {
+    case high
+    case medium
+    case low
+}
+
 enum VeganReasonSource: Equatable {
     case structuredNonVeganIngredient
     case structuredDoubtfulIngredient
@@ -66,6 +72,20 @@ struct VeganAnalysis {
     let heuristic: Bool
     let reason: VeganReason?
     let hasIngredientData: Bool
+
+    var confidence: VeganConfidence {
+        if status == .unknown {
+            return .low
+        }
+        switch reason?.source {
+        case .structuredNonVeganIngredient, .structuredVeganIngredient, .veganSeal:
+            return .high
+        case .heuristicText, .unverifiedNonVeganTag, .additiveUncertain:
+            return .low
+        default:
+            return heuristic ? .low : .medium
+        }
+    }
 
     init(
         status: VeganStatus,

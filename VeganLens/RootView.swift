@@ -136,6 +136,10 @@ struct RootView: View {
                 onPhotoAnalysis: {
                     scannerRunning = false
                     path.append(Route.photoOCR)
+                },
+                onDishPhoto: {
+                    scannerRunning = false
+                    path.append(Route.dishPhoto)
                 }
             )
             .accessibilityIdentifier("main-scanner-screen")
@@ -226,6 +230,14 @@ struct RootView: View {
                 case .photoResult(let text):
                     PhotoIngredientResultView(
                         initialText: text,
+                        onBack: {
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
+                        }
+                    )
+                case .dishPhoto:
+                    DishPhotoView(
                         onBack: {
                             if !path.isEmpty {
                                 path.removeLast()
@@ -365,4 +377,5 @@ private enum Route: Hashable {
     case contribution(String, String?)
     case photoOCR
     case photoResult(String)
+    case dishPhoto
 }
