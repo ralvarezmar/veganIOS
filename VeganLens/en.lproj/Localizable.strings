@@ -145,6 +145,8 @@
 "quantity_label" = "Quantity";
 "product_label" = "Product";
 "open_food_facts_attribution" = "Data from Open Food Facts (ODbL).";
+"verdict_details_show" = "View details";
+"verdict_details_hide" = "Hide details";
 "product_source_open_food_facts" = "Open Food Facts";
 "product_source_open_beauty_facts" = "Open Beauty Facts";
 "product_source_open_product_facts" = "Open Product Facts";
@@ -264,7 +266,7 @@
 "vegan_reason_vegan_seal" = "Vegan seal registered in Open Food Facts.";
 "vegan_reason_meat_category" = "Meat-substitute category registered in Open Food Facts.";
 "vegan_reason_additive_animal" = "Cause: %@ (animal-origin additive according to the catalogue).";
-"vegan_reason_additive_uncertain" = "Cause: %@ (uncertain origin according to the additive catalogue).";
+"vegan_reason_additive_uncertain" = "%@. The origin of the ingredient cannot be determined.";
 "vegan_reason_traces_only" = "Only traces of %@ from cross-contamination; the product is considered suitable.";
 "vegan_reason_seal_conflict" = "Vegan seal registered in Open Food Facts, but %@ is listed as animal-derived; check the label.";
 "vegan_reason_unverified_non_vegan_tag" = "Open Food Facts marks it as non-vegan, but I cannot find the responsible ingredient in the list; check the label.";
@@ -494,6 +496,15 @@
 "dish_photo_take_photo" = "Take a dish photo";
 "dish_photo_analyzing" = "Analyzing photo…";
 "dish_photo_error" = "The photo could not be analyzed.";
+"dish_food_pizza" = "pizza";
+"dish_food_burger" = "burger";
+"dish_food_pasta" = "pasta";
+"dish_food_salad" = "salad";
+"dish_food_fruit" = "fruit";
+"dish_food_vegetable" = "vegetable";
+"dish_food_cake" = "cake";
+"dish_food_dessert" = "dessert";
+"dish_food_ice_cream" = "ice cream";
 "env_category_reference" = "Category average: %1$@";
 "env_stages_title" = "Where the footprint comes from";
 "env_stage_agriculture" = "Agriculture";

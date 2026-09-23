@@ -150,6 +150,8 @@ Fuente: %@
 "quantity_label" = "Cantidad";
 "product_label" = "Producto";
 "open_food_facts_attribution" = "Datos de Open Food Facts (ODbL).";
+"verdict_details_show" = "Ver detalles";
+"verdict_details_hide" = "Ocultar detalles";
 "product_source_open_food_facts" = "Open Food Facts";
 "product_source_open_beauty_facts" = "Open Beauty Facts";
 "product_source_open_product_facts" = "Open Product Facts";
@@ -269,7 +271,7 @@ Fuente: %@
 "vegan_reason_vegan_seal" = "Sello vegano registrado en Open Food Facts.";
 "vegan_reason_meat_category" = "Categoría de sustituto de carne registrada en Open Food Facts.";
 "vegan_reason_additive_animal" = "Causa: %@ (aditivo de origen animal según el catálogo).";
-"vegan_reason_additive_uncertain" = "Causa: %@ (origen incierto según el catálogo de aditivos).";
+"vegan_reason_additive_uncertain" = "%@. No se puede determinar el origen del ingrediente.";
 "vegan_reason_traces_only" = "Solo trazas de %@ por contaminación cruzada; el producto se considera apto.";
 "vegan_reason_seal_conflict" = "Sello vegano registrado en Open Food Facts, pero %@ figura como de origen animal; revisa la etiqueta.";
 "vegan_reason_unverified_non_vegan_tag" = "Open Food Facts lo marca como no vegano, pero no encuentro el ingrediente responsable en la lista; revisa la etiqueta.";
@@ -499,6 +501,15 @@ Fuente: %@
 "dish_photo_take_photo" = "Hacer foto del plato";
 "dish_photo_analyzing" = "Analizando la foto…";
 "dish_photo_error" = "No se ha podido analizar la foto.";
+"dish_food_pizza" = "pizza";
+"dish_food_burger" = "hamburguesa";
+"dish_food_pasta" = "pasta";
+"dish_food_salad" = "ensalada";
+"dish_food_fruit" = "fruta";
+"dish_food_vegetable" = "verdura";
+"dish_food_cake" = "tarta";
+"dish_food_dessert" = "postre";
+"dish_food_ice_cream" = "helado";
 "env_category_reference" = "Media de la categoría: %1$@";
 "env_stages_title" = "De dónde viene la huella";
 "env_stage_agriculture" = "Agricultura";

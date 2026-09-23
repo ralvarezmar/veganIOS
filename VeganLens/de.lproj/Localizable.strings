@@ -145,6 +145,8 @@
 "quantity_label" = "Menge";
 "product_label" = "Produkt";
 "open_food_facts_attribution" = "Daten von Open Food Facts (ODbL).";
+"verdict_details_show" = "Details anzeigen";
+"verdict_details_hide" = "Details ausblenden";
 "product_source_open_food_facts" = "Open Food Facts";
 "product_source_open_beauty_facts" = "Open Beauty Facts";
 "product_source_open_product_facts" = "Open Product Facts";
@@ -264,7 +266,7 @@
 "vegan_reason_vegan_seal" = "Veganes Siegel in Open Food Facts registriert.";
 "vegan_reason_meat_category" = "Kategorie für Fleischersatz in Open Food Facts registriert.";
 "vegan_reason_additive_animal" = "Ursache: %@ (Zusatzstoff tierischen Ursprungs laut Katalog).";
-"vegan_reason_additive_uncertain" = "Ursache: %@ (unklare Herkunft laut Zusatzstoffkatalog).";
+"vegan_reason_additive_uncertain" = "%@. Die Herkunft des Bestandteils kann nicht bestimmt werden.";
 "vegan_reason_traces_only" = "Nur Spuren von %@ durch Kreuzkontamination; das Produkt gilt als geeignet.";
 "vegan_reason_seal_conflict" = "Veganes Siegel in Open Food Facts registriert, aber %@ ist als tierischen Ursprungs aufgeführt; prüfe das Etikett.";
 "vegan_reason_unverified_non_vegan_tag" = "Open Food Facts kennzeichnet es als nicht vegan, aber ich finde die verantwortliche Zutat nicht in der Liste; prüfe das Etikett.";
@@ -570,3 +572,12 @@
 "product_category_cosmetics_and_hygiene" = "Kosmetik und Hygiene";
 "product_category_pet_food" = "Tierfutter";
 "product_category_other" = "Andere";
+"dish_food_pizza" = "Pizza";
+"dish_food_burger" = "Burger";
+"dish_food_pasta" = "Pasta";
+"dish_food_salad" = "Salat";
+"dish_food_fruit" = "Obst";
+"dish_food_vegetable" = "Gemüse";
+"dish_food_cake" = "Kuchen";
+"dish_food_dessert" = "Dessert";
+"dish_food_ice_cream" = "Eis";

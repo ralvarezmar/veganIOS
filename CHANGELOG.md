@@ -8,6 +8,15 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Verdict cards now show a direct explanation for uncertain additives, including the additive code and name when available.
+- Data-source and cache details are hidden behind a compact “View details” action.
+
+## [1.22.1 (54)] - 2026-09-23
+
+### Fixed
+- Dish-photo results now localize recognized food names using the device language when a translation is available, matching Android.
+
 ## [1.22.0 (53)] - 2026-09-22
 
 ### Added

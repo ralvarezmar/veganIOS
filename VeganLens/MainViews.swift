@@ -1832,6 +1832,7 @@ private struct VeganBannerView: View {
     let fromCache: Bool
     let cachedAt: Date?
     @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
+    @State private var detailsExpanded = false
 
     var body: some View {
         let spec = bannerSpec
@@ -1864,26 +1865,28 @@ private struct VeganBannerView: View {
                     .accessibilityLabel(explanation)
             }
 
-            SourceCapsule(
-                text: LF("vegan_confidence_label", veganConfidenceText(analysis.confidence)),
-                foreground: spec.foreground
-            )
+            Button {
+                detailsExpanded.toggle()
+            } label: {
+                Text(detailsExpanded ? L("verdict_details_hide") : L("verdict_details_show"))
+                    .appFont(.subheadline, weight: .semibold)
+                    .foregroundStyle(spec.foreground)
+            }
+            .buttonStyle(.plain)
 
-            SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
+            if detailsExpanded {
+                SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
 
-            if fromCache {
-                SourceCapsule(text: L("offline_cache_badge"), foreground: spec.foreground)
-                if let cachedAt {
-                    SourceCapsule(
-                        text: cacheAgeText(cachedAt),
-                        foreground: spec.foreground
-                    )
+                if fromCache {
+                    SourceCapsule(text: L("offline_cache_badge"), foreground: spec.foreground)
+                    if let cachedAt {
+                        SourceCapsule(
+                            text: cacheAgeText(cachedAt),
+                            foreground: spec.foreground
+                        )
+                    }
                 }
             }
-
-            Text(L("open_food_facts_attribution"))
-                .appFont(.caption2)
-                .foregroundStyle(spec.foreground.opacity(0.9))
 
         }
         .padding(18)
@@ -2011,7 +2014,7 @@ private func verdictAnnouncement(for product: Product) -> String {
 func reasonNeedsOriginHint(_ source: VeganReasonSource, evidenceCount: Int) -> Bool {
     guard evidenceCount > 0 else { return false }
     switch source {
-    case .flavourDairyName, .structuredDoubtfulIngredient, .additiveUncertain:
+    case .flavourDairyName, .structuredDoubtfulIngredient:
         return true
     default:
         return false
@@ -2058,7 +2061,10 @@ private func veganReasonText(_ reason: VeganReason?) -> String? {
     case .additiveAnimal:
         reasonText = String(format: L("vegan_reason_additive_animal"), evidenceWithRemainder)
     case .additiveUncertain:
-        reasonText = String(format: L("vegan_reason_additive_uncertain"), evidenceWithRemainder)
+        let namedEvidence = visibleEvidence
+            .map { localizedAdditiveEvidence($0) }
+            .joined(separator: ", ")
+        reasonText = String(format: L("vegan_reason_additive_uncertain"), namedEvidence)
     case .tracesOnly:
         reasonText = String(format: L("vegan_reason_traces_only"), evidenceWithRemainder)
     case .sealConflict:
@@ -2066,13 +2072,19 @@ private func veganReasonText(_ reason: VeganReason?) -> String? {
     case .unverifiedNonVeganTag:
         reasonText = L("vegan_reason_unverified_non_vegan_tag")
     }
-    guard reasonNeedsOriginHint(reason.source, evidenceCount: reason.evidence.count) else {
+    guard reasonNeedsOriginHint(reason.source, evidenceCount: reason.evidence.count),
+          reason.source != .additiveUncertain else {
         return reasonText
     }
-    let originKey = reason.evidence.count == 1
-        ? "vegan_reason_check_origin_one"
-        : "vegan_reason_check_origin_other"
-    return "\(reasonText) \(L(originKey))"
+    return reasonText
+}
+
+private func localizedAdditiveEvidence(_ rawCode: String) -> String {
+    let code = normalizeAdditiveCode(rawCode)
+    guard let entry = additiveEntry(for: code), let commonName = entry.info.commonName else {
+        return code
+    }
+    return "\(code): \(commonName)"
 }
 
 private struct VeganBannerSpec {

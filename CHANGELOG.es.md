@@ -10,6 +10,15 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Las tarjetas de veredicto explican directamente los aditivos dudosos, incluyendo su código y nombre cuando están disponibles.
+- La fuente de datos y la información de caché quedan dentro de una acción compacta de «Ver detalles».
+
+## [1.22.1 (54)] - 2026-09-23
+
+### Corregido
+- Los resultados de la foto de plato ahora localizan los nombres de los alimentos reconocidos según el idioma del dispositivo cuando hay traducción disponible, igual que Android.
+
 ## [1.22.0 (53)] - 2026-09-22
 
 ### Añadido
