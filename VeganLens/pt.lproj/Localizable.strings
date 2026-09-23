@@ -145,6 +145,8 @@
 "quantity_label" = "Quantidade";
 "product_label" = "Produto";
 "open_food_facts_attribution" = "Dados do Open Food Facts (ODbL).";
+"verdict_details_show" = "Ver detalhes";
+"verdict_details_hide" = "Ocultar detalhes";
 "product_source_open_food_facts" = "Open Food Facts";
 "product_source_open_beauty_facts" = "Open Beauty Facts";
 "product_source_open_product_facts" = "Open Product Facts";
@@ -264,7 +266,7 @@
 "vegan_reason_vegan_seal" = "Selo vegan registado no Open Food Facts.";
 "vegan_reason_meat_category" = "Categoria de substituto de carne registada no Open Food Facts.";
 "vegan_reason_additive_animal" = "Causa: %@ (aditivo de origem animal segundo o catálogo).";
-"vegan_reason_additive_uncertain" = "Causa: %@ (origem incerta segundo o catálogo de aditivos).";
+"vegan_reason_additive_uncertain" = "%@. Não é possível determinar a origem do ingrediente.";
 "vegan_reason_traces_only" = "Apenas vestígios de %@ por contaminação cruzada; o produto é considerado adequado.";
 "vegan_reason_seal_conflict" = "Selo vegan registado no Open Food Facts, mas %@ é indicado como de origem animal; verifique o rótulo.";
 "vegan_reason_unverified_non_vegan_tag" = "Open Food Facts marca-o como não vegan, mas não encontro o ingrediente responsável na lista; verifique o rótulo.";

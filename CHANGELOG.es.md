@@ -10,6 +10,10 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Las tarjetas de veredicto explican directamente los aditivos dudosos, incluyendo su código y nombre cuando están disponibles.
+- La fuente de datos y la información de caché quedan dentro de una acción compacta de «Ver detalles».
+
 ## [1.22.1 (54)] - 2026-09-23
 
 ### Corregido
