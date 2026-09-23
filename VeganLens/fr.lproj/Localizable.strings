@@ -50,6 +50,11 @@
 "scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Code-barres détecté";
 "scanner_confirmation_subtitle" = "Ouverture du résultat…";
+"scanner_feedback_title" = "Retour du scanner";
+"scanner_haptics_title" = "Vibration à la détection";
+"scanner_sound_title" = "Son à la détection";
+"scanner_feedback_description" = "Choisissez une vibration et un son optionnels lorsqu’un code est détecté automatiquement.";
+"scanner_retry" = "Réessayer le scanner";
 "loading_product" = "Interrogation des bases de données…";
 "loading_product_source" = "Interrogation de %1$@…";
 "loading_product_siblings" = "Interrogation des bases associées…";
@@ -565,3 +570,12 @@
 "product_category_cosmetics_and_hygiene" = "Cosmétiques et hygiène";
 "product_category_pet_food" = "Aliments pour animaux";
 "product_category_other" = "Autres";
+"dish_food_pizza" = "pizza";
+"dish_food_burger" = "hamburger";
+"dish_food_pasta" = "pâtes";
+"dish_food_salad" = "salade";
+"dish_food_fruit" = "fruit";
+"dish_food_vegetable" = "légume";
+"dish_food_cake" = "gâteau";
+"dish_food_dessert" = "dessert";
+"dish_food_ice_cream" = "glace";

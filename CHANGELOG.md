@@ -8,6 +8,20 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.22.1 (54)] - 2026-09-23
+
+### Fixed
+- Dish-photo results now localize recognized food names using the device language when a translation is available, matching Android.
+
+## [1.22.0 (53)] - 2026-09-22
+
+### Added
+- Scanner feedback can optionally use vibration or sound when a barcode is detected.
+- The scanner includes a clear retry action for restarting automatic detection.
+
+### Changed
+- Barcode detection remains automatic and now gives immediate, configurable feedback before opening the result.
+
 ## [1.21.0 (52)] - 2026-09-17
 
 ### Changed

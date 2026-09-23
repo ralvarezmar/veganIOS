@@ -10,6 +10,20 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.22.1 (54)] - 2026-09-23
+
+### Corregido
+- Los resultados de la foto de plato ahora localizan los nombres de los alimentos reconocidos según el idioma del dispositivo cuando hay traducción disponible, igual que Android.
+
+## [1.22.0 (53)] - 2026-09-22
+
+### Añadido
+- El escáner permite activar opcionalmente vibración o sonido al detectar un código.
+- El escáner incluye una acción clara para reiniciar la detección automática.
+
+### Cambiado
+- La detección de códigos sigue siendo automática y ahora ofrece una respuesta inmediata y configurable antes de abrir el resultado.
+
 ## [1.21.0 (52)] - 2026-09-17
 
 ### Cambiado

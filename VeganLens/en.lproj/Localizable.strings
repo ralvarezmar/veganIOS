@@ -50,6 +50,11 @@
 "scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Barcode detected";
 "scanner_confirmation_subtitle" = "Opening the result…";
+"scanner_feedback_title" = "Scanner feedback";
+"scanner_haptics_title" = "Vibration on detection";
+"scanner_sound_title" = "Sound on detection";
+"scanner_feedback_description" = "Choose optional vibration and sound when a barcode is detected automatically.";
+"scanner_retry" = "Retry scanner";
 "loading_product" = "Querying databases…";
 "loading_product_source" = "Querying %1$@…";
 "loading_product_siblings" = "Querying the related databases…";
@@ -489,6 +494,15 @@
 "dish_photo_take_photo" = "Take a dish photo";
 "dish_photo_analyzing" = "Analyzing photo…";
 "dish_photo_error" = "The photo could not be analyzed.";
+"dish_food_pizza" = "pizza";
+"dish_food_burger" = "burger";
+"dish_food_pasta" = "pasta";
+"dish_food_salad" = "salad";
+"dish_food_fruit" = "fruit";
+"dish_food_vegetable" = "vegetable";
+"dish_food_cake" = "cake";
+"dish_food_dessert" = "dessert";
+"dish_food_ice_cream" = "ice cream";
 "env_category_reference" = "Category average: %1$@";
 "env_stages_title" = "Where the footprint comes from";
 "env_stage_agriculture" = "Agriculture";

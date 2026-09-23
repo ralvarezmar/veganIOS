@@ -50,6 +50,11 @@
 "scanner_zoom" = "Zoom";
 "scanner_confirmation" = "Código detectado";
 "scanner_confirmation_subtitle" = "Abriendo el resultado…";
+"scanner_feedback_title" = "Respuesta del escáner";
+"scanner_haptics_title" = "Vibración al detectar";
+"scanner_sound_title" = "Sonido al detectar";
+"scanner_feedback_description" = "Elige si quieres vibración y sonido opcionales cuando se detecte un código automáticamente.";
+"scanner_retry" = "Reintentar escáner";
 "loading_product" = "Consultando bases de datos…";
 "loading_product_source" = "Consultando %1$@…";
 "loading_product_siblings" = "Consultando las bases hermanas…";
@@ -494,6 +499,15 @@ Fuente: %@
 "dish_photo_take_photo" = "Hacer foto del plato";
 "dish_photo_analyzing" = "Analizando la foto…";
 "dish_photo_error" = "No se ha podido analizar la foto.";
+"dish_food_pizza" = "pizza";
+"dish_food_burger" = "hamburguesa";
+"dish_food_pasta" = "pasta";
+"dish_food_salad" = "ensalada";
+"dish_food_fruit" = "fruta";
+"dish_food_vegetable" = "verdura";
+"dish_food_cake" = "tarta";
+"dish_food_dessert" = "postre";
+"dish_food_ice_cream" = "helado";
 "env_category_reference" = "Media de la categoría: %1$@";
 "env_stages_title" = "De dónde viene la huella";
 "env_stage_agriculture" = "Agricultura";

@@ -26,7 +26,7 @@ struct DishPhotoView: View {
                                 .foregroundStyle(.secondary)
                         } else {
                             ForEach(analysis.visibleFoods, id: \.self) { food in
-                                Label(food.capitalized, systemImage: "circle.fill")
+                                Label(localizedFoodName(food).capitalized, systemImage: "circle.fill")
                             }
                         }
                         Text(
@@ -99,5 +99,30 @@ struct DishPhotoView: View {
                 }
             }
         }
+    }
+}
+
+private func localizedFoodName(_ food: String) -> String {
+    switch food.lowercased() {
+    case "pizza":
+        return L("dish_food_pizza")
+    case "burger", "hamburger":
+        return L("dish_food_burger")
+    case "pasta":
+        return L("dish_food_pasta")
+    case "salad":
+        return L("dish_food_salad")
+    case "fruit":
+        return L("dish_food_fruit")
+    case "vegetable", "vegetables":
+        return L("dish_food_vegetable")
+    case "cake":
+        return L("dish_food_cake")
+    case "dessert":
+        return L("dish_food_dessert")
+    case "ice cream":
+        return L("dish_food_ice_cream")
+    default:
+        return food
     }
 }
