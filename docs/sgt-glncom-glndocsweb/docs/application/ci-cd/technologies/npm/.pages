@@ -1,0 +1,6 @@
+nav:
+
+  - Scaffolding: scaffolding
+  - Snapshot-Release: immutable-images
+  - Artifacts: artifacts
+  - Library: library

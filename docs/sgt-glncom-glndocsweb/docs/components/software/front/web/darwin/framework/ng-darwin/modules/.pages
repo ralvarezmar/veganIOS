@@ -1,0 +1,6 @@
+nav:
+
+  - index.md
+  - Config: config
+  - Security: 'https://automatic-doodle-rew2y31.pages.github.io/modules/_ng-darwin_security.html" target="_blank'
+  - Logger: logger

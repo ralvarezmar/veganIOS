@@ -1,0 +1,6 @@
+---
+nav:
+    - 'firewall-rules.md'
+    - Jfrog Artifactory Repository: jfrog
+    - Ephemeral Runners: ephemeral-runners
+    - Rulesets: rulesets

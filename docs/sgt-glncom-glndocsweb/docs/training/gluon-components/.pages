@@ -1,0 +1,18 @@
+---
+nav:
+
+  - 'index.md'
+  - APIs: apis
+  - Backend: backend
+  - CI/CD: ci-cd
+  - Exception Management: exception-management
+  - Front: front
+  - Gluon PaaS: gluon-paas
+  - IaC: iac
+  - Insights: insights
+  - Libraries: libraries
+  - Processes: processes
+  - Release Management: release-management
+  - Security: security
+  - Testing: testing
+  - Vault: vault

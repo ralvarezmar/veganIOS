@@ -1,0 +1,7 @@
+---
+nav:
+  - Architecture: index.md
+  - Reference Architectures: reference-architecture
+  - Design Guides: guides
+  - Technical stack: tech-stack
+  - Glossary: glossary

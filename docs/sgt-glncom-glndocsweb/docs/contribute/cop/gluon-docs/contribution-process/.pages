@@ -1,0 +1,8 @@
+---
+nav:
+    - index.md
+    - Quick Start Guide: gd-quick-start.md
+    - Contribution Journey: contributor-journey.md
+    - Editing Standard: editing-standard.md
+    - Style Guide: style-guide.md
+    - Advanced Topics: advanced-topics.md

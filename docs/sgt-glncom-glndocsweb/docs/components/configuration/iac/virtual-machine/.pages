@@ -1,0 +1,6 @@
+---
+nav:
+
+  - index.md
+  - Provision Virtual Machine: vm.md
+  - Placement Engine: placement.md

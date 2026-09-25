@@ -1,0 +1,35 @@
+properties:
+  aud: bussinessAudience
+  claims: sub;acr;scope;clientId;secCtx;customClaim;upnM;client_id
+  private-key-id: JWSID_PRIVATE_KEY_ID_VALUE
+  sca-iss: https://ciam.cip.com
+securitySchemes:
+  scopes: cards.read
+policies:
+  gln-whiteList:
+    configuration:
+      IpHeaders:
+        HeaderIp:
+          Host:
+            - 10.1.1.1
+            - 10.1.1.2
+          X-Forwarded-For:
+            - 10.1.1.3
+            - 10.1.1.4
+          Forwarded:
+            - 10.1.1.5
+            - 10.1.1.6
+          X-Client-IP:
+            - 10.1.1.7
+            - 10.1.1.8
+operations:
+  /intracli/touchpoint-api-gluon-poc-nlb2:
+    get:
+      securitySchemes:
+        scopes: cards.read
+      policies:
+  /intracli/test-noauth:
+    get:
+      securitySchemes:
+        scopes: cards.read
+      policies:

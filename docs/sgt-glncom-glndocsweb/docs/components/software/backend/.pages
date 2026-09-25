@@ -1,0 +1,6 @@
+nav:
+  - 'index.md'
+  - Java components: java
+  - NodeJS components: nodejs
+  - Python Components: python
+  - Common backend documentation: commons

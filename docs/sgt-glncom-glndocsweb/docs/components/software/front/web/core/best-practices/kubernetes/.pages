@@ -1,0 +1,5 @@
+nav:
+
+  - HPA (Horizontal Pod Autoscaling): hpa.md
+  - Security Context: security-context.md
+  

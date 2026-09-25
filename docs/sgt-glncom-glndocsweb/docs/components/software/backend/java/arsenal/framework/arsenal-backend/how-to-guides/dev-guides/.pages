@@ -1,0 +1,5 @@
+nav:
+    - Using Lombok: 'use-lombok.md'
+    - Using MapStruct: 'use-mapstruct.md'
+    - General Troubleshooting: 'troubleshooting-general.md'
+    - Troubleshooting - Java: 'troubleshooting-java.md'

@@ -1,0 +1,3 @@
+nav:
+        - Health Check: 'health-check.md'
+        - Metrics and Monitoring: 'metrics-and-monitoring.md'

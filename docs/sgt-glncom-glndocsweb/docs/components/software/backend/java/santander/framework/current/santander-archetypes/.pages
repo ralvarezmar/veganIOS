@@ -1,0 +1,5 @@
+---
+nav:
+
+  - Microservice Archetype: santander-spring-boot-archetype-microservice
+  - Library Archetype: santander-spring-boot-archetype-library

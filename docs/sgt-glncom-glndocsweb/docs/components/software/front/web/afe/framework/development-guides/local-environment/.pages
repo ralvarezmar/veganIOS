@@ -1,0 +1,5 @@
+nav:
+
+  - index.md
+  - Verdaccio: verdaccio
+  - Proxy: proxy.md

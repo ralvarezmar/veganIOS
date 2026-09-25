@@ -1,0 +1,3 @@
+nav:
+  - Scaffolding: scaffolding
+  - CI/CD: helm-cd-workflow.md

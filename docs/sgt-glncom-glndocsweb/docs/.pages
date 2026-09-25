@@ -1,0 +1,10 @@
+nav:
+  - Home: 'index.md'
+  - Getting Started: getting-started
+  - Applications: application
+  - Architecture: architecture
+  - Components: components
+  - Training: training
+  - Changelog: changelog
+  - Contribution: contribute
+  - My Gluon: local

@@ -1,0 +1,5 @@
+nav:
+
+  - index.md
+  - Debugging: debugging.md
+  - Plugins: plugins

@@ -1,0 +1,7 @@
+nav:
+    - index.md
+    - Context: context.md
+    - Principles: principles.md
+    - Technical Positions: technical-positions.md
+    - Patterns: patterns.md
+    - Vocabulary: vocabulary.md

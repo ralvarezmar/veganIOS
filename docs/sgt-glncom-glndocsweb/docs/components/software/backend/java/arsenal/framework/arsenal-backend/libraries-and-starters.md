@@ -1,0 +1,26 @@
+# Arsenal Backend Framework Libraries and Starters {!include-markdown '../snippets/versions.md' start='<!tag:back-version-schema>' end='<!end:back-version-schema>'!}
+
+{!include-markdown '../snippets/versions.md' start='<!tag:back-current>' end='<!end:back-current>'!}
+
+This document provides a comprehensive list of all the starters and libraries used in the project, along with a brief description of their responsibilities. These components are essential for configuring and
+implementing various functionalities within the application.
+
+| Starter/Lib                                                                                     | Description                                                                                                                                           |
+|-------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [arsenal-backend-api-starter](how-to-guides/api/using-contract-first.md)                        | Starter for API configurations and implementations, providing necessary tools and settings for building and exposing RESTful APIs.                    |
+| [arsenal-backend-distributed-caching](how-to-guides/caching/distributed-cache.md)               | Starter for distributed caching configurations and implementations, enabling efficient caching mechanisms across multiple nodes.                      |
+| [arsenal-backend-embeddedcrypto](how-to-guides/security/embedded-crypto.md)                     | Starter for embedded encryption configuration, providing tools and settings for secure data encryption and decryption within the application.         |
+| [arsenal-backend-embeddedmainframe](how-to-guides/integration/use-altair-client.md)             | Starter for embedded mainframe configurations and implementations, facilitating integration with mainframe systems.                                   |
+| arsenal-backend-error-starter                                                                   | Starter for error handling configurations and implementations, offering standardized error responses and logging mechanisms.                          |
+| [arsenal-backend-gluon-error-starter](how-to-guides/execution-and-runtime/error-handling.md)    | Starter for Gluon error handling configurations and implementations, providing specialized error handling for Gluon-based applications.               |
+| arsenal-backend-lib-minicrypto                                                                  | Library for minimal cryptographic functionalities, offering lightweight encryption and decryption utilities.                                          |
+| arsenal-backend-logback-plugin                                                                  | Plugin for Logback logging configurations and implementations, enabling advanced logging features and customizations using Logback.                   |
+| arsenal-backend-telemetry-log-starter                                                           | Starter for telemetry logging configurations and implementations, providing tools for capturing and analyzing application telemetry data.             |
+| [arsenal-backend-test-starter](how-to-guides/testing/integration-tests.md)                      | Starter for testing utilities and configurations, offering tools and settings for unit, integration, and end-to-end testing.                          |
+| [arsenal-backend-web-channel-holder-starter](how-to-guides/integration/use-altair-client.md)    | Starter for web channel holder configurations and implementations, facilitating management of web communication channels.                             |
+| arsenal-backend-web-entity-holder-starter                                                       | Starter for web entity holder configurations and implementations, providing tools for managing web entities and their lifecycle.                      |
+| [arsenal-backend-web-security-channel-holder-starter](how-to-guides/security/channel-holder.md) | Starter for web security channel holder configurations and implementations, offering security features for web communication channels.                |
+| [arsenal-global-observability-starter](how-to-guides/observability/observability.md)            | Starter for global observability configurations and implementations, providing tools for monitoring and analyzing application performance and health. |
+| [arsenal-altair-codegen-maven-plugin](how-to-guides/integration/use-altair-maven-plugin.md)     | Maven plugin for Altair code generation, facilitating the integration of Altair code generation into Maven build processes.                           |
+| [arsenal-jpa-codegen-maven-plugin](tutorials/code-generator-jpa-maven-plugin.md)                | Maven plugin for JPA code generation, automating the creation of JPA entities and repositories.                                                       |
+| [arsenal-openapi-generator](tutorials/code-generator-openapi-maven-plugin.md)                   | Library for generating OpenAPI specifications, facilitating the creation and maintenance of API documentation.                                        |

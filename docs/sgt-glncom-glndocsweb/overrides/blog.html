@@ -1,0 +1,70 @@
+{% extends "main.html" %}
+
+<!-- Page content -->
+{% block container %}
+<div class="md-content" data-md-component="content">
+    <div class="md-content__inner">
+
+        <!-- Header -->
+        <header class="md-typeset">
+            <h1>Changelog</h1>
+            <p>Stay updated on everything we ship. Subscribe via <a
+                    href="https://gluon.gs.corp/community/docs/latest/feed_rss_created.xml" target="_blank">RSS</a> or
+                follow us
+                on <a
+                    href="https://engage.cloud.microsoft/main/org/santander.com/topics/eyJfdHlwZSI6IlRvcGljIiwiaWQiOiJFVF84MjliZjhmMS0zOTIxLTRjOTQtODI4MC0yNjhjODFiMWIyNTgifQ/all"
+                    target="_blank">Yammer</a>.</p>
+        </header>
+
+        <!-- Posts -->
+        <div class="blog-posts">
+            {% for post in posts %}
+            <div class="blog-post">
+                <div class="md-post__meta md-meta">
+                    <ul class="md-meta__list">
+                
+                        <!-- Post date -->
+                        <li class="md-meta__item">
+                            <time datetime="{{ post.config.date.created }}">
+                                {{- post.config.date.created | date -}}
+                            </time>
+                            {#- Collapse whitespace -#}
+                        </li>
+                
+                        <!-- Post categories -->
+                        {% if post.categories %}
+                        <li class="md-meta__item">
+                            {{ lang.t("blog.categories.in") }}
+                            {% for category in post.categories %}
+                            <a href="{{ category.url | url }}" class="md-meta__link">
+                                {{- category.title -}}
+                            </a>
+                            {%- if loop.revindex > 1 %}, {% endif -%}
+                            {% endfor -%}
+                        </li>
+                        {% endif %}
+                    </ul>
+                
+                    <!-- Draft marker -->
+                    {% if post.config.draft %}
+                    <span class="md-draft">
+                        {{ lang.t("blog.draft") }}
+                    </span>
+                    {% endif %}
+                </div>
+                <!-- Title -->
+                <h2 class="blog-title"><a href="{{ post.url | url }}">{{ post.title }}</a></h2>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if pagination %}
+        {% block pagination %}
+        {% include "partials/pagination.html" %}
+        {% endblock %}
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

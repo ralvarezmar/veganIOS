@@ -1,0 +1,8 @@
+---
+nav:
+  - index.md
+  - Photon Embedded Crypto: photon-quarkus-embedded-crypto
+  - Photon Error Handler: photon-quarkus-error-handler
+  - Photon Altair Connector: photon-quarkus-altair-connector
+  - Photon Telemetry: photon-telemetry
+  - Photon Observability: photon-quarkus-observability

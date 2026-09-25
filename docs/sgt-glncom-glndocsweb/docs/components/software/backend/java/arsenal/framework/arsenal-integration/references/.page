@@ -1,0 +1,4 @@
+nav:
+  - Best Practices: 'best-practices.md'
+  - Header Sanitization: 'header-sanitization.md'
+  - Configuration: 'all-configuration-fields.md'

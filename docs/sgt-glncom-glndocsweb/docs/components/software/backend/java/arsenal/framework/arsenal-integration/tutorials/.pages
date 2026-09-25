@@ -1,0 +1,5 @@
+nav:
+      - Arsenal Integration OpenAPI Maven Plugin: 'integration-openapi-maven-plugin.md'
+      - Arsenal Integration Native Compilation: 'native-compilation.md'
+      - Quickstart Arsenal Integration Rest Archetype: 'archetype-rest.md'
+      - Migration Guide Arsenal Brazil to Arsenal Gluon: 'migration-guide-3.8.x-to-4.x.x.md'

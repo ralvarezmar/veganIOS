@@ -1,0 +1,196 @@
+site_name: Gluon Docs
+docs_dir: !ENV [GLUON_DOCS_DIR, 'docs']
+site_url: !ENV [GLUON_SITE_URL, 'https://gluon.gs.corp/community/docs/']
+repo_url: https://github.com/santander-group-shared-assets/sgt-glncom-glndocsweb
+repo_name: sgt-glncom-glndocsweb
+strict: true
+
+validation:
+  nav:
+    omitted_files: info
+    not_found: warn
+    absolute_links: info
+  links:
+    not_found: warn
+    anchors: warn
+    absolute_links: info
+    unrecognized_links: warn 
+
+
+theme:
+  icon:
+    repo: fontawesome/brands/git-alt
+    logo: gluon/favicon
+  language: en
+  name: material
+  custom_dir: overrides
+  favicon: assets/images/favicon.svg
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.path
+    - content.code.copy
+    - navigation.top
+    - navigation.prune
+    - navigation.instant # New feature
+
+ # Color palette
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: gluon
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: gluon
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+  static_templates:
+    - maintenance.html
+
+  font:
+    text: Santander Text
+    #text: Roboto
+    code: Roboto Mono
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+extra_javascript:
+  - assets/javascripts/extra.js
+  - assets/javascripts/tablesort.js
+  - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js  
+  - https://viewer.diagrams.net/js/viewer-static.min.js
+  - javascripts/drawio-reload.js
+
+copyright: Copyright &copy; Grupo Santander - Gluon 2024
+
+extra:
+  generator: true
+  version:
+    provider: mike
+    default: latest
+
+plugins:
+  - search:
+      lang: en
+  - markdown-exec
+  - mike:
+      deploy_prefix: html
+  - glightbox
+  - awesome-pages
+  - include-markdown:
+      opening_tag: "{!"
+      closing_tag: "!}"
+      comments: false
+  - tags:
+      tags_allowed:
+        - Improvement
+        - Feature
+        - Retired
+        - Fix
+        - dictionary
+        - glossary
+        - faqs
+        - video
+        - AI
+        - Architecture
+        - APIs
+        - Audit Compliance
+        - Back
+        - Banksphere
+        - Data
+        - Documentation
+        - Events
+        - "UX & Accessibility"   # añadidas comillas para que no de error
+        - Gravity
+        - Infrastructure CICD
+        - Insights
+        - Quality
+        - Management
+        - Marketplace
+        - Mobile
+        - Process
+        - Release
+        - Security
+        - Software CICD
+        - Testing
+        - SDLC Tools
+        - Web
+  - spellcheck:
+      backends:  # the backends you want to use
+        - codespell:  # or nested configs
+            dictionaries: [clear, rare]
+      known_words: known_words.txt
+  - drawio
+  - minify_html
+  - blog:
+      blog_dir: changelog
+      post_dir: "{blog}/posts"
+      categories_allowed:
+        - AI
+        - Architecture
+        - APIs
+        - Audit Compliance
+        - Back
+        - Banksphere
+        - Data
+        - Documentation
+        - Events
+        - "UX & Accessibility"   # añadidas comillas para que no de error
+        - Gravity
+        - Infrastructure CICD
+        - Insights
+        - Quality
+        - Management
+        - Marketplace
+        - Mobile
+        - Process
+        - Release
+        - Security
+        - Software CICD
+        - Testing
+        - SDLC Tools
+        - Web
+      archive_date_format: yyyy
+  - rss:
+      match_path: "changelog/posts/.*"
+      abstract_chars_count: -1
+      date_from_meta:
+        as_creation: date.created
+        as_update: date.updated
+
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - pymdownx.details
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.snippets
+  - attr_list
+  - def_list
+  - md_in_html
+  - tables
+  - footnotes
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - overrides/.icons
+  - pymdownx.tasklist:
+      custom_checkbox: true

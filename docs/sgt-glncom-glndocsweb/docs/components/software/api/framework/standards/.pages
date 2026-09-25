@@ -1,0 +1,9 @@
+---
+nav:
+      - API Standards: index.md
+      - General: std-general.md
+      - Design: design
+      - Security : std-security.md
+      - Patterns: patterns
+      - RFCs: std-rfcs.md
+      - Revision Control: std-revision.md

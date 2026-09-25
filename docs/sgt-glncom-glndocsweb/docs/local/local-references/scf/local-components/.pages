@@ -1,0 +1,42 @@
+nav:
+
+  - index.md
+  - (SCF) Airflow Environment Settings: mwaa-environment-settings.md
+  - (SCF) Airflow Requirements: mwaa-requirements.md
+  - (SCF) Ansible Execute: ansible-execute.md
+  - (SCF) Apigee: apigee.md
+  - (SCF) Apigee Product: apigee-product.md
+  - (SCF) AWS QuickSight: aws-quicksight.md
+  - (SCF) Camunda: camunda.md
+  - (SCF) Control-M: controlm.md
+  - (SCF) Helm Deploy: helm-deploy.md
+  - (SCF) Image Upload: image-upload.md
+  - (SCF) Java Microservice: java-maven.md
+  - (SCF) Kafka Connect Connectors EKS: kafka-connect-connectors-eks.md
+  - (SCF) Liquibase Athena: liquibase-athena.md
+  - (SCF) Liquibase DocumentDB: liquibase-documentdb.md
+  - (SCF) Liquibase MSSQL: liquibase-mssql.md
+  - (SCF) Liquibase MySQL: liquibase-mysql.md
+  - (SCF) Liquibase Oracle: liquibase-oracle.md
+  - (SCF) Liquibase PostgreSQL: liquibase-postgresql.md
+  - (SCF) Liquibase Snowflake: liquibase-snowflake.md
+  - (SCF) Maven EMR Microservice: maven-emr-micro.md
+  - (SCF) Maven Nakedmule: maven-nakedmule.md
+  - (SCF) .NET Framework SGS: net-framework-sgs.md
+  - (SCF) .NET Framework Library: netframework-library.md
+  - (SCF) .NET microservice: dotnet-microservice.md
+  - (SCF) .NET Library: dotnet-library.md
+  - (SCF) Next JS FRONT: nextjs-micro.md
+  - (SCF) Node Lambda: node-lambda.md
+  - (SCF) Node S3: node-s3.md
+  - (SCF) NodeJs Microservice: nodejs-micro.md
+  - (SCF) Node S3 Assets: node-assets.md
+  - (SCF) PHP microservice: php-micro.md
+  - (SCF) PowerBI Library: powerbi-lib.md
+  - (SCF) Provenir: provenir.md
+  - (SCF) Python EMR: python-emr.md
+  - (SCF) Python Lambda: python-lambda.md
+  - (SCF) Python Sagemaker: python-sagemaker.md
+  - (SCF) Python S3: python-s3.md
+  - (SCF) Python Virtual Environment: python-venv.md
+  - (SCF) S3 Upload: s3-upload.md

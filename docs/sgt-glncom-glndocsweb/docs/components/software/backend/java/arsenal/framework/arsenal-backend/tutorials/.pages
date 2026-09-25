@@ -1,0 +1,9 @@
+nav:
+      - Quickstart Arsenal: 'quickstart-arsenal.md'
+      - Quickstart Message Driven: 'quickstart-message-driven.md'
+      - Quickstart Mongo DB: 'quickstart-mongo-db.md'
+      - Quickstart Arsenal Starter: 'quickstart-arsenal-starter.md'
+      - Migration Guide Arsenal Brazil to Arsenal Gluon: 'migration-backend-gluon.md'
+      - Arsenal JPA Code Generator Maven Plugin: 'code-generator-jpa-maven-plugin.md'
+      - Arsenal OpenaAPI Code Generator Maven Plugin: 'code-generator-openapi-maven-plugin.md'
+      - Arsenal Native Compilation: 'native-compilation.md'

@@ -1,0 +1,72 @@
+swagger: '2.0'
+info:
+  title: Example 2
+  version: 1.0.0-SNAPSHOT
+  description: This example is based on example 1 and performs several actions to adapt the output of our API so that it remains aligned with the dictionary
+               These actions are
+               - Simplification, remove unwanted attributes from an object
+               - Replacement, replace the reference to an objetct by its definition
+               - Tailoring (replacement + simplification)
+schemes:
+  - https
+basePath: /training
+tags:
+  - name: example1
+    description: Example 1
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  '/withholdings/{withholding_id}':
+    get:
+      description: |
+        Validating objects.
+      produces:
+        - application/json
+      parameters:
+        - name: withholding_id
+          type: string
+          required: true
+          in: path
+          description: withholding identifier
+          x-example: 1234567
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Withholding'
+          headers: {}
+
+definitions:
+
+#Simplification: only interested in withholdingReferenceId, withHoldingAmount and creationDate attributes
+#Replacement: in withHoldingAmount attribute, reference to Amount has been changed by its explicit definition
+#Tailoring: in withHoldingAmount definition, currency attribute has been removed
+ Withholding :
+    description : "This structure contains all information related to a Withholding. A Withholding exists inside an Account."
+    type : "object"
+    properties :
+       withholdingReferenceId :
+          type : "string"
+          description : "Withholding Reference."
+          example : "2020-01-17.01.02.02.123456EH"
+       withHoldingAmount :
+         type : "object"
+         required :
+         - amount
+         - currency
+         properties :
+            amount :
+               description : "Data in ISO 20022 format containing up to 18 digits from which 5 may be decimals. Separation is a point."
+               type : "number"
+               minimum : -9999999999999
+               maximum : 9999999999999
+               example : 99.99    
+       creationDate :
+          description : "Withholding start date ISO 8601 Complete Data format (YYYY-MM-DD) where YYYY = four-digit year, MM = two-digit month (01=January, etc.) and DD = two-digit day of month (01 through 31)"
+          type : "string"
+          format : "date"
+          example : "2020-03-03"       
+
+    

@@ -1,0 +1,6 @@
+nav:
+  - Darwin Java Microservice standars: microservice-standars.md
+  - Darwin Java Microservice configuration: microservice-configuration.md
+  - Darwin Java error management: error-management.md
+  - Darwin Java resilience: resilience.md
+  

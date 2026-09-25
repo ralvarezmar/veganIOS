@@ -1,0 +1,4 @@
+nav:
+    - Important Components Of Spring Cloud Stream: 'important-components-spring.md'
+    - Distributed Cache References: 'distributed-cache.md'
+    - Configuration: 'all-configuration-fields.md'

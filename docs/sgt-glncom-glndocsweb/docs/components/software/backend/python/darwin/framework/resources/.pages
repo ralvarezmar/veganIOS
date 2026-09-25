@@ -1,0 +1,6 @@
+nav:
+
+  - fastapi-endpoint-decorators.md
+  - fastapi-technical-middleware.md
+  - how-to-use-darwin-python-microservice.md
+  - resilience.md

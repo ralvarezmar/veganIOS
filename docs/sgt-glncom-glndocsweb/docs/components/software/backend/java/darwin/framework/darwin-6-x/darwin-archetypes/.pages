@@ -1,0 +1,6 @@
+---
+nav:
+
+  - Darwin Microservice Archetype: darwin-spring-boot-archetype-microservice
+  - Darwin Library Archetype: darwin-spring-boot-archetype-library
+  - Darwin Function Archetype: darwin-spring-boot-archetype-function

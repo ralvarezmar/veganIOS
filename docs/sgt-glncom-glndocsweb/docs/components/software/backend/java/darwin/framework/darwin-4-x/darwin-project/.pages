@@ -1,0 +1,19 @@
+---
+nav:
+
+  - Darwin Authentication Security: darwin-spring-boot-security-authentication
+  - Darwin Authorization Security: darwin-spring-boot-security-authorization
+  - Darwin Batch Applications: darwin-spring-boot-batch
+  - Darwin Cache: darwin-spring-boot-cache
+  - Darwin CodeTables service: darwin-spring-boot-codetables
+  - Darwin Core: darwin-spring-boot-core
+  - Darwin Extended-Error's error customization: darwin-spring-boot-extended-error
+  - Darwin Events: darwin-spring-boot-events
+  - Darwin GraphQL Applications: darwin-spring-boot-graphql
+  - Darwin Logging (Observability): darwin-spring-boot-logging
+  - Darwin Metrics: darwin-spring-boot-metrics
+  - Darwin Omnichannel: darwin-spring-boot-omnichannel
+  - Darwin Partenon transactions: darwin-spring-boot-partenon
+  - Darwin Starters: darwin-spring-boot-starters
+  - Darwin Testing toolkit: darwin-spring-boot-test
+  - Darwin Web Service facilities: darwin-spring-boot-webservice

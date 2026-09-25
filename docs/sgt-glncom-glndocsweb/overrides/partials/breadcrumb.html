@@ -1,0 +1,56 @@
+{#-
+  This file was automatically generated - do not edit
+-#}
+{% macro render(nav_item, path, level) %}
+  
+{#-
+  First active element
+-#}
+  {% if nav_item.children and nav_item.active %}
+    {% set expanded = "navigation.expand" in features %}
+    {% set active = nav_item.active or expanded %}
+    {% set checked = "checked" if nav_item.active %}
+    {% set indexes = [] %}
+    
+    {% if "navigation.indexes" in features %}
+      {% for nav_item in nav_item.children %}
+        {% if nav_item.is_index and not index is defined %}
+          {% set _ = indexes.append(nav_item) %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    
+    {% if not indexes %}
+      {{ nav_item.title }} &raquo; 
+    {% else %}
+      {% set index = indexes | first %}
+      <a href="{{ index.url | url }}">{{ nav_item.title }}</a> 
+      {%  if index != page %}
+      &raquo;
+      {% endif %}
+    {% endif %}
+
+    {% for nav_item in nav_item.children %}
+      {% if not indexes or nav_item != indexes | first %}
+        {{ render(nav_item, path ~ "_" ~ loop.index, level + 1) }}
+      {% endif %}
+    {% endfor %}
+
+  {% elif nav_item == page  %}
+
+    
+    <a href="{{ nav_item.url | url }}">
+    {{ nav_item.title }} 
+    </a>
+
+
+
+  {% else %}
+    {% if level == 1 %}
+      <a href="{{ nav_item.url | url }}">
+        {{ nav_item }} L66
+      </a>
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+{{ render(nav_item, path, level) }}

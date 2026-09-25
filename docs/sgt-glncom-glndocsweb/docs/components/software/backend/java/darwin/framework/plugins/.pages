@@ -1,0 +1,4 @@
+nav:
+  - index.md
+  - Gluon Darwin Code Analysis Maven-Plugin: 'codeanalysis-plugin.md'
+  - Gluon Partenon Maven Plugin: 'partenon-plugin.md'

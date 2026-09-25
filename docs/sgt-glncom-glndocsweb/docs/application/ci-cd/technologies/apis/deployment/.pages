@@ -1,0 +1,3 @@
+nav:
+  - CI Deployment: apis-ci-index.md
+  - CD Deployment: apis-cd-index.md

@@ -1,0 +1,413 @@
+#!/bin/bash
+
+########################################################################
+# Gluon doc CLI
+#
+# Fully supported by Git Bash terminal client,
+#
+# Glu service launch:
+# " source ./glu"
+#  - Creates the CLI glu, to simplify the calls, just call glu into the active terminal
+# "glu start": Starts the server
+#  - Creates the virtual environment to run the doc server
+#  - When adding "--clean" argument,it regenerates completely the
+#    environment. Recommended when regeneration is required
+# "glu stop": Stops the server
+# "glu restart": Stops the server
+# "glu status": Displays the server status
+# "glu check":  Performs PR validation in your local environment
+# "glu log": Displayes latest 100 lines
+# "glu log --check": Displayes error logs if glu check ends with error
+# "glu branch": Displays working branch status
+# "glu help": Displays help options
+# "glu hola": Let's start the day
+# "bye": Closes glu session
+#
+########################################################################
+
+
+# Input Parameters
+OPTION=$1
+ARG=$2
+VAL=$3
+
+# Log file
+VENV=.venv
+GLUONDOC="$VENV"/gluondoc
+PID_FILE="$VENV"/pid
+MKDOCS_LOGS="$VENV"/logs/mkdocs
+if [ ! -d $MKDOCS_LOGS ]; then
+    echo -e "### Creating log file into $MKDOCS_LOGS"  |& tee -a $LOG_FILE
+    mkdir -p $MKDOCS_LOGS
+fi
+LOG_FILE=$MKDOCS_LOGS/glu.log
+ERR_FILE=$MKDOCS_LOGS/glu-err.log
+
+
+#Colours to highlight display messages
+RED='\033[0;31m'
+GREEN='\033[32m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color
+
+# Mike branch to deploy
+branch=glu-test
+
+create_virtual_environment () {
+    # If the Virtual environment does not exist, then create
+    if [ ! -d $GLUONDOC ]; then
+        echo "" |& tee -a $LOG_FILE
+        echo "Creating virtual environment..." |& tee -a $LOG_FILE
+        echo "" |& tee -a $LOG_FILE
+        py -m venv $GLUONDOC &>> $LOG_FILE
+    fi
+
+    echo "Setting up virtual environment" |& tee -a $LOG_FILE
+    echo "This might take few seconds..." |& tee -a $LOG_FILE
+    echo "" |& tee -a $LOG_FILE
+
+    source $GLUONDOC'/Scripts/activate'  # |& tee -a $LOG_FILE
+
+    pip config --site set global.index https://nexus.alm.europe.cloudcenter.corp/repository/pypi-public/simple >> $LOG_FILE & 
+    pip config --site set global.index-url https://nexus.alm.europe.cloudcenter.corp/repository/pypi-public/simple >> $LOG_FILE & 
+    pip config --site set global.trusted-host nexus.alm.europe.cloudcenter.corp >> $LOG_FILE & 
+
+    py -m pip install  --upgrade pip  &>> $LOG_FILE
+
+    pip install symspellpy  &>> $LOG_FILE;
+
+    pip install -r requirements.txt  &>> $LOG_FILE
+
+
+}
+
+glu_start () {
+
+    # TO-DO: Check if the http://localhost:8000 is already busy and send a message to the user
+    # TO-DO: Check if the environment is already activated and send a message to the user
+    # TO-DO: Check if the server is already running and send a message to the user
+    if $(curl --output /dev/null --silent --head --fail http://localhost:8000); then
+        echo -e "..."
+        echo -e "Checking existing services listening at port 8000..."      
+        echo -e "${RED}ERROR:${NC} ${BOLD}Another service already running${NC} at http://localhost:8000."
+        echo -e "Check glu server status with ${BOLD}glu status${NC} or open your browser." 
+        echo -e "Consider restarting your server with ${BOLD}glu restart${NC}." 
+        echo ""
+        exit 1
+    fi
+
+
+    echo "### Gluon Docs START ###" |& tee -a $LOG_FILE
+    > $LOG_FILE
+
+    if [[  ! -z "$ARG"  ]]; then
+        [[ ! $ARG =~ $regexArg ]] && { echo -e "Invalid parameter. Valid call  glu start [--clean] " ; exit 1; }
+        echo "Deleting Gluon Environment..." |& tee -a $LOG_FILE
+        echo "" |& tee -a $LOG_FILE
+        rm -Rf  $GLUONDOC &>> $LOG_FILE
+        #TO-DO: Make sure the environment is deleted. Some files could be locked (logs by the use of tail -f...) Check output and manage it
+    fi
+
+    create_virtual_environment
+
+    echo "Starting Gluon Docs" |& tee -a $LOG_FILE
+    echo "" |& tee -a $LOG_FILE
+
+    mkdocs serve  --no-strict --dirty  &>> $LOG_FILE &
+    MKDOCS_PID=$(echo $!)
+    echo "$MKDOCS_PID" > $PID_FILE 
+
+    printf 'Gluon Docs is building your portal...'
+    until $(curl --output /dev/null --silent --head --fail http://localhost:8000); do    
+        if ! ps -p $MKDOCS_PID > /dev/null; then
+            printf '\n'    
+            echo -e "${RED}ERROR:${NC} Gluon Docs has failed to start. to check the logs, call ${BOLD}glu log${NC}" |& tee -a $LOG_FILE
+            exit 1;
+        else
+            printf '.'
+            sleep 1
+        fi
+    done
+    printf '\n'
+    echo "Gluon Docs ready on http://localhost:8000/ "
+    echo "" |& tee -a $LOG_FILE
+    echo -e "${RED}WARNING:${NC} This is a server running for development purposes." |& tee -a $LOG_FILE
+    echo "WARNING messages are not accepted in productive environments, where a clean start is required" |& tee -a $LOG_FILE
+    echo "Make sure the server starts without WARNING and INFO messages running \glu log\" command" |& tee -a $LOG_FILE
+    echo "---" |& tee -a $LOG_FILE
+
+}
+
+glu_stop (){
+
+    echo "### Gluon Docs STOP ###" |& tee -a $LOG_FILE
+    printf 'Waiting for the server to stop...'
+
+    kill -9 $(cat $PID_FILE)   &>> $LOG_FILE
+    > $PID_FILE
+
+    while $(curl --output /dev/null --silent --head --fail http://localhost:8000); do
+        printf '.'
+        sleep 1
+    done
+
+    printf '\n'
+    echo "Gluon Docs gracefully stopped " |& tee -a $LOG_FILE
+    echo "---" |& tee -a $LOG_FILE
+
+}
+
+print_glu_greetings () {
+    echo  -e "### GLU SAYS HOLA!! ###"
+    echo  -e ""
+    echo  -e "Welcome to glu, Gluon Docs server CLI"
+    echo  -e "${BOLD}glu is a command line assistant to run Gluon Docs locally${NC}"
+    echo  -e "It is made for Gitbash terminal and supports usually linux terminals."
+    echo  -e "It's very simple: Create your document and start the server"
+    echo  -e "Then, review in your browser, edit again,and restart to see the changes"
+    echo  -e ""
+    echo  -e "- ${BOLD}Launch the assistant${NC} type: ${RED}\"source ./glu\"${NC}"
+    echo  -e "  Now you're into glu console, showing ${RED}\"glu>\"${NC} prompt"
+    echo  -e "  You can leave just typing : ${RED}\"bye\"${NC}"
+    echo  -e "- ${BOLD}Start${NC} the server: ${RED}\"glu start\"${NC}"
+    echo  -e "  To regenerate the environment add --clean: ${RED}\"glu start --clean\"${NC}"
+    echo  -e "  Server updates modified pages at runtime. For a full refresh, restart"
+    echo  -e "- ${BOLD}Stop${NC} the server: ${RED}\"glu stop\"${NC}"
+    echo  -e "- ${BOLD}Restart${NC} the server: ${RED}\"glu restart\"${NC}"
+    echo  -e "- ${BOLD}Check server status${NC} running|stopped: ${RED}\"glu status\"${NC}"
+    echo  -e "- ${BOLD}Read the logs${NC} of the server and validations: ${RED}\"glu log\"${NC}"
+    echo  -e "- ${BOLD}Run validations${NC} locally: ${RED}\"glu check\"${NC}"
+    echo  -e "- ${BOLD}Display validations error details${NC} locally: ${RED}\"glu log --check\"${NC}"
+    echo  -e "- ${BOLD}Working Branch status${NC} locally: ${RED}\"glu branch\"${NC}"
+    echo  -e "- ${BOLD}End${NC} your glu session: : ${RED}\"bye\"${NC}"
+    echo  -e ""
+    echo  -e "That's all, as simple as that."
+    echo  -e "By the way, do you want to propose an improvement... or even better, are you thinking on contributing?"
+    echo  -e "Just contact Gluon Docs Community Team!"
+    echo  -e ""
+    echo  -e "${BOLD}To avoid issues, keep your branch up-to-date with main. Before starting your daily work call: git pull --rebase origin main${NC}"
+    echo  -e ""
+    echo  -e "Have fun :)"
+    echo  -e ""
+    echo  -e "### GLU IS READY!!!!! "
+
+}
+
+# Params validation:
+# Option (glu menú actions)
+regexOption="(hola|bye|branch|help|start|stop|restart|status|log|check)$"
+# Argument: only with glu start
+regexArg="(--clean)$"
+regexArgCheck="(--check)$"
+regexArgPreview="(--preview)$"
+regexArgUnpublish="(--cancel)$"
+regexArgPR="(PR\-[0-9]+)$"
+
+# Init calls supported:
+# source ./glu
+# Display message with source ./glu, glu, glu hola, glu help, or igf the parameter is not valid
+if [[ !  -z "$OPTION" && ! $OPTION =~ $regexOption ||  -z "$OPTION" || "$OPTION" == "hola" ]]; then
+    echo -e "### Starting Glu session $MKDOCS_LOGS"  >> $LOG_FILE
+    if [[ -z "$OPTION" ]]; then
+        if [[ -z "$_OLD_VIRTUAL_PS1" ]]; then
+            _OLD_VIRTUAL_PS1="${PS1:-}"
+            export PS1="\e[1;31m glu> \e[0m"
+            alias glu=\'./glu\'
+            alias bye="source ./glu bye"
+        fi
+    fi
+
+    print_glu_greetings
+
+fi
+
+# Glu bye
+
+if [[ "$OPTION" == "bye" ]]; then
+
+
+   #echo  -e "- ${BOLD}End${NC} your glu session: : ${RED}\"bye\"${NC}"
+
+    if [ "$0" = "$BASH_SOURCE" ]; then
+        echo -e "Are you leaving? Just type ${BOLD}bye${NC}"
+        exit 1
+    fi
+
+    if (curl --output /dev/null --silent --head --fail http://localhost:8000); then
+        glu_stop
+    fi
+    echo -e "Ending glu session, bye... \xf0\x9f\x98\x80\x0a\x00"
+    if [ -n "${_OLD_VIRTUAL_PS1:-}" ] ; then
+        PS1="${_OLD_VIRTUAL_PS1:-}"
+        export PS1
+        unset _OLD_VIRTUAL_PS1
+    fi
+
+    if [ "$(type -t glu)" = 'alias' ]; then
+        unalias glu
+    fi
+    if [ "$(type -t bye)" = 'alias' ]; then
+        unalias bye
+    fi
+fi
+
+# ################### GLU START ############################
+#
+# Command "glu start"
+# Sets the environoment and starts the server.
+# Empties log file
+# If receives the argument --clean, regenerates the environment.
+#
+# ##########################################################
+
+
+
+if [[ "$OPTION" == "start" ]]; then
+    # TO-DO: stop the server if it's still running
+    # TO-DO: Deactivate if it's still activated (or always...don't know)
+    glu_start
+    exit 1;
+fi
+
+# Glu stop
+
+if [[ "$OPTION" == "stop" ]]; then
+    glu_stop
+    exit 1;
+fi
+
+# Glu restart
+
+if [[ "$OPTION" == "restart" ]]; then
+    glu_stop
+    glu_start
+    exit 1;
+fi
+
+# Glu status
+
+if [[ "$OPTION" == "status" ]]; then
+
+    if (curl --output /dev/null --silent --head --fail http://localhost:8000); then
+        echo "Status: server running"
+    else
+        echo "Status: server stopped"
+    fi
+
+fi
+
+# Glu check
+# Performs markdownlint-cli validation
+
+if [[ "$OPTION" == "check" ]]; then
+
+    echo -e "${BOLD}## Automated validation start ${NC}" |& tee -a $LOG_FILE
+    echo "" |& tee -a $LOG_FILE
+
+    if ! (type npm > /dev/null 2>&1 && which npm > /dev/null 2>&1) ;then
+        echo "Error: NPM needs to be installed" |& tee -a $LOG_FILE
+        echo "You can chek how to install into https://gluon.gs.corp/docs/latest/getting-started/setup-your-environment/technologies/javascript-node/#installing-npm" |& tee -a $LOG_FILE
+        exit 2;
+    fi
+
+    if [ `npm list -g | grep -c markdownlint-cli` -eq 0 ]; then
+        echo "### Installing validation libraries..." |& tee -a $LOG_FILE
+        echo "" |& tee -a $LOG_FILE
+        npm install -g markdownlint-cli@0.25.0 &>> $LOG_FILE &
+    fi
+
+    echo -e "${BOLD}1. Markdown check starts...${NC}" |& tee -a $LOG_FILE
+
+    LINTER_OUTPUT=`npm exec  --node-options="--no-deprecation"  --  markdownlint '**/*.md'  -c ./.markdownlint.yml 2>&1`
+    #PID_CHECK=$(echo $!)
+
+    # while $(ps -p $PID_CHECK > /dev/null); do
+    #     printf '.'
+    #     sleep 1
+    # done
+    now=$(date)
+    echo "" > $ERR_FILE &
+    echo "[$now] Gluon Docs Checks" >> $ERR_FILE &    
+
+    echo "..." >> $LOG_FILE &
+    if [[ -z "$LINTER_OUTPUT" ]]; then
+        echo -e " - Markdown check: ${GREEN} SUCCESS${NC}" |& tee -a $LOG_FILE
+        echo -e " - Markdown check: ${GREEN} SUCCESS${NC}" >> $ERR_FILE &
+    else
+        echo -e " - Markdown check:${RED} ERROR ${NC}" |& tee -a $LOG_FILE
+        echo -e " - Markdown check:${RED} ERROR ${NC}" >> $ERR_FILE &
+        
+        echo "" >> $LOG_FILE &
+        echo "" >> $ERR_FILE &
+        
+        echo -e "${BOLD}Check error details:${NC}" >> $LOG_FILE &
+        echo -e "${BOLD}Check error details:${NC}" >> $ERR_FILE &
+        
+        echo "" >> $LOG_FILE &        
+        echo "" >> $ERR_FILE &        
+        echo "$LINTER_OUTPUT" >> $ERR_FILE &
+        echo "$LINTER_OUTPUT" >> $LOG_FILE &
+        echo "" >> $LOG_FILE &
+        echo "" >> $ERR_FILE &
+    fi
+    
+    echo -e "${BOLD}2. Portal validation: Structure and spellcheck...${NC}" |& tee -a $LOG_FILE
+    echo "This will take few minutes" |& tee -a $LOG_FILE
+    
+    echo "Setting up the virtual environment... " |& tee -a $LOG_FILE
+    pip config --site set global.index https://nexus.alm.europe.cloudcenter.corp/repository/pypi-public/simple >> $LOG_FILE & 
+    pip config --site set global.index-url https://nexus.alm.europe.cloudcenter.corp/repository/pypi-public/simple >> $LOG_FILE & 
+    pip config --site set global.trusted-host nexus.alm.europe.cloudcenter.corp >> $LOG_FILE & 
+    py -m pip install --upgrade pip >> $LOG_FILE &  
+    pip install -r requirements.txt >> $LOG_FILE &  
+
+    echo "Starting Portal validation... " |& tee -a $LOG_FILE
+    MIKE_DELETE_OUTPUT=`mike delete $branch  --ignore-remote-status 2>&1`
+    echo "Validating new portal... " |& tee -a $LOG_FILE
+    MIKE_OUTPUT=`mike deploy $branch --ignore-remote-status 2>&1` 
+    MIKE_EXIT_CODE=$(echo $?)
+
+    if [[ "$MIKE_EXIT_CODE" == 0 ]]; then
+        echo -e " - Portal validation: ${GREEN} SUCCESS${NC}" |& tee -a $LOG_FILE
+        echo -e " - Portal validation: ${GREEN} SUCCESS${NC}" >> $ERR_FILE &
+    else
+        echo -e " - Portal validation:${RED} ERROR ${NC}" |& tee -a $LOG_FILE
+        echo "$MIKE_OUTPUT" >> $LOG_FILE &        
+        echo -e " - Portal validation:${RED} ERROR ${NC}" >> $ERR_FILE &  
+        echo "$MIKE_OUTPUT" >> $ERR_FILE &        
+    fi
+    echo ""
+    echo -e "${BOLD}## Automated validation ended ${NC}"
+
+    if [[ ! -z "$LINTER_OUTPUT" || "$MIKE_EXIT_CODE" != 0  ]]; then
+        echo "Use \"glu log --check\" to see check error details" |& tee -a $LOG_FILE
+        echo "Validation error file can be found at $ERR_FILE" |& tee -a $LOG_FILE
+    fi
+
+    exit 0;
+fi
+
+# Glu log
+
+if [[ "$OPTION" == "log" ]]; then
+        FILE_TO_DISPLAY_MSG="log file"
+    if [[  ! -z "$ARG"  ]]; then
+        [[ ! $ARG =~ $regexArgCheck ]] && { echo -e "Invalid parameter. Valid call:  glu log [--check] " ; exit 1; }
+        FILE_TO_DISPLAY=$ERR_FILE
+        FILE_TO_DISPLAY_MSG="check output file"
+    fi
+    echo "-- Start of $FILE_TO_DISPLAY_MSG"
+    echo ""
+    tail -100 $FILE_TO_DISPLAY
+    echo ""
+    echo "-- End of $FILE_TO_DISPLAY_MSG"
+    echo ""
+    echo "Displaying latest 100 log lines"
+    echo "You can access full $FILE_TO_DISPLAY_MSG into $FILE_TO_DISPLAY"
+    exit 0;
+fi
+
+if [[ "$OPTION" == "branch" ]]; then
+    git status
+    exit 0;
+fi

@@ -1,0 +1,12 @@
+---
+nav:
+
+  - 'index.md'
+  - Gluon News: gluon-news
+  - Gluon Essentials: gluon-essentials
+  - Gluon Functionalities: gluon-components
+  - Gluon Brownfield: gluon-brownfield  
+  # - About Gluon Docs: make-a-contribution
+  # - Gluon Workshops: gluon-workshops
+  # - Gluon Experts: gluon-experts
+  - External Sessions: external-sessions

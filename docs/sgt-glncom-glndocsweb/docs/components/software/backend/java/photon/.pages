@@ -1,0 +1,5 @@
+nav:
+  - 'index.md'
+  - Photon Microservice Journey: 'photon-maven-kubernetes.md'
+  - Photon Extension Journey: 'photon-maven-extension.md'
+  - Photon Framework: framework

@@ -1,0 +1,10 @@
+nav:
+          - API: api
+          - Testing: testing
+          - Messaging: message-driven
+          - Dev Guides: dev-guides
+          - Integration: integration
+          - Execution & Runtime: execution-and-runtime
+          - Observability: observability
+          - Security: security
+          - Localization: i18n-l10n

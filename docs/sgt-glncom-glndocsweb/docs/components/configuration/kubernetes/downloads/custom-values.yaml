@@ -1,0 +1,36 @@
+### UNCOMMENT TO CREATE CUSTOM VALUES FOR THE NAMESPACE
+### Not all values are required, only the ones you want to override from the basic values
+### To add more namespaces to this environment, copy as much items as you need
+###
+### REQUISITES:
+###
+### * The display name must match that of the deployment.yaml file
+### * The values can be upgraded as long as they are within the limits of your company
+### * Be careful when downgrading values, as it can cause problems in the deployment
+
+# items:
+#   - displayName: "mod1"
+#     kube_objects:
+#       pods: 150
+#       deployment: 40
+#       deployment_config: 40
+#       configmaps: 40
+#       cronjobs: 40
+#       jobs: 40
+#       replicasets: 40
+#       replicationcontroller: 40
+#       secrets: 40
+#       services: 40
+#       statefulset: 40
+#     kube_limits:
+#       storage_quotas: 40
+#       number_volumes: 40
+#       pods_memory: 1
+#       pods_cpu: 1
+#       containers_memory: 1
+#       containers_cpu: 1
+#       namespace_memory_limit: 40
+#       namespace_memory_request: 40
+#       namespace_cpu_limit: 40
+#       namespace_cpu_request: 40
+#       persistent_volume_claims: 40

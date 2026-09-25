@@ -1,0 +1,7 @@
+nav: 
+  - Policies API Deployment 2.0: 
+      - Framework Current Version: policies.md
+      - Framework Previous Versions: previous-framework.md
+      - Framework Changelog: framework-changelog.md
+  - Local policies: local-policies.md
+  - Policies API Deployment (deprecated): policies10.md

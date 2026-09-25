@@ -1,0 +1,7 @@
+---
+nav:
+  - Design guides: index.md
+  - Functional architecture model: funcarchmodel.md
+  - Resiliency Patterns Definition: resiliency.md
+  - Data Access Patterns: dataaccess.md
+  - ...

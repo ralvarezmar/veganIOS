@@ -1,0 +1,9 @@
+nav:
+  - index.md
+  - About Santander Spring Boot Microservices: 'ABOUT.md'
+  - Getting started: 'WELCOME-PACK.md'
+  - Archetypes: santander-archetypes
+  - Libraries: santander-project
+  - Configuration properties: 'PROPERTIES.md'
+  - Changelog: 'CHANGELOG.md'
+  - API Documentation: 'https://gluon.dev.corp/microservices/docs/santander-spring-boot/1.2.1/apidocs/index.html" target="_blank'

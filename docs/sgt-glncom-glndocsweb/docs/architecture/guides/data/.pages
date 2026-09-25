@@ -1,0 +1,5 @@
+---
+nav:
+  - Design guides: index.md
+  - Data Access Patterns: read-replica-decision-tree.md
+  - ...

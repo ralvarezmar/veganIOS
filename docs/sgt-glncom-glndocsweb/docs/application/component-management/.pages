@@ -1,0 +1,9 @@
+---
+nav:
+
+  - index.md
+  - Create your component: create-component.md
+  - Register your component: component-catalog.md
+  - Update your component: update-component.md
+  - Disable your component: disable-component.md
+  - Archive your component: archive-component.md

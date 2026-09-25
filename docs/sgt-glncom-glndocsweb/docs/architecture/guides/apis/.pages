@@ -1,0 +1,6 @@
+---
+nav:
+  - Design guides: index.md
+  - Certified platforms: platformcert.md
+  - API Versioning: apiversioning.md
+  - ...

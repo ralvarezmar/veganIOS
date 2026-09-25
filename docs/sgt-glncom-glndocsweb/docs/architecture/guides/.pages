@@ -1,0 +1,12 @@
+---
+nav:
+  - Home: index.md
+  - General: general
+  - API: apis
+  - Data: data
+  - Infrastructure: infra
+  - Microfrontend: mfe 
+  - Microservices: ms  
+  - Network: net
+  - Observabiltity: obs
+  - Security: security

@@ -1,0 +1,6 @@
+nav:
+  - index.md
+  - CI: ci
+  - CD: cd
+  - Waivers: waivers
+  - Sysdig Scan: sysdig

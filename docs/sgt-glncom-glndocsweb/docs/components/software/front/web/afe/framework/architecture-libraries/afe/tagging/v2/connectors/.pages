@@ -1,0 +1,5 @@
+nav:
+
+  - index.md
+  - Dynatrace Connector: dynatrace-connector.md
+  - GTM Connector: gtm-connector.md

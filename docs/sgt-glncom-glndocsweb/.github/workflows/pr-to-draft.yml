@@ -1,0 +1,20 @@
+name: Set PR to Draft on Docs Change
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+    branches:
+      - main
+##      - feat/ci-granular-concurrency
+##      - feat/metrics-observability
+##      - test/ci-lab
+concurrency:
+  group: docs-draft-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  call-reusable-workflow:
+    name: PR Preview
+    uses: santander-group-shared-assets/gln-mkdocs-child-workflows/.github/workflows/mkdocs-pr-to-draft.yml@fixpreview
+    with:
+      pr-number: ${{ github.event.pull_request.number }}
+    secrets: inherit

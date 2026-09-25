@@ -1,0 +1,4 @@
+nav:
+  - index.md
+  - Recipes: migration-assistant-recipes
+  - Changelog: changelog.md

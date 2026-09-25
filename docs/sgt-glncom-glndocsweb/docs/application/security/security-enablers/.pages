@@ -1,0 +1,8 @@
+
+# Navigation on the left side
+
+nav:
+
+  - index.md
+  - Hashicorp Vault: hashicorp-vault
+  

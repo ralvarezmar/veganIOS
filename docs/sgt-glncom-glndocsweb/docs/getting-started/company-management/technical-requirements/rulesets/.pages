@@ -1,0 +1,8 @@
+---
+nav:
+    - Gluon Branch Protection: gluon-branching-protection.md
+    - Gluon Protection No Production Branch: gluon-branching-protection-no-production.md
+    - Gluon Tag Protection: gluon-tag-protection.md
+    - Gluon Push Protection: gluon-push-protection.md
+    - ...
+  

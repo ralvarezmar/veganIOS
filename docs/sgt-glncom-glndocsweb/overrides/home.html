@@ -1,0 +1,109 @@
+{#-This file was automatically generated - do not edit-#}
+{% extends "main.html" %}
+
+<!-- Custom css files to load in home page -->
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ 'assets/stylesheets/mkdocs.material.css' | url }}" />
+<link rel="stylesheet" href="{{ 'assets/stylesheets/animate.css' | url }}" />
+{% endblock %}
+
+
+<!-- Custom javascript for the home site -->
+{% block libs %}
+{{ super() }}
+<script src="{{ 'assets/javascripts/materialize.min.js' | url }}"></script>
+{% endblock %}
+
+{% block tabs %}
+{{ super() }}
+<section class="mdx-container" id="waves">
+  <div class="md-grid md-typeset">
+    <div class="left-column">
+      <p class="title">Gluon Docs</p>
+      <p class="subtitle">Help for wherever you are on your Gluon journey</p>
+    </div>
+    <!-- <div class="right-column">
+      <div class="news-box">
+        <div class="news-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EC0000" d="M27.775454,6.88843952 C27.541108,6.60723762 27.120828,6.56763022 26.839001,6.80401112 L22.849001,10.1348631 L22.764147,10.2196107 C22.561987,10.4614712 22.555071,10.820784 22.764546,11.0713161 C22.895817,11.2291206 23.08481,11.3103038 23.275665,11.3103038 C23.425689,11.3103038 23.577043,11.2596441 23.700999,11.1557445 L27.690999,7.82489252 L27.775986,7.74014492 C27.978013,7.49827112 27.985062,7.13897162 27.775454,6.88843952 Z M28.595,13.3131774 C28.962612,13.3131774 29.26,13.6105654 29.26,13.9781774 C29.26,14.3048254 29.024989,14.5761454 28.714567,14.6324044 L28.595,14.6431774 L23.275,14.6431774 C22.907388,14.6431774 22.61,14.3456564 22.61,13.9781774 C22.61,13.6513964 22.845011,13.3800764 23.155433,13.3238174 L23.275,13.3131774 L28.595,13.3131774 Z M22.764014,16.8698634 C22.97176,16.6192914 23.32687,16.5607714 23.601648,16.7158494 L23.700467,16.7842114 L27.690467,20.1033594 C27.972959,20.3377054 28.011263,20.7573204 27.776252,21.0398124 C27.644981,21.1975504 27.455323,21.2793454 27.264468,21.2793454 C27.152482,21.2793454 27.039299,21.2508834 26.937421,21.1931614 L26.839799,21.1254644 L22.849799,17.8063164 C22.567307,17.5718374 22.52887,17.1523554 22.764014,16.8698634 Z"/><path fill="#23779A" fill-rule="nonzero" d="M9.31,15.9651974 L13.3,15.9651974 L13.3,23.2801974 C13.3,24.3819694 12.4068119,25.2751974 11.305,25.2751974 C10.2031881,25.2751974 9.31,24.3819694 9.31,23.2801974 L9.31,15.9651974 Z"/><path fill="#CEDEE7" fill-rule="nonzero" d="M7.98,10.6453038 L20.368019,5.37535172 C20.804791,5.19397962 21.28,5.47593962 21.28,5.96428902 L21.28,21.9243954 C21.28,22.4126384 20.804791,22.7466014 20.368019,22.5651894 L7.98,17.2953304 L7.98,10.6453038 Z"/><path fill="#9BC3D3" d="M20.368019,22.5651894 L11.634574,18.8499674 L19.103588,5.91327022 L20.368019,5.37535172 C20.804924,5.19397962 21.28,5.47593962 21.28,5.96428902 L21.28,21.9243954 C21.28,22.4126384 20.804924,22.7466014 20.368019,22.5651894 Z M3.325,10.645357 C2.9577338,10.645357 2.66,10.9430908 2.66,11.310357 L2.66,16.6303304 C2.66,16.9976764 2.9577338,17.2953304 3.325,17.2953304 L7.98,17.2953304 L7.98,10.645357 L3.325,10.645357 Z"/></g></svg>
+          <div class="news-content">
+            <p><b>&nbsp;&nbsp;Events Subscription Now Available! <a href="https://gluon.gs.corp/community/docs/latest/components/software/events/subscription/">Learn more</a></b></p>          </div>
+        </div>
+        <div class="news-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EC0000" d="M27.775454,6.88843952 C27.541108,6.60723762 27.120828,6.56763022 26.839001,6.80401112 L22.849001,10.1348631 L22.764147,10.2196107 C22.561987,10.4614712 22.555071,10.820784 22.764546,11.0713161 C22.895817,11.2291206 23.08481,11.3103038 23.275665,11.3103038 C23.425689,11.3103038 23.577043,11.2596441 23.700999,11.1557445 L27.690999,7.82489252 L27.775986,7.74014492 C27.978013,7.49827112 27.985062,7.13897162 27.775454,6.88843952 Z M28.595,13.3131774 C28.962612,13.3131774 29.26,13.6105654 29.26,13.9781774 C29.26,14.3048254 29.024989,14.5761454 28.714567,14.6324044 L28.595,14.6431774 L23.275,14.6431774 C22.907388,14.6431774 22.61,14.3456564 22.61,13.9781774 C22.61,13.6513964 22.845011,13.3800764 23.155433,13.3238174 L23.275,13.3131774 L28.595,13.3131774 Z M22.764014,16.8698634 C22.97176,16.6192914 23.32687,16.5607714 23.601648,16.7158494 L23.700467,16.7842114 L27.690467,20.1033594 C27.972959,20.3377054 28.011263,20.7573204 27.776252,21.0398124 C27.644981,21.1975504 27.455323,21.2793454 27.264468,21.2793454 C27.152482,21.2793454 27.039299,21.2508834 26.937421,21.1931614 L26.839799,21.1254644 L22.849799,17.8063164 C22.567307,17.5718374 22.52887,17.1523554 22.764014,16.8698634 Z"/><path fill="#23779A" fill-rule="nonzero" d="M9.31,15.9651974 L13.3,15.9651974 L13.3,23.2801974 C13.3,24.3819694 12.4068119,25.2751974 11.305,25.2751974 C10.2031881,25.2751974 9.31,24.3819694 9.31,23.2801974 L9.31,15.9651974 Z"/><path fill="#CEDEE7" fill-rule="nonzero" d="M7.98,10.6453038 L20.368019,5.37535172 C20.804791,5.19397962 21.28,5.47593962 21.28,5.96428902 L21.28,21.9243954 C21.28,22.4126384 20.804791,22.7466014 20.368019,22.5651894 L7.98,17.2953304 L7.98,10.6453038 Z"/><path fill="#9BC3D3" d="M20.368019,22.5651894 L11.634574,18.8499674 L19.103588,5.91327022 L20.368019,5.37535172 C20.804924,5.19397962 21.28,5.47593962 21.28,5.96428902 L21.28,21.9243954 C21.28,22.4126384 20.804924,22.7466014 20.368019,22.5651894 Z M3.325,10.645357 C2.9577338,10.645357 2.66,10.9430908 2.66,11.310357 L2.66,16.6303304 C2.66,16.9976764 2.9577338,17.2953304 3.325,17.2953304 L7.98,17.2953304 L7.98,10.645357 L3.325,10.645357 Z"/></g></svg>
+          <div class="news-content">
+            <p><b>&nbsp;&nbsp;New Branch Strategy for Releases! <a href="https://gluon.gs.corp/community/docs/latest/components/snippets/lifecycle/fix-release-flow/">Visit for more info</a></b></p>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</section>
+<style>
+  .md-grid {
+    display: flex;
+  }
+
+  .left-column, .right-column {
+    flex: 1;
+    padding: 20px;
+  }
+
+  .right-column {
+    text-align: right; /* Alinea el contenido a la derecha */
+  }
+
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--md-default-fg-color);
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: gray;
+    color: var(--md-default-fg-color--light);
+  }
+
+  .news-box {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.384);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 5px 10px;
+  }
+
+  .news-item {
+    display: flex;
+    align-items: left;
+  }
+
+  .news-content {
+    font-size: 14px; /* Cambia el tamaño de la fuente para ajustar el alto */
+    margin: 0;
+    margin-left: 5px;
+    text-align: left;
+    line-height: 0.5 !important;
+  }
+
+  /* Estilos para el modo oscuro */
+  [data-md-color-scheme="slate"] .title,
+  [data-md-color-scheme="slate"] .subtitle {
+  color: #ffffff !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<style>
+  article.md-content__inner.md-typeset {
+    margin: 0rem;
+  }
+</style>
+{% include "partials/contents-home.html" %}
+{% endblock %}
+
+{% block site_nav %}
+{% endblock %}

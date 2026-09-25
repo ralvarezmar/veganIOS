@@ -1,0 +1,10 @@
+---
+nav:
+  - Darwin Archetype Generator (CLI): 'generator-darwin.md'
+  - Apollo Server plugins (GraphQL): 'darwin-apollo-plugins.md'
+  - Darwin Composer: 'darwin-composer.md'
+  - Dawin Error Handler: 'darwin-error.md'
+  - Darwin Logger: 'darwin-logger.md'
+  - Darwin Middlewares: 'darwin-middlewares.md'
+  - Darwin Relay Cursor Connections (GraphQL): 'darwin-relay-cursor-connections.md'
+  - Darwin Security: 'darwin-security.md'

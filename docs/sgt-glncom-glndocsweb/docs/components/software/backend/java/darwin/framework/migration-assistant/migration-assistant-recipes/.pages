@@ -1,0 +1,4 @@
+nav:
+  - readme.md
+  - Recipes: recipes.md
+  - Recipes details: recipes-details.md

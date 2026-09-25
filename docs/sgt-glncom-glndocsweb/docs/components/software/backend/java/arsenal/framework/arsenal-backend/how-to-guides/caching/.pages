@@ -1,0 +1,4 @@
+nav:
+  - Use Local Cache: 'local-cache.md'
+  - Use Distributed Cache: 'distributed-cache.md'
+  - Use In Memory DB starter: 'in-memory-db.md'

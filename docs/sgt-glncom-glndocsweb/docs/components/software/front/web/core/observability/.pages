@@ -1,0 +1,5 @@
+nav:
+
+  - index.md
+  - Use it in Angular SPA: spa-observability.md
+  - Use it in Angular Microfront: mfe-observability.md

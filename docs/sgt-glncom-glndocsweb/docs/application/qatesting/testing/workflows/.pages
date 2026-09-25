@@ -1,0 +1,6 @@
+nav:
+
+  - index.md
+  - CICD: cicd
+  - Ondemand: ondemand
+  - Utilities: utilities

@@ -1,0 +1,5 @@
+---
+nav:
+  - index.md
+  - APM-based tracing: apm-based-traceability.md
+  - Log-based tracing: log-based-traceability.md

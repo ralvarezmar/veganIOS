@@ -1,0 +1,25 @@
+nav:
+
+  - index.md
+  - Getting Started with Microfront Development: getting-started-with-microfront-development
+  - Configuration: configuration.md
+  - Channel Management: channel-management.md
+  - Session Storage and Local Storage: session-storage-and-local-storage.md
+  - Security and Token Handling: security-and-token-handling.md
+  - User Interface Communication: user-interface-communication.md
+  - Routing inside the Microfront: routing-inside-the-microfront.md
+  - Navigation outside the Microfront: navigation-outside-the-microfront.md
+  - Lifecycle and Common Events: lifecycle-and-common-events.md
+  - Error handling: error-handling.md
+  - Breadcrumbs: breadcrumbs.md
+  - Internationalization and Location: internationalization-and-location.md
+  - Webpack configuration: webpack-configuration.md
+  - Sharing Libraries: sharing-libraries.md
+  - How to work with Microfront assets: how-to-work-with-microfront-assets.md
+  - CSS Styles: css-styles.md
+  - Nginx and Proxy.conf configuration: nginx-and-proxy.conf-configuration.md
+  - How to integrate a Microfront into a Shell application: how-to-integrate-a-microfront-into-a-shell-application
+  - Simultaneous Microfronts Considerations: simultaneous-microfronts.md
+  - Semantic nesting of Microfronts: semantic-nesting-of-microfronts.md
+  - Iframe: iframe.md
+  - FAQ: faq.md

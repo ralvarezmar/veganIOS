@@ -1,0 +1,21 @@
+name: Preview
+on:
+  # Trigger when a pull request is set to "Ready to review"
+  pull_request:
+    types:
+      - ready_for_review
+    branches:
+      - main
+##      - feat/ci-granular-concurrency
+##      - feat/metrics-observability
+##      - test/ci-lab
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  call-reusable-workflow:
+    name: PR Preview
+    uses: santander-group-shared-assets/gln-mkdocs-child-workflows/.github/workflows/mkdocs-pr-preview.yml@v1
+    with:
+      technology: 'python'
+    secrets: inherit

@@ -1,0 +1,13 @@
+
+# Navigation on the left side
+
+nav:
+
+  - index.md
+  - Secret Types: secret-types
+  - Roles and Groups: roles
+  - Vault Infrastructure: vault-infrastructure
+  - Secret Lifecycle: secret-lifecycle
+  - Migration Patterns: migration-patterns
+  - How to operate with vault?: how-to
+  - Journeys: journeys

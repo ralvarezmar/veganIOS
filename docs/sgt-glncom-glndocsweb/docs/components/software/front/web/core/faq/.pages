@@ -1,0 +1,5 @@
+nav:
+
+  - How to use Puppeteer: how-to-use-puppeteer.md
+  - livenessProbe and readinessProbe: enable-liveness-readiness.md
+  - Best practices with NPM: best-practices-npm.md

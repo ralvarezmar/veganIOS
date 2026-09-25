@@ -1,0 +1,131 @@
+swagger: '2.0'
+info:
+  title: Example 1
+  version: 1.0.0-SNAPSHOT
+  description: This example uses a wrapper to combine objects existing in dictionary
+schemes:
+  - https
+basePath: /training
+tags:
+  - name: example1
+    description: Example 1
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  '/withholdings/{withholding_id}':
+    get:
+      description: |
+        Validating objects.
+      produces:
+        - application/json
+      parameters:
+        - name: withholding_id
+          type: string
+          required: true
+          in: path
+          description: withholding identifier
+          x-example: 1234567
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/_MyFirstWrapper'
+          headers: {}
+
+definitions:
+
+#The object _MyFirstWrapper is a wrapper. It does not exist in the dictionary
+#but the objects that it combines (in this case Withholding and Links) must exist
+#The wrapper starts by '_' and must be followed by a capital letter.
+  _MyFirstWrapper:
+    type : object
+    properties: 
+      withholdings : 
+        type : array
+        items:         
+          $ref: "#/definitions/Withholding"
+      links:
+        $ref: "#/definitions/Links"    
+
+#Withholding exists in the dictionary.
+#Note that some attributes have been removed
+  Withholding :
+    title : "PENDING TECH. WRITING REVIEW"
+    description : "This structure contains all information related to a Withholding. A Withholding exists inside an Account."
+    type : "object"
+    properties :
+       withholdingReferenceId :
+          type : "string"
+          description : "Withholding Reference."
+          example : "2020-01-17.01.02.02.123456EH"
+       withHoldingAmount :
+          $ref : "#/definitions/Amount"
+       reasonCode :
+          description : "Reason code for the withholding."
+          type : "string"
+          example : "02"
+       reasonDescription :
+          description : "Reason description for the withholding."
+          type : "string"
+          example : "VISA AUTHORISATION"
+       additionalInfo :
+          type : "string"
+          description : "This field is a free text"
+          example : "Car payment"
+       creationDate :
+          description : "Withholding start date ISO 8601 Complete Data format (YYYY-MM-DD) where YYYY = four-digit year, MM = two-digit month (01=January, etc.) and DD = two-digit day of month (01 through 31)"
+          type : "string"
+          format : "date"
+          example : "2020-03-03"
+       expirationDate :
+          description : "Withholding end date ISO 8601 Complete Data format (YYYY-MM-DD) where YYYY = four-digit year, MM = two-digit month (01=January, etc.) and DD = two-digit day of month (01 through 31)"
+          type : "string"
+          format : "date"
+          example : "2020-06-03"
+       cancelationDate :
+          description : "Withholding cancelation date ISO 8601 Complete Data format (YYYY-MM-DD) where YYYY = four-digit year, MM = two-digit month (01=January, etc.) and DD = two-digit day of month (01 through 31)"
+          type : "string"
+          format : "date"
+          example : "0001-01-01"
+
+#Amount exists in the dictionary.
+  Amount :
+    type : "object"
+    required :
+    - amount
+    - currency
+    properties :
+       amount :
+          description : "Data in ISO 20022 format containing up to 18 digits from which 5 may be decimals. Separation is a point."
+          type : "number"
+          minimum : -9999999999999
+          maximum : 9999999999999
+          example : 99.99
+       currency :
+          description : "Data in ISO 4217."
+          type : "string"
+          minLength : 3
+          maxLength : 3
+          pattern : (^.{3}$)                
+          example: USD
+
+#Links exists in the dictionary.
+  Links :
+    type : "object"
+    properties :
+       _first :
+          $ref : "#/definitions/LinkReference"
+       _prev :
+          $ref : "#/definitions/LinkReference"
+       _next :
+          $ref : "#/definitions/LinkReference"
+       _last :
+          $ref : "#/definitions/LinkReference"
+
+#LinkReference exists in the dictionary.
+  LinkReference :
+    type : "string"
+    format : "uri"
+    description : "Reference link url, that allows to navigate to specified uri"          

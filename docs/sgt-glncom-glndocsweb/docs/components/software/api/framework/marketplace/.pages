@@ -1,0 +1,6 @@
+nav:
+  - API Catalog: api-catalog.md
+  - Product Catalog: product-catalog.md
+  - Request Subscription: request-subscription.md
+  - Key Set management: key-set.md
+  - Copilot for APIs Gluon Certified: api-copilot.md

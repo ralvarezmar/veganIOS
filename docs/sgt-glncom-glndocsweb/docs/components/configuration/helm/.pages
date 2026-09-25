@@ -1,0 +1,5 @@
+---
+nav:
+
+  - Helm chart: helm-chart.md
+  - Helm deployment: helm-deployment.md

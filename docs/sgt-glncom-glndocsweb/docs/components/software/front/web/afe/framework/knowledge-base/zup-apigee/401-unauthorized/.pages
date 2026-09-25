@@ -1,0 +1,8 @@
+nav:
+
+  - index.md
+  - Headers Configuration: headers-configuration.md
+  - Legacy Token: legacy-token.md
+  - Project Configuration: project-configuration.md
+  - Session Time: session-time.md
+  - Version Interceptors: version-interceptors.md

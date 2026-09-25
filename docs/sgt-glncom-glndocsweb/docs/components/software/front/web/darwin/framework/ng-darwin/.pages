@@ -1,0 +1,8 @@
+nav:
+
+  - index.md
+  - Modules: modules
+  - Nginx Configuration: nginx-config
+  - First Steps: first-steps
+  - Versions: versions
+  - FAQ: faq

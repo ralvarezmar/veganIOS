@@ -1,0 +1,5 @@
+nav:
+  - index.md
+  - Guiding the Migration: 'capabilities/darwin/darwin-java/current/MIGRATION/'
+  - Native Images Development Guide: 'native-development-guide.md'
+  - Libraries Ready with Native Image: 'native-ready-libraries.md'

@@ -1,0 +1,7 @@
+nav:
+    - 'index.md'
+    - 'team-owners-management.md'
+    - 'team-members-management.md'
+    - 'team-tools-management.md'
+    - 'team-users-permissions.md'
+    - 'team-predefined.md'

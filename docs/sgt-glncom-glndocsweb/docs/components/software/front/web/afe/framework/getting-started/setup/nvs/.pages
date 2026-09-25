@@ -1,0 +1,8 @@
+nav:
+
+  - index.md
+  - Configuring NPM: configuring-npm.md
+  - Including Version: including-version.md
+  - Install: install.md
+  - Prerequisites: pre-reqs.md
+  - Using Version:  using-version.md

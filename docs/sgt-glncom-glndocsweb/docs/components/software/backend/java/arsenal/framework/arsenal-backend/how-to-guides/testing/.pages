@@ -1,0 +1,6 @@
+nav:
+  - Unit Tests: 'unit-tests.md'
+  - Integration Tests: 'integration-tests.md'
+  - BDD Testing: 'bdd-tests.md'
+  - Architectural Tests: 'arch-tests.md'
+  - Protected microservice: 'protected-microservice.md'

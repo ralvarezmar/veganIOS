@@ -1,0 +1,10 @@
+nav:
+
+  - index.md
+  - Angular Life cycle: angular-lifecycle.md
+  - Angular Update Cycle: angular-update-cycle.md
+  - Approved Versions: approved-versions.md
+  - Obsolescence Policy: obsolescence-policy.md
+  - Semantic Versioning: semantic-versioning.md
+  - Update Policy: update-policy.md
+  - Versioning Policy: versioning-policy.md

@@ -1,0 +1,15 @@
+---
+nav:
+      - Design Standards: index.md
+      - Core Principles: corePrinciples.md
+      - API First: apiFirst.md
+      - URI Structure: uri.md
+      - Versioning: versioning.md
+      - HTTP Methods: httpMethods.md
+      - HTTP Status Codes: statusCodes.md
+      - HTTP Headers: headers.md
+      - Query Parameters: queryParams.md
+      - Payload: payload.md
+      - Error Structure: error.md
+      - Observability: observability.md
+      - API Specification Guidelines : api-spec-guidelines.md      

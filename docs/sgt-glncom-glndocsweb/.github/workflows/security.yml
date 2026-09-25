@@ -1,0 +1,24 @@
+name: Security TBD
+on:
+  pull_request:
+    branches:
+      - development
+      - develop
+      - main
+      - master
+      - release-v[0-9]+.[0-9]+.[xX]
+##      - feat/ci-granular-concurrency
+##      - feat/metrics-observability
+##      - test/ci-lab
+    paths-ignore:
+      - 'docs/**'
+concurrency:
+  group: security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  call-reusable-workflow:
+    name: Security
+    uses: santander-group-shared-assets/gln-workflows/.github/workflows/python-security-image.yml@v1
+    with:
+      gluon-runner: ansible-runner
+    secrets: inherit

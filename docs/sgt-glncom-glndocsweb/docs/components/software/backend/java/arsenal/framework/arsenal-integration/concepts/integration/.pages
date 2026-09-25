@@ -1,0 +1,9 @@
+nav:
+  - Aggregation: 'aggregation.md'
+  - Enrichment: 'enrichment.md'
+  - Transformation: 'transformation.md'
+  - GraphQL Integration: 'graphql-integration.md'
+  - REST Integration: 'rest-integration.md'
+  - Soap Integration: 'soap-integration.md'
+  - Paralleling Message Processing: 'parallel-processing.md'
+  - Saga: saga.md

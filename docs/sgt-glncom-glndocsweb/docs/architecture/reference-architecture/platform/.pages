@@ -1,0 +1,6 @@
+---
+nav:
+  - Reference Architectures: index.md
+  - Ephemeral-Runners: ephemeral-runners.md
+  - GitHub Comms Architecture: github-comms.md
+  - ...

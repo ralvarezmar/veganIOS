@@ -1,0 +1,19 @@
+name: Integration TBD
+on:
+  push:
+    branches:
+      - main
+      - master
+      - release-v[0-9]+.[0-9]+.[xX]
+##      - feat/ci-granular-concurrency
+##      - test/ci-lab
+concurrency:
+  group: ci-integration-${{ github.ref_name }}-${{ github.sha }}
+  cancel-in-progress: false
+jobs:
+  call-reusable-workflow:
+    name: Integration fix
+    uses: santander-group-shared-assets/gln-workflows/.github/workflows/python-ci-tbd.yml@v1
+    with:
+      technology: 'python'
+    secrets: inherit      
