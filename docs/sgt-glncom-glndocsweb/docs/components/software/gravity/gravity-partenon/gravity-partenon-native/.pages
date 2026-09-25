@@ -1,0 +1,7 @@
+---
+nav:
+  - Home: index.md
+  - GravityCI Workflow: GravityCI.md
+  - GravityCert Workflow: GravityCert.md
+  - GravityPREPRO Workflow: GravityPREPRO.md
+  - GravityRestore Workflow: GravityRestore.md

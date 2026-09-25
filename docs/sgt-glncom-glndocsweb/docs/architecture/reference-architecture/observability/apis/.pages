@@ -1,0 +1,6 @@
+---
+nav:
+  - IBM APIs Observability: ibmapisobservability.md
+  - Apigee APIs Observability: apigeeapisobservability.md
+  - AWS APIs Observability: awsapisobservability.md
+  - ...

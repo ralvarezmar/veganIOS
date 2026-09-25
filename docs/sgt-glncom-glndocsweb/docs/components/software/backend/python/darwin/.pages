@@ -1,0 +1,5 @@
+nav:
+  - 'index.md'
+  - Darwin Python Microservice Journey: 'darwin-python-journey.md'
+  - Darwin Python Library Journey: 'darwin-python.md'
+  - Darwin Python Framework: framework

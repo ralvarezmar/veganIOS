@@ -1,0 +1,7 @@
+---
+nav:
+  - Reference Architectures: index.md
+  - Apigee OPDK: apigeeopdk.md
+  - IBM API Connect v10 - Openshift deployment: ibmapicv10ocp.md
+  - AWS API Gateway: awsapigateway.md
+  - ...

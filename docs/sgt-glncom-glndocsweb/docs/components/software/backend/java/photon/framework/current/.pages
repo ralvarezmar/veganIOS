@@ -1,0 +1,7 @@
+---
+nav:
+  - index.md
+  - Photon Archetypes: archetypes
+  - Photon Archunit: archunit
+  - Photon Extensions: extensions
+  - How To Guides: how-to-guides

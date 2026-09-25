@@ -1,0 +1,7 @@
+nav:
+
+  - index.md
+  - Commit Scope: commit-scope.md
+  - Commits Fix: commits-fix.md
+  - Commits Pattern: commits-pattern.md
+  - Referencing Tickets: referencing-tickets.md

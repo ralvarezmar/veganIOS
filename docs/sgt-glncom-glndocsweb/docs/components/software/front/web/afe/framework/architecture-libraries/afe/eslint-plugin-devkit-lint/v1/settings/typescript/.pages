@@ -1,0 +1,6 @@
+nav:
+
+  - index.md
+  - Best Practices: best-practices.md
+  - Bugs: bugs.md
+  - Code Smells: code-smells.md

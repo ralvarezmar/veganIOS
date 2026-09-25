@@ -1,0 +1,7 @@
+# but only the code owners can approve files outside the docs folder
+
+* @santander-group-shared-assets/gr_almnxtgn_sgt-cct-gpm_ctm
+
+## Code owners for /docs/local team @santander-group-shared-assets/gr_almnxtgn_sgt-cct-gdct_ctm
+
+/docs/local/**/* @santander-group-shared-assets/gr_almnxtgn_sgt-cct-gdct_ctm

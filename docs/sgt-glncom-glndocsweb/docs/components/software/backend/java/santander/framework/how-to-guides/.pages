@@ -1,0 +1,6 @@
+nav:
+  - index.md
+  - Apache Camel Integration: 'camel-integration.md'
+  - Arsenal Backend Migration Guide: 'arsenal-backend-to-santander-framework.md'
+  - Arsenal Integration Migration Guide: 'arsenal-integration-to-santander-framework.md'
+  - Darwin Spring Boot Migration Guide: 'darwin-spring-boot-to-santander-framework.md'

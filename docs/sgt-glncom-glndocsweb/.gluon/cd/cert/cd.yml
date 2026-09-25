@@ -1,0 +1,4 @@
+- ci_id: aws-community-dev
+  configuration_files:
+    - .gluon/cd/values.yaml
+    - .gluon/cd/cert/values.yaml

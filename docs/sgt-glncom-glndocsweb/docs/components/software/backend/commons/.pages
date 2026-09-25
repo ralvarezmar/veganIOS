@@ -1,0 +1,5 @@
+nav:
+ - 'index.md'
+ - Blue-Green Deployment: 'blue-green-development.md'
+ - Dealing with vulnerabilities: 'vulnerabilities.md'
+ - Security Context configuration: 'security-context.md'

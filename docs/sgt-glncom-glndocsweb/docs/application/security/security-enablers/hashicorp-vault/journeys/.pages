@@ -1,0 +1,9 @@
+
+# Navigation on the left side
+
+nav:
+
+  - index.md
+  - Product Owner: product-owner
+  - Developer: developer
+  - Access Management: access-management

@@ -1,0 +1,5 @@
+---
+nav:
+  - Home: index.md
+  - MainframeSync Workflow: MainframeSync.md
+  - MainframeSync Restore Workflow: MainframeSyncRestore.md

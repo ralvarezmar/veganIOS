@@ -1,0 +1,9 @@
+nav:
+  - index.md
+  - About Darwin Microservices: 'ABOUT.md'
+  - Getting started: 'WELCOME_PACK.md'
+  - Darwin Archetypes: darwin-archetypes
+  - Darwin Libraries: darwin-project
+  - Darwin Spring configuration properties: 'PROPERTIES.md'
+  - Changelog: 'CHANGELOG.md'
+  - API Documentation: 'https://gluon.dev.corp/microservices/docs/darwin-spring-boot/4.3.3-RELEASE/apidocs/index.html" target="_blank'

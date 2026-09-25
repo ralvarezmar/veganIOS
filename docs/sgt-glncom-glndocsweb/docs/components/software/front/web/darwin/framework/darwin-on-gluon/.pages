@@ -1,0 +1,7 @@
+nav:
+
+  - index.md
+  - How to deal with Classic and Gluon Security Models: how-to-deal-with-classic-and-gluon-security-models.md
+  - Transforming Darwin Classic SPA to Darwin Gluon SPA: how-to-transform-a-darwin-classic-spa-into-a-darwin-gluon-spa.md
+  - Transforming Darwin Classic Shell to Darwin Gluon Shell: how-to-transform-a-darwin-classic-shell-into-a-darwin-gluon-shell.md
+  - Transforming Darwin Classic Microfont to Darwin Gluon Microfront: how-to-transform-a-darwin-classic-mfe-into-a-darwin-gluon-mfe.md

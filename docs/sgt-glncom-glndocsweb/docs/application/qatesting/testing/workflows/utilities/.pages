@@ -1,0 +1,11 @@
+nav:
+
+  - index.md
+  - Secrets: secrets.md
+  - Selenium: selenium.md
+  - Check connections: check-connections.md
+  - Email: email.md
+  - Test configurations: configurations.md
+  - Check version: check-version.md
+  - Send report to HP-ALM: send-report-alm.md
+  - Send report to Xray: xray-report.md

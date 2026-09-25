@@ -1,0 +1,9 @@
+nav:
+
+  - index.md
+  - Beta Versions: beta-versions.md
+  - Branches: branches.md
+  - Development: development.md
+  - HotFix: hotfix.md
+  - Initial Structure: initial-structure.md
+  - Release: release.md

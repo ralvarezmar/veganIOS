@@ -1,0 +1,10 @@
+---
+nav:
+  - index.md
+  - Event life cycle: life-cycle
+  - Event proposal: proposal
+  - Event definition: definition
+  - Event deployment: deployment
+  - Event subscription: subscription
+  - Event app authorization: appauthorization
+  - Framework: framework

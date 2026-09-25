@@ -1,0 +1,7 @@
+---
+nav:
+  - Home: index.md
+  - Gravity JCL Certification Workflows: gravity-jcl-certification-workflows.md
+  - Gravity JCL PrePro Workflows: gravity-jcl-prepro-workflows.md
+  - Gravity JCL Overlib Workflows: gravity-jcl-overlib-workflows.md
+  - Gravity JCL Transformed Workflows: gravity-jcl-transformed-workflows.md

@@ -1,0 +1,8 @@
+---
+nav:
+  - Home: index.md
+  - MainframeCI Workflow: MainframeCI.md
+  - MainframeCERT Workflow: MainframeCERT.md
+  - MainframeRLSE Workflow: MainframeRLSE.md
+  - MainframePREPRO Workflow: MainframePREPRO.md
+  - MainframeRestore Workflow: MainframeRestore.md

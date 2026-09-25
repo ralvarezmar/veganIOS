@@ -1,0 +1,8 @@
+---
+nav:
+    - index.md
+    - About Gluon: about-gluon
+    - Support: support
+    - Company Management: company-management
+    - Billing: 'getting-started/about-gluon/gluon-variable-costs/'
+    - Setup your environment: setup-your-environment

@@ -1,0 +1,6 @@
+nav:
+
+  - index.md
+  - Configurations: configurations.md
+  - Prerequisites: pre-reqs.md
+  - Temporary Setup Required: temp-authenticator-service.md

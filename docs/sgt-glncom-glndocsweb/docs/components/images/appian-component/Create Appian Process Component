@@ -1,0 +1,226 @@
+## Create Appian Process Component
+The goal of this section is to create a Appian Process from the Gluon portal.
+
+### Component Creation from Gluon
+To create a component, follow the steps described in Component Management, searching for the component to be created.
+
+![Component Onbaording Journey](appianFlowComponentOnboardingExpanded.drawio.png)
+
+![Component Creation from Gluon](CreateAppianComponent.png)
+
+???+ remember
+
+    To follow the naming convention visit [Repository Naming Convention](../../component-management/create-component.md/#repository-naming-convention).
+
+The following configuration on the component is shown already preloaded, as it is not user-configurable:
+
+- Branch Strategy: git-flow
+- Class: deployable
+- Deployment target: optimized-hosting-environment
+
+![Appian Process Component Creation Step 2](AppianProcessComponentStep2.png)
+
+As a last step, a summary is displayed with the entered information and the option to "Create Component"
+
+![Appian Process Component Creation Step 3](AppianProcessComponentStep3.png)
+
+The component has been created correctly! In order to continue with the development of the component, Gluon automatically provides a repository on GitHub and registers the component on Sonarqube.
+
+This operation may take a few seconds, and when it is finished, the links will be enabled on the portal, so that the developer can access it directly.
+
+![Component Created](ComponentCreated.png)
+
+## Deploy the Process
+
+The goal of this section is to work with the GitHub repository in order to deploy a process developed in an Appian development environment to certification, preproduction and production.
+
+The following flowchart shows an outline of the steps that will be explained below, which developers must follow in order to deploy their process.
+
+![Component Development Journey](appianFlowDevelopmentprocessExpanded.drawio.png)
+
+### Deploy the Process in Certification
+
+#### Component structure
+
+When accessing the repository, the Actions section shows that a GitHub action called "Initialization repository" has been executed which creates 2 branches: main and develop.
+
+![Initialization Repository](InitializationRepository.PNG)
+
+In the develop branch, the Appian archetype is available, with the scaffolding to be able to upload the Appian Component files. The structure of the archetype is as follows:
+
+``` bash
+
+📂.github
+ ┣ 📂workflows
+ | ┣ 📜appian-quality.yml
+ | ┣ 📜appian-rl-artifact-tb.yml
+ | ┣ 📜appian-snapshot-artifact-tb.yml
+ | ┣ 📜maven-cd-artifact.yml
+ | ┗ 📜version-update-proposal.yml
+ ┗ 📜CODEOWNERS
+📂appian
+ ┣ 📂applications
+ ┣ 📂properties
+📂assembly
+ ┗ 📜application.xml
+ ┗ full.xml
+📂envs
+ ┗ 📜properties.env
+📜README.md
+📜deployment.yml
+📜pom.xml
+
+```
+
+In addition, following the Gluon strategy, the repository has been created with the team associated to the application, so that the team members have permissions to be able to work with the repository.
+
+
+#### Cloning the repository
+
+Once we have the device properly configured, the first step is to clone the project locally. To do so, visit [How to clone de project](../..//create-component.md/#cloning-a-repository).
+
+#### Exporting and copying Appian Component files
+
+The repository is ready in the local environment, now it is time to copy the files and configurations of the process we have developed.
+
+To do this, use the "Export Application" option available in the Appian Designer console:
+
+![Appian Export Step 1](AppianExportStep1.PNG)
+
+![Appian Export Step 2](AppianExportStep2.PNG)
+
+![Appian Export Step 3](AppianExportStep3.PNG)
+
+2 files are downloaded:
+- < File name >.zip (the name of the file we have indicated when exporting the file): Contains the files of the Appian Component developed.
+- < File name >.properties: File with the Appian Component properties, which have to be set for each environment.
+
+The Appian Component files must be unzipped in the appian/applications folder of the archetype.
+
+``` bash
+
+📂appian
+ ┣ 📂applications
+  ┣ 📂application
+  ┣ 📂connectedSystem
+  ┣ 📂content
+  ┣ 📂group
+  ┣ 📂processModelFolder
+  ┣ 📂META-INF
+  ┣ 📜README.md
+
+```
+
+Regarding the customisation file, one file for each environment must be created. For this, the downloaded .properties file is copied to the appian/applications folder and 3 copies are created, with the following name:
+
+``` bash
+  < repo name >-< environment >.properties
+```
+
+Below is an example of how the folder should look like:
+
+``` bash
+
+  📂appian
+   ┣ 📂aproperties
+    ┣ 📜sov-vortex-appiandoc.cert.properties
+    ┣ 📜sov-vortex-appiandoc.pre.properties
+    ┣ 📜sov-vortex-appiandoc.pro.properties
+    ┣ 📜README.md
+
+  ```
+
+To configure the properties for each environment, each property must be uncommented and the corresponding value included.
+
+#### Adding secrets
+
+At this point, it is common that there are some properties that must be configured as secrets, such as tokens or passwords, which value are not known by the developer.
+
+???+ info
+
+  The developer does not have permissions to configure secrets. The creation of these secrets can only be done by profiles that know the value of the property and have the necessary permissions in the GitHub repository to create the secret. The developer must coordinate with these people, indicating the name of the secret to be created.
+
+To create the secret, a profile with sufficient permissions must go to Settings -> Environments, where the 3 environments created will be displayed: certification, pre-production and production.
+
+![Secret Environments](SecretEnvironments.PNG)
+
+By clicking on one, in the section "Environmens secrets" the secrets can be created by adding its name and value.
+
+![Configure Repository Journey](appianFlowConfigureRepositoryExpanded.drawio.png)
+
+![Secret Example](SecretExample.png)
+
+In order for Appian's deployment workflow to allow GitHub Actions to access the server, 2 secrets must be configured:
+
+- _APPIAN_USER_: The user with which the component is going to be deployed.
+- _APPIAN_PASSWORD_: Password of the user with which the component is going to be deployed.
+
+![Secrets Appian](SecretsAppian.png)
+
+Once the secrets have been created, they must be incorporated into the property file using the following nomenclature ${{ secret.< SECRET_NAME >}}
+
+Below is an example of a property file with 2 properties, one of them being a secret:
+
+``` yaml title="sov-vortex-appiandoc.cert.properties" hl_lines="13 14" linenums="1"
+
+## Connected System: FAM AppianServer
+connectedSystem._a-0002ea91-ebe5-8000-ebe5-219188219188_16633.baseUrl=https://santander-sdsx-poc-bpm4.apps.ocpcto02.sgt.pre.weu2.azure.paas.cloudcenter.corp/suite/deployment-management/v1
+connectedSystem._a-0002ea91-ebe5-8000-ebe5-219188219188_16633.apiKeyValue=${{ secret.APIKEYVALUE}}
+
+```
+
+#### Appian Component Pull Request
+
+Once the Appian component has been copied and configured, it is time to upload the changes to the branch and create a Pull Request.
+
+![Appian Quality Gate Workflow](AppianQualityGateWorkflow.png)
+
+If the quality gates have been executed correctly, the reviewers configured in the repository, following the Gluon principles, must accept the Pull Request.
+
+When the Pull Request is approved, the developer must merge the changes in the main branch and delete the develop branch (this step is not mandatory, but is good practice).
+
+So the CI (Continuos Integracion) / CD (Continuos Delivery) workflows has started.
+
+The CI workflow build the artefact and upload to Nexus:
+
+![CI - Merge Pull Request](CI-MergePullRequest.PNG)
+
+The CD workflow deploy in Certification environment and finally create a draft release.
+
+![CD Maven CD Artifact](CD-MavenCDArtifact.PNG)
+
+### Deploy the Process in Preproduction
+
+For deployment in the pre-production environment, the developer must edit the release and publish it.
+
+![Releases](Releases.png)
+
+To do this, in the repository, the developer must go to the Releases option and edit the draft release that has been created
+
+![Edit Release](Releases-EditRelease.png)
+
+At this point, for the correct functioning of the pipeline, the "Set as a pre-release" option must not be unchecked. Finally, click on the "Publish Release" option.
+
+![Publish Release](Release-PublishRelease.png)
+
+At this point, the CI and CD workflows are started to deploy the Appian component in the pre-production environment. As in the case of certification, in order to work, the secrets must be configured to be able to access the server.
+
+![CD Create Release](CD-CreateRelease.PNG)
+
+### Deploy the Process in Production
+
+Finally, the day of deployment to production has arrived. For this step, it is only necessary to approve the release to production in order to deploy the created release.
+
+![Promote Production](PromoteProduction.png)
+
+Deployment reviewers have to be configured in the repository, in the section "Settings -> Environments -> production -> Required reviewers".
+
+![Reviewers](Reviewers.png)
+
+These users, during the execution of the pipeline, have received an email requesting their approval to deploy to production. The only step they have to do is to click on the "Review Pending Deployment" option and the workflow will start running.
+
+![Review Pending Deployment](ReviewPendingDeployment.png)
+
+On the workflow screen, the status of the flow can be reviewed, click on the "Review deployments" option and if everything is correct, approve the deployment by clicking on the "Approve and deploy" button and the component will be deployed in production.
+
+![Review Deployment](ReviewDeployment.png)

@@ -1,0 +1,30 @@
+---
+title: "[NPM] Retrieving the first version occurrence from the package.json file"
+categories:
+  - Software CICD
+date:
+  created: 2025-09-18
+tags:
+  - Fix
+---
+
+![Fix](../assets/images/fix-blog.png)
+
+### What's Changing?
+
+In the scripts section of package.json, there are naming conventions and reserved names, but 'version' is not a  
+reserved name. Therefore, a script named 'version' may exist, causing the package.json to contain more than one  
+'version' label.
+
+**Technical Changes:**
+
+- Changed the command that retrieves the version field to only retrieve the main "version" field
+
+**Problem Impact:**
+
+- Projects that have scripts in their package.json with a field named 'version' would not correctly retrieve
+ the component version during version validation, but instead retrieve the version field from the script section.
+
+**Benefits of the Fix:**
+
+- **Functional improvement**: The technical version of the component is now correctly retrieved.

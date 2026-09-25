@@ -1,0 +1,6 @@
+nav:
+
+  - index.md
+  - Configuration: configuration.md
+  - Consumption: consumption.md
+  - Publishing: publishing.md

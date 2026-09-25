@@ -1,0 +1,24 @@
+---
+nav:
+  - Altair transactions: santander-spring-boot-altair
+  - Authentication Security: santander-spring-boot-security-authentication
+  - Authorization Security: santander-spring-boot-security-authorization
+  - Batch Applications: santander-spring-boot-batch
+  - Business Events: santander-spring-boot-business-events
+  - Cache: santander-spring-boot-cache
+  - CodeTables service: santander-spring-boot-codetables
+  - Core: santander-spring-boot-core
+  - DLB Crypto library : santander-spring-boot-dlb
+  - Events: santander-spring-boot-events
+  - Extended-Error's error customization: santander-spring-boot-extended-error
+  - GraphQL Applications: santander-spring-boot-graphql
+  - In-Memory Database: santander-spring-boot-in-memory
+  - Logging (Observability): santander-spring-boot-logging
+  - Logging Logback Kafka Appender: santander-spring-boot-logging-logback-kafka-appender
+  - Metrics: santander-spring-boot-metrics
+  - Omnichannel: santander-spring-boot-omnichannel
+  - Partenon transactions: santander-spring-boot-partenon
+  - Starters: santander-spring-boot-starters
+  - Telemetry Log: santander-spring-boot-telemetry-log
+  - Testing toolkit: santander-spring-boot-test
+  - Web Service facilities: santander-spring-boot-webservice

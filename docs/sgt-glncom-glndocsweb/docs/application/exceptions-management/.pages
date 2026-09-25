@@ -1,0 +1,10 @@
+---
+nav:
+
+  - index.md
+  - General usage: general-usage.md
+  - Create exception for quality automated checks: quality-exceptions.md
+  - Create exception for security automated checks: security-exceptions.md
+  - Create exception for integration testing: testing-exceptions.md
+  - Create exception for an incidence: incidence-exceptions.md
+  - Request a Cross Team association: incidence-exceptions.md

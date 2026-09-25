@@ -1,0 +1,13 @@
+---
+nav:
+  - index.md
+  - Applications Management: application-management
+  - Users and Teams: users-teams
+  - Components: component-management
+  - Exceptions: exceptions-management
+  - Releases: release-management
+  - Infrastructure: iac
+  - CI/CD: ci-cd
+  - QA & Testing: qatesting
+  - Security: security
+  - Observability and Insights: observability-insights

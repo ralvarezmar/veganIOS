@@ -1,0 +1,11 @@
+---
+nav:
+  - Home: index.md
+  - API: apis
+  - Events: events
+  - Web: front-web
+  - Mobile: front-mobile
+  - Observability: observability
+  - OHE: referenceohet.md
+  - Platform: platform
+  - Security: security

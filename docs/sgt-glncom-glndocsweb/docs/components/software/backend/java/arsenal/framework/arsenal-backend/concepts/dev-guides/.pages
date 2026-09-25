@@ -1,0 +1,7 @@
+nav:
+  - Packages Structure: 'packages-structure.md'
+  - Nomenclature: 'nomenclature.md'
+  - CodeStyle: 'code-style.md'
+  - Semantic Version: 'semver.md'
+  - Lombok: 'lombok.md'
+  - MapStruct: 'mapstruct.md'

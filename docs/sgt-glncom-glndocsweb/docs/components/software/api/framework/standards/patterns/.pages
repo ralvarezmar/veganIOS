@@ -1,0 +1,12 @@
+---
+nav:
+      - index.md
+      - Idempotency: idempotency.md
+      - Inheritance & Polymorphism: inheritance.md
+      - Asynchrony: asynchrony.md
+      - Large files: large-files.md
+      - Metadata: metadata.md
+      - Content Negotiation: content-negotiation.md
+      - Virtual resources & long polling: virtual-resources.md
+      - Pagination: pagination.md
+      - Parametric APIs: parametric.md

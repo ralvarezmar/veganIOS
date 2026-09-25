@@ -1,0 +1,5 @@
+---
+nav:
+  - index.md
+  - Photon Archetype Extension: photon-quarkus-archetype-extension
+  - Photon Archetype ORM: photon-quarkus-archetype-orm

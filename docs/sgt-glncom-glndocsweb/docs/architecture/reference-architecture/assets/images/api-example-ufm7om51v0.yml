@@ -1,0 +1,1699 @@
+openapi: 3.0.0
+info:
+  title: Customer Position API
+  version: 1.2.0
+  description: >-
+    Provides information about contracts and balances of a customer. It also
+    includes endpoints to allow sorting the sequence of each product family in
+    the list.
+  contact:
+    name: Name and Last name
+    email: name.lastName@gruposantander.com
+  license:
+    name: Apache
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  - url: /v2/customer_pos
+tags:
+  - name: Customer position
+    description: Customer position
+paths:
+  /:
+    get:
+      description: >-
+        Provides a customer's total balances for each group of product
+        families. 
+         Provides the detailed balances of each customer contract. 
+         It performs grouping of balances by product and family of products.
+      operationId: getCustomerPosition
+      tags:
+        - Customer position
+      responses:
+        '200':
+          $ref: '#/components/responses/Get200_GlobalPosition'
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+      parameters:
+        - $ref: '#/components/parameters/accept-language'
+        - $ref: '#/components/parameters/device-information'
+        - $ref: '#/components/parameters/content-type'
+        - $ref: '#/components/parameters/accept'
+        - $ref: '#/components/parameters/product_family'
+        - $ref: '#/components/parameters/active_only'
+        - $ref: '#/components/parameters/operation'
+        - $ref: '#/components/parameters/profile_id'
+        - $ref: '#/components/parameters/customer_id'
+components:
+  schemas:
+    AccountsMonthlyBalanceResponseDTO:
+      description: >-
+        Data structure containing all the information related to the customer
+        position view.
+      type: object
+      properties:
+        accountsMonthlyBalance:
+          description: list containing the monthly balances
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountMonthlyBalanceItem'
+    AccountMonthlyBalanceItem:
+      description: >-
+        Data structure containing all the information related to the customer
+        position view.
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/AccountMonthlyBalance'
+        monthlyBalance:
+          description: monthly balance for the account specified in the 'accout' parameter
+          type: array
+          items:
+            $ref: '#/components/schemas/MonthlyBalanceItem'
+    MonthlyBalanceItem:
+      description: Monthly balance
+      type: object
+      properties:
+        month:
+          $ref: '#/components/schemas/Order'
+        balance:
+          $ref: '#/components/schemas/Amount'
+        expense:
+          $ref: '#/components/schemas/Amount'
+        income:
+          $ref: '#/components/schemas/Amount'
+    AccountMonthlyBalance:
+      x-bizObjRef: Account
+      type: object
+      description: Data structure containing account information
+      properties:
+        accountId:
+          description: Unique account ID
+          type: string
+          example: '00491655300123456700'
+    GetGlobalPositionResponse:
+      description: >-
+        Data structure containing all the information related to the customer
+        position.
+      type: object
+      properties:
+        accounts:
+          $ref: '#/components/schemas/AccountsInformation'
+        cards:
+          $ref: '#/components/schemas/CardsInformation'
+        loans:
+          $ref: '#/components/schemas/LoansInformation'
+        deposits:
+          $ref: '#/components/schemas/DepositsInformation'
+        pensions:
+          $ref: '#/components/schemas/PensionsInformation'
+        securities:
+          $ref: '#/components/schemas/SecuritiesInformation'
+        investmentFunds:
+          $ref: '#/components/schemas/InvestmentFundsInformation'
+        investmentsInsurances:
+          $ref: '#/components/schemas/InsuranceInformation'
+        savingsInsurances:
+          $ref: '#/components/schemas/InsuranceInformation'
+        managedPortfolios:
+          $ref: '#/components/schemas/PortfoliosInformation'
+        unmanagedPortfolios:
+          $ref: '#/components/schemas/PortfoliosInformation'
+        unitLinked:
+          $ref: '#/components/schemas/UnitLinkedInformation'
+    InsuranceInformation:
+      description: >-
+        Data structure containing aggregated information from the Insurance
+        balances and broken down to Insurance level.
+      type: object
+      properties:
+        viewConfiguration:
+          $ref: '#/components/schemas/ChannelAccessAgreementInformation'
+        totalBalances:
+          $ref: '#/components/schemas/InsuranceTotalBalances'
+        list:
+          description: Array of investments.
+          type: array
+          items:
+            $ref: '#/components/schemas/InsuranceWithLinks'
+    InsuranceWithLinks:
+      type: object
+      description: Data structure containing Insurance information and interest links.
+      properties:
+        insurance:
+          $ref: '#/components/schemas/InsurancePolicy'
+    InsuranceTotalBalances:
+      description: >-
+        Data structure containing aggregated information from the investment
+        balances.
+      type: object
+      properties:
+        totalCurrent:
+          $ref: '#/components/schemas/Amount'
+    PortfoliosInformation:
+      description: >-
+        Data structure containing aggregated information from the Insurance
+        balances and broken down to Insurance level.
+      type: object
+      properties:
+        viewConfiguration:
+          $ref: '#/components/schemas/ChannelAccessAgreementInformation'
+        totalBalances:
+          $ref: '#/components/schemas/PortfoliosTotalBalances'
+        list:
+          description: Array of Portfolios.
+          type: array
+          items:
+            $ref: '#/components/schemas/PortfoliosWithLinks'
+    PortfoliosWithLinks:
+      type: object
+      description: Data structure containing Portfolio information and interest links.
+      properties:
+        portfolios:
+          $ref: '#/components/schemas/InvestmentPortfolio'
+    PortfoliosTotalBalances:
+      description: Data structure containing aggregated information from portfolios.
+      type: object
+      properties:
+        totalCurrent:
+          $ref: '#/components/schemas/Amount'
+    AccountsInformation:
+      description: >-
+        Data structure containing aggregated information from the account
+        balances and broken down to account level.
+      type: object
+      properties:
+        viewConfiguration:
+          $ref: '#/components/schemas/ChannelAccessAgreementInformation'
+        totalBalances:
+          $ref: '#/components/schemas/AccountTotalBalances'
+        list:
+          description: Array of accounts.
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountWithLinks'
+    AccountWithLinks:
+      type: object
+      description: Data structure containing account information and interest links.
+      properties:
+        account:
+          $ref: '#/components/schemas/Account'
+        bank:
+          $ref: '#/components/schemas/Bank'
+    AccountTotalBalances:
+      description: >-
+        Data structure containing aggregated information from the account
+        balances.
+      type: object
+      properties:
+        totalCurrent:
+          $ref: '#/components/schemas/Amount'
+        totalWithholding:
+          $ref: '#/components/schemas/Amount'
+        totalAvailable:
+          $ref: '#/components/schemas/Amount'
+    CardsInformation:
+      description: Data structure containing information broken down to card level.
+      type: object
+      properties:
+        viewConfiguration:
+          $ref: '#/components/schemas/ChannelAccessAgreementInformation'
+        list:
+          description: Array of cards.
+          type: array
+          items:
+            $ref: '#/components/schemas/CardWithLinks'
+    CardWithLinks:
+      type: object
+      description: Data structure containing card information and interest links.
+      properties:
+        card:
+          $ref: '#/components/schemas/Card'
+        bank:
+          $ref: '#/components/schemas/Bank'
+    LoansInformation:
+      description: >-
+        Data structure containing aggregated information from the loan balances
+        and broken down to account level.
+      type: object
+      properties:
+        viewConfiguration:
+          $ref: '#/components/schemas/ChannelAccessAgreementInformation'
+        totalBalances:
+          $ref: '#/components/schemas/LoanTotalBalances'
+        list:
+          description: Array of loans.
+          type: array
+          items:
+            $ref: '#/components/schemas/LoanWithLinks'
+    LoanWithLinks:
+      type: object
+      description: Data structure containing loan information and interest links.
+      properties:
+        loan:
+          $ref: '#/components/schemas/Loan'
+        bank:
+          $ref: '#/components/schemas/Bank'
+    LoanTotalBalances:
+      description: Data structure containing aggregated information from the loan balances.
+      type: object
+      properties:
+        totalPrincipal:
+          $ref: '#/components/schemas/Amount'
+        totalAmortization:
+          $ref: '#/components/schemas/Amount'
+    DepositsInformation:
+      description: >-
+        Data structure containing aggregated information from the deposit
+        balances and broken down to deposit level.
+      type: object
+      properties:
+        viewConfiguration:
+          $ref: '#/components/schemas/ChannelAccessAgreementInformation'
+        totalBalances:
+          $ref: '#/components/schemas/DepositTotalBalances'
+        list:
+          description: Array of deposits.
+          type: array
+          items:
+            $ref: '#/components/schemas/DepositWithLinks'
+    DepositWithLinks:
+      type: object
+      description: Data structure containing deposit information and interest links.
+      properties:
+        deposit:
+          $ref: '#/components/schemas/Deposit'
+        balances:
+          $ref: '#/components/schemas/Balances'
+        bank:
+          $ref: '#/components/schemas/Bank'
+    DepositTotalBalances:
+      description: >-
+        Data structure containing aggregated information from the deposit
+        balances.
+      type: object
+      properties:
+        totalCurrent:
+          $ref: '#/components/schemas/Amount'
+        totalProfit:
+          $ref: '#/components/schemas/Amount'
+    PensionsInformation:
+      description: >-
+        Data structure containing aggregated information from the pension plan
+        balances and broken down to pension plan level.
+      type: object
+      properties:
+        viewConfiguration:
+          $ref: '#/components/schemas/ChannelAccessAgreementInformation'
+        totalBalances:
+          $ref: '#/components/schemas/PensionTotalBalances'
+        list:
+          description: Array of pension plans.
+          type: array
+          items:
+            $ref: '#/components/schemas/PensionWithLinks'
+    PensionWithLinks:
+      type: object
+      description: Data structure containing pension plan information and interest links.
+      properties:
+        pension:
+          $ref: '#/components/schemas/InvestmentPensionContract'
+        bank:
+          $ref: '#/components/schemas/Bank'
+    PensionTotalBalances:
+      description: >-
+        Data structure containing aggregated information from the pension plan
+        balances.
+      type: object
+      properties:
+        totalCurrent:
+          $ref: '#/components/schemas/Amount'
+    SecuritiesInformation:
+      description: >-
+        Data structure containing aggregated information from the security
+        balances and broken down to security level.
+      type: object
+      properties:
+        viewConfiguration:
+          $ref: '#/components/schemas/ChannelAccessAgreementInformation'
+        totalBalances:
+          $ref: '#/components/schemas/SecurityTotalBalances'
+        list:
+          description: Array of securities.
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityWithLinks'
+    SecurityWithLinks:
+      type: object
+      description: Data structure containing security information and interest links.
+      properties:
+        security:
+          $ref: '#/components/schemas/InvestmentShareContract'
+        bank:
+          $ref: '#/components/schemas/Bank'
+    SecurityTotalBalances:
+      description: >-
+        Data structure containing aggregated information from the security
+        balances.
+      type: object
+      properties:
+        totalCurrent:
+          $ref: '#/components/schemas/Amount'
+    InvestmentFundsInformation:
+      description: >-
+        Data structure containing aggregated information from the investment
+        balances and broken down to investment level.
+      type: object
+      properties:
+        viewConfiguration:
+          $ref: '#/components/schemas/ChannelAccessAgreementInformation'
+        totalBalances:
+          $ref: '#/components/schemas/InvestmentFundTotalBalances'
+        list:
+          description: Array of investments.
+          type: array
+          items:
+            $ref: '#/components/schemas/InvestmentFundWithLinks'
+    InvestmentFundWithLinks:
+      type: object
+      description: Data structure containing investment information and interest links.
+      properties:
+        investmentFund:
+          $ref: '#/components/schemas/InvestmentFundContract'
+        bank:
+          $ref: '#/components/schemas/Bank'
+    InvestmentFundTotalBalances:
+      description: >-
+        Data structure containing aggregated information from the investment
+        balances.
+      type: object
+      properties:
+        totalCurrent:
+          $ref: '#/components/schemas/Amount'
+    UnitLinkedInformation:
+      description: Data structure containing data about the unit-linked plan product family
+      type: object
+      properties:
+        viewConfiguration:
+          $ref: '#/components/schemas/ChannelAccessAgreementInformation'
+        totalBalances:
+          $ref: '#/components/schemas/UnitLinkedTotalBalances'
+        list:
+          description: Array of accounts.
+          type: array
+          items:
+            $ref: '#/components/schemas/UnitLinkedLinks'
+    UnitLinkedTotalBalances:
+      description: >-
+        Data structure containing aggregated information from the account
+        balances.
+      type: object
+      properties:
+        totalCurrent:
+          $ref: '#/components/schemas/Amount'
+    UnitLinkedLinks:
+      type: object
+      description: Data structure containing account information and interest links.
+      properties:
+        unitLinked:
+          $ref: '#/components/schemas/UnitLinked'
+    Account:
+      type: object
+      description: Data structure containing account information
+      properties:
+        accountId:
+          description: Unique account ID
+          type: string
+          example: '9012781018079'
+        accountIdentification:
+          description: >-
+            Data structure containing information related to account
+            identification
+          type: object
+          properties:
+            internationalIdentification:
+              type: string
+              description: International Bank Account Number (IBAN) obfuscated.
+              example: ES91xxxxxxxxxxxx0051332
+            nationalIdentification:
+              type: string
+              description: National bank account number obfuscated.
+              example: 9021xxxxxxxx676767
+        typeCode:
+          description: Account type code
+          type: string
+          example: '10'
+        typeDescription:
+          description: Account type description
+          type: string
+          example: Saving
+        channelAccessAgreementInformation:
+          description: Data structure containing information about a customer overview item
+          type: object
+          properties:
+            alias:
+              type: string
+              description: >-
+                Name (alias) that the customer has assigned to the item for easy
+                identification. Only required for customer usability.
+              example: MY CHECKING ACCOUNT
+            isMainItem:
+              type: boolean
+              description: >-
+                Whether the item is the customer's main item. Applies only when
+                the operation is used by a physical or business customer, not
+                when used by Santander staff.
+
+
+                The possible values are:
+
+                - true = Main item
+
+                - false = Secondary item
+              example: true
+            presentationOrder:
+              type: integer
+              description: >-
+                Display order of the contract within the product family-specific
+                list.
+
+
+                The possible values are incremental whole digits from 0:
+
+                - All contracts with 0 are listed first, using an internal
+                contract ID to determine their mutual order
+
+                - Contracts with 1, 2... are listed next in the order defined
+
+                - Any contracts with no defined display order are listed at the
+                end, using an internal contract ID to determine their mutual
+                order
+
+
+                The default value is 0.
+              example: 1
+            isVisible:
+              type: boolean
+              description: |-
+                Contract visibility indicator.
+
+                The possible values are:
+                - true = Contract is shown in the customer's global position
+                - false = Contract is hidden in the customer's global position
+
+                The default value is true.
+              example: true
+        contract:
+          description: Data structure containing contract information
+          type: object
+          properties:
+            product:
+              type: object
+              description: >-
+                Data structure containing product information. Products can be
+                services or goods.
+              properties:
+                productCode:
+                  type: string
+                  description: Product code
+                  example: '0049300130'
+                productDescription:
+                  type: string
+                  description: Product description
+                  example: Santander Checking Account
+        statusInfo:
+          $ref: '#/components/schemas/StatusInfo'
+        balances:
+          $ref: '#/components/schemas/Balances'
+    Card:
+      type: object
+      description: Data structure containing card details
+      properties:
+        cardId:
+          type: string
+          description: >-
+            Card ID that is used to uniquely identify the card in card-related
+            operations. For internal use, the value does not require
+            tokenization.
+          example: '4547420008209985'
+        cardIdentification:
+          description: Data structure containing identification information for a card
+          type: object
+          properties:
+            displayNumber:
+              description: Displayed card number
+              type: string
+              example: xxxx-xxxx-xxxx-5643
+        channelAccessAgreementInformation:
+          description: Data structure containing information about a customer overview item
+          type: object
+          properties:
+            alias:
+              type: string
+              description: >-
+                Name (alias) that the customer has assigned to the item for easy
+                identification. Only required for customer usability.
+              example: Card for family expenses
+            isMainItem:
+              type: boolean
+              description: >-
+                Whether the item is the customer's main item. Applies only when
+                the operation is used by a physical or business customer, not
+                when used by Santander staff.
+
+
+                The possible values are:
+
+                - true = Main item
+
+                - false = Secondary item
+              example: true
+            presentationOrder:
+              type: integer
+              description: >-
+                Display order of the contract within the product family-specific
+                list.
+
+
+                The possible values are incremental whole digits from 0:
+
+                - All contracts with 0 are listed first, using an internal
+                contract ID to determine their mutual order
+
+                - Contracts with 1, 2... are listed next in the order defined
+
+                - Any contracts with no defined display order are listed at the
+                end, using an internal contract ID to determine their mutual
+                order
+
+
+                The default value is 0.
+              example: 1
+            isVisible:
+              type: boolean
+              description: |-
+                Contract visibility indicator.
+
+                The possible values are:
+                - true = Contract is shown in the customer's global position
+                - false = Contract is hidden in the customer's global position
+
+                The default value is true.
+              example: true
+        type:
+          type: string
+          description: Card type that defines the operations for which it can be used
+          example: CREDIT CARD
+        typeCode:
+          description: Card type code
+          type: string
+          example: '01'
+        typeDescription:
+          description: Card type description
+          type: string
+          example: Visa Oro 123
+        statusInfo:
+          description: Data structure containing information about the status of an item
+          type: object
+          properties:
+            statusCode:
+              type: string
+              description: Status code
+              example: CANC
+            statusDescription:
+              type: string
+              description: Status description
+              example: INACTIVE
+            statusReasonCode:
+              type: string
+              description: Status reason code
+              example: DQUA
+            statusReasonDescription:
+              type: string
+              description: Description of the status reason
+              example: Stolen
+        balances:
+          $ref: '#/components/schemas/Balances'
+    Loan:
+      description: Data structure containing information about a loan
+      type: object
+      properties:
+        loanId:
+          type: string
+          description: Unique loan ID
+          example: '1520891037864384'
+        loanIdentification:
+          description: Data structure containing information to identify a loan
+          type: object
+          properties:
+            nationalIdentification:
+              type: string
+              description: National loan identification
+              example: '091520891037864384'
+            internalIdentification:
+              description: Internal loan identification
+              type: string
+              example: '031700015000501323'
+        channelAccessAgreementInformation:
+          description: Data structure containing information about a customer overview item
+          type: object
+          properties:
+            alias:
+              type: string
+              description: >-
+                Name (alias) that the customer has assigned to the item for easy
+                identification. Only required for customer usability.
+              example: MY LOAN ACCOUNT
+            isMainItem:
+              type: boolean
+              description: >-
+                Whether the item is the customer's main item. Applies only when
+                the operation is used by a physical or business customer, not
+                when used by Santander staff.
+
+
+                The possible values are:
+
+                - true = Main item
+
+                - false = Secondary item
+              example: true
+            presentationOrder:
+              type: integer
+              description: >-
+                Display order of the contract within the product family-specific
+                list.
+
+
+                The possible values are incremental whole digits from 0:
+
+                - All contracts with 0 are listed first, using an internal
+                contract ID to determine their mutual order
+
+                - Contracts with 1, 2... are listed next in the order defined
+
+                - Any contracts with no defined display order are listed at the
+                end, using an internal contract ID to determine their mutual
+                order
+
+
+                The default value is 0.
+              example: 1
+            isVisible:
+              type: boolean
+              description: |-
+                Contract visibility indicator.
+
+                The possible values are:
+                - true = Contract is shown in the customer's global position
+                - false = Contract is hidden in the customer's global position
+
+                The default value is true.
+              example: true
+        contract:
+          description: Data structure containing contract information
+          type: object
+          properties:
+            product:
+              type: object
+              description: >-
+                Data structure containing product information. Products can be
+                services or goods.
+              properties:
+                productCode:
+                  type: string
+                  description: Product code
+                  example: '0049300130'
+                productDescription:
+                  type: string
+                  description: Product description
+                  example: Santander Checking Account
+        statusInfo:
+          $ref: '#/components/schemas/StatusInfo'
+        balances:
+          $ref: '#/components/schemas/Balances'
+        nextPaymentAmount:
+          $ref: '#/components/schemas/Amount'
+    Deposit:
+      description: Data structure containing information about a deposit
+      type: object
+      properties:
+        depositId:
+          type: string
+          description: Unique deposit ID
+          example: '1520893020013689'
+        depositIdentification:
+          description: Data structure containing identification information for a deposit
+          type: object
+          properties:
+            nationalIdentification:
+              type: string
+              description: National bank deposit number
+              example: '902127899967676767'
+        contract:
+          description: Data structure containing contract information
+          type: object
+          properties:
+            product:
+              type: object
+              description: >-
+                Data structure containing product information. Products can be
+                services or goods.
+              properties:
+                productCode:
+                  type: string
+                  description: Product code
+                  example: '0049300130'
+                productDescription:
+                  type: string
+                  description: Product description
+                  example: Santander Checking Account
+            validityPeriod:
+              type: object
+              description: Data structure containing period information
+              properties:
+                endDate:
+                  type: string
+                  description: |-
+                    Date when the period ends.
+
+                    The value uses the complete data format defined in ISO 8601:
+
+                    'YYYY-MM-DD'
+
+                    Where:
+                    - YYYY: 4-digit year
+                    - MM: 2-digit month (for example, 01 = January)
+                    - DD: 2-digit day of the month (01 through 31)
+                  format: date
+                  example: '2025-12-01'
+        channelAccessAgreementInformation:
+          description: Data structure containing information about a customer overview item
+          type: object
+          properties:
+            alias:
+              type: string
+              description: >-
+                Name (alias) that the customer has assigned to the item for easy
+                identification. Only required for customer usability.
+              example: MY DEPOSIT ACCOUNT
+            isMainItem:
+              type: boolean
+              description: >-
+                Whether the item is the customer's main item. Applies only when
+                the operation is used by a physical or business customer, not
+                when used by Santander staff.
+
+
+                The possible values are:
+
+                - true = Main item
+
+                - false = Secondary item
+              example: true
+            presentationOrder:
+              type: integer
+              description: >-
+                Display order of the contract within the product family-specific
+                list.
+
+
+                The possible values are incremental whole digits from 0:
+
+                - All contracts with 0 are listed first, using an internal
+                contract ID to determine their mutual order
+
+                - Contracts with 1, 2... are listed next in the order defined
+
+                - Any contracts with no defined display order are listed at the
+                end, using an internal contract ID to determine their mutual
+                order
+
+
+                The default value is 0.
+              example: 1
+            isVisible:
+              type: boolean
+              description: |-
+                Contract visibility indicator.
+
+                The possible values are:
+                - true = Contract is shown in the customer's global position
+                - false = Contract is hidden in the customer's global position
+
+                The default value is true.
+              example: true
+        statusInfo:
+          $ref: '#/components/schemas/StatusInfo'
+    InvestmentPensionContract:
+      description: Data structure containing information about a pension plan
+      type: object
+      properties:
+        investmentPensionContractId:
+          type: string
+          description: Unique pension plan ID
+          example: '1578653139876456'
+        pensionIdentification:
+          description: >-
+            Data structure containing identification information for a pension
+            plan
+          type: object
+          properties:
+            displayNumber:
+              description: Displayed pension plan number
+              type: string
+              example: 00***384
+        contract:
+          description: Data structure containing contract information
+          type: object
+          properties:
+            product:
+              type: object
+              description: >-
+                Data structure containing product information. Products can be
+                services or goods.
+              properties:
+                productCode:
+                  type: string
+                  description: Product code
+                  example: '0049300130'
+                productDescription:
+                  type: string
+                  description: Product description
+                  example: Santander Checking Account
+        channelAccessAgreementInformation:
+          description: Data structure containing information about a customer overview item
+          type: object
+          properties:
+            alias:
+              type: string
+              description: >-
+                Name (alias) that the customer has assigned to the item for easy
+                identification. Only required for customer usability.
+              example: MY PENSION ACCOUNT
+            isMainItem:
+              type: boolean
+              description: >-
+                Whether the item is the customer's main item. Applies only when
+                the operation is used by a physical or business customer, not
+                when used by Santander staff.
+
+
+                The possible values are:
+
+                - true = Main item
+
+                - false = Secondary item
+              example: true
+            presentationOrder:
+              type: integer
+              description: >-
+                Display order of the contract within the product family-specific
+                list.
+
+
+                The possible values are incremental whole digits from 0:
+
+                - All contracts with 0 are listed first, using an internal
+                contract ID to determine their mutual order
+
+                - Contracts with 1, 2... are listed next in the order defined
+
+                - Any contracts with no defined display order are listed at the
+                end, using an internal contract ID to determine their mutual
+                order
+
+
+                The default value is 0.
+              example: 1
+            isVisible:
+              type: boolean
+              description: |-
+                Contract visibility indicator.
+
+                The possible values are:
+                - true = Contract is shown in the customer's global position
+                - false = Contract is hidden in the customer's global position
+
+                The default value is true.
+              example: true
+        statusInfo:
+          $ref: '#/components/schemas/StatusInfo'
+        balances:
+          $ref: '#/components/schemas/Balances'
+    InsurancePolicy:
+      type: object
+      description: Data structure containing information about an insurance policy
+      properties:
+        insurancePolicyId:
+          type: string
+          description: Unique insurance policy ID
+          example: '001520893020013689'
+        channelAccessAgreementInformation:
+          description: Data structure containing information about a customer overview item
+          type: object
+          properties:
+            alias:
+              type: string
+              description: >-
+                Name (alias) that the customer has assigned to the item for easy
+                identification. Only required for customer usability.
+              example: Family Insurance
+            presentationOrder:
+              type: integer
+              description: >-
+                Display order of the contract within the product family-specific
+                list.
+
+
+                The possible values are incremental whole digits from 0:
+
+                - All contracts with 0 are listed first, using an internal
+                contract ID to determine their mutual order
+
+                - Contracts with 1, 2... are listed next in the order defined
+
+                - Any contracts with no defined display order are listed at the
+                end, using an internal contract ID to determine their mutual
+                order
+
+
+                The default value is 0.
+              example: 1
+            isVisible:
+              type: boolean
+              description: |-
+                Contract visibility indicator.
+
+                The possible values are:
+                - true = Contract is shown in the customer's global position
+                - false = Contract is hidden in the customer's global position
+
+                The default value is true.
+              example: true
+        insuranceIdentification:
+          description: >-
+            Data structure containing identification information for an
+            insurance policy
+          type: object
+          properties:
+            policyNumber:
+              description: Insurance policy number obfuscated
+              type: string
+              example: xxxxxxxx90987654321
+        contract:
+          type: object
+          description: Data structure containing contract information
+          properties:
+            product:
+              type: object
+              description: >-
+                Data structure containing product information. Products can be
+                services or goods.
+              properties:
+                productCode:
+                  type: string
+                  description: Product code
+                  example: '0049300130'
+                productDescription:
+                  type: string
+                  description: Product description
+                  example: Santander Checking Account
+        premiumAmount:
+          $ref: '#/components/schemas/Amount'
+    InvestmentPortfolio:
+      type: object
+      description: Data structure containing information about an investment portfolio
+      properties:
+        portfolioId:
+          type: string
+          description: Unique portfolio ID
+          example: invpor123456
+        channelAccessAgreementInformation:
+          description: Data structure containing information about a customer overview item
+          type: object
+          properties:
+            alias:
+              type: string
+              description: >-
+                Name (alias) that the customer has assigned to the item for easy
+                identification. Only required for customer usability.
+              example: Portfolio
+            presentationOrder:
+              type: integer
+              description: >-
+                Display order of the contract within the product family-specific
+                list.
+
+
+                The possible values are incremental whole digits from 0:
+
+                - All contracts with 0 are listed first, using an internal
+                contract ID to determine their mutual order
+
+                - Contracts with 1, 2... are listed next in the order defined
+
+                - Any contracts with no defined display order are listed at the
+                end, using an internal contract ID to determine their mutual
+                order
+
+
+                The default value is 0.
+              example: 1
+            isVisible:
+              type: boolean
+              description: |-
+                Contract visibility indicator.
+
+                The possible values are:
+                - true = Contract is shown in the customer's global position
+                - false = Contract is hidden in the customer's global position
+
+                The default value is true.
+              example: true
+        portfolioIdentification:
+          description: >-
+            Data structure containing identification information for an
+            insurance policy
+          type: object
+          properties:
+            portfolioNumber:
+              description: Portfolio number
+              type: string
+              example: '1234567890987654321'
+        contract:
+          description: Data structure containing contract information
+          type: object
+          properties:
+            product:
+              type: object
+              description: >-
+                Data structure containing product information. Products can be
+                services or goods.
+              properties:
+                productCode:
+                  type: string
+                  description: Product code
+                  example: '0049300130'
+                productDescription:
+                  type: string
+                  description: Product description
+                  example: Santander Checking Account
+        statusInfo:
+          $ref: '#/components/schemas/StatusInfo'
+        balances:
+          $ref: '#/components/schemas/Balances'
+    InvestmentShareContract:
+      type: object
+      description: >-
+        Data structure containing information about an investment share
+        contract. A trader must have an investment share contract in place for
+        each company whose shares they intend to trade.
+      properties:
+        investmentShareContractId:
+          description: Unique ID for the investment share contract
+          type: string
+          example: Sales0123456789
+        investmentShareIdentification:
+          description: >-
+            Data structure containing identification information for an
+            investment share
+          type: object
+          properties:
+            displayNumber:
+              description: Displayed investment share number
+              type: string
+              example: '001578658029699345'
+        contract:
+          description: Data structure containing contract information
+          type: object
+          properties:
+            product:
+              type: object
+              description: >-
+                Data structure containing product information. Products can be
+                services or goods.
+              properties:
+                productCode:
+                  type: string
+                  description: Product code
+                  example: '0049300130'
+                productDescription:
+                  type: string
+                  description: Product description
+                  example: Santander Checking Account
+        channelAccessAgreementInformation:
+          description: Data structure containing information about a customer overview item
+          type: object
+          properties:
+            alias:
+              type: string
+              description: >-
+                Name (alias) that the customer has assigned to the item for easy
+                identification. Only required for customer usability.
+              example: MY SECURITY ACCOUNT
+            isMainItem:
+              type: boolean
+              description: >-
+                Whether the item is the customer's main item. Applies only when
+                the operation is used by a physical or business customer, not
+                when used by Santander staff.
+
+
+                The possible values are:
+
+                - true = Main item
+
+                - false = Secondary item
+              example: true
+            presentationOrder:
+              type: integer
+              description: >-
+                Display order of the contract within the product family-specific
+                list.
+
+
+                The possible values are incremental whole digits from 0:
+
+                - All contracts with 0 are listed first, using an internal
+                contract ID to determine their mutual order
+
+                - Contracts with 1, 2... are listed next in the order defined
+
+                - Any contracts with no defined display order are listed at the
+                end, using an internal contract ID to determine their mutual
+                order
+
+
+                The default value is 0.
+              example: 1
+            isVisible:
+              type: boolean
+              description: |-
+                Contract visibility indicator.
+
+                The possible values are:
+                - true = Contract is shown in the customer's global position
+                - false = Contract is hidden in the customer's global position
+
+                The default value is true.
+              example: true
+        statusInfo:
+          $ref: '#/components/schemas/StatusInfo'
+        balances:
+          $ref: '#/components/schemas/Balances'
+    InvestmentFundContract:
+      description: Data structure containing information about an investment fund contract
+      type: object
+      properties:
+        investmentFundContractId:
+          type: string
+          description: Investment fund contract ID
+          example: '1578658029699345'
+        investmentFundIdentification:
+          description: >-
+            Data structure containing identification information for an
+            investment fund
+          type: object
+          properties:
+            displayNumber:
+              description: Displayed investment fund number
+              type: string
+              example: '001578658029699345'
+        contract:
+          description: Data structure containing contract information
+          type: object
+          properties:
+            product:
+              type: object
+              description: >-
+                Data structure containing product information. Products can be
+                services or goods.
+              properties:
+                productCode:
+                  type: string
+                  description: Product code
+                  example: '0049300130'
+                productDescription:
+                  type: string
+                  description: Product description
+                  example: Santander Checking Account
+        channelAccessAgreementInformation:
+          description: Data structure containing information about a customer overview item
+          type: object
+          properties:
+            alias:
+              type: string
+              description: >-
+                Name (alias) that the customer has assigned to the item for easy
+                identification. Only required for customer usability.
+              example: MY INVESTMENT FUND ACCOUNT
+            isMainItem:
+              type: boolean
+              description: >-
+                Whether the item is the customer's main item. Applies only when
+                the operation is used by a physical or business customer, not
+                when used by Santander staff.
+
+
+                The possible values are:
+
+                - true = Main item
+
+                - false = Secondary item
+              example: true
+            presentationOrder:
+              type: integer
+              description: >-
+                Display order of the contract within the product family-specific
+                list.
+
+
+                The possible values are incremental whole digits from 0:
+
+                - All contracts with 0 are listed first, using an internal
+                contract ID to determine their mutual order
+
+                - Contracts with 1, 2... are listed next in the order defined
+
+                - Any contracts with no defined display order are listed at the
+                end, using an internal contract ID to determine their mutual
+                order
+
+
+                The default value is 0.
+              example: 1
+            isVisible:
+              type: boolean
+              description: |-
+                Contract visibility indicator.
+
+                The possible values are:
+                - true = Contract is shown in the customer's global position
+                - false = Contract is hidden in the customer's global position
+
+                The default value is true.
+              example: true
+        statusInfo:
+          $ref: '#/components/schemas/StatusInfo'
+        balances:
+          $ref: '#/components/schemas/Balances'
+    Balances:
+      description: Array of balances
+      type: array
+      items:
+        $ref: '#/components/schemas/Balance'
+    Balance:
+      type: object
+      description: >-
+        Data structure containing a numerical representation of the net
+        increases and decreases in an account at a specific point in time
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+        typeCode:
+          type: string
+          description: Balance type code
+          example: CRRT
+        typeDescription:
+          type: string
+          description: Balance type description
+          example: Current
+        lastUpdateDate:
+          type: string
+          format: date
+          description: |-
+            Date when the balance was last updated.
+
+            The value uses the complete data format defined in ISO 8601:
+
+            'YYYY-MM-DD'
+
+            Where:
+            - YYYY: 4-digit year
+            - MM: 2-digit month (for example, 01 = January)
+            - DD: 2-digit day of the month (01 through 31)
+          example: '2020-12-01'
+    StatusInfo:
+      description: Data structure containing information about the status of an item
+      type: object
+      properties:
+        statusDescription:
+          type: string
+          description: Status description
+          example: ACTIVE
+    Amount:
+      description: Data structure containing amount details
+      type: object
+      properties:
+        amount:
+          description: >-
+            Amount.
+
+
+            The value uses the data format defined in ISO 20022 and has a
+            maximum of 18 digits, of which 5 can be decimals, separated by a
+            point.
+          type: number
+          example: 99.99
+        currency:
+          description: >-
+            Currency code.
+
+
+            The value is in the alpha-3 format defined in ISO 4217
+            (https://www.iso.org/iso-4217-currency-codes.html).
+          type: string
+          minLength: 3
+          maxLength: 3
+          pattern: (^.{3}$)
+          example: EUR
+    Order:
+      type: integer
+      description: Order
+      example: 1
+    ChannelAccessAgreementInformation:
+      description: Data structure containing information about a customer overview item
+      type: object
+      properties:
+        presentationOrder:
+          type: integer
+          description: >-
+            Display order of the contract within the product family-specific
+            list.
+
+
+            The possible values are incremental whole digits from 0:
+
+            - All contracts with 0 are listed first, using an internal contract
+            ID to determine their mutual order
+
+            - Contracts with 1, 2... are listed next in the order defined
+
+            - Any contracts with no defined display order are listed at the end,
+            using an internal contract ID to determine their mutual order
+
+
+            The default value is 0.
+          example: 1
+        isVisible:
+          type: boolean
+          description: |-
+            Contract visibility indicator.
+
+            The possible values are:
+            - true = Contract is shown in the customer's global position
+            - false = Contract is hidden in the customer's global position
+
+            The default value is true.
+          example: true
+    Bank:
+      description: Data structure containing bank details
+      type: object
+      properties:
+        bankId:
+          description: Unique bank ID
+          example: AAOZ
+          type: string
+    UnitLinked:
+      description: Data structure containing information about a unit-linked plan
+      type: object
+      properties:
+        unitLinkeddId:
+          type: string
+          description: Unit-linked plan ID
+          example: '001578653066574321'
+        unitLinkedIdentification:
+          $ref: '#/components/schemas/UnitLinkedIdentification'
+        contract:
+          description: Data structure containing contract information
+          type: object
+          properties:
+            product:
+              type: object
+              description: >-
+                Data structure containing product information. Products can be
+                services or goods.
+              properties:
+                productCode:
+                  type: string
+                  description: Product code
+                  example: '0049300130'
+                productDescription:
+                  type: string
+                  description: Product description
+                  example: Santander Checking Account
+        channelAccessAgreementInformation:
+          $ref: '#/components/schemas/ChannelAccessAgreementInformation'
+        statusInfo:
+          $ref: '#/components/schemas/StatusInfo'
+        balances:
+          $ref: '#/components/schemas/Balances'
+    UnitLinkedIdentification:
+      description: >-
+        Data structure containing identification information for a unit-linked
+        plan
+      type: object
+      properties:
+        displayNumber:
+          description: Displayed unit-linked plan number
+          type: string
+          example: '001578653066574321'
+    Errors:
+      type: object
+      description: Data structure containing the details for errors
+      properties:
+        errors:
+          description: Array of errors
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      description: Data structure containing the error details
+      properties:
+        code:
+          type: string
+          description: Unique alphanumeric human readable error code
+          example: ERR001
+        message:
+          type: string
+          description: Brief summary of the reported issue
+          example: Invalid Action
+        level:
+          type: string
+          description: Level of the reported issue
+          enum:
+            - info
+            - warning
+            - error
+          example: error
+        description:
+          type: string
+          description: Detailed description of the reported issue
+          example: Description
+  parameters:
+    language:
+      name: language
+      schema:
+        type: string
+      required: false
+      in: header
+      description: >-
+        The server responds with the field in the header with the response
+        language. Following the ([ISO 639-2]-[ISO 3166-1/Alpha3]) code standard.
+      x-example: Spain will be es-ESP
+    accept-language:
+      name: accept-language
+      schema:
+        type: string
+      required: false
+      in: header
+      description: >-
+        The consumer list of languages by order of preference. Following the
+        (([ISO 639-2]-[ISO 3166-1/Alpha3])) code standard.
+      x-example: Spain will be es-ESP
+    device-information:
+      name: device-information
+      schema:
+        type: string
+      required: false
+      in: header
+      description: >-
+        CHANNEL/SEGMENT FRONT_APP/VERSION DEVICE OS/OS_VERSION
+        NETWORK_CLIENT/VERSION FRAMEWORK/VERSION Channel: [ISO 639-2][] plus 5
+        custom contry digits. For Segment: retail / business Front_App/Version:
+        For example OneApp/1.0 Device: Platform value extracted from the device.
+        For example iPhone13 OS/VERSION: android / iOS / windows / linux /
+        macOS, version is a platform value extracted from the device. For
+        example iOS/1.0 Network_Client/Version: App network client and version.
+        For example CF_Network/5.1 Framework/Version: For example Darwin/16.3.0
+    content-type:
+      name: content-type
+      schema:
+        type: string
+      required: false
+      in: header
+      description: >-
+        The server responds with the data format of the response. Backend
+        expected a JSON document format.
+      x-example: application/json
+    accept:
+      name: accept
+      schema:
+        type: string
+      required: false
+      in: header
+      description: >-
+        The consumer request the data format of the response by order of
+        preference.Backend expected a JSON document format.
+      x-example: application/json
+    product_family:
+      name: product_family
+      in: query
+      required: false
+      schema:
+        type: string
+      description: >-
+        The family to which a product belongs. A product can only belong to a
+        single family.  Avaliable values (accounts, cards, loans, deposits and
+        securities)
+      x-example: cards
+    active_only:
+      name: activeOnly
+      in: query
+      required: true
+      schema:
+        type: boolean
+      description: Whether return only contracts active.
+      x-example: true
+    operation:
+      name: operation
+      schema:
+        type: string
+        enum:
+          - contracts
+          - transferFrom
+          - transferTo
+          - makePayment
+      in: query
+      description: Operation value that need to be considered for filter
+      required: false
+    profile_id:
+      name: profile_id
+      schema:
+        type: string
+      required: false
+      in: query
+      description: >-
+        Unique ID for the user profile (if not indicated, use the default for
+        the client) .
+      x-example: '123456789'
+    customer_id:
+      name: customer_id
+      schema:
+        type: string
+      required: false
+      in: query
+      description: Customer ID
+      x-example: F1234567
+    bank_id:
+      name: bank_id
+      schema:
+        type: string
+      required: false
+      in: query
+      description: Unique bank ID
+      x-example: AAOZ
+    refresh:
+      name: refresh
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: >-
+        If true performs a manual update of the global position information of
+        one particular user bank.
+      x-example: false
+    from_month:
+      name: from_month
+      schema:
+        type: string
+      required: true
+      in: path
+      description: >-
+        Date with the format MMYYYY to set the initial date up today referencing
+        response data.
+      x-example: '052022'
+  responses:
+    Get200_GlobalPosition:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetGlobalPositionResponse'
+    NoContent:
+      description: No content
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    UnsupportedMediaType:
+      description: Unsupported media type
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    ServiceUnavailable:
+      description: Service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    GatewayTimeout:
+      description: Gateway timeout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'

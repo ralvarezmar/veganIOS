@@ -1,0 +1,7 @@
+---
+nav:
+
+- Jfrog Cli local install: installnow.md
+- OIDC Authentication: oidc.md
+- Identity Tokens: identitytkn.md
+- Local Setup: localsetup

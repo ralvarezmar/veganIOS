@@ -1,0 +1,10 @@
+nav:
+  - index.md
+  - SAST: fortify
+  - SCA: sonatype
+  - DAST: dast
+  - Secret Protection: secret-protection
+  - Security Gate: security-gate
+  - Use of SSC Platform: ssc-platform
+  - Brownfield: brownfield
+  - FAQ: support 

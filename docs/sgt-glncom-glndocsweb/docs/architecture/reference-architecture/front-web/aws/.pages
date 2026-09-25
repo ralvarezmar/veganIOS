@@ -1,0 +1,7 @@
+---
+nav:
+  - Home: index.md
+  - Reference Architecture: reference-architecture.md
+  - S3 Bucket: s3-bucket.md
+  - API Gateway: api-gateway
+  - Cloudfront: cloudfront

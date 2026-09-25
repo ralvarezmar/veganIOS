@@ -1,0 +1,11 @@
+nav:
+
+  - index.md
+  - Authentication: authentication
+  - Best Practices: best-practices
+  - Deployment: deployment
+  - Local Environment:  local-environment
+  - MFE:  mfe
+  - PWA:  pwa
+  - Tagging:  tagging
+  - Technical Writing: technical-writing

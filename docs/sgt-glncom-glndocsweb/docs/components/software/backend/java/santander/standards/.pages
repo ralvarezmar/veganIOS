@@ -1,0 +1,6 @@
+nav:
+  - Santander Spring Boot Microservice standards: microservice-standards.md
+  - Santander Spring Boot Microservice configuration: microservice-configuration.md
+  - Santander Spring Boot error management: error-management.md
+  - Santander Spring Boot resilience: resilience.md
+  

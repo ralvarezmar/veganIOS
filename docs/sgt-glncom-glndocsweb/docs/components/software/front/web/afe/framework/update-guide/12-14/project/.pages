@@ -1,0 +1,5 @@
+nav:
+
+  - index.md
+  - SPA: spa.md
+  - Element: element.md

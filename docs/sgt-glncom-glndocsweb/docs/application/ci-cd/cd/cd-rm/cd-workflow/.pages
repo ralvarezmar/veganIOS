@@ -1,0 +1,6 @@
+---
+nav:
+
+  - index.md
+  - CD Env Configuration: cd-envs-configuration.md
+  - CI Env Configuration: ci-envs-configuration.md

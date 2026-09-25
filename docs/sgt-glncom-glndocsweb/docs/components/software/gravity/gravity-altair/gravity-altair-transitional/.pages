@@ -1,0 +1,5 @@
+nav:
+  - index.md
+  - Altair Sync: altair-sync.md
+  - PrePro Sync: altair-prepro.md
+  - Restore Sync: altair-restore.md

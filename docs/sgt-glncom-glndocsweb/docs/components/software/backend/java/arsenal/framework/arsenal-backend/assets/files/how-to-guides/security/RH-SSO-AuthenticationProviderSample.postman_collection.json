@@ -1,0 +1,174 @@
+{
+	"info": {
+		"_postman_id": "dde7870a-68c2-4817-8ccc-33f8fb075af7",
+		"name": "RH-SSO - Authentication provider - Sample",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "DEV - realm - corp - poc_seguranca_camel",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "35f8f5c7-f036-4bba-a566-55fc2accdba9",
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"pm.globals.set('access_token', res.access_token);",
+							"pm.globals.set('refresh_token', res.refresh_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "poc_seguranca_camel",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "4e219129-9df5-48e0-95f1-d0da181b9e00",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://login.azure.paas.santanderbr.dev.corp/auth/realms/corp/protocol/openid-connect/token",
+					"protocol": "https",
+					"host": [
+						"login",
+						"azure",
+						"paas",
+						"santanderbr",
+						"dev",
+						"corp"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"corp",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DEV - realm - corp - poc_seguranca_camel - refresh",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e6e00fa7-559e-46bc-b134-6e0474e5da4a",
+						"exec": [
+							"var res = pm.response.json();",
+							"pm.globals.set('access_token', res.access_token);",
+							"pm.globals.set('refresh_token', res.refresh_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "refresh_token",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "poc_seguranca_camel",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "4e219129-9df5-48e0-95f1-d0da181b9e00",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "{{refresh_token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://login.azure.paas.santanderbr.dev.corp/auth/realms/corp/protocol/openid-connect/token",
+					"protocol": "https",
+					"host": [
+						"login",
+						"azure",
+						"paas",
+						"santanderbr",
+						"dev",
+						"corp"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"corp",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ac8e36cc-9606-49b8-b11d-e175bdb40de3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "4f073fcb-9185-479a-9a4f-360f6909f104",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

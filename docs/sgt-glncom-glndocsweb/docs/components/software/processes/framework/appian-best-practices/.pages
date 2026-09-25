@@ -1,0 +1,6 @@
+nav:
+    - Nomenclature: nomenclature.md
+    - Patterns: patterns.md
+    - User security and roles: user-and-roles.md
+    - Integrations with third-party systems: integrations.md
+    - Automatic Test: automatic-test.md

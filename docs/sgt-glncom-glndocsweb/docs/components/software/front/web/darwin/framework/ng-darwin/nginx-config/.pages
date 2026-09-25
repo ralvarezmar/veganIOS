@@ -1,0 +1,7 @@
+nav:
+
+  - index.md
+  - default-conf.md
+  - common-headers-conf.md
+  - gzip-conf.md
+  - proxy-cache-conf.md

@@ -1,0 +1,6 @@
+nav:
+  - ConfigMap 2.0 Kubernetes Journey: configmaps-rm.md
+  - Application Secrets Journey: application-secrets.md
+  - Namespace & harbor space: namespace_harbor.md
+  - Image reuse: image-reuse.md
+  - ...

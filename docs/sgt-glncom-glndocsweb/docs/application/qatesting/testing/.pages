@@ -1,0 +1,6 @@
+---
+nav:
+  - index.md
+  - Initial steps: initialstep.md
+  - Gluon Testing Portal: portal
+  - Gluon Testing Workflows: workflows

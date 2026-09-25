@@ -1,0 +1,6 @@
+---
+nav:
+    - 'index.md'
+    - About Gluon Docs: about.md
+    - Contribute to Gluon Docs: contribution-process
+    - Code of Conduct: code-of-conduct.md

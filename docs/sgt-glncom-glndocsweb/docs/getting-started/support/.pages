@@ -1,0 +1,7 @@
+---
+nav:
+    - index.md
+    - Atlassian Tools Information: atlassian   
+    - Tools Licenses: tools-licenses.md
+    - Automatics ITSM: robots-itsm.md    
+    - FAQs: faqs

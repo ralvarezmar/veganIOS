@@ -1,0 +1,14 @@
+# Here is an example file of how to give deployment values for a specific environment
+# It is necessary to reference this file in the deployment.yaml
+
+image:
+  ## @param image.registry micro image registry to fill
+  repository: glo/gluond/pro
+  ## @param image.pullPolicy darwin micro image pull policy
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  registry: 930113167619.dkr.ecr.eu-west-1.amazonaws.com
+  tag: ${TAG_VERSION}
+  pullPolicy: IfNotPresent

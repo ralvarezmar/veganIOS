@@ -1,0 +1,37 @@
+nav:
+    - 'index.md'
+    - SCF Airflow Environment Settings: airflow-environment.md
+    - SCF Airflow Requirements: airflow-requirements.md
+    - SCF Ansible Execute Migration Guide: ansible-execute.md
+    - SCF Apigee: apigee.md
+    - SCF AWS QuickSight: aws-quicksight.md
+    - SCF Camunda: camunda.md
+    - SCF Control-M: controlm.md
+    - SCF Helm Deploy: helm-deploy.md
+    - SCF Image Upload: image-upload.md
+    - SCF Kafka Connector on EKS: kafka-connector-eks.md
+    - SCF Liquibase Athena: liquibase-athena.md
+    - SCF Liquibase DocumentDB: liquibase-documentdb.md
+    - SCF Liquibase MSSQL: liquibase-mssql.md
+    - SCF Liquibase MySQL: liquibase-mysql.md
+    - SCF Liquibase Oracle: liquibase-oracle.md
+    - SCF Liquibase Postgres: liquibase-postgres.md
+    - SCF Liquibase Snowflake: liquibase-snowflake.md
+    - SCF Maven EMR: maven-emr.md
+    - SCF Maven Nakedmule: nakedmule.md
+    - SCF .NET Framework Library: net-fr-lib.md
+    - SCF .NET Framework SGS: net-fr-sgs.md
+    - SCF .NET Library: net-lib.md
+    - SCF .NET Microservice: net-micro.md
+    - SCF NodeJs Lambda: node-lambda.md
+    - SCF Node S3 Assets: node-s3-assets.md
+    - SCF Node S3: node-s3.md
+    - SCF PHP Microservice: php-micro.md
+    - SCF PowerBi Libray: powerbi-lib.md
+    - SCF Provenir: provenir.md
+    - SCF Python EMR: python-emr.md
+    - SCF Python Lambda: python-lambda.md
+    - SCF Python S3: python-s3.md
+    - SCF Python Sagemaker: python-sagemaker.md
+    - SCF Python Virtual Environment: python-venv.md
+    - SCF S3 Upload: s3-upload.md

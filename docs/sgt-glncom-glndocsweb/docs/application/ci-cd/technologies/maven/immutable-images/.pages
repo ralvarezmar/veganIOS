@@ -1,0 +1,6 @@
+nav:
+  - CI: maven-ci-index.md
+  - CD: maven-cd-index.md
+  - Snapshot: maven-snapshot-tb-index.md
+  - Release: maven-rl-image-tb-index.md
+  

@@ -1,0 +1,7 @@
+---
+nav:
+
+  - index.md
+  - Open Application Model: oam
+  - Gluon Release Management: zero-touch
+  - Be compliance with Release Management: how-integrate-a-new-tempalte-with-rm.md

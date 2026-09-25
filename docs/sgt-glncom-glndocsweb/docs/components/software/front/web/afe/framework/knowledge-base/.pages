@@ -1,0 +1,17 @@
+nav:
+
+  - index.md
+  - Architecture Libraries: architecture-libraries
+  - Authentication: authentication
+  - Dependencies: dependencies
+  - Development: development
+  - Encryption: encryption
+  - Integration: integration
+  - Local Environment: local-environment
+  - MFE: mfe
+  - Obsolescence: obsolescence
+  - Pipeline: pipeline
+  - Security: security
+  - Status Code: status-code
+  - Unit Tests: unit-tests
+  - Zup Apigee: zup-apigee

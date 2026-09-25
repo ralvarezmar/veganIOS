@@ -1,0 +1,4 @@
+nav:
+
+  - index.md
+  - AWS S3 considerations: aws-s3-considerations.md

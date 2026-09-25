@@ -1,0 +1,7 @@
+---
+nav:
+  - Design guides: index.md
+  - Namespace segregation: ns-segregation.md
+  - Internet use cases: internetusecase.md
+  - Intranet use cases: intranetusecase.md
+  - ...

@@ -1,0 +1,7 @@
+nav:
+
+  - index.md
+  - Use it in Angular: use-it-in-angular.md
+  - Use it in Vanilla Javascript: use-it-in-vanilla.md
+  - API Reference: api-reference.md
+  - Coexistence with AFE:  coexistence-with-afe.md

@@ -1,0 +1,4 @@
+- ci_id: aws-community-pre
+  configuration_files:
+    - .gluon/cd/values.yaml
+    - .gluon/cd/pre/values.yaml

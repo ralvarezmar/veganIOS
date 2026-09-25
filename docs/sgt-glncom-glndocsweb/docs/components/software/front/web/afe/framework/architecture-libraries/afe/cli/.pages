@@ -1,0 +1,9 @@
+nav:
+
+  - index.md
+  - New: new
+  - Update: update
+  - Version: version
+  - Commit: commit.md
+  - Exec: exec.md
+  - Setup: setup.md

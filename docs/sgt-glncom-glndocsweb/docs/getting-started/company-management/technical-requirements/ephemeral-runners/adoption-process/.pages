@@ -1,0 +1,6 @@
+---
+nav:
+    - 'index.md'
+    - AWS: aws
+    - OpenShift: openshift
+    - Gluon: gluon

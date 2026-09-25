@@ -1,0 +1,6 @@
+nav:
+
+  - index.md
+  - Coverage: coverage.md
+  - Make sure that the copy is safe: make-sure-that-the-copy-is-safe.md
+  - No implicit dependencies: no-implicit-dependencies.md

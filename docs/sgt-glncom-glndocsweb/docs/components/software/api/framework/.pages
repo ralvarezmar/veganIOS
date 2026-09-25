@@ -1,0 +1,9 @@
+nav:
+  - index.md
+  - About Gluon APIs: about
+  - API life cycle: lifecycle
+  - Marketplace: marketplace
+  - Infrastructure: infrastructure
+  - Technical components: tech-components
+  - Santander Standards & Patterns: standards
+

@@ -1,0 +1,4 @@
+---
+nav:
+    - Atlassian cloud login and security controls: atlassian-login-security.md
+    - Atlassian api tokens: atlassian-api-token-user.md

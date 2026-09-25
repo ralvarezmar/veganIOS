@@ -1,0 +1,5 @@
+nav:
+  - 'index.md'
+  - Santander Spring Boot Microservice Journey: 'ms.md'
+  - Santander Spring Boot Library Journey: 'lib.md'
+  - Santander Spring Boot Framework: framework

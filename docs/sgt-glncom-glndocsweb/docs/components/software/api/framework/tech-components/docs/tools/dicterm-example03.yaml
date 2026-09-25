@@ -1,0 +1,83 @@
+swagger: '2.0'
+info:
+  title: Example 3
+  version: 1.0.0-SNAPSHOT
+  description: This example uses a wrapper to provide different aspects or views of
+                an existing object in the dictionary
+schemes:
+  - https
+basePath: /training
+tags:
+  - name: example3
+    description: Example 3
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  '/withholdings':
+    post:
+      description: >
+       Create a withholding.
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: ''
+          schema:
+            $ref: '#/definitions/_MyWapperWithholdingRequest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/_MyWapperWithholdingResponse'
+          headers: {}
+
+definitions:
+
+#wrapper _MyWapperWithholdingRequest to define one visualization of Withholding object
+  _MyWapperWithholdingRequest :
+    x-bizObjRef : Withholding
+    description : "This structure contains all information related to a Withholding. A Withholding exists inside an Account."
+    type : "object"
+    properties :
+       withHoldingAmount :
+          $ref : "#/definitions/Amount"
+       reasonCode :
+          description : "Reason code for the withholding."
+          type : "string"
+          example : "02"
+
+#wrapper _MyWapperWithholdingResponse to define another visualization of Withholding object
+  _MyWapperWithholdingResponse :
+    x-bizObjRef : Withholding
+    description : "This structure contains all information related to a Withholding. A Withholding exists inside an Account."
+    type : "object"
+    properties :
+       withholdingReferenceId :
+          type : "string"
+          description : "Withholding Reference."
+          example : "2020-01-17.01.02.02.123456EH"        
+
+  Amount :
+    title : "PENDING TECH. WRITING REVIEW"
+    type : "object"
+    required :
+    - amount
+    - currency
+    properties :
+       amount :
+          description : "Data in ISO 20022 format containing up to 18 digits from which 5 may be decimals. Separation is a point."
+          type : "number"
+          minimum : -9999999999999
+          maximum : 9999999999999
+          example : 99.99
+       currency :
+          description : "Data in ISO 4217."
+          type : "string"
+          minLength : 3
+          maxLength : 3
+          pattern : (^.{3}$)
+          example : USD

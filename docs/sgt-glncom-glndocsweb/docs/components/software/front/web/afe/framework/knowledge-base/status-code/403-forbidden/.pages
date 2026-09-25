@@ -1,0 +1,5 @@
+nav:
+
+  - index.md
+  - CSP Configuration: csp-configuration.md
+  - Resource Release: resource-release.md

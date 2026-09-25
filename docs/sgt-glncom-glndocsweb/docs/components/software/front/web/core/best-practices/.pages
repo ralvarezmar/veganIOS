@@ -1,0 +1,8 @@
+nav:
+  - index.md
+  - Deployment Tips: deployment-tips.md
+  - Kubernetes: kubernetes
+  - Gitflow: gitflow
+  - Security Hardening: security-hardening.md
+  - Iframe Risks and Mitigations: iframes-risks-and-mitigation.md
+  - Headers Injection Strategy: headers-injection-strategy.md

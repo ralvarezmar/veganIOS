@@ -1,0 +1,7 @@
+---
+nav:
+
+- Maven Local Setup: mavenlocalsetup.md
+- NodeJS and NPM Local Setup: npmlocalsetup.md
+- Python and Pip Local Setup: pythonlocalsetup.md
+- Troubleshooting: troubleshooting.md

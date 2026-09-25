@@ -1,0 +1,14 @@
+---
+nav:
+
+  - Darwin 6.x: current
+  - Darwin 5.x: darwin-5-x
+  - Darwin 4.x: darwin-4-x
+  - Darwin Versions: versions.md
+  - Guides: guides
+  - Migration Assistant: migration-assistant
+  - Darwin Plugins: plugins
+  - Kubernetes Helm Chart: darwin-helm.md
+  - Take a look at the Samples: 'https://github.com/santander-group-shared-assets/gln-back-darwin-java-samples/tree/develop" target="_blank'
+  - Report an issue: 'https://gluon.gs.corp/community/docs/latest/quick-start/support/" target="_blank' 
+  - Report an issue (Spain projects): 'https://sanes.atlassian.net/jira/software/c/projects/ESPARQSOP/boards/480" target="_blank'

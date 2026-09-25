@@ -1,0 +1,8 @@
+nav:
+
+  - 'index.md'
+  - Insights: insights
+  - Copilot: copilot
+  - GitHub: github
+  - Atlassian: atlassian
+  - Gates Compliance: gatescompliance

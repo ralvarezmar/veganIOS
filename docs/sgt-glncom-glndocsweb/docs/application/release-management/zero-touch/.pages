@@ -1,0 +1,10 @@
+---
+nav:
+
+  - index.md
+  - Deployment window configuration: deployment-window-configuration.md
+  - Create release: create-release.md
+  - Deployment With Release Management: deploy-with-release-management.md
+  - Rollback with Release Management: rollback-release-management.md
+  - Change Management Team: change-management-approval.md
+  - Batch, the last Release Stage: batch-last-stage-of-release.md

@@ -1,0 +1,255 @@
+{
+    "httpMethod": "GET",
+    "authorizationType": "CUSTOM",
+    "authorizerId": "zwxgwt",
+    "apiKeyRequired": true,
+    "operationName": "getCustomerPosition",
+    "requestParameters": {
+        "method.request.header.accept": false,
+        "method.request.header.accept-language": false,
+        "method.request.header.content-type": false,
+        "method.request.header.device-information": false,
+:...skipping...
+:...skipping...
+{
+    "httpMethod": "GET",
+    "authorizationType": "CUSTOM",
+    "authorizerId": "zwxgwt",
+    "apiKeyRequired": true,
+    "operationName": "getCustomerPosition",
+    "requestParameters": {
+        "method.request.header.accept": false,
+        "method.request.header.accept-language": false,
+        "method.request.header.content-type": false,
+        "method.request.header.device-information": false,
+        "method.request.querystring.activeOnly": true,
+:...skipping...
+:...skipping...
+{
+    "httpMethod": "GET",
+    "authorizationType": "CUSTOM",
+    "authorizerId": "zwxgwt",
+    "apiKeyRequired": true,
+    "operationName": "getCustomerPosition",
+    "requestParameters": {
+        "method.request.header.accept": false,
+        "method.request.header.accept-language": false,
+        "method.request.header.content-type": false,
+        "method.request.querystring.customer_id": false,
+:...skipping...
+{
+    "httpMethod": "GET",
+    "authorizationType": "CUSTOM",
+    "authorizerId": "zwxgwt",
+    "apiKeyRequired": true,
+    "operationName": "getCustomerPosition",
+    "requestParameters": {
+        "method.request.header.accept": false,
+        "method.request.header.accept-language": false,
+        "method.request.header.content-type": false,
+        "method.request.header.device-information": false,
+        "method.request.querystring.activeOnly": true,
+        "method.request.querystring.customer_id": false,
+        "method.request.querystring.operation": false,
+:...skipping...
+:...skipping...
+{
+    "httpMethod": "GET",
+    "authorizationType": "CUSTOM",
+    "authorizerId": "zwxgwt",
+    "apiKeyRequired": true,
+    "operationName": "getCustomerPosition",
+    "requestParameters": {
+        "method.request.header.accept": false,
+        "method.request.header.accept-language": false,
+        "method.request.header.content-type": false,
+        "method.request.header.device-information": false,
+        "method.request.querystring.activeOnly": true,
+        "method.request.querystring.customer_id": false,
+        "method.request.querystring.operation": false,
+        "method.request.querystring.product_family": false,
+        "method.request.querystring.profile_id": false
+:...skipping...
+:...skipping...
+{
+    "httpMethod": "GET",
+    "authorizationType": "CUSTOM",
+    "authorizerId": "zwxgwt",
+    "apiKeyRequired": true,
+    "operationName": "getCustomerPosition",
+    "requestParameters": {
+        "method.request.header.accept": false,
+        "method.request.header.accept-language": false,
+        "method.request.header.content-type": false,
+        "method.request.header.device-information": false,
+        "method.request.querystring.activeOnly": true,
+        "method.request.querystring.customer_id": false,
+        "method.request.querystring.operation": false,
+        "method.request.querystring.product_family": false,
+        "method.request.querystring.profile_id": false
+    },
+:...skipping...
+{
+    "httpMethod": "GET",
+    "authorizationType": "CUSTOM",
+    "authorizerId": "zwxgwt",
+    "apiKeyRequired": true,
+    "operationName": "getCustomerPosition",
+    "requestParameters": {
+        "method.request.header.accept": false,
+        "method.request.header.accept-language": false,
+        "method.request.header.content-type": false,
+        "method.request.header.device-information": false,
+        "method.request.querystring.activeOnly": true,
+        "method.request.querystring.customer_id": false,
+        "method.request.querystring.operation": false,
+        "method.request.querystring.product_family": false,
+        "method.request.querystring.profile_id": false
+    },
+    "methodResponses": {
+        "200": {
+            "statusCode": "200",
+            "responseModels": {
+                "application/json": "GetGlobalPositionResponse"
+            }
+        },
+        "204": {
+            "statusCode": "204"
+        },
+        "400": {
+            "statusCode": "400",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "401": {
+            "statusCode": "401",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "403": {
+            "statusCode": "403",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "404": {
+            "statusCode": "404",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "415": {
+            "statusCode": "415",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "500": {
+            "statusCode": "500",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "503": {
+            "statusCode": "503",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "504": {
+            "statusCode": "504",
+            "responseModels": {
+                "application/json": "Errors"
+{
+    "httpMethod": "GET",
+    "authorizationType": "CUSTOM",
+    "authorizerId": "zwxgwt",
+    "apiKeyRequired": true,
+    "operationName": "getCustomerPosition",
+    "requestParameters": {
+        "method.request.header.accept": false,
+        "method.request.header.accept-language": false,
+        "method.request.header.content-type": false,
+        "method.request.header.device-information": false,
+        "method.request.querystring.activeOnly": true,
+        "method.request.querystring.customer_id": false,
+        "method.request.querystring.operation": false,
+        "method.request.querystring.product_family": false,
+        "method.request.querystring.profile_id": false
+    },
+    "methodResponses": {
+        "200": {
+            "statusCode": "200",
+            "responseModels": {
+                "application/json": "GetGlobalPositionResponse"
+            }
+        },
+        "204": {
+            "statusCode": "204"
+        },
+        "400": {
+            "statusCode": "400",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "401": {
+            "statusCode": "401",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "403": {
+            "statusCode": "403",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "404": {
+            "statusCode": "404",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "415": {
+            "statusCode": "415",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "500": {
+            "statusCode": "500",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "503": {
+            "statusCode": "503",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        },
+        "504": {
+            "statusCode": "504",
+            "responseModels": {
+                "application/json": "Errors"
+            }
+        }
+    },
+    "methodIntegration": {
+        "type": "HTTP_PROXY",
+        "httpMethod": "GET",
+        "uri": "https://eks-nlb-310604bd0d3a71f3.elb.eu-west-1.amazonaws.com/customer-position",
+        "connectionType": "VPC_LINK",
+        "connectionId": "1ecwvd",
+        "passthroughBehavior": "WHEN_NO_MATCH",
+        "timeoutInMillis": 29000,
+        "cacheNamespace": "08960zjp68",
+        "cacheKeyParameters": [],
+        "tlsConfig": {
+            "insecureSkipVerification": true
+        }
+    }
+}

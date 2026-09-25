@@ -1,0 +1,8 @@
+nav:
+
+  - index.md
+  - File Transfer: file-transfer.md
+  - Headers Configuration: headers-configuration.md
+  - HTTP Interceptors: http-interceptors.md
+  - Import Order: import-order.md
+  - Multiple Instances Httpclient: multiple-instances-httpclient.md

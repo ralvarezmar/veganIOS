@@ -1,0 +1,8 @@
+nav:
+  - index.md
+  - About Nitro Framework: 'about.md'
+  - Getting started: 'quick-start.md'
+  - Features: 'features.md'
+  - Migration guide: 'migration.md'
+  - FAQ: 'faq.md'
+  - Changelog: 'changelog.md'

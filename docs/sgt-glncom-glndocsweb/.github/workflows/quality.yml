@@ -1,0 +1,22 @@
+name: Quality
+on:
+  pull_request:
+    branches:
+      - development
+      - develop
+      - main
+      - master
+      - release-v[0-9]+.[0-9]+.[xX]
+##      - feat/ci-granular-concurrency
+##      - feat/metrics-observability
+##      - test/ci-lab
+    paths-ignore:
+      - 'docs/**' 
+concurrency:
+  group: quality-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  call-reusable-workflow:
+    name: Quality
+    uses: santander-group-shared-assets/gln-workflows/.github/workflows/python-quality-image.yml@v1
+    secrets: inherit
