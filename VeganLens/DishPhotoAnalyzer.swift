@@ -3,41 +3,68 @@ import Vision
 
 struct DishPhotoAnalysis: Equatable {
     let visibleFoods: [String]
-    let calorieRange: ClosedRange<Int>
+    let calorieRange: ClosedRange<Int>?
     let confidence: VeganConfidence
 }
 
 enum DishPhotoAnalyzer {
+    private enum FoodGroup: Hashable {
+        case main
+        case plant
+        case dessert
+    }
+
     static func analyze(_ image: UIImage) async throws -> DishPhotoAnalysis {
         guard let cgImage = image.cgImage else {
             throw DishPhotoError.invalidImage
         }
 
         let labels = try await classify(cgImage, orientation: .up)
-        let foods = labels
-            .filter { $0.confidence >= 0.25 }
-            .map(\.identifier)
-            .filter { $0.count > 2 }
+        let recognizedFoods = labels
+            .filter { $0.confidence >= 0.45 }
+            .compactMap { observation -> (String, FoodGroup)? in
+                guard let group = recognizedFoodGroup(observation.identifier) else {
+                    return nil
+                }
+                return (observation.identifier.replacingOccurrences(of: "_", with: " "), group)
+            }
+            .reduce(into: [(String, FoodGroup)]()) { result, food in
+                guard !result.contains(where: { $0.0 == food.0 }) else { return }
+                result.append(food)
+            }
             .prefix(5)
-            .map { $0.replacingOccurrences(of: "_", with: " ") }
 
-        let identifiers = Set(labels.map { $0.identifier.lowercased() })
-        let range: ClosedRange<Int>
-        if identifiers.contains(where: { $0.contains("pizza") || $0.contains("burger") || $0.contains("pasta") }) {
-            range = 500...1_200
-        } else if identifiers.contains(where: { $0.contains("salad") || $0.contains("fruit") || $0.contains("vegetable") }) {
-            range = 150...700
-        } else if identifiers.contains(where: { $0.contains("dessert") || $0.contains("cake") || $0.contains("ice cream") }) {
-            range = 300...900
+        let foods = Array(recognizedFoods.map(\.0))
+        let groups = Set(recognizedFoods.map(\.1))
+        let range: ClosedRange<Int>?
+        if groups.contains(.main) {
+            range = 350...800
+        } else if groups.contains(.dessert) {
+            range = 250...650
+        } else if groups.contains(.plant) {
+            range = 100...450
         } else {
-            range = 250...1_000
+            range = nil
         }
 
         return DishPhotoAnalysis(
-            visibleFoods: Array(foods),
+            visibleFoods: foods,
             calorieRange: range,
             confidence: .low
         )
+    }
+
+    private static func recognizedFoodGroup(_ identifier: String) -> FoodGroup? {
+        switch identifier.lowercased() {
+        case "pizza", "burger", "hamburger", "pasta":
+            return .main
+        case "salad", "fruit", "vegetable", "vegetables":
+            return .plant
+        case "cake", "dessert", "ice cream":
+            return .dessert
+        default:
+            return nil
+        }
     }
 
     private static func classify(
