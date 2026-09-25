@@ -1,0 +1,3 @@
+[submodule "docs/sgt-glncom-glndocsweb"]
+\tpath = docs/sgt-glncom-glndocsweb
+\turl = https://github.com/santander-group-shared-assets/sgt-glncom-glndocsweb.git
