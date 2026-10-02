@@ -586,3 +586,7 @@ Fuente: %@
 "product_category_cosmetics_and_hygiene" = "Cosmética e higiene";
 "product_category_pet_food" = "Comida de mascotas";
 "product_category_other" = "Otros";
+
+"verdict_details_show" = "Ver por qué";
+"verdict_details_hide" = "Ocultar explicación";
+"verdict_details_evidence" = "Evidencia";

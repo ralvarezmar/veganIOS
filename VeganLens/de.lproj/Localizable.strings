@@ -581,3 +581,7 @@
 "dish_photo_take_photo" = "Gericht fotografieren";
 "dish_photo_analyzing" = "Foto wird analysiert…";
 "dish_photo_error" = "Das Foto konnte nicht analysiert werden.";
+
+"verdict_details_show" = "Warum dieses Ergebnis";
+"verdict_details_hide" = "Erklärung ausblenden";
+"verdict_details_evidence" = "Nachweis";

@@ -581,3 +581,7 @@
 "product_category_cosmetics_and_hygiene" = "Cosmetics and hygiene";
 "product_category_pet_food" = "Pet food";
 "product_category_other" = "Other";
+
+"verdict_details_show" = "Why this result";
+"verdict_details_hide" = "Hide explanation";
+"verdict_details_evidence" = "Evidence";
