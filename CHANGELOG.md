@@ -8,30 +8,27 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+- The scanner screenshot now highlights faster barcode detection with an in-flow analysis state.
+
+- The scanner store artwork now uses a clean VeganLens header instead of overlaying text on the older screenshot.
+
+- The promotional set now includes a complete positive-result screen with verdict, confidence, evidence, ingredients, and allergens.
+
+- iOS store screenshots now use the requested 1242×2688 px dimensions, and the scanner artwork uses the VeganLens name.
+
 ### Changed
-- Verdict cards now show a direct explanation for uncertain additives, including the additive code and name when available.
-- Data-source and cache details are hidden behind a compact “View details” action.
-
-## [1.22.1 (54)] - 2026-09-23
-
-### Fixed
-- Dish-photo results now localize recognized food names using the device language when a translation is available, matching Android.
-
-## [1.22.0 (53)] - 2026-09-22
+- The iOS store screenshots now use a more promotional layout with clearer benefits, stronger hierarchy, and consistent privacy messaging.
 
 ### Added
-- Scanner feedback can optionally use vibration or sound when a barcode is detected.
-- The scanner includes a clear retry action for restarting automatic detection.
+- Product analyses now expose explicit high, medium, or low confidence.
+- A separate experimental dish-photo flow reports probable visible foods and a deliberately broad calorie range.
+- Eight 1080×1920 Google Play screenshots and a 1024×500 feature graphic are included as store assets.
+
+## [1.21.0 (52)] - 2026-09-14
 
 ### Changed
-- Barcode detection remains automatic and now gives immediate, configurable feedback before opening the result.
-
-## [1.21.0 (52)] - 2026-09-17
-
-### Changed
-- Allergen settings are grouped into one profile section and strict mode is presented with its description and toggle.
-- Product photo contributions expose camera and gallery actions and show upload status with retry.
-- Card surfaces, corner radii, and verdict hierarchy are refined for a more consistent visual design.
+- The portada now offers 30 cooking and vegan nutrition tips instead of 16.
+- The portada stays visible for 7 seconds so there is more time to read each tip.
 
 ## [1.20.0 (51)] - 2026-09-14
 

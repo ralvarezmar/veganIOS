@@ -10,30 +10,27 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+- La captura del escáner destaca ahora la detección rápida del código y el estado de análisis dentro del flujo.
+
+- El arte promocional del escáner usa ahora una cabecera VeganLens limpia, sin superponer texto sobre la captura antigua.
+
+- El conjunto promocional incluye ahora una pantalla completa de resultado apto, con veredicto, confianza, evidencia, ingredientes y alérgenos.
+
+- Las capturas de tienda de iOS usan ahora las dimensiones solicitadas de 1242×2688 px y el arte del escáner utiliza el nombre VeganLens.
+
 ### Cambiado
-- Las tarjetas de veredicto explican directamente los aditivos dudosos, incluyendo su código y nombre cuando están disponibles.
-- La fuente de datos y la información de caché quedan dentro de una acción compacta de «Ver detalles».
-
-## [1.22.1 (54)] - 2026-09-23
-
-### Corregido
-- Los resultados de la foto de plato ahora localizan los nombres de los alimentos reconocidos según el idioma del dispositivo cuando hay traducción disponible, igual que Android.
-
-## [1.22.0 (53)] - 2026-09-22
+- Las capturas de tienda de iOS usan ahora una composición más promocional, con beneficios más claros, mejor jerarquía y un mensaje de privacidad coherente.
 
 ### Añadido
-- El escáner permite activar opcionalmente vibración o sonido al detectar un código.
-- El escáner incluye una acción clara para reiniciar la detección automática.
+- Los análisis de productos muestran ahora una confianza explícita alta, media o baja.
+- Un flujo experimental separado de foto de plato muestra alimentos probables y un rango calórico deliberadamente amplio.
+- Se incluyen ocho capturas 1080×1920 para Google Play y una gráfica destacada 1024×500 como recursos de tienda.
+
+## [1.21.0 (52)] - 2026-09-14
 
 ### Cambiado
-- La detección de códigos sigue siendo automática y ahora ofrece una respuesta inmediata y configurable antes de abrir el resultado.
-
-## [1.21.0 (52)] - 2026-09-17
-
-### Cambiado
-- Los ajustes de alérgenos se agrupan en una única sección y el modo estricto presenta juntos su descripción y su interruptor.
-- Las aportaciones de fotos muestran acciones de cámara y galería, además del estado de subida y la opción de reintento.
-- Se refinan las superficies, los radios de las tarjetas y la jerarquía del veredicto para un diseño más coherente.
+- La portada ahora ofrece 30 consejos de cocina y nutrición vegana en lugar de 16.
+- La portada se muestra durante 7 segundos para dar tiempo a leer cada consejo.
 
 ## [1.20.0 (51)] - 2026-09-14
 
