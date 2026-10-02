@@ -581,3 +581,7 @@
 "dish_photo_take_photo" = "Scatta una foto del piatto";
 "dish_photo_analyzing" = "Analisi della foto…";
 "dish_photo_error" = "Non è stato possibile analizzare la foto.";
+
+"verdict_details_show" = "Perché questo risultato";
+"verdict_details_hide" = "Nascondi spiegazione";
+"verdict_details_evidence" = "Evidenza";

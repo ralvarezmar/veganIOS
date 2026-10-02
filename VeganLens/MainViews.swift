@@ -1784,9 +1784,11 @@ private struct VeganBannerView: View {
     let fromCache: Bool
     let cachedAt: Date?
     @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
+    @State private var detailsExpanded = false
 
     var body: some View {
         let spec = bannerSpec
+        let explanation = veganReasonText(analysis.reason) ?? spec.subtitle
 
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .top, spacing: 14) {
@@ -1802,40 +1804,56 @@ private struct VeganBannerView: View {
                         .lineLimit(2)
                         .accessibilityAddTraits(.isHeader)
 
-                    Text(spec.subtitle)
+                }
+            }
+
+            Text(explanation)
+                .appFont(.subheadline)
+                .foregroundStyle(spec.foreground.opacity(0.96))
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityLabel(explanation)
+
+            Button {
+                detailsExpanded.toggle()
+            } label: {
+                Text(L(detailsExpanded ? "verdict_details_hide" : "verdict_details_show"))
+                    .appFont(.subheadline, weight: .semibold)
+                    .foregroundStyle(spec.foreground)
+            }
+            .buttonStyle(.plain)
+
+            if detailsExpanded {
+                if let evidence = analysis.reason?.evidence, !evidence.isEmpty {
+                    Text(L("verdict_details_evidence"))
+                        .appFont(.caption, weight: .bold)
+                        .foregroundStyle(spec.foreground)
+                    Text(evidence.map { "• \($0)" }.joined(separator: "\n"))
                         .appFont(.subheadline)
                         .foregroundStyle(spec.foreground.opacity(0.96))
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-            }
 
-            if let explanation = veganReasonText(analysis.reason) {
-                Text(explanation)
-                    .appFont(.subheadline)
-                    .foregroundStyle(spec.foreground.opacity(0.96))
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityLabel(explanation)
-            }
+                SourceCapsule(
+                    text: LF("vegan_confidence_label", veganConfidenceText(analysis.confidence)),
+                    foreground: spec.foreground
+                )
 
-            SourceCapsule(
-                text: LF("vegan_confidence_label", veganConfidenceText(analysis.confidence)),
-                foreground: spec.foreground
-            )
+                SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
 
-            SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
-
-            if fromCache {
-                SourceCapsule(text: L("offline_cache_badge"), foreground: spec.foreground)
-                if let cachedAt {
-                    SourceCapsule(
-                        text: cacheAgeText(cachedAt),
-                        foreground: spec.foreground
-                    )
+                if fromCache {
+                    SourceCapsule(text: L("offline_cache_badge"), foreground: spec.foreground)
+                    if let cachedAt {
+                        SourceCapsule(
+                            text: cacheAgeText(cachedAt),
+                            foreground: spec.foreground
+                        )
+                    }
                 }
-            }
 
-            Text(L("open_food_facts_attribution"))
-                .appFont(.caption2)
-                .foregroundStyle(spec.foreground.opacity(0.9))
+                Text(L("open_food_facts_attribution"))
+                    .appFont(.caption2)
+                    .foregroundStyle(spec.foreground.opacity(0.9))
+            }
 
         }
         .padding(18)
@@ -1848,7 +1866,7 @@ private struct VeganBannerView: View {
             verdictAccessibilityText(
                 headline: spec.headline,
                 subtitle: spec.subtitle,
-                explanation: veganReasonText(analysis.reason),
+                explanation: explanation,
                 confidence: veganConfidenceText(analysis.confidence)
             )
         )
