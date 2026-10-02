@@ -3,7 +3,6 @@ import SwiftUI
 import Charts
 import SwiftData
 import AVFoundation
-import AudioToolbox
 import UIKit
 import Translation
 
@@ -53,8 +52,6 @@ struct ScannerView: View {
     @State private var zoomDeviceMin: CGFloat = 1
     @State private var zoomDeviceMax: CGFloat = 1
     @State private var zoomGestureStart: CGFloat?
-    @AppStorage(ScannerPreferences.hapticsEnabledKey) private var scannerHapticsEnabled = true
-    @AppStorage(ScannerPreferences.soundEnabledKey) private var scannerSoundEnabled = false
 
     var body: some View {
         ZStack {
@@ -80,7 +77,6 @@ struct ScannerView: View {
                     onChainEntrySelected: onChainEntrySelected,
                     onChainRetry: onChainRetry,
                     onChainClear: onChainClear,
-                    onRetryScanner: retryScanner,
                     onManualEntry: presentManualBarcodeEntry,
                     onPhotoAnalysis: onPhotoAnalysis,
                     onDishPhoto: onDishPhoto,
@@ -89,9 +85,7 @@ struct ScannerView: View {
                     torchOn: $torchOn,
                     zoomFactor: $zoomFactor,
                     zoomDeviceMin: zoomDeviceMin,
-                    zoomDeviceMax: zoomDeviceMax,
-                    hapticsEnabled: scannerHapticsEnabled,
-                    soundEnabled: scannerSoundEnabled
+                    zoomDeviceMax: zoomDeviceMax
                 )
                     .ignoresSafeArea()
             } else {
@@ -168,7 +162,9 @@ struct ScannerView: View {
     private func handleDetection(_ barcode: String) {
         if chainScanningEnabled {
             guard chainSession.register(barcode: barcode) else { return }
-            playScanFeedback()
+            let notification = UINotificationFeedbackGenerator()
+            notification.notificationOccurred(.success)
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             onChainDetected(barcode)
             detectedBarcode = nil
             isScannerRunning = true
@@ -177,7 +173,6 @@ struct ScannerView: View {
 
         guard detectedBarcode == nil else { return }
         detectedBarcode = barcode
-        playScanFeedback()
         isScannerRunning = false
         withAnimation(.easeInOut(duration: 0.2)) {
             showingDetectionConfirmation = true
@@ -247,28 +242,6 @@ struct ScannerView: View {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url)
     }
-
-    private func retryScanner() {
-        pendingNavigationTask?.cancel()
-        detectedBarcode = nil
-        showingDetectionConfirmation = false
-        isScannerRunning = false
-        Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(150))
-            guard authorizationStatus == .authorized else { return }
-            isScannerRunning = true
-        }
-    }
-
-    private func playScanFeedback() {
-        if scannerHapticsEnabled {
-            let notification = UINotificationFeedbackGenerator()
-            notification.notificationOccurred(.success)
-        }
-        if scannerSoundEnabled {
-            AudioServicesPlaySystemSound(SystemSoundID(1057))
-        }
-    }
 }
 
 private struct ScannerOverlayView: View {
@@ -278,7 +251,6 @@ private struct ScannerOverlayView: View {
     let onChainEntrySelected: (String) -> Void
     let onChainRetry: (String) -> Void
     let onChainClear: () -> Void
-    let onRetryScanner: () -> Void
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
     let onDishPhoto: () -> Void
@@ -288,8 +260,6 @@ private struct ScannerOverlayView: View {
     @Binding var zoomFactor: CGFloat
     let zoomDeviceMin: CGFloat
     let zoomDeviceMax: CGFloat
-    let hapticsEnabled: Bool
-    let soundEnabled: Bool
     @State private var helperCardHeight: CGFloat = 0
     @State private var helperCardContentHeight: CGFloat = 0
 
@@ -368,16 +338,13 @@ private struct ScannerOverlayView: View {
                             onManualEntry: onManualEntry,
                             onPhotoAnalysis: onPhotoAnalysis,
                             onDishPhoto: onDishPhoto,
-                            onRetryScanner: onRetryScanner,
                             chainScanningEnabled: $chainScanningEnabled,
                             cameraReady: cameraReady,
                             hasTorch: hasTorch,
                             torchOn: $torchOn,
                             zoomFactor: $zoomFactor,
                             zoomDeviceMin: zoomDeviceMin,
-                            zoomDeviceMax: zoomDeviceMax,
-                            hapticsEnabled: hapticsEnabled,
-                            soundEnabled: soundEnabled
+                            zoomDeviceMax: zoomDeviceMax
                         )
                         .background(
                             GeometryReader { contentProxy in
@@ -536,7 +503,6 @@ private struct HelperCardView: View {
     let onManualEntry: () -> Void
     let onPhotoAnalysis: () -> Void
     let onDishPhoto: () -> Void
-    let onRetryScanner: () -> Void
     @Binding var chainScanningEnabled: Bool
     let cameraReady: Bool
     let hasTorch: Bool
@@ -544,8 +510,6 @@ private struct HelperCardView: View {
     @Binding var zoomFactor: CGFloat
     let zoomDeviceMin: CGFloat
     let zoomDeviceMax: CGFloat
-    let hapticsEnabled: Bool
-    let soundEnabled: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -554,10 +518,6 @@ private struct HelperCardView: View {
 
             Toggle(L("scanner_chain_title"), isOn: $chainScanningEnabled)
                 .tint(Color("AccentColor"))
-
-            Text(L("scanner_feedback_description"))
-                .appFont(.caption)
-                .foregroundStyle(.secondary)
 
             if cameraReady {
                 HStack(spacing: 10) {
@@ -604,14 +564,6 @@ private struct HelperCardView: View {
                 onDishPhoto()
             } label: {
                 Label(L("dish_photo_action"), systemImage: "fork.knife")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.bordered)
-
-            Button {
-                onRetryScanner()
-            } label: {
-                Label(L("scanner_retry"), systemImage: "arrow.clockwise")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
@@ -1836,6 +1788,7 @@ private struct VeganBannerView: View {
 
     var body: some View {
         let spec = bannerSpec
+        let explanation = veganReasonText(analysis.reason) ?? spec.subtitle
 
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .top, spacing: 14) {
@@ -1851,30 +1804,40 @@ private struct VeganBannerView: View {
                         .lineLimit(2)
                         .accessibilityAddTraits(.isHeader)
 
-                    Text(spec.subtitle)
-                        .appFont(.subheadline)
-                        .foregroundStyle(spec.foreground.opacity(0.96))
                 }
             }
 
-            if let explanation = veganReasonText(analysis.reason) {
-                Text(explanation)
-                    .appFont(.subheadline)
-                    .foregroundStyle(spec.foreground.opacity(0.96))
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityLabel(explanation)
-            }
+            Text(explanation)
+                .appFont(.subheadline)
+                .foregroundStyle(spec.foreground.opacity(0.96))
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityLabel(explanation)
 
             Button {
                 detailsExpanded.toggle()
             } label: {
-                Text(detailsExpanded ? L("verdict_details_hide") : L("verdict_details_show"))
+                Text(L(detailsExpanded ? "verdict_details_hide" : "verdict_details_show"))
                     .appFont(.subheadline, weight: .semibold)
                     .foregroundStyle(spec.foreground)
             }
             .buttonStyle(.plain)
 
             if detailsExpanded {
+                if let evidence = analysis.reason?.evidence, !evidence.isEmpty {
+                    Text(L("verdict_details_evidence"))
+                        .appFont(.caption, weight: .bold)
+                        .foregroundStyle(spec.foreground)
+                    Text(evidence.map { "• \($0)" }.joined(separator: "\n"))
+                        .appFont(.subheadline)
+                        .foregroundStyle(spec.foreground.opacity(0.96))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                SourceCapsule(
+                    text: LF("vegan_confidence_label", veganConfidenceText(analysis.confidence)),
+                    foreground: spec.foreground
+                )
+
                 SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
 
                 if fromCache {
@@ -1886,6 +1849,10 @@ private struct VeganBannerView: View {
                         )
                     }
                 }
+
+                Text(L("open_food_facts_attribution"))
+                    .appFont(.caption2)
+                    .foregroundStyle(spec.foreground.opacity(0.9))
             }
 
         }
@@ -1899,7 +1866,7 @@ private struct VeganBannerView: View {
             verdictAccessibilityText(
                 headline: spec.headline,
                 subtitle: spec.subtitle,
-                explanation: veganReasonText(analysis.reason),
+                explanation: explanation,
                 confidence: veganConfidenceText(analysis.confidence)
             )
         )
@@ -2014,7 +1981,7 @@ private func verdictAnnouncement(for product: Product) -> String {
 func reasonNeedsOriginHint(_ source: VeganReasonSource, evidenceCount: Int) -> Bool {
     guard evidenceCount > 0 else { return false }
     switch source {
-    case .flavourDairyName, .structuredDoubtfulIngredient:
+    case .flavourDairyName, .structuredDoubtfulIngredient, .additiveUncertain:
         return true
     default:
         return false
@@ -2061,10 +2028,7 @@ private func veganReasonText(_ reason: VeganReason?) -> String? {
     case .additiveAnimal:
         reasonText = String(format: L("vegan_reason_additive_animal"), evidenceWithRemainder)
     case .additiveUncertain:
-        let namedEvidence = visibleEvidence
-            .map { localizedAdditiveEvidence($0) }
-            .joined(separator: ", ")
-        reasonText = String(format: L("vegan_reason_additive_uncertain"), namedEvidence)
+        reasonText = String(format: L("vegan_reason_additive_uncertain"), evidenceWithRemainder)
     case .tracesOnly:
         reasonText = String(format: L("vegan_reason_traces_only"), evidenceWithRemainder)
     case .sealConflict:
@@ -2072,19 +2036,13 @@ private func veganReasonText(_ reason: VeganReason?) -> String? {
     case .unverifiedNonVeganTag:
         reasonText = L("vegan_reason_unverified_non_vegan_tag")
     }
-    guard reasonNeedsOriginHint(reason.source, evidenceCount: reason.evidence.count),
-          reason.source != .additiveUncertain else {
+    guard reasonNeedsOriginHint(reason.source, evidenceCount: reason.evidence.count) else {
         return reasonText
     }
-    return reasonText
-}
-
-private func localizedAdditiveEvidence(_ rawCode: String) -> String {
-    let code = normalizeAdditiveCode(rawCode)
-    guard let entry = additiveEntry(for: code), let commonName = entry.info.commonName else {
-        return code
-    }
-    return "\(code): \(commonName)"
+    let originKey = reason.evidence.count == 1
+        ? "vegan_reason_check_origin_one"
+        : "vegan_reason_check_origin_other"
+    return "\(reasonText) \(L(originKey))"
 }
 
 private struct VeganBannerSpec {
