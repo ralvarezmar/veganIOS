@@ -888,8 +888,6 @@ struct OnboardingView: View {
         }
     }
 
-     }
-
     private func dismissAndMarkSeen() {
         onDismiss()
         dismiss()
