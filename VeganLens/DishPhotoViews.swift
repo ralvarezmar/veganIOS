@@ -29,17 +29,19 @@ struct DishPhotoView: View {
                                 Label(localizedFoodName(food).capitalized, systemImage: "circle.fill")
                             }
                         }
-                        Text(
-                            LF(
-                                "dish_photo_calories",
-                                analysis.calorieRange.lowerBound,
-                                analysis.calorieRange.upperBound
+                        if let calorieRange = analysis.calorieRange {
+                            Text(
+                                LF(
+                                    "dish_photo_calories",
+                                    calorieRange.lowerBound,
+                                    calorieRange.upperBound
+                                )
                             )
-                        )
-                        .appFont(.headline, weight: .semibold)
-                        Text(L("dish_photo_uncertain"))
-                            .appFont(.footnote)
-                            .foregroundStyle(.secondary)
+                            .appFont(.headline, weight: .semibold)
+                            Text(L("dish_photo_uncertain"))
+                                .appFont(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     .padding(16)
                     .frame(maxWidth: .infinity, alignment: .leading)
