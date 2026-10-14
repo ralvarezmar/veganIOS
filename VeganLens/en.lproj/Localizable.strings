@@ -585,3 +585,16 @@
 "verdict_details_show" = "Why this result";
 "verdict_details_hide" = "Hide explanation";
 "verdict_details_evidence" = "Evidence";
+"compare_title" = "Compare products";
+"compare_open_product" = "View product";
+"compare_mode_on" = "Compare";
+"compare_mode_off" = "Exit compare";
+"compare_launch" = "Compare (%d)";
+"contribution_guide_hint" = "Ingredient data is missing for this product. Contribute to Open Food Facts to help analyze it.";
+"onboarding_next" = "Next";
+"onboarding_skip" = "Skip";
+"onboarding_verdicts_title" = "What each verdict means";
+"onboarding_features_title" = "More features";
+"onboarding_features_compare" = "• Compare products from your history.";
+"onboarding_features_contribute" = "• Complete missing data on Open Food Facts.";
+"onboarding_features_dish_photo" = "• Analyze a photo of your dish.";

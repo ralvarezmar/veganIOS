@@ -795,6 +795,8 @@ struct OnboardingView: View {
 
     let onDismiss: () -> Void
 
+    @State private var page = 0
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -806,44 +808,79 @@ struct OnboardingView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .accessibilityLabel(L("portada_image_description"))
 
-                    Text(L("onboarding_title"))
-                        .appFont(.title, weight: .bold)
-
-                    Text(L("onboarding_message"))
+                    if page == 0 {
+                        Text(L("onboarding_title"))
+                            .appFont(.title, weight: .bold)
+                        Text(L("onboarding_message"))
+                            .appFont(.body)
+                            .foregroundStyle(.secondary)
+                    } else if page == 1 {
+                        Text(L("onboarding_verdicts_title"))
+                            .appFont(.title, weight: .bold)
+                        VStack(alignment: .leading, spacing: 10) {
+                            OnboardingLegendRow(
+                                color: veganVerdictColor(for: .vegan, colorblindSafe: colorblindSafePalette),
+                                text: L("vegan_verdict_vegan")
+                            )
+                            OnboardingLegendRow(
+                                color: veganVerdictColor(for: .notVegan, colorblindSafe: colorblindSafePalette),
+                                text: L("vegan_verdict_not_vegan")
+                            )
+                            OnboardingLegendRow(
+                                color: veganVerdictColor(for: .maybe, colorblindSafe: colorblindSafePalette),
+                                text: L("vegan_verdict_maybe")
+                            )
+                            OnboardingLegendRow(
+                                color: veganVerdictColor(for: .unknown, colorblindSafe: colorblindSafePalette),
+                                text: L("vegan_verdict_unknown")
+                            )
+                        }
+                        .padding()
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    } else {
+                        Text(L("onboarding_features_title"))
+                            .appFont(.title, weight: .bold)
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(L("onboarding_features_compare"))
+                            Text(L("onboarding_features_contribute"))
+                            Text(L("onboarding_features_dish_photo"))
+                        }
                         .appFont(.body)
                         .foregroundStyle(.secondary)
-
-                    VStack(alignment: .leading, spacing: 10) {
-                        OnboardingLegendRow(
-                            color: veganVerdictColor(for: .vegan, colorblindSafe: colorblindSafePalette),
-                            text: L("vegan_verdict_vegan")
-                        )
-                        OnboardingLegendRow(
-                            color: veganVerdictColor(for: .notVegan, colorblindSafe: colorblindSafePalette),
-                            text: L("vegan_verdict_not_vegan")
-                        )
-                        OnboardingLegendRow(
-                            color: veganVerdictColor(for: .maybe, colorblindSafe: colorblindSafePalette),
-                            text: L("vegan_verdict_maybe")
-                        )
-                        OnboardingLegendRow(
-                            color: veganVerdictColor(for: .unknown, colorblindSafe: colorblindSafePalette),
-                            text: L("vegan_verdict_unknown")
-                        )
                     }
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+
+                    HStack(spacing: 6) {
+                        ForEach(0..<3, id: \.self) { index in
+                            Circle()
+                                .fill(index == page ? Color("AccentColor") : Color(.tertiaryLabel))
+                                .frame(width: 8, height: 8)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
 
                     Button {
-                        dismissAndMarkSeen()
+                        if page < 2 {
+                            page += 1
+                        } else {
+                            dismissAndMarkSeen()
+                        }
                     } label: {
-                        Text(L("onboarding_dismiss"))
+                        Text(page < 2 ? L("onboarding_next") : L("onboarding_dismiss"))
                             .frame(maxWidth: .infinity)
                     }
-                    .accessibilityIdentifier("onboarding-dismiss")
+                    .accessibilityIdentifier("onboarding-next")
                     .buttonStyle(.borderedProminent)
                     .tint(Color("AccentColor"))
+
+                    if page < 2 {
+                        Button(L("onboarding_skip")) {
+                            dismissAndMarkSeen()
+                        }
+                        .frame(maxWidth: .infinity)
+                        .buttonStyle(.borderless)
+                        .accessibilityIdentifier("onboarding-dismiss")
+                    }
                 }
                 .padding()
             }
@@ -852,7 +889,7 @@ struct OnboardingView: View {
         }
     }
 
-    private func dismissAndMarkSeen() {
+        private func dismissAndMarkSeen() {
         onDismiss()
         dismiss()
     }
@@ -1031,10 +1068,11 @@ struct ResultView: View {
                     watchedKeywords: WatchlistPreferences.decode(watchedKeywordsStorage)
                 )
                 let facts = product.nutritionFacts
+                let veganAnalysis = analyzeVegan(product)
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 16) {
                         VeganBannerView(
-                            analysis: analyzeVegan(product),
+                            analysis: veganAnalysis,
                             source: source,
                             fromCache: fromCache,
                             cachedAt: cachedAt
@@ -1067,13 +1105,32 @@ struct ResultView: View {
                         .buttonStyle(.borderedProminent)
                         .tint(Color("AccentColor"))
 
-                        Button {
-                            onContribute(barcode, product, source)
-                        } label: {
-                            Label(L("contribute_product_action"), systemImage: "square.and.pencil")
-                                .frame(maxWidth: .infinity)
+                        if veganAnalysis.status == .unknown && !veganAnalysis.hasIngredientData {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text(L("contribution_guide_hint"))
+                                    .appFont(.caption)
+                                    .foregroundStyle(.secondary)
+                                Button {
+                                    onContribute(barcode, product, source)
+                                } label: {
+                                    Label(L("contribute_product_action"), systemImage: "square.and.pencil")
+                                        .frame(maxWidth: .infinity)
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .tint(Color("AccentColor"))
+                            }
+                            .padding()
+                            .background(Color(.tertiarySystemBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        } else {
+                            Button {
+                                onContribute(barcode, product, source)
+                            } label: {
+                                Label(L("contribute_product_action"), systemImage: "square.and.pencil")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.bordered)
                         }
-                        .buttonStyle(.bordered)
 
                         if let imageURLString = product.imageUrl, let url = URL(string: imageURLString) {
                             AsyncImage(url: url) { phase in
@@ -1504,6 +1561,9 @@ struct HistoryView: View {
     @State private var showingClearConfirmation = false
     @State private var pendingUndo: DeletedScanSnapshot?
     @State private var pendingUndoID: UUID?
+    @State private var compareMode = false
+    @State private var compareSelection: Set<String> = []
+    @State private var showingCompare = false
 
     let onSelectBarcode: (String) -> Void
     let onScanProduct: () -> Void
@@ -1575,9 +1635,27 @@ struct HistoryView: View {
             } else {
                 ForEach(displayedRecords, id: \.barcode) { record in
                     Button {
-                        onSelectBarcode(record.barcode)
+                        if compareMode {
+                            if compareSelection.contains(record.barcode) {
+                                compareSelection.remove(record.barcode)
+                            } else if compareSelection.count < 3 {
+                                compareSelection.insert(record.barcode)
+                            }
+                        } else {
+                            onSelectBarcode(record.barcode)
+                        }
                     } label: {
                         HistoryRow(record: record)
+                            .overlay(alignment: .topTrailing) {
+                                if compareMode {
+                                    Image(
+                                        systemName: compareSelection.contains(record.barcode)
+                                            ? "checkmark.circle.fill" : "circle"
+                                    )
+                                    .foregroundStyle(Color("AccentColor"))
+                                    .padding(8)
+                                }
+                            }
                     }
                     .buttonStyle(.plain)
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
@@ -1595,6 +1673,18 @@ struct HistoryView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 sortMenu
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    compareMode.toggle()
+                    compareSelection = []
+                } label: {
+                    Image(systemName: compareMode ? "checklist.checked" : "checklist")
+                }
+                .disabled(records.isEmpty)
+                .accessibilityLabel(
+                    compareMode ? L("compare_mode_off") : L("compare_mode_on")
+                )
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(role: .destructive) {
@@ -1623,13 +1713,31 @@ struct HistoryView: View {
         .navigationTitle(L("history_title"))
         .navigationBarTitleDisplayMode(.inline)
         .overlay(alignment: .bottom) {
-            if pendingUndo != nil {
+            if compareMode {
+                Button {
+                    showingCompare = true
+                } label: {
+                    Text(LF("compare_launch", compareSelection.count))
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(Color("AccentColor"))
+                .disabled(!(2...3).contains(compareSelection.count))
+                .padding()
+            } else if pendingUndo != nil {
                 UndoBanner(
                     message: L("item_deleted_message"),
                     actionLabel: L("undo_action"),
                     onUndo: restorePendingScan
                 )
             }
+        }
+        .sheet(isPresented: $showingCompare) {
+            CompareView(
+                records: compareSelection
+                    .compactMap { code in records.first { $0.barcode == code } },
+                onSelectBarcode: onSelectBarcode
+            )
         }
         .task(id: pendingUndoID) {
             guard pendingUndoID != nil else { return }
