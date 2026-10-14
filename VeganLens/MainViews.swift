@@ -808,14 +808,13 @@ struct OnboardingView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .accessibilityLabel(L("portada_image_description"))
 
-                    switch page {
-                    case 0:
+                    if page == 0 {
                         Text(L("onboarding_title"))
                             .appFont(.title, weight: .bold)
                         Text(L("onboarding_message"))
                             .appFont(.body)
                             .foregroundStyle(.secondary)
-                    case 1:
+                    } else if page == 1 {
                         Text(L("onboarding_verdicts_title"))
                             .appFont(.title, weight: .bold)
                         VStack(alignment: .leading, spacing: 10) {
@@ -839,7 +838,7 @@ struct OnboardingView: View {
                         .padding()
                         .background(Color(.secondarySystemBackground))
                         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                    default:
+                    } else {
                         Text(L("onboarding_features_title"))
                             .appFont(.title, weight: .bold)
                         VStack(alignment: .leading, spacing: 10) {
