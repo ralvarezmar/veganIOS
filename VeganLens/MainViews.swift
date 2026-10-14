@@ -869,7 +869,7 @@ struct OnboardingView: View {
                         Text(page < 2 ? L("onboarding_next") : L("onboarding_dismiss"))
                             .frame(maxWidth: .infinity)
                     }
-                    .accessibilityIdentifier("onboarding-dismiss")
+                    .accessibilityIdentifier("onboarding-next")
                     .buttonStyle(.borderedProminent)
                     .tint(Color("AccentColor"))
 
@@ -879,6 +879,7 @@ struct OnboardingView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .buttonStyle(.borderless)
+                        .accessibilityIdentifier("onboarding-dismiss")
                     }
                 }
                 .padding()
