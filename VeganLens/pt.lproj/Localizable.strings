@@ -585,3 +585,16 @@
 "verdict_details_show" = "Porquê este resultado";
 "verdict_details_hide" = "Ocultar explicação";
 "verdict_details_evidence" = "Evidência";
+"compare_title" = "Comparar produtos";
+"compare_open_product" = "Ver produto";
+"compare_mode_on" = "Comparar";
+"compare_mode_off" = "Sair da comparação";
+"compare_launch" = "Comparar (%d)";
+"contribution_guide_hint" = "Faltam dados de ingredientes para este produto. Contribua para o Open Food Facts para ajudar na análise.";
+"onboarding_next" = "Seguinte";
+"onboarding_skip" = "Ignorar";
+"onboarding_verdicts_title" = "O que significa cada veredicto";
+"onboarding_features_title" = "Mais funcionalidades";
+"onboarding_features_compare" = "• Compare produtos a partir do histórico.";
+"onboarding_features_contribute" = "• Complete os dados em falta no Open Food Facts.";
+"onboarding_features_dish_photo" = "• Analise uma foto do seu prato.";
