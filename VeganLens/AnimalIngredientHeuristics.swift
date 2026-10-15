@@ -77,43 +77,137 @@ let eggTokens: Set<String> = [
     "trockenei", "huhnerei", "oeuf", "oeufs"
 ]
 
-private let traceWarningMarkers = [
-    "puede contener", "pode conter", "may contain", "peut contenir",
-    "puo contenere", "kann spuren", "spuren von", "trazas de", "traza de",
-    "tracce di", "traces of", "traces de", "vestigios de", "tracos de"
+private let traceWarningTokenPattern =
+    #"(?<![\p{L}\p{N}])(?:trazas?|traces?|tracce|traccia|spur(?:en)?|vestigios?|tracos?|sporen|spoor)(?![\p{L}\p{N}])"#
+
+private let traceWarningPatterns = [
+    #"\b(?:puede|pueden|podria|podrian|pode|podem|podera|peut|peuvent|puo|possono|may|might|can|could|pot|poden|kan|kunnen)"# +
+        #"(?: \p{L}+){0,2} (?:contener|conter|contenir|contenere|contain|bevatten)\b"#,
+    #"\b(?:kann|konnen|konnte|konnten)\b.*\benthalten\b"#,
+    #"\benthalt moglicherweise\b"#,
+    #"\bsusceptible de contenir\b"#
 ]
+
+private let sharedFacilityMarkers = [
+    "en una fabrica", "en una planta", "en instalaciones", "en la misma linea",
+    "numa fabrica", "em uma fabrica", "numa unidade", "na mesma linha",
+    "in a factory", "in a facility", "on equipment", "on shared equipment",
+    "on the same line", "on a line",
+    "dans un atelier", "dans une usine", "sur une ligne", "sur la meme ligne",
+    "in uno stabilimento", "nello stabilimento", "sulla stessa linea",
+    "in einem betrieb", "auf anlagen", "auf einer anlage", "auf derselben linie",
+    "in een fabriek", "in een bedrijf"
+]
+
+private let traceSegmentSeparator = " , "
+private let sentenceDelimiters = CharacterSet(charactersIn: ".!\n")
+private let segmentDelimiters = CharacterSet(charactersIn: ",;()/")
+
+struct IngredientTraceParts {
+    let real: [String]
+    let traces: [String]
+}
+
+private func traceWarningStart(_ normalized: String) -> Int? {
+    guard !normalized.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
+    func offset(of pattern: String, regex: Bool) -> Int? {
+        guard let range = normalized.range(
+            of: pattern,
+            options: regex ? .regularExpression : []
+        ) else {
+            return nil
+        }
+        return normalized.distance(from: normalized.startIndex, to: range.lowerBound)
+    }
+    let starts = [offset(of: traceWarningTokenPattern, regex: true)] +
+        traceWarningPatterns.map { offset(of: $0, regex: true) } +
+        sharedFacilityMarkers.map { offset(of: $0, regex: false) }
+    return starts.compactMap { $0 }.min()
+}
+
+func containsTraceWarning(_ segment: String) -> Bool {
+    traceWarningStart(normalizeIngredientSegment(segment)) != nil
+}
+
+private func traceWarningSegmentIndex(_ segments: [String]) -> Int? {
+    let normalized = segments.map(normalizeIngredientSegment)
+    var segmentStarts: [Int] = []
+    var offset = 0
+    for segment in normalized {
+        segmentStarts.append(offset)
+        offset += segment.count + traceSegmentSeparator.count
+    }
+    guard let matchStart = traceWarningStart(normalized.joined(separator: traceSegmentSeparator)) else {
+        return nil
+    }
+    return segmentStarts.lastIndex { $0 <= matchStart }
+}
+
+private struct IngredientPhrase {
+    let text: String
+    let endsWithLineBreak: Bool
+}
+
+private func ingredientPhrases(_ text: String) -> [IngredientPhrase] {
+    var phrases: [IngredientPhrase] = []
+    var current = ""
+    for scalar in cleanFoodFactsMarkup(text).unicodeScalars {
+        if sentenceDelimiters.contains(scalar) {
+            phrases.append(IngredientPhrase(text: current, endsWithLineBreak: scalar == "\n"))
+            current = ""
+        } else {
+            current.unicodeScalars.append(scalar)
+        }
+    }
+    phrases.append(IngredientPhrase(text: current, endsWithLineBreak: false))
+    return phrases
+}
+
+private func startsWithLowercaseLetter(_ text: String) -> Bool {
+    text.first(where: \.isLetter)?.isLowercase == true
+}
+
+/// Splits ingredient text into real ingredients and precautionary trace statements
+/// ("may contain", "traces of", "made in a factory that also handles"...). A trace
+/// statement wrapped onto the next line (common in OCR text) keeps applying while the
+/// next line continues in lowercase.
+func splitIngredientTraceParts(_ text: String) -> IngredientTraceParts {
+    var real: [String] = []
+    var traces: [String] = []
+    var traceContinues = false
+    for phrase in ingredientPhrases(text) {
+        let segments = phrase.text.components(separatedBy: segmentDelimiters)
+        if traceContinues && startsWithLowercaseLetter(phrase.text) {
+            traces.append(contentsOf: segments)
+            traceContinues = phrase.endsWithLineBreak
+            continue
+        }
+        guard let traceStart = traceWarningSegmentIndex(segments) else {
+            real.append(contentsOf: segments)
+            traceContinues = false
+            continue
+        }
+        real.append(contentsOf: segments[..<traceStart])
+        traces.append(contentsOf: segments[traceStart...])
+        traceContinues = phrase.endsWithLineBreak
+    }
+    return IngredientTraceParts(real: real, traces: traces)
+}
 
 func detectAnimalIngredients(_ text: String) -> [String] {
     guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return [] }
 
     var results: [String] = []
     var seen = Set<String>()
-    let textWithoutMarkup = cleanFoodFactsMarkup(text)
-    for sentence in textWithoutMarkup.components(separatedBy: CharacterSet(charactersIn: ".!\n")) {
-        for segment in sentence.components(separatedBy: CharacterSet(charactersIn: ",;()/")) {
-            let norm = normalizeIngredientSegment(segment)
-            if traceWarningMarkers.contains(where: { norm.contains($0) }) { break }
-            guard containsAnimalIngredient(segment),
-                  let cleaned = cleanFoodFactsLabel(segment),
-                  seen.insert(cleaned).inserted else {
-                continue
-            }
-            results.append(cleaned)
+    for segment in splitIngredientTraceParts(text).real {
+        guard containsAnimalIngredient(segment),
+              let cleaned = cleanFoodFactsLabel(segment),
+              seen.insert(cleaned).inserted else {
+            continue
         }
+        results.append(cleaned)
     }
     return results
-}
-
-func ingredientSegments(_ text: String) -> [String] {
-    cleanFoodFactsMarkup(text)
-        .components(separatedBy: CharacterSet(charactersIn: ".!\n"))
-        .flatMap { sentence in
-            sentence.components(separatedBy: CharacterSet(charactersIn: ",;()/"))
-        }
-}
-
-func containsTraceWarning(_ segment: String) -> Bool {
-    traceWarningMarkers.contains { normalizeIngredientSegment(segment).contains($0) }
 }
 
 func containsAnimalIngredient(_ segment: String) -> Bool {
@@ -161,17 +255,13 @@ func detectDoubtfulFlavourIngredients(_ text: String) -> [String] {
 
     var results: [String] = []
     var seen = Set<String>()
-    let textWithoutMarkup = cleanFoodFactsMarkup(text)
-    for sentence in textWithoutMarkup.components(separatedBy: CharacterSet(charactersIn: ".!\n")) {
-        for segment in sentence.components(separatedBy: CharacterSet(charactersIn: ",;()/")) {
-            if containsTraceWarning(segment) { break }
-            guard containsDoubtfulFlavourIngredient(segment),
-                  let cleaned = cleanFoodFactsLabel(segment),
-                  seen.insert(cleaned).inserted else {
-                continue
-            }
-            results.append(cleaned)
+    for segment in splitIngredientTraceParts(text).real {
+        guard containsDoubtfulFlavourIngredient(segment),
+              let cleaned = cleanFoodFactsLabel(segment),
+              seen.insert(cleaned).inserted else {
+            continue
         }
+        results.append(cleaned)
     }
     return results
 }

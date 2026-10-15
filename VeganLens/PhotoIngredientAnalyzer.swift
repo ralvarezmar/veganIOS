@@ -46,12 +46,12 @@ func analyzePhotoIngredients(
     )
     var traceWarning = containsTraceWarning("\(section.ingredientsText) \(section.trailingText)")
 
-    for rawSegment in ingredientSegments(section.ingredientsText) {
-        if containsTraceWarning(rawSegment) {
-            traceWarning = true
-            continue
-        }
+    let traceParts = splitIngredientTraceParts(section.ingredientsText)
+    if !traceParts.traces.isEmpty {
+        traceWarning = true
+    }
 
+    for rawSegment in traceParts.real {
         guard let label = cleanPhotoIngredientLabel(rawSegment) else {
             continue
         }

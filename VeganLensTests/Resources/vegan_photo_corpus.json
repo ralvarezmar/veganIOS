@@ -234,6 +234,18 @@
       "rationale": "An additive code extension must not be mistaken for the carmine code E120: E1201 is a recognised synthetic additive, so the verdict stays vegan instead of turning non-vegan.",
       "text": "Ingredientes: azúcar, E1201",
       "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": false}
+    },
+    {
+      "id": "photo-trazas-colon-warning",
+      "rationale": "A 'Trazas:' allergen line must be treated as a trace warning, not as ingredients.",
+      "text": "Ingredientes: harina, azúcar, sal. Trazas: leche.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": true}
+    },
+    {
+      "id": "photo-wrapped-shared-factory-warning",
+      "rationale": "A shared-factory warning wrapped onto the next OCR line keeps applying to the continuation line.",
+      "text": "Ingredientes: harina, azúcar, sal. Elaborado en una fábrica que\nutiliza leche y huevo.",
+      "expected": {"status": "vegan", "reasonSource": "photoAllPlantRecognized", "culprits": [], "unrecognized": [], "traceWarning": true}
     }
   ]
 }

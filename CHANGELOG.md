@@ -8,6 +8,10 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Fixed
+- Ingredients mentioned only in cross-contamination warnings ("may contain", "traces of", shared factory notices) no longer make a product non-vegan, in all supported languages.
+- The contribution photo rows now use a compact placeholder before a photo is selected.
+
 - The scanner screenshot now highlights faster barcode detection with an in-flow analysis state.
 
 - The scanner store artwork now uses a clean VeganLens header instead of overlaying text on the older screenshot.

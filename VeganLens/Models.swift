@@ -158,6 +158,7 @@ struct Product: Codable {
 }
 
 struct OffIngredient: Codable {
+    let id: String?
     let text: String?
     let vegan: String?
     let vegetarian: String?
@@ -167,8 +168,10 @@ struct OffIngredient: Codable {
         text: String?,
         vegan: String?,
         vegetarian: String?,
-        ingredients: [OffIngredient]? = nil
+        ingredients: [OffIngredient]? = nil,
+        id: String? = nil
     ) {
+        self.id = id
         self.text = text
         self.vegan = vegan
         self.vegetarian = vegetarian

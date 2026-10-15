@@ -69,4 +69,24 @@ final class AnimalIngredientHeuristicsTests: XCTestCase {
         XCTAssertTrue(containsAnimalIngredient("aroma de mantequilla y gelatina"))
         XCTAssertFalse(containsAnimalIngredient("mantequilla de cacahuete"))
     }
+
+    func testIgnoresMultilingualTraceAndSharedFacilityWarnings() {
+        XCTAssertTrue(detectAnimalIngredients("Farine de blé, sucre. Traces éventuelles de lait.").isEmpty)
+        XCTAssertTrue(detectAnimalIngredients("Farina di frumento, zucchero. Può contenere tracce di latte.").isEmpty)
+        XCTAssertTrue(detectAnimalIngredients("Farinha de trigo, açúcar. Pode conter vestígios de leite.").isEmpty)
+        XCTAssertTrue(detectAnimalIngredients("Weizenmehl, Zucker. Kann Milch und Ei enthalten.").isEmpty)
+        XCTAssertTrue(detectAnimalIngredients("Wheat flour, sugar. Made in a factory that also handles milk.").isEmpty)
+        XCTAssertTrue(detectAnimalIngredients("Harina, azúcar. Trazas: leche.").isEmpty)
+        XCTAssertEqual(
+            detectAnimalIngredients("Sugar, whole milk powder. May contain nuts."),
+            ["Whole Milk Powder"]
+        )
+    }
+
+    func testSplitsTraceWarningsContinuedOnNextOcrLine() {
+        let parts = splitIngredientTraceParts("Wheat flour, sugar. Made in a factory\nthat also handles milk and egg.")
+
+        XCTAssertFalse(parts.traces.isEmpty)
+        XCTAssertFalse(parts.real.contains { containsAnimalIngredient($0) })
+    }
 }

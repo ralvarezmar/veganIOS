@@ -110,11 +110,6 @@ private struct NormalizedIngredient {
     let isTrace: Bool
 }
 
-private struct IngredientTraceParts {
-    let real: [String]
-    let traces: [String]
-}
-
 private func flattenIngredients(_ ingredients: [OffIngredient]?) -> [OffIngredient] {
     var flattened: [OffIngredient] = []
 
@@ -129,22 +124,11 @@ private func flattenIngredients(_ ingredients: [OffIngredient]?) -> [OffIngredie
     return flattened
 }
 
-private func traceParts(_ text: String) -> IngredientTraceParts {
-    var real: [String] = []
-    var traces: [String] = []
-    for phrase in cleanFoodFactsMarkup(text).components(separatedBy: CharacterSet(charactersIn: ".!\n")) {
-        let segments = phrase.components(separatedBy: CharacterSet(charactersIn: ",;()/"))
-        guard let traceStart = segments.firstIndex(where: containsTraceWarning) else {
-            real.append(contentsOf: segments)
-            continue
-        }
-        real.append(contentsOf: segments[..<traceStart])
-        traces.append(contentsOf: segments[traceStart...])
-    }
-    return IngredientTraceParts(real: real, traces: traces)
-}
-
-private func isTraceIngredient(_ ingredient: OffIngredient, ingredientsText: String?) -> Bool {
+private func isTraceIngredient(
+    _ ingredient: OffIngredient,
+    ingredientsText: String?,
+    tracesTags: [String]?
+) -> Bool {
     if containsTraceWarning(ingredient.text ?? "") {
         return true
     }
@@ -155,19 +139,22 @@ private func isTraceIngredient(_ ingredient: OffIngredient, ingredientsText: Str
     }
 
     let name = normalizeIngredientSegment(cleanedName)
-    let parts = traceParts(ingredientsText)
+    let parts = splitIngredientTraceParts(ingredientsText)
     let appearsInRealIngredients = parts.real.contains {
         normalizeIngredientSegment($0).contains(name)
     }
     if appearsInRealIngredients {
         return false
     }
-    return parts.traces.contains {
-        normalizeIngredientSegment($0).contains(name)
-    } || (
-        parts.traces.contains(where: containsAnimalIngredient) &&
-            !parts.real.contains(where: containsAnimalIngredient)
-        )
+    if parts.traces.contains(where: { normalizeIngredientSegment($0).contains(name) }) {
+        return true
+    }
+    if parts.real.contains(where: containsAnimalIngredient) {
+        return false
+    }
+    let ingredientID = ingredient.id?.lowercased()
+    return parts.traces.contains(where: containsAnimalIngredient) ||
+        (ingredientID != nil && (tracesTags ?? []).contains { $0.lowercased() == ingredientID })
 }
 
 func analyzeVegan(_ product: Product) -> VeganAnalysis {
@@ -177,7 +164,8 @@ func analyzeVegan(_ product: Product) -> VeganAnalysis {
         ingredientsText: product.ingredientsText,
         additivesTags: product.additivesTags,
         categoriesTags: product.categoriesTags,
-        labelsTags: product.labelsTags
+        labelsTags: product.labelsTags,
+        tracesTags: product.tracesTags
     )
 }
 
@@ -187,7 +175,8 @@ func analyzeVegan(
     ingredientsText: String? = nil,
     additivesTags: [String]? = nil,
     categoriesTags: [String]? = nil,
-    labelsTags: [String]? = nil
+    labelsTags: [String]? = nil,
+    tracesTags: [String]? = nil
 ) -> VeganAnalysis {
     let ingredientList = flattenIngredients(ingredients)
     let normalizedIngredients = ingredientList.compactMap { ingredient -> NormalizedIngredient? in
@@ -201,7 +190,7 @@ func analyzeVegan(
             status: vegan,
             name: cleanedText,
             isTrace: ["no", "maybe"].contains(vegan) &&
-                isTraceIngredient(ingredient, ingredientsText: ingredientsText)
+                isTraceIngredient(ingredient, ingredientsText: ingredientsText, tracesTags: tracesTags)
         )
     }
 

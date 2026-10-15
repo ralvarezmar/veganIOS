@@ -264,6 +264,46 @@
       "ingredientsAnalysisTags": ["en:non-vegan"],
       "ingredientsText": "Harina de trigo, mantequilla, azúcar.",
       "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Mantequilla"]}
+    },
+    {
+      "id": "french-eventual-milk-traces-are-vegan",
+      "rationale": "French 'traces éventuelles de' is a precautionary warning, not an ingredient.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "ingredientsText": "Sucre, pâte de cacao, beurre de cacao. Traces éventuelles de lait.",
+      "ingredients": [{"text": "Sucre", "vegan": "yes"}, {"text": "lait", "vegan": "no"}],
+      "expected": {"status": "vegan", "reasonSource": "tracesOnly", "culprits": []}
+    },
+    {
+      "id": "german-may-contain-milk-without-spuren-is-vegan",
+      "rationale": "German 'Kann ... enthalten' spanning several comma-separated allergens is a precautionary warning.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "ingredientsText": "Zucker, Kakaomasse, Kakaobutter. Kann Milch, Haselnüsse und Soja enthalten.",
+      "ingredients": [{"text": "Zucker", "vegan": "yes"}, {"text": "Milch", "vegan": "no"}],
+      "expected": {"status": "vegan", "reasonSource": "tracesOnly", "culprits": []}
+    },
+    {
+      "id": "english-shared-factory-milk-is-vegan",
+      "rationale": "A shared-factory statement is cross-contamination guidance, not an ingredient.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "ingredientsText": "Sugar, cocoa mass, cocoa butter. Made in a factory that also handles milk and eggs.",
+      "ingredients": [{"text": "Sugar", "vegan": "yes"}, {"text": "milk", "vegan": "no"}],
+      "expected": {"status": "vegan", "reasonSource": "tracesOnly", "culprits": []}
+    },
+    {
+      "id": "italian-shared-plant-milk-is-vegan",
+      "rationale": "Italian 'prodotto in uno stabilimento che utilizza' is cross-contamination guidance.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "ingredientsText": "Zucchero, pasta di cacao. Prodotto in uno stabilimento che utilizza latte.",
+      "ingredients": [{"text": "Zucchero", "vegan": "yes"}, {"text": "latte", "vegan": "no"}],
+      "expected": {"status": "vegan", "reasonSource": "tracesOnly", "culprits": []}
+    },
+    {
+      "id": "may-also-contain-does-not-hide-real-milk",
+      "rationale": "A later precautionary warning must not clear a real animal ingredient listed before it.",
+      "ingredientsAnalysisTags": ["en:non-vegan"],
+      "ingredientsText": "Sugar, whole milk powder, cocoa butter. May also contain nuts.",
+      "ingredients": [{"text": "Whole milk powder", "vegan": "no"}],
+      "expected": {"status": "notVegan", "reasonSource": "structuredNonVeganIngredient", "culprits": ["Whole Milk Powder"]}
     }
   ]
 }

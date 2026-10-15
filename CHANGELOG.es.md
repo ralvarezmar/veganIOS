@@ -10,6 +10,10 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Corregido
+- Los ingredientes que solo aparecen en avisos de contaminación cruzada ("puede contener", "trazas de", fabricado en instalaciones compartidas) ya no marcan el producto como no apto, en todos los idiomas soportados.
+- Las filas de fotos de Contribuir usan un marcador compacto antes de seleccionar una foto.
+
 - La captura del escáner destaca ahora la detección rápida del código y el estado de análisis dentro del flujo.
 
 - El arte promocional del escáner usa ahora una cabecera VeganLens limpia, sin superponer texto sobre la captura antigua.
