@@ -2089,7 +2089,7 @@ private func verdictAnnouncement(for product: Product) -> String {
 func displayEvidenceLabel(_ raw: String) -> String {
     let tag = raw.trimmingCharacters(in: .whitespaces)
     let body: String
-    if tag.range(of: "^[a-z]{2,3}:\s*.+", options: .regularExpression) != nil,
+    if tag.range(of: "^[a-z]{2,3}:\\s*.+", options: .regularExpression) != nil,
        let colon = tag.firstIndex(of: ":") {
         body = String(tag[tag.index(after: colon)...])
     } else {
