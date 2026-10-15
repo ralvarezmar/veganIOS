@@ -322,7 +322,7 @@ private struct ProductPhotoRow: View {
                         .foregroundStyle(.secondary)
                 }
             }
-            .frame(width: 58, height: 58)
+            .frame(width: 44, height: 44)
             .background(.quaternary)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 

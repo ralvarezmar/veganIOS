@@ -489,7 +489,9 @@ private func findAdditiveMatches(
             codes.append(entry.code)
         }
     }
-    let text = ([ingredientsText ?? ""] + (ingredients ?? []).map { $0.text ?? "" }).joined(separator: " ")
+    let realText = traceParts(ingredientsText ?? "").real.joined(separator: " ")
+    let ingredientTexts = (ingredients ?? []).map { traceParts($0.text ?? "").real.joined(separator: " ") }
+    let text = ([realText] + ingredientTexts).joined(separator: " ")
     for rawCode in findAdditiveCodesInText(text) {
         if let entry = additiveEntry(for: rawCode), !codes.contains(entry.code) {
             codes.append(entry.code)
