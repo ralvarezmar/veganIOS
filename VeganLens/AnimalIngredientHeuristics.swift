@@ -78,9 +78,22 @@ let eggTokens: Set<String> = [
 ]
 
 private let traceWarningMarkers = [
-    "puede contener", "pode conter", "may contain", "peut contenir",
-    "puo contenere", "kann spuren", "spuren von", "trazas de", "traza de",
-    "tracce di", "traces of", "traces de", "vestigios de", "tracos de"
+    "puede contener", "podria contener", "pode conter", "podendo conter",
+    "trazas", "tracos", "vestigios", "restos de", "residuos de",
+    "may contain", "may also contain", "traces", "possible traces",
+    "produced in a facility", "manufactured in a facility",
+    "shared equipment", "made on equipment",
+    "peut contenir", "peut egalement contenir",
+    "presence eventuelle", "presence possible", "eventuellement present",
+    "traces eventuelles", "traces possibles", "contamination croisee",
+    "fabrique dans un atelier", "atelier qui utilise",
+    "kann spuren", "spuren", "kann enthalten", "kann auch enthalten",
+    "enthalt spuren", "eventuell",
+    "puo contenere", "potrebbe contenere", "tracce",
+    "tracce eventuali", "presenza accidentale",
+    "kan sporen", "sporen", "kan bevatten", "mogelijke sporen",
+    "eventual", "moze zawierac", "sladowe ilosci", "slady",
+    "cross contamination", "contaminacion cruzada"
 ]
 
 func detectAnimalIngredients(_ text: String) -> [String] {

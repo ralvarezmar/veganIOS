@@ -1935,7 +1935,7 @@ private struct VeganBannerView: View {
                     Text(L("verdict_details_evidence"))
                         .appFont(.caption, weight: .bold)
                         .foregroundStyle(spec.foreground)
-                    Text(evidence.map { "• \($0)" }.joined(separator: "\n"))
+                    Text(evidence.map { "• \(displayEvidenceLabel($0))" }.joined(separator: "\n"))
                         .appFont(.subheadline)
                         .foregroundStyle(spec.foreground.opacity(0.96))
                         .fixedSize(horizontal: false, vertical: true)
@@ -2084,6 +2084,25 @@ private func verdictAnnouncement(for product: Product) -> String {
         explanation: veganReasonText(analysis.reason),
         confidence: veganConfidenceText(analysis.confidence)
     )
+}
+
+func displayEvidenceLabel(_ raw: String) -> String {
+    let tag = raw.trimmingCharacters(in: .whitespaces)
+    let body: String
+    if tag.range(of: "^[a-z]{2,3}:\\s*.+", options: .regularExpression) != nil,
+       let colon = tag.firstIndex(of: ":") {
+        body = String(tag[tag.index(after: colon)...])
+    } else {
+        body = tag
+    }
+    let words = body
+        .replacingOccurrences(of: "_", with: " ")
+        .replacingOccurrences(of: "-", with: " ")
+        .components(separatedBy: .whitespaces)
+        .filter { !$0.isEmpty }
+        .map { $0.prefix(1).uppercased() + $0.dropFirst() }
+    let result = words.joined(separator: " ")
+    return result.isEmpty ? raw : result
 }
 
 func reasonNeedsOriginHint(_ source: VeganReasonSource, evidenceCount: Int) -> Bool {
