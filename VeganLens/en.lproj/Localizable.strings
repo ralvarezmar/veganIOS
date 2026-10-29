@@ -89,6 +89,8 @@
 "share_verdict_no_apto" = "Not suitable ❌";
 "share_verdict_dudoso" = "Doubtful origin ⚠️";
 "share_verdict_sin_datos" = "Not enough data 🔍";
+"share_card_non_vegan_ingredients" = "Ingredients of animal origin: %@";
+"share_card_doubtful_ingredients" = "Ingredients of doubtful provenance: %@";
 "share_result_template" = "%@\nVerdict: %@\nSource: %@\n%@";
 "product_not_found" = "Product not found in Open Food Facts";
 "product_not_found_sources" = "We could not find enough information in any of the consulted bases: %@.";
@@ -175,6 +177,15 @@
 "search_retry" = "Retry";
 "favorite_add_action" = "Add to favorites";
 "favorite_remove_action" = "Remove from favorites";
+"shopping_list_action" = "Shopping list";
+"shopping_list_title" = "Shopping list";
+"shopping_list_empty_title" = "Your list is empty";
+"shopping_list_empty_message" = "Add products from their result using the cart icon.";
+"shopping_list_add_action" = "Add to shopping list";
+"shopping_list_remove_action" = "Remove from shopping list";
+"shopping_list_clear_checked" = "Remove checked";
+"shopping_list_checked" = "Bought";
+"shopping_list_pending" = "Pending";
 "home_action" = "Scanner";
 "allergen_gluten" = "Gluten";
 "allergen_crustaceans" = "Crustaceans";
@@ -543,6 +554,9 @@
 "env_recycling_reuse" = "reusable";
 "b12_reminder_title" = "B12 reminder";
 "b12_reminder_notification" = "It is time for your reminder.";
+"product_update_notification_title" = "History updates";
+"product_update_notification_single" = "%@ now has information on Open Food Facts. Open it to see the verdict.";
+"product_update_notification_multiple" = "%d products in your history now have information on Open Food Facts.";
 "b12_reminder_time" = "Time";
 "b12_reminder_frequency" = "How often";
 "b12_reminder_every_day" = "Every day";
@@ -560,6 +574,7 @@
 "scanner_chain_loading" = "Loading result…";
 "scanner_chain_error" = "This product could not be loaded.";
 "scanner_chain_retry" = "Retry";
+"scanner_chain_summary" = "%1$d vegan · %2$d not vegan · %3$d doubtful · %4$d no data";
 "filters_label" = "Filters";
 "filters_button" = "Filters (%d)";
 "filters_title" = "Filters";

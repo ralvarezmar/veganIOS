@@ -89,6 +89,8 @@
 "share_verdict_no_apto" = "Nicht geeignet ❌";
 "share_verdict_dudoso" = "Zweifelhafte Herkunft ⚠️";
 "share_verdict_sin_datos" = "Nicht genügend Daten 🔍";
+"share_card_non_vegan_ingredients" = "Zutaten tierischen Ursprungs: %@";
+"share_card_doubtful_ingredients" = "Zutaten zweifelhafter Herkunft: %@";
 "share_result_template" = "%@\nBewertung: %@\nQuelle: %@\n%@";
 "product_not_found" = "Produkt in Open Food Facts nicht gefunden";
 "product_not_found_sources" = "Wir konnten in keiner der abgefragten Datenbanken genügend Informationen finden: %@.";
@@ -175,6 +177,15 @@
 "search_retry" = "Erneut versuchen";
 "favorite_add_action" = "Zu Favoriten hinzufügen";
 "favorite_remove_action" = "Aus Favoriten entfernen";
+"shopping_list_action" = "Einkaufsliste";
+"shopping_list_title" = "Einkaufsliste";
+"shopping_list_empty_title" = "Deine Liste ist leer";
+"shopping_list_empty_message" = "Füge Produkte über das Einkaufswagen-Symbol im Ergebnis hinzu.";
+"shopping_list_add_action" = "Zur Einkaufsliste hinzufügen";
+"shopping_list_remove_action" = "Von der Einkaufsliste entfernen";
+"shopping_list_clear_checked" = "Abgehakte entfernen";
+"shopping_list_checked" = "Gekauft";
+"shopping_list_pending" = "Offen";
 "home_action" = "Scanner";
 "allergen_gluten" = "Gluten";
 "allergen_crustaceans" = "Krebstiere";
@@ -527,6 +538,9 @@
 "env_recycling_reuse" = "wiederverwendbar";
 "b12_reminder_title" = "B12-Erinnerung";
 "b12_reminder_notification" = "Es ist Zeit für deine Erinnerung.";
+"product_update_notification_title" = "Neues im Verlauf";
+"product_update_notification_single" = "%@ hat jetzt Informationen auf Open Food Facts. Öffne es, um das Ergebnis zu sehen.";
+"product_update_notification_multiple" = "%d Produkte in deinem Verlauf haben jetzt Informationen auf Open Food Facts.";
 "b12_reminder_time" = "Zeit";
 "b12_reminder_frequency" = "Wie oft";
 "b12_reminder_every_day" = "Jeden Tag";
@@ -544,6 +558,7 @@
 "scanner_chain_loading" = "Ergebnis wird geladen…";
 "scanner_chain_error" = "Dieses Produkt konnte nicht geladen werden.";
 "scanner_chain_retry" = "Erneut versuchen";
+"scanner_chain_summary" = "%1$d geeignet · %2$d nicht geeignet · %3$d unklar · %4$d ohne Daten";
 "filters_label" = "Filter";
 "filters_button" = "Filter (%d)";
 "filters_title" = "Filter";

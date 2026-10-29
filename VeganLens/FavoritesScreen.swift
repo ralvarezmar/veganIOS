@@ -14,6 +14,7 @@ struct FavoritesScreen: View {
 
     let onSelectBarcode: (String) -> Void
     let onScanProduct: () -> Void
+    var onOpenShoppingList: () -> Void = {}
 
     private var displayedFavorites: [FavoriteProduct] {
         filterAndSortItems(
@@ -90,6 +91,13 @@ struct FavoritesScreen: View {
         .listStyle(.insetGrouped)
         .searchable(text: $query, prompt: L("favorites_search_hint"))
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: onOpenShoppingList) {
+                    Image(systemName: "cart")
+                }
+                .accessibilityLabel(L("shopping_list_action"))
+                .accessibilityIdentifier("shopping-list-button")
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 sortMenu
             }
