@@ -10,6 +10,12 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- El escaneo en cadena muestra un resumen de productos aptos, no aptos, dudosos y sin datos.
+- Lista de la compra: añade productos desde su resultado con el botón del carrito, márcalos y quita los ya comprados.
+- Al compartir un resultado se envía una tarjeta-imagen con el veredicto, el producto y el motivo en lugar de la foto del producto.
+- Los productos del historial sin información se revisan una vez al día y recibes un aviso cuando Open Food Facts añade datos.
+
 - La captura del escáner destaca ahora la detección rápida del código y el estado de análisis dentro del flujo.
 
 - El arte promocional del escáner usa ahora una cabecera VeganLens limpia, sin superponer texto sobre la captura antigua.

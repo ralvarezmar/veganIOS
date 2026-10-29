@@ -91,6 +91,8 @@
 "share_verdict_no_apto" = "No apto ❌";
 "share_verdict_dudoso" = "Origen dudoso ⚠️";
 "share_verdict_sin_datos" = "Sin datos suficientes 🔍";
+"share_card_non_vegan_ingredients" = "Ingredientes de origen animal: %@";
+"share_card_doubtful_ingredients" = "Ingredientes de procedencia dudosa: %@";
 "share_result_template" = "%@
 Veredicto: %@
 Fuente: %@
@@ -180,6 +182,15 @@ Fuente: %@
 "search_retry" = "Reintentar";
 "favorite_add_action" = "Añadir a favoritos";
 "favorite_remove_action" = "Quitar de favoritos";
+"shopping_list_action" = "Lista de la compra";
+"shopping_list_title" = "Lista de la compra";
+"shopping_list_empty_title" = "Tu lista está vacía";
+"shopping_list_empty_message" = "Añade productos desde su resultado con el icono del carrito.";
+"shopping_list_add_action" = "Añadir a la lista de la compra";
+"shopping_list_remove_action" = "Quitar de la lista de la compra";
+"shopping_list_clear_checked" = "Quitar marcados";
+"shopping_list_checked" = "Comprado";
+"shopping_list_pending" = "Pendiente";
 "home_action" = "Escáner";
 "allergen_gluten" = "Gluten";
 "allergen_crustaceans" = "Crustáceos";
@@ -548,6 +559,9 @@ Fuente: %@
 "env_recycling_reuse" = "reutilizable";
 "b12_reminder_title" = "Recordatorio de B12";
 "b12_reminder_notification" = "Es la hora de tu recordatorio.";
+"product_update_notification_title" = "Novedades del historial";
+"product_update_notification_single" = "%@ ya tiene información en Open Food Facts. Ábrelo para ver el veredicto.";
+"product_update_notification_multiple" = "%d productos de tu historial ya tienen información en Open Food Facts.";
 "b12_reminder_time" = "Hora";
 "b12_reminder_frequency" = "Cada cuánto";
 "b12_reminder_every_day" = "Cada día";
@@ -565,6 +579,7 @@ Fuente: %@
 "scanner_chain_loading" = "Cargando resultado…";
 "scanner_chain_error" = "No se ha podido cargar este producto.";
 "scanner_chain_retry" = "Reintentar";
+"scanner_chain_summary" = "%1$d aptos · %2$d no aptos · %3$d dudosos · %4$d sin datos";
 "filters_label" = "Filtros";
 "filters_button" = "Filtros (%d)";
 "filters_title" = "Filtros";

@@ -8,6 +8,12 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- Chain-scan sessions show a running summary of suitable, not suitable, doubtful and no-data products.
+- Shopping list: add products from their result with the cart button, tick them off and remove the checked ones.
+- Sharing a result now sends a generated card image with the verdict, product and reason instead of the product photo.
+- Products in your history that had no information are rechecked once a day; you get a notification when Open Food Facts adds data.
+
 - The scanner screenshot now highlights faster barcode detection with an in-flow analysis state.
 
 - The scanner store artwork now uses a clean VeganLens header instead of overlaying text on the older screenshot.

@@ -2805,3 +2805,32 @@ private func preferredLanguageCode() -> String {
     let identifier = Locale.preferredLanguages.first ?? Locale.current.identifier
     return identifier.lowercased().hasPrefix("en") ? "en" : "es"
 }
+
+@Model
+final class ShoppingListItem {
+    @Attribute(.unique) var barcode: String
+    var productName: String?
+    var brand: String?
+    var imageURL: String?
+    var verdict: String?
+    var addedAt: Date
+    var checked: Bool
+
+    init(
+        barcode: String,
+        productName: String?,
+        brand: String?,
+        imageURL: String?,
+        verdict: String? = nil,
+        addedAt: Date = Date(),
+        checked: Bool = false
+    ) {
+        self.barcode = barcode
+        self.productName = productName
+        self.brand = brand
+        self.imageURL = imageURL
+        self.verdict = verdict
+        self.addedAt = addedAt
+        self.checked = checked
+    }
+}
