@@ -91,6 +91,8 @@
 "share_verdict_no_apto" = "No apto ❌";
 "share_verdict_dudoso" = "Origen dudoso ⚠️";
 "share_verdict_sin_datos" = "Sin datos suficientes 🔍";
+"share_card_non_vegan_ingredients" = "Ingredientes de origen animal: %@";
+"share_card_doubtful_ingredients" = "Ingredientes de procedencia dudosa: %@";
 "share_result_template" = "%@
 Veredicto: %@
 Fuente: %@

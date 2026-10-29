@@ -1456,20 +1456,16 @@ struct ResultView: View {
     private func prepareShare(text: String) {
         shareTextForPresentation = text
         shareImageForPresentation = nil
+        if case .success(let product, let source, _, _) = loadState {
+            shareImageForPresentation = renderVerdictShareCard(VerdictShareCardContent(
+                product: product,
+                barcode: barcode,
+                source: source,
+                analysis: analyzeVegan(product),
+                colorblindSafe: UserDefaults.standard.bool(forKey: AccessibilityPreferences.colorblindPaletteKey)
+            ))
+        }
         showingShareSheet = true
-        guard
-            case .success(let product, _, _, _) = loadState,
-            let imageURLString = product.imageUrl,
-            let imageURL = URL(string: imageURLString)
-        else {
-            return
-        }
-
-        Task { @MainActor in
-            if let (data, _) = try? await URLSession.shared.data(from: imageURL) {
-                shareImageForPresentation = UIImage(data: data)
-            }
-        }
     }
 
     private func shareVerdictLabel(for status: VeganStatus) -> String {

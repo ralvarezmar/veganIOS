@@ -89,6 +89,8 @@
 "share_verdict_no_apto" = "Nicht geeignet ❌";
 "share_verdict_dudoso" = "Zweifelhafte Herkunft ⚠️";
 "share_verdict_sin_datos" = "Nicht genügend Daten 🔍";
+"share_card_non_vegan_ingredients" = "Zutaten tierischen Ursprungs: %@";
+"share_card_doubtful_ingredients" = "Zutaten zweifelhafter Herkunft: %@";
 "share_result_template" = "%@\nBewertung: %@\nQuelle: %@\n%@";
 "product_not_found" = "Produkt in Open Food Facts nicht gefunden";
 "product_not_found_sources" = "Wir konnten in keiner der abgefragten Datenbanken genügend Informationen finden: %@.";
