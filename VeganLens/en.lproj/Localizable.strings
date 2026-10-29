@@ -554,6 +554,9 @@
 "env_recycling_reuse" = "reusable";
 "b12_reminder_title" = "B12 reminder";
 "b12_reminder_notification" = "It is time for your reminder.";
+"product_update_notification_title" = "History updates";
+"product_update_notification_single" = "%@ now has information on Open Food Facts. Open it to see the verdict.";
+"product_update_notification_multiple" = "%d products in your history now have information on Open Food Facts.";
 "b12_reminder_time" = "Time";
 "b12_reminder_frequency" = "How often";
 "b12_reminder_every_day" = "Every day";

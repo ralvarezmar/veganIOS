@@ -559,6 +559,9 @@ Fuente: %@
 "env_recycling_reuse" = "reutilizable";
 "b12_reminder_title" = "Recordatorio de B12";
 "b12_reminder_notification" = "Es la hora de tu recordatorio.";
+"product_update_notification_title" = "Novedades del historial";
+"product_update_notification_single" = "%@ ya tiene información en Open Food Facts. Ábrelo para ver el veredicto.";
+"product_update_notification_multiple" = "%d productos de tu historial ya tienen información en Open Food Facts.";
 "b12_reminder_time" = "Hora";
 "b12_reminder_frequency" = "Cada cuánto";
 "b12_reminder_every_day" = "Cada día";

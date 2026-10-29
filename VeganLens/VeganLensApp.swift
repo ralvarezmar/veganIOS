@@ -25,6 +25,10 @@ struct VeganLensApp: App {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 B12ReminderScheduler.refreshIfEnabled()
+                let context = sharedModelContainer.mainContext
+                Task { @MainActor in
+                    await ProductUpdateChecker.runIfDue(in: context)
+                }
             }
         }
     }
