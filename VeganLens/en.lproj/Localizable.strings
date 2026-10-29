@@ -560,6 +560,7 @@
 "scanner_chain_loading" = "Loading result…";
 "scanner_chain_error" = "This product could not be loaded.";
 "scanner_chain_retry" = "Retry";
+"scanner_chain_summary" = "%1$d vegan · %2$d not vegan · %3$d doubtful · %4$d no data";
 "filters_label" = "Filters";
 "filters_button" = "Filters (%d)";
 "filters_title" = "Filters";

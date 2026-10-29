@@ -418,6 +418,13 @@ private struct ChainScanResultsOverlay: View {
             }
             .foregroundStyle(.primary)
 
+            let summary = summarizeChainScan(entries)
+            if summary.total > 0 {
+                Text(LF("scanner_chain_summary", summary.vegan, summary.notVegan, summary.maybe, summary.unknown))
+                    .appFont(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(spacing: 8) {
                     ForEach(entries) { entry in

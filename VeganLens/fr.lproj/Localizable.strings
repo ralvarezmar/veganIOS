@@ -544,6 +544,7 @@
 "scanner_chain_loading" = "Chargement du résultat…";
 "scanner_chain_error" = "Impossible de charger ce produit.";
 "scanner_chain_retry" = "Réessayer";
+"scanner_chain_summary" = "%1$d adaptés · %2$d non adaptés · %3$d douteux · %4$d sans données";
 "filters_label" = "Filtres";
 "filters_button" = "Filtres (%d)";
 "filters_title" = "Filtres";

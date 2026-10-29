@@ -100,3 +100,22 @@ final class ChainScanSession: ObservableObject {
         lastAcceptedAt.removeAll()
     }
 }
+
+struct ChainScanSummary: Equatable {
+    let vegan: Int
+    let notVegan: Int
+    let maybe: Int
+    let unknown: Int
+
+    var total: Int { vegan + notVegan + maybe + unknown }
+}
+
+func summarizeChainScan(_ entries: [ChainScanEntry]) -> ChainScanSummary {
+    let verdicts = entries.filter { $0.state == .done }.map { $0.verdict ?? .unknown }
+    return ChainScanSummary(
+        vegan: verdicts.filter { $0 == .vegan }.count,
+        notVegan: verdicts.filter { $0 == .notVegan }.count,
+        maybe: verdicts.filter { $0 == .maybe }.count,
+        unknown: verdicts.filter { $0 == .unknown }.count
+    )
+}

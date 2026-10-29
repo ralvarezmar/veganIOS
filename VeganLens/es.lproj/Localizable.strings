@@ -565,6 +565,7 @@ Fuente: %@
 "scanner_chain_loading" = "Cargando resultado…";
 "scanner_chain_error" = "No se ha podido cargar este producto.";
 "scanner_chain_retry" = "Reintentar";
+"scanner_chain_summary" = "%1$d aptos · %2$d no aptos · %3$d dudosos · %4$d sin datos";
 "filters_label" = "Filtros";
 "filters_button" = "Filtros (%d)";
 "filters_title" = "Filtros";
