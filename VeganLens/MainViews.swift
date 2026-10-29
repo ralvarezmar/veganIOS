@@ -418,6 +418,13 @@ private struct ChainScanResultsOverlay: View {
             }
             .foregroundStyle(.primary)
 
+            let summary = summarizeChainScan(entries)
+            if summary.total > 0 {
+                Text(LF("scanner_chain_summary", summary.vegan, summary.notVegan, summary.maybe, summary.unknown))
+                    .appFont(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(spacing: 8) {
                     ForEach(entries) { entry in
@@ -918,6 +925,7 @@ struct ResultView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Query private var favoriteProducts: [FavoriteProduct]
+    @Query private var shoppingListItems: [ShoppingListItem]
     @AppStorage(AllergenPreferences.selectedKeysKey) private var selectedAllergenStorage = ""
     @AppStorage(AllergenPreferences.strictModeKey) private var strictMode = false
     @AppStorage(WatchlistPreferences.additivesKey) private var watchedAdditivesStorage = ""
@@ -946,6 +954,9 @@ struct ResultView: View {
         self.onBack = onBack
         _favoriteProducts = Query(filter: #Predicate<FavoriteProduct> { favorite in
             favorite.barcode == barcode
+        })
+        _shoppingListItems = Query(filter: #Predicate<ShoppingListItem> { item in
+            item.barcode == barcode
         })
     }
 
@@ -984,6 +995,17 @@ struct ResultView: View {
                             Image(systemName: isFavorite ? "star.fill" : "star")
                         }
                         .accessibilityLabel(isFavorite ? L("favorite_remove_action") : L("favorite_add_action"))
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            toggleShoppingList()
+                        } label: {
+                            Image(systemName: shoppingListItems.isEmpty ? "cart.badge.plus" : "cart.fill")
+                        }
+                        .accessibilityLabel(
+                            shoppingListItems.isEmpty ? L("shopping_list_add_action") : L("shopping_list_remove_action")
+                        )
+                        .accessibilityIdentifier("shopping-list-toggle")
                     }
                 }
                 if let shareText {
@@ -1365,6 +1387,30 @@ struct ResultView: View {
     }
 
     @MainActor
+    private func toggleShoppingList() {
+        guard case .success(let product, _, _, _) = loadState else {
+            return
+        }
+
+        do {
+            if shoppingListItems.isEmpty {
+                modelContext.insert(ShoppingListItem(
+                    barcode: barcode,
+                    productName: product.productName,
+                    brand: product.brands,
+                    imageURL: product.imageUrl,
+                    verdict: analyzeVegan(product).status.persistedValue
+                ))
+            } else {
+                shoppingListItems.forEach { modelContext.delete($0) }
+            }
+            try modelContext.save()
+        } catch {
+            print("No se pudo actualizar la lista de la compra: \(error)")
+        }
+    }
+
+    @MainActor
     private func toggleFavorite() {
         guard case .success(let product, let source, _, _) = loadState else {
             return
@@ -1410,20 +1456,16 @@ struct ResultView: View {
     private func prepareShare(text: String) {
         shareTextForPresentation = text
         shareImageForPresentation = nil
+        if case .success(let product, let source, _, _) = loadState {
+            shareImageForPresentation = renderVerdictShareCard(VerdictShareCardContent(
+                product: product,
+                barcode: barcode,
+                source: source,
+                analysis: analyzeVegan(product),
+                colorblindSafe: UserDefaults.standard.bool(forKey: AccessibilityPreferences.colorblindPaletteKey)
+            ))
+        }
         showingShareSheet = true
-        guard
-            case .success(let product, _, _, _) = loadState,
-            let imageURLString = product.imageUrl,
-            let imageURL = URL(string: imageURLString)
-        else {
-            return
-        }
-
-        Task { @MainActor in
-            if let (data, _) = try? await URLSession.shared.data(from: imageURL) {
-                shareImageForPresentation = UIImage(data: data)
-            }
-        }
     }
 
     private func shareVerdictLabel(for status: VeganStatus) -> String {

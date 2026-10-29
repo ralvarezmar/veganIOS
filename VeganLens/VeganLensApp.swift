@@ -7,7 +7,7 @@ struct VeganLensApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([ScanRecord.self, CachedProduct.self, FavoriteProduct.self])
+        let schema = Schema([ScanRecord.self, CachedProduct.self, FavoriteProduct.self, ShoppingListItem.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
@@ -25,6 +25,10 @@ struct VeganLensApp: App {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 B12ReminderScheduler.refreshIfEnabled()
+                let context = sharedModelContainer.mainContext
+                Task { @MainActor in
+                    await ProductUpdateChecker.runIfDue(in: context)
+                }
             }
         }
     }

@@ -176,8 +176,15 @@ struct RootView: View {
                             if !path.isEmpty {
                                 path.removeLast()
                             }
+                        },
+                        onOpenShoppingList: {
+                            path.append(Route.shoppingList)
                         }
                     )
+                case .shoppingList:
+                    ShoppingListScreen { barcode in
+                        path.append(Route.result(barcode))
+                    }
                 case .search:
                     SearchScreen { barcode in
                         path.append(Route.result(barcode))
@@ -370,6 +377,7 @@ struct RootView: View {
 private enum Route: Hashable {
     case history
     case favorites
+    case shoppingList
     case search
     case profile
     case settings
