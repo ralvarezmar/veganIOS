@@ -13,6 +13,8 @@ struct SettingsView: View {
     @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
     @AppStorage(AccessibilityPreferences.textSizeKey) private var textSize = AccessibilityTextSize.normal.rawValue
     @AppStorage(AccessibilityPreferences.highLegibilityFontKey) private var highLegibilityFont = false
+    @AppStorage(ScannerPreferences.hapticsEnabledKey) private var scannerHapticsEnabled = true
+    @AppStorage(ScannerPreferences.soundEnabledKey) private var scannerSoundEnabled = false
     @AppStorage(B12ReminderSettings.enabledKey) private var b12ReminderEnabled = false
     @AppStorage(B12ReminderSettings.hourKey) private var b12ReminderHour = 9
     @AppStorage(B12ReminderSettings.minuteKey) private var b12ReminderMinute = 0
@@ -74,6 +76,15 @@ struct SettingsView: View {
                 Text(L("accessibility_title"))
             } footer: {
                 Text(L("accessibility_description"))
+            }
+
+            Section {
+                Toggle(L("scanner_haptics_title"), isOn: $scannerHapticsEnabled)
+                Toggle(L("scanner_sound_title"), isOn: $scannerSoundEnabled)
+            } header: {
+                Text(L("scanner_feedback_title"))
+            } footer: {
+                Text(L("scanner_feedback_description"))
             }
 
             Section {

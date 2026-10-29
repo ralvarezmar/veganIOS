@@ -896,7 +896,7 @@ struct OnboardingView: View {
         }
     }
 
-    private func dismissAndMarkSeen() {
+        private func dismissAndMarkSeen() {
         onDismiss()
         dismiss()
     }

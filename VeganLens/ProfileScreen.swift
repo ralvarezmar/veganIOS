@@ -18,18 +18,25 @@ struct ProfileScreen: View {
                 infoCard
                 strictModeCard
                 watchlistCard
-                Text(L("allergen_profile_catalog_title"))
-                    .appFont(.headline, weight: .bold)
-                    .padding(.horizontal, 4)
+                profileCard {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(L("allergen_profile_catalog_title"))
+                            .appFont(.headline, weight: .bold)
+                            .padding(.bottom, 4)
 
-                ForEach(AllergenCatalog.options) { option in
-                    toggleRow(
-                        title: L(option.labelKey),
-                        isOn: selectedKeys.contains(option.key),
-                        onToggle: { enabled in
-                            updateSelectedKeys(for: option.key, enabled: enabled)
+                        ForEach(Array(AllergenCatalog.options.enumerated()), id: \.element.id) { index, option in
+                            toggleRow(
+                                title: L(option.labelKey),
+                                isOn: selectedKeys.contains(option.key),
+                                onToggle: { enabled in
+                                    updateSelectedKeys(for: option.key, enabled: enabled)
+                                }
+                            )
+                            if index < AllergenCatalog.options.count - 1 {
+                                Divider()
+                            }
                         }
-                    )
+                    }
                 }
             }
             .padding(20)
@@ -128,12 +135,14 @@ struct ProfileScreen: View {
 
     private var strictModeCard: some View {
         profileCard {
-            VStack(alignment: .leading, spacing: 10) {
-                Text(L("strict_mode_title"))
-                    .appFont(.headline, weight: .bold)
-                Text(L("strict_mode_description"))
-                    .foregroundStyle(.secondary)
-
+            HStack(alignment: .top, spacing: 16) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(L("strict_mode_title"))
+                        .appFont(.headline, weight: .bold)
+                    Text(L("strict_mode_description"))
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
                 Toggle("", isOn: $strictMode)
                     .tint(Color("AccentColor"))
                     .labelsHidden()
@@ -142,24 +151,23 @@ struct ProfileScreen: View {
     }
 
     private func toggleRow(title: String, isOn: Bool, onToggle: @escaping (Bool) -> Void) -> some View {
-        profileCard {
-            HStack(spacing: 16) {
-                Text(title)
-                Spacer()
-                Toggle("", isOn: Binding(get: { isOn }, set: onToggle))
-                    .labelsHidden()
-            }
+        HStack(spacing: 16) {
+            Text(title)
+            Spacer()
+            Toggle("", isOn: Binding(get: { isOn }, set: onToggle))
+                .labelsHidden()
         }
+        .padding(.vertical, 10)
     }
 
     private func profileCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
         content()
-            .padding(18)
+            .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color(.secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 24, style: .continuous)
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .strokeBorder(Color.secondary.opacity(0.10), lineWidth: 1)
             )
     }
