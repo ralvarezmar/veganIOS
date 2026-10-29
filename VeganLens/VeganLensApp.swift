@@ -7,7 +7,7 @@ struct VeganLensApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([ScanRecord.self, CachedProduct.self, FavoriteProduct.self])
+        let schema = Schema([ScanRecord.self, CachedProduct.self, FavoriteProduct.self, ShoppingListItem.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {

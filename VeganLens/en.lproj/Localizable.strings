@@ -175,6 +175,15 @@
 "search_retry" = "Retry";
 "favorite_add_action" = "Add to favorites";
 "favorite_remove_action" = "Remove from favorites";
+"shopping_list_action" = "Shopping list";
+"shopping_list_title" = "Shopping list";
+"shopping_list_empty_title" = "Your list is empty";
+"shopping_list_empty_message" = "Add products from their result using the cart icon.";
+"shopping_list_add_action" = "Add to shopping list";
+"shopping_list_remove_action" = "Remove from shopping list";
+"shopping_list_clear_checked" = "Remove checked";
+"shopping_list_checked" = "Bought";
+"shopping_list_pending" = "Pending";
 "home_action" = "Scanner";
 "allergen_gluten" = "Gluten";
 "allergen_crustaceans" = "Crustaceans";

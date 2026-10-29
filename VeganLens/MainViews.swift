@@ -925,6 +925,7 @@ struct ResultView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Query private var favoriteProducts: [FavoriteProduct]
+    @Query private var shoppingListItems: [ShoppingListItem]
     @AppStorage(AllergenPreferences.selectedKeysKey) private var selectedAllergenStorage = ""
     @AppStorage(AllergenPreferences.strictModeKey) private var strictMode = false
     @AppStorage(WatchlistPreferences.additivesKey) private var watchedAdditivesStorage = ""
@@ -953,6 +954,9 @@ struct ResultView: View {
         self.onBack = onBack
         _favoriteProducts = Query(filter: #Predicate<FavoriteProduct> { favorite in
             favorite.barcode == barcode
+        })
+        _shoppingListItems = Query(filter: #Predicate<ShoppingListItem> { item in
+            item.barcode == barcode
         })
     }
 
@@ -991,6 +995,17 @@ struct ResultView: View {
                             Image(systemName: isFavorite ? "star.fill" : "star")
                         }
                         .accessibilityLabel(isFavorite ? L("favorite_remove_action") : L("favorite_add_action"))
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            toggleShoppingList()
+                        } label: {
+                            Image(systemName: shoppingListItems.isEmpty ? "cart.badge.plus" : "cart.fill")
+                        }
+                        .accessibilityLabel(
+                            shoppingListItems.isEmpty ? L("shopping_list_add_action") : L("shopping_list_remove_action")
+                        )
+                        .accessibilityIdentifier("shopping-list-toggle")
                     }
                 }
                 if let shareText {
@@ -1369,6 +1384,30 @@ struct ResultView: View {
             return
         }
         UIApplication.shared.open(url)
+    }
+
+    @MainActor
+    private func toggleShoppingList() {
+        guard case .success(let product, _, _, _) = loadState else {
+            return
+        }
+
+        do {
+            if shoppingListItems.isEmpty {
+                modelContext.insert(ShoppingListItem(
+                    barcode: barcode,
+                    productName: product.productName,
+                    brand: product.brands,
+                    imageURL: product.imageUrl,
+                    verdict: analyzeVegan(product).status.persistedValue
+                ))
+            } else {
+                shoppingListItems.forEach { modelContext.delete($0) }
+            }
+            try modelContext.save()
+        } catch {
+            print("No se pudo actualizar la lista de la compra: \(error)")
+        }
     }
 
     @MainActor

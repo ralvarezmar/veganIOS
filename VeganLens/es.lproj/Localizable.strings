@@ -180,6 +180,15 @@ Fuente: %@
 "search_retry" = "Reintentar";
 "favorite_add_action" = "Añadir a favoritos";
 "favorite_remove_action" = "Quitar de favoritos";
+"shopping_list_action" = "Lista de la compra";
+"shopping_list_title" = "Lista de la compra";
+"shopping_list_empty_title" = "Tu lista está vacía";
+"shopping_list_empty_message" = "Añade productos desde su resultado con el icono del carrito.";
+"shopping_list_add_action" = "Añadir a la lista de la compra";
+"shopping_list_remove_action" = "Quitar de la lista de la compra";
+"shopping_list_clear_checked" = "Quitar marcados";
+"shopping_list_checked" = "Comprado";
+"shopping_list_pending" = "Pendiente";
 "home_action" = "Escáner";
 "allergen_gluten" = "Gluten";
 "allergen_crustaceans" = "Crustáceos";

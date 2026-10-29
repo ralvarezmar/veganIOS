@@ -175,6 +175,15 @@
 "search_retry" = "Réessayer";
 "favorite_add_action" = "Ajouter aux favoris";
 "favorite_remove_action" = "Retirer des favoris";
+"shopping_list_action" = "Liste de courses";
+"shopping_list_title" = "Liste de courses";
+"shopping_list_empty_title" = "Votre liste est vide";
+"shopping_list_empty_message" = "Ajoutez des produits depuis leur résultat avec l'icône du panier.";
+"shopping_list_add_action" = "Ajouter à la liste de courses";
+"shopping_list_remove_action" = "Retirer de la liste de courses";
+"shopping_list_clear_checked" = "Retirer les cochés";
+"shopping_list_checked" = "Acheté";
+"shopping_list_pending" = "À acheter";
 "home_action" = "Scanner";
 "allergen_gluten" = "Gluten";
 "allergen_crustaceans" = "Crustacés";
