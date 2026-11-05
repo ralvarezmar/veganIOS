@@ -41,6 +41,14 @@ struct ShoppingListScreen: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
+                ShareLink(item: shareText, subject: Text(L("shopping_list_share_header"))) {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .accessibilityLabel(L("shopping_list_share"))
+                .accessibilityIdentifier("shopping-list-share")
+                .disabled(items.isEmpty)
+            }
+            ToolbarItem(placement: .topBarTrailing) {
                 Button(L("shopping_list_clear_checked")) {
                     clearChecked()
                 }
@@ -48,6 +56,23 @@ struct ShoppingListScreen: View {
             }
         }
         .navigationTitle(L("shopping_list_title"))
+    }
+
+    private var shareText: String {
+        formatShoppingListShareText(
+            header: L("shopping_list_share_header"),
+            checkedSectionTitle: L("shopping_list_share_checked_section"),
+            items: orderedItems.map {
+                ShoppingShareItem(
+                    barcode: $0.barcode,
+                    productName: $0.productName,
+                    brand: $0.brand,
+                    verdict: $0.verdict,
+                    checked: $0.checked
+                )
+            },
+            verdictLabel: verdictLabel(for:)
+        )
     }
 
     private func toggleChecked(_ item: ShoppingListItem) {
