@@ -9,6 +9,10 @@ version so that App Store Connect can provide notes in both languages.
 ## [Unreleased]
 
 ### Added
+- Ingredient and additive glossary: searchable list of animal-derived ingredients and E numbers with origin and plant alternatives; flagged ingredients in a result now explain why.
+- Backup: export history, favorites and shopping list to a JSON file and import it on another device (shared format between Android and iOS; importing never deletes existing data).
+- Share the shopping list as text.
+- Your stats: products scanned, verdict breakdown, last 30 days and most scanned categories, calculated on the device.
 - Chain-scan sessions show a running summary of suitable, not suitable, doubtful and no-data products.
 - Shopping list: add products from their result with the cart button, tick them off and remove the checked ones.
 - Sharing a result now sends a generated card image with the verdict, product and reason instead of the product photo.
@@ -29,6 +33,9 @@ version so that App Store Connect can provide notes in both languages.
 - Product analyses now expose explicit high, medium, or low confidence.
 - A separate experimental dish-photo flow reports probable visible foods and a deliberately broad calorie range.
 - Eight 1080×1920 Google Play screenshots and a 1024×500 feature graphic are included as store assets.
+
+### Removed
+- Removed the cherries character from the gallery and splash screen.
 
 ## [1.21.0 (52)] - 2026-09-14
 

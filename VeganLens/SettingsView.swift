@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import UserNotifications
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(\.openURL) private var openURL
@@ -9,6 +10,10 @@ struct SettingsView: View {
     @State private var showingCredits = false
     @State private var showingMascotGallery = false
     @State private var versionTapCount = 0
+    @State private var showingBackupExporter = false
+    @State private var showingBackupImporter = false
+    @State private var backupDocument: BackupDocument?
+    @State private var backupStatus: String?
     @State private var lastVersionTap: Date?
     @AppStorage(AccessibilityPreferences.colorblindPaletteKey) private var colorblindSafePalette = false
     @AppStorage(AccessibilityPreferences.textSizeKey) private var textSize = AccessibilityTextSize.normal.rawValue
@@ -141,6 +146,48 @@ struct SettingsView: View {
             }
 
             Section {
+                NavigationLink {
+                    StatsScreen()
+                } label: {
+                    Label(L("stats_action"), systemImage: "chart.bar")
+                }
+                .accessibilityIdentifier("stats-row")
+                NavigationLink {
+                    GlossaryScreen()
+                } label: {
+                    Label(L("glossary_action"), systemImage: "book")
+                }
+                .accessibilityIdentifier("glossary-row")
+            }
+
+            Section {
+                Button {
+                    exportBackup()
+                } label: {
+                    Label(L("backup_export"), systemImage: "square.and.arrow.up")
+                }
+                .accessibilityIdentifier("backup-export-row")
+                Button {
+                    showingBackupImporter = true
+                } label: {
+                    Label(L("backup_import"), systemImage: "square.and.arrow.down")
+                }
+                .accessibilityIdentifier("backup-import-row")
+                if let backupStatus {
+                    Text(backupStatus)
+                        .appFont(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            } header: {
+                Text(L("backup_section_title"))
+            } footer: {
+                Text(L("backup_description"))
+            }
+            .fileImporter(isPresented: $showingBackupImporter, allowedContentTypes: [.json]) { result in
+                handleBackupImport(result)
+            }
+
+            Section {
                 Button(role: .destructive) {
                     showingClearCacheConfirmation = true
                 } label: {
@@ -180,6 +227,15 @@ struct SettingsView: View {
         }
         .sheet(isPresented: $showingMascotGallery) {
             MascotGalleryView()
+        }
+        .fileExporter(
+            isPresented: $showingBackupExporter,
+            document: backupDocument,
+            contentType: .json,
+            defaultFilename: "veganlens-backup"
+        ) { result in
+            backupStatus = (try? result.get()) != nil ? L("backup_export_done") : L("backup_error")
+            backupDocument = nil
         }
     }
 
@@ -221,6 +277,34 @@ struct SettingsView: View {
             versionTapCount = 0
             lastVersionTap = nil
             showingMascotGallery = true
+        }
+    }
+
+    private func exportBackup() {
+        do {
+            backupDocument = BackupDocument(data: try makeBackupData(context: modelContext))
+            showingBackupExporter = true
+        } catch {
+            backupStatus = L("backup_error")
+        }
+    }
+
+    private func handleBackupImport(_ result: Result<URL, Error>) {
+        do {
+            let url = try result.get()
+            let accessing = url.startAccessingSecurityScopedResource()
+            defer {
+                if accessing { url.stopAccessingSecurityScopedResource() }
+            }
+            let plan = try importBackup(try Data(contentsOf: url), context: modelContext)
+            backupStatus = LF(
+                "backup_import_done",
+                plan.historyCount,
+                plan.favoritesToInsert.count,
+                plan.shoppingToInsert.count
+            )
+        } catch {
+            backupStatus = L("backup_error")
         }
     }
 

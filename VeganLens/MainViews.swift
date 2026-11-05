@@ -1981,6 +1981,19 @@ private struct VeganBannerView: View {
                         .appFont(.subheadline)
                         .foregroundStyle(spec.foreground.opacity(0.96))
                         .fixedSize(horizontal: false, vertical: true)
+
+                    let glossaryMatches = glossaryIngredients(for: evidence + evidence.map(displayEvidenceLabel))
+                    if !glossaryMatches.isEmpty {
+                        Text(L("glossary_result_hint_title"))
+                            .appFont(.caption, weight: .bold)
+                            .foregroundStyle(spec.foreground)
+                        ForEach(glossaryMatches) { entry in
+                            Text("\(entry.name): \(entry.explanation)")
+                                .appFont(.subheadline)
+                                .foregroundStyle(spec.foreground.opacity(0.96))
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
                 }
 
                 SourceCapsule(
@@ -3721,7 +3734,7 @@ private struct AdditiveInfoSheet: View {
     }
 }
 
-private func additiveOriginLabel(_ origin: AdditiveOrigin) -> String {
+func additiveOriginLabel(_ origin: AdditiveOrigin) -> String {
     switch origin {
     case .animal:
         return L("additive_origin_animal")
