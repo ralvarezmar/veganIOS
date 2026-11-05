@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.25.0 (66)] - 2026-11-05
+
 ### Añadido
 - Glosario de ingredientes y aditivos: lista con buscador de ingredientes de origen animal y números E, con su origen y alternativas vegetales; los ingredientes marcados en un resultado ahora explican por qué.
 - Copia de seguridad: exporta el historial, los favoritos y la lista de la compra a un archivo JSON e impórtalo en otro dispositivo (mismo formato en Android e iOS; importar nunca borra datos).
