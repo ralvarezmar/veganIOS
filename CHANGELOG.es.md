@@ -11,6 +11,10 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 ### Añadido
+- Glosario de ingredientes y aditivos: lista con buscador de ingredientes de origen animal y números E, con su origen y alternativas vegetales; los ingredientes marcados en un resultado ahora explican por qué.
+- Copia de seguridad: exporta el historial, los favoritos y la lista de la compra a un archivo JSON e impórtalo en otro dispositivo (mismo formato en Android e iOS; importar nunca borra datos).
+- Compartir la lista de la compra como texto.
+- Tus estadísticas: productos escaneados, reparto de veredictos, últimos 30 días y categorías más escaneadas, calculadas en el dispositivo.
 - El escaneo en cadena muestra un resumen de productos aptos, no aptos, dudosos y sin datos.
 - Lista de la compra: añade productos desde su resultado con el botón del carrito, márcalos y quita los ya comprados.
 - Al compartir un resultado se envía una tarjeta-imagen con el veredicto, el producto y el motivo en lugar de la foto del producto.
@@ -31,6 +35,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 - Los análisis de productos muestran ahora una confianza explícita alta, media o baja.
 - Un flujo experimental separado de foto de plato muestra alimentos probables y un rango calórico deliberadamente amplio.
 - Se incluyen ocho capturas 1080×1920 para Google Play y una gráfica destacada 1024×500 como recursos de tienda.
+
+### Eliminado
+- Eliminado el personaje de las cerezas de la galería y la portada.
 
 ## [1.21.0 (52)] - 2026-09-14
 

@@ -2758,6 +2758,22 @@ func additiveEntry(for rawCode: String) -> AdditiveEntry? {
     )
 }
 
+func allAdditiveEntries() -> [AdditiveEntry] {
+    func number(_ code: String) -> Int {
+        Int(code.dropFirst().prefix { $0.isNumber }) ?? Int.max
+    }
+    return additiveCatalog.keys
+        .filter { code in
+            guard let parent = romanParentCode(for: code) else { return true }
+            return additiveCatalog[parent] == nil
+        }
+        .sorted { lhs, rhs in
+            let (left, right) = (number(lhs), number(rhs))
+            return left != right ? left < right : lhs < rhs
+        }
+        .compactMap { additiveEntry(for: $0) }
+}
+
 func additiveEntries(from tags: [String]?) -> [AdditiveEntry] {
     var seen = Set<String>()
     return (tags ?? []).compactMap { tag in
