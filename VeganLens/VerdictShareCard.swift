@@ -59,13 +59,13 @@ func verdictShareSymbolName(for status: VeganStatus) -> String {
     }
 }
 
-func verdictShareMascot(for title: String) -> String {
-    let seed = title.unicodeScalars.reduce(0) { ($0 &* 31 &+ Int($1.value)) & 0x7fffffff }
-    return portadaCharacterNames[seed % portadaCharacterNames.count]
+func randomVerdictShareMascot() -> String {
+    portadaCharacterNames.randomElement() ?? "apple"
 }
 
 struct VerdictShareCardView: View {
     let content: VerdictShareCardContent
+    var mascot: String = randomVerdictShareMascot()
 
     private var accent: Color {
         veganVerdictColor(for: content.status, colorblindSafe: content.colorblindSafe)
@@ -144,7 +144,7 @@ struct VerdictShareCardView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     .padding(32)
-                    Image("portada_\(verdictShareMascot(for: content.title))")
+                    Image("portada_\(mascot)")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 150, height: 150)

@@ -12,7 +12,7 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ### Cambiado
 - El motivo del veredicto muestra los ingredientes animales en el idioma de la app (por ejemplo, "garnaal" en neerlandés aparece como "gamba"), usando los ids de ingredientes de Open Food Facts y un catálogo compartido entre Android e iOS.
-- Nueva tarjeta para compartir: formato 4:5 con icono grande del veredicto, ficha del producto y un personaje de VeganLens.
+- Nueva tarjeta para compartir: formato 4:5 con icono grande del veredicto, ficha del producto y un personaje de VeganLens distinto cada vez que compartes.
 
 ## [1.25.2 (68)] - 2026-11-11
 

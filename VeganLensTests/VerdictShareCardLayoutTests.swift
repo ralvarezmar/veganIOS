@@ -2,11 +2,10 @@ import XCTest
 @testable import VeganLens
 
 final class VerdictShareCardLayoutTests: XCTestCase {
-    func testMascotIsStableAndFromRotation() {
-        let mascot = verdictShareMascot(for: "Gambas al ajillo")
-        XCTAssertEqual(mascot, verdictShareMascot(for: "Gambas al ajillo"))
-        XCTAssertTrue(portadaCharacterNames.contains(mascot))
-        XCTAssertTrue(portadaCharacterNames.contains(verdictShareMascot(for: "")))
+    func testRandomMascotComesFromRotationAndVaries() {
+        let picks = (0..<50).map { _ in randomVerdictShareMascot() }
+        XCTAssertTrue(picks.allSatisfy(portadaCharacterNames.contains))
+        XCTAssertGreaterThan(Set(picks).count, 1)
     }
 
     func testEveryVerdictHasASymbol() {

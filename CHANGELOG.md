@@ -10,7 +10,7 @@ version so that App Store Connect can provide notes in both languages.
 
 ### Changed
 - Verdict reasons now show animal ingredients in the app language (e.g. Dutch "garnaal" appears as "shrimp"), using Open Food Facts ingredient ids and a catalogue shared by Android and iOS.
-- Redesigned share card: fixed 4:5 format with a large verdict icon, product card and a VeganLens character.
+- Redesigned share card: fixed 4:5 format with a large verdict icon, product card and a random VeganLens character each time you share.
 
 ## [1.25.2 (68)] - 2026-11-11
 
