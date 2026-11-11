@@ -9,6 +9,11 @@ version so that App Store Connect can provide notes in both languages.
 ## [Unreleased]
 
 ### Added
+- Cherry character back in the cover rotation and mascot gallery, with the new artwork.
+
+## [1.25.0 (66)] - 2026-11-05
+
+### Added
 - Ingredient and additive glossary: searchable list of animal-derived ingredients and E numbers with origin and plant alternatives; flagged ingredients in a result now explain why.
 - Backup: export history, favorites and shopping list to a JSON file and import it on another device (shared format between Android and iOS; importing never deletes existing data).
 - Share the shopping list as text.
