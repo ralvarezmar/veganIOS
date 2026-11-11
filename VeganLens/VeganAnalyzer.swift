@@ -170,14 +170,20 @@ private func isTraceIngredient(_ ingredient: OffIngredient, ingredientsText: Str
         )
 }
 
-func analyzeVegan(_ product: Product) -> VeganAnalysis {
-    analyzeVegan(
+func analyzeVegan(_ product: Product, displayLanguage: String? = additiveLanguageCode()) -> VeganAnalysis {
+    let analysis = analyzeVegan(
         ingredientsAnalysisTags: product.ingredientsAnalysisTags,
         ingredients: product.ingredients,
         ingredientsText: product.ingredientsText,
         additivesTags: product.additivesTags,
         categoriesTags: product.categoriesTags,
         labelsTags: product.labelsTags
+    )
+    guard let displayLanguage else { return analysis }
+    return analysis.withLocalizedIngredientNames(
+        ingredients: product.ingredients,
+        productLanguage: product.ingredientsLanguage,
+        languageCode: displayLanguage
     )
 }
 
