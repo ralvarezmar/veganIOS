@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Additive names and explanations (glossary and result) are now available in all 6 app languages, from a catalogue shared by Android and iOS.
+
 ## [1.25.1 (67)] - 2026-11-11
 
 ### Added

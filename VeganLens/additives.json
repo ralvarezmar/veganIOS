@@ -1,0 +1,6366 @@
+{
+ "format": "veganlens-additives",
+ "version": 1,
+ "additives": [
+  {
+   "code": "E100",
+   "origin": "plant",
+   "name": {
+    "es": "Curcumina",
+    "en": "Curcumin",
+    "pt": "Curcumina",
+    "it": "Curcumina",
+    "fr": "Curcumine",
+    "de": "Kurkumin"
+   },
+   "note": {
+    "es": "Colorante amarillo de la cúrcuma.",
+    "en": "Yellow coloring from turmeric.",
+    "pt": "Corante amarelo da curcuma.",
+    "it": "Colorante giallo della curcuma.",
+    "fr": "Colorant jaune issu du curcuma.",
+    "de": "Gelber Farbstoff aus Kurkuma."
+   }
+  },
+  {
+   "code": "E101",
+   "origin": "synthetic",
+   "name": {
+    "es": "Riboflavina",
+    "en": "Riboflavin",
+    "pt": "Riboflavina",
+    "it": "Riboflavina",
+    "fr": "Riboflavine",
+    "de": "Riboflavin"
+   },
+   "note": {
+    "es": "Vitamina B2 usada como colorante amarillo.",
+    "en": "Vitamin B2 used as a yellow coloring.",
+    "pt": "Vitamina B2 usada como corante amarelo.",
+    "it": "Vitamina B2 usata come colorante giallo.",
+    "fr": "Vitamine B2 utilisée comme colorant jaune.",
+    "de": "Vitamin B2, als gelber Farbstoff verwendet."
+   }
+  },
+  {
+   "code": "E101I",
+   "origin": "synthetic",
+   "name": {
+    "es": "Riboflavina",
+    "en": "Riboflavin",
+    "pt": "Riboflavina",
+    "it": "Riboflavina",
+    "fr": "Riboflavine",
+    "de": "Riboflavin"
+   },
+   "note": {
+    "es": "Vitamina B2 usada como colorante amarillo; suele obtenerse por fermentación.",
+    "en": "Vitamin B2 used as a yellow colouring; usually obtained by fermentation.",
+    "pt": "Vitamina B2 usada como corante amarelo; costuma obter-se por fermentação.",
+    "it": "Vitamina B2 usata come colorante giallo; di solito si ottiene per fermentazione.",
+    "fr": "Vitamine B2 utilisée comme colorant jaune ; généralement obtenue par fermentation.",
+    "de": "Vitamin B2, als gelber Farbstoff verwendet; meist durch Fermentation gewonnen."
+   }
+  },
+  {
+   "code": "E102",
+   "origin": "synthetic",
+   "name": {
+    "es": "Tartrazina",
+    "en": "Tartrazine",
+    "pt": "Tartrazina",
+    "it": "Tartrazina",
+    "fr": "Tartrazine",
+    "de": "Tartrazin"
+   },
+   "note": {
+    "es": "Colorante amarillo azoico de síntesis.",
+    "en": "Synthetic azo yellow colour.",
+    "pt": "Corante amarelo azoico sintético.",
+    "it": "Colorante giallo azoico di sintesi.",
+    "fr": "Colorant jaune azoïque de synthèse.",
+    "de": "Synthetischer gelber Azofarbstoff."
+   }
+  },
+  {
+   "code": "E104",
+   "origin": "synthetic",
+   "name": {
+    "es": "Amarillo de quinoleína",
+    "en": "Quinoline Yellow",
+    "pt": "Amarelo de quinoleína",
+    "it": "Giallo di chinolina",
+    "fr": "Jaune de quinoléine",
+    "de": "Chinolingelb"
+   },
+   "note": {
+    "es": "Colorante amarillo de síntesis.",
+    "en": "Synthetic yellow colour.",
+    "pt": "Corante amarelo sintético.",
+    "it": "Colorante giallo di sintesi.",
+    "fr": "Colorant jaune de synthèse.",
+    "de": "Synthetischer gelber Farbstoff."
+   }
+  },
+  {
+   "code": "E110",
+   "origin": "synthetic",
+   "name": {
+    "es": "Amarillo ocaso FCF",
+    "en": "Sunset Yellow FCF",
+    "pt": "Amarelo-sol FCF",
+    "it": "Giallo tramonto FCF",
+    "fr": "Jaune orangé S",
+    "de": "Gelborange S"
+   },
+   "note": {
+    "es": "Colorante naranja azoico de síntesis.",
+    "en": "Synthetic azo orange colour.",
+    "pt": "Corante laranja azoico sintético.",
+    "it": "Colorante arancione azoico di sintesi.",
+    "fr": "Colorant orange azoïque de synthèse.",
+    "de": "Synthetischer orangefarbener Azofarbstoff."
+   }
+  },
+  {
+   "code": "E120",
+   "origin": "animal",
+   "name": {
+    "es": "Carmín",
+    "en": "Carmine",
+    "pt": "Carmim",
+    "it": "Carminio",
+    "fr": "Carmin",
+    "de": "Karmin"
+   },
+   "note": {
+    "es": "Colorante rojo obtenido de la cochinilla.",
+    "en": "Red coloring obtained from cochineal.",
+    "pt": "Corante vermelho obtido da cochonilha.",
+    "it": "Colorante rosso ottenuto dalla cocciniglia.",
+    "fr": "Colorant rouge obtenu à partir de la cochenille.",
+    "de": "Roter Farbstoff aus der Cochenilleschildlaus."
+   }
+  },
+  {
+   "code": "E122",
+   "origin": "synthetic",
+   "name": {
+    "es": "Azorrubina",
+    "en": "Azorubine",
+    "pt": "Azorrubina",
+    "it": "Azorubina",
+    "fr": "Azorubine",
+    "de": "Azorubin"
+   },
+   "note": {
+    "es": "Colorante rojo azoico de síntesis.",
+    "en": "Synthetic azo red colour.",
+    "pt": "Corante vermelho azoico sintético.",
+    "it": "Colorante rosso azoico di sintesi.",
+    "fr": "Colorant rouge azoïque de synthèse.",
+    "de": "Synthetischer roter Azofarbstoff."
+   }
+  },
+  {
+   "code": "E123",
+   "origin": "synthetic",
+   "name": {
+    "es": "Amaranto",
+    "en": "Amaranth",
+    "pt": "Amaranto",
+    "it": "Amaranto",
+    "fr": "Amarante",
+    "de": "Amaranth"
+   },
+   "note": {
+    "es": "Colorante rojo azoico de uso muy limitado.",
+    "en": "Synthetic azo red colour with very limited use.",
+    "pt": "Corante vermelho azoico de uso muito limitado.",
+    "it": "Colorante rosso azoico di uso molto limitato.",
+    "fr": "Colorant rouge azoïque à usage très limité.",
+    "de": "Roter Azofarbstoff mit sehr eingeschränkter Verwendung."
+   }
+  },
+  {
+   "code": "E124",
+   "origin": "synthetic",
+   "name": {
+    "es": "Rojo Ponceau 4R",
+    "en": "Ponceau 4R",
+    "pt": "Ponceau 4R",
+    "it": "Ponceau 4R",
+    "fr": "Ponceau 4R",
+    "de": "Cochenillerot A"
+   },
+   "note": {
+    "es": "Colorante rojo azoico de síntesis.",
+    "en": "Synthetic azo red colour.",
+    "pt": "Corante vermelho azoico sintético.",
+    "it": "Colorante rosso azoico di sintesi.",
+    "fr": "Colorant rouge azoïque de synthèse.",
+    "de": "Synthetischer roter Azofarbstoff."
+   }
+  },
+  {
+   "code": "E127",
+   "origin": "synthetic",
+   "name": {
+    "es": "Eritrosina",
+    "en": "Erythrosine",
+    "pt": "Eritrosina",
+    "it": "Eritrosina",
+    "fr": "Érythrosine",
+    "de": "Erythrosin"
+   },
+   "note": {
+    "es": "Colorante rojo de síntesis usado en cerezas confitadas.",
+    "en": "Synthetic red colour used in candied cherries.",
+    "pt": "Corante vermelho sintético usado em cerejas cristalizadas.",
+    "it": "Colorante rosso di sintesi usato nelle ciliegie candite.",
+    "fr": "Colorant rouge de synthèse utilisé dans les cerises confites.",
+    "de": "Synthetischer roter Farbstoff für kandierte Kirschen."
+   }
+  },
+  {
+   "code": "E129",
+   "origin": "synthetic",
+   "name": {
+    "es": "Rojo allura AC",
+    "en": "Allura Red AC",
+    "pt": "Vermelho allura AC",
+    "it": "Rosso allura AC",
+    "fr": "Rouge allura AC",
+    "de": "Allurarot AC"
+   },
+   "note": {
+    "es": "Colorante rojo azoico de síntesis.",
+    "en": "Synthetic azo red colour.",
+    "pt": "Corante vermelho azoico sintético.",
+    "it": "Colorante rosso azoico di sintesi.",
+    "fr": "Colorant rouge azoïque de synthèse.",
+    "de": "Synthetischer roter Azofarbstoff."
+   }
+  },
+  {
+   "code": "E131",
+   "origin": "synthetic",
+   "name": {
+    "es": "Azul patentado V",
+    "en": "Patent Blue V",
+    "pt": "Azul patenteado V",
+    "it": "Blu patent V",
+    "fr": "Bleu patenté V",
+    "de": "Patentblau V"
+   },
+   "note": {
+    "es": "Colorante azul de síntesis.",
+    "en": "Synthetic blue colour.",
+    "pt": "Corante azul sintético.",
+    "it": "Colorante blu di sintesi.",
+    "fr": "Colorant bleu de synthèse.",
+    "de": "Synthetischer blauer Farbstoff."
+   }
+  },
+  {
+   "code": "E132",
+   "origin": "synthetic",
+   "name": {
+    "es": "Indigotina",
+    "en": "Indigotine",
+    "pt": "Indigotina",
+    "it": "Indigotina",
+    "fr": "Indigotine",
+    "de": "Indigotin"
+   },
+   "note": {
+    "es": "Colorante azul de síntesis.",
+    "en": "Synthetic blue colour.",
+    "pt": "Corante azul sintético.",
+    "it": "Colorante blu di sintesi.",
+    "fr": "Colorant bleu de synthèse.",
+    "de": "Synthetischer blauer Farbstoff."
+   }
+  },
+  {
+   "code": "E133",
+   "origin": "synthetic",
+   "name": {
+    "es": "Azul brillante FCF",
+    "en": "Brilliant Blue FCF",
+    "pt": "Azul brilhante FCF",
+    "it": "Blu brillante FCF",
+    "fr": "Bleu brillant FCF",
+    "de": "Brillantblau FCF"
+   },
+   "note": {
+    "es": "Colorante azul de síntesis.",
+    "en": "Synthetic blue colour.",
+    "pt": "Corante azul sintético.",
+    "it": "Colorante blu di sintesi.",
+    "fr": "Colorant bleu de synthèse.",
+    "de": "Synthetischer blauer Farbstoff."
+   }
+  },
+  {
+   "code": "E140",
+   "origin": "plant",
+   "name": {
+    "es": "Clorofilas",
+    "en": "Chlorophylls",
+    "pt": "Clorofilas",
+    "it": "Clorofille",
+    "fr": "Chlorophylles",
+    "de": "Chlorophylle"
+   },
+   "note": {
+    "es": "Pigmentos verdes de origen vegetal.",
+    "en": "Green pigments of plant origin.",
+    "pt": "Pigmentos verdes de origem vegetal.",
+    "it": "Pigmenti verdi di origine vegetale.",
+    "fr": "Pigments verts d'origine végétale.",
+    "de": "Grüne Pigmente pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E141",
+   "origin": "plant",
+   "name": {
+    "es": "Complejos cúpricos de clorofilas",
+    "en": "Copper complexes of chlorophylls",
+    "pt": "Complexos cúpricos de clorofilas",
+    "it": "Complessi rameici delle clorofille",
+    "fr": "Complexes cuivriques de chlorophylles",
+    "de": "Kupferkomplexe der Chlorophylle"
+   },
+   "note": {
+    "es": "Derivado de clorofilas vegetales con cobre.",
+    "en": "Derived from plant chlorophylls with copper.",
+    "pt": "Derivado de clorofilas vegetais com cobre.",
+    "it": "Derivato delle clorofille vegetali con rame.",
+    "fr": "Dérivé de chlorophylles végétales avec du cuivre.",
+    "de": "Aus pflanzlichen Chlorophyllen mit Kupfer gewonnen."
+   }
+  },
+  {
+   "code": "E142",
+   "origin": "synthetic",
+   "name": {
+    "es": "Verde S",
+    "en": "Green S",
+    "pt": "Verde S",
+    "it": "Verde S",
+    "fr": "Vert S",
+    "de": "Grün S"
+   },
+   "note": {
+    "es": "Colorante verde de síntesis.",
+    "en": "Synthetic green colour.",
+    "pt": "Corante verde sintético.",
+    "it": "Colorante verde di sintesi.",
+    "fr": "Colorant vert de synthèse.",
+    "de": "Synthetischer grüner Farbstoff."
+   }
+  },
+  {
+   "code": "E150A",
+   "origin": "synthetic",
+   "name": {
+    "es": "Caramelo simple",
+    "en": "Plain caramel",
+    "pt": "Caramelo simples",
+    "it": "Caramello semplice",
+    "fr": "Caramel ordinaire",
+    "de": "Zuckerkulör"
+   },
+   "note": {
+    "es": "Colorante marrón obtenido por caramelización controlada.",
+    "en": "Brown colouring obtained by controlled caramelisation.",
+    "pt": "Corante castanho obtido por caramelização controlada.",
+    "it": "Colorante marrone ottenuto per caramellizzazione controllata.",
+    "fr": "Colorant brun obtenu par caramélisation contrôlée.",
+    "de": "Brauner Farbstoff durch kontrollierte Karamellisierung."
+   }
+  },
+  {
+   "code": "E150B",
+   "origin": "synthetic",
+   "name": {
+    "es": "Caramelo sulfito cáustico",
+    "en": "Caustic sulphite caramel",
+    "pt": "Caramelo sulfito cáustico",
+    "it": "Caramello solfito caustico",
+    "fr": "Caramel de sulfite caustique",
+    "de": "Sulfitlaugen-Zuckerkulör"
+   },
+   "note": {
+    "es": "Colorante marrón producido con compuestos sulfitados.",
+    "en": "Brown colouring made with sulphite compounds.",
+    "pt": "Corante castanho produzido com compostos sulfitados.",
+    "it": "Colorante marrone prodotto con composti solfitici.",
+    "fr": "Colorant brun produit avec des composés sulfités.",
+    "de": "Brauner Farbstoff, mit Sulfitverbindungen hergestellt."
+   }
+  },
+  {
+   "code": "E150C",
+   "origin": "synthetic",
+   "name": {
+    "es": "Caramelo amónico",
+    "en": "Ammonia caramel",
+    "pt": "Caramelo amoniacal",
+    "it": "Caramello ammoniacale",
+    "fr": "Caramel ammoniacal",
+    "de": "Ammoniak-Zuckerkulör"
+   },
+   "note": {
+    "es": "Colorante marrón producido con compuestos amónicos.",
+    "en": "Brown colouring made with ammonium compounds.",
+    "pt": "Corante castanho produzido com compostos amoniacais.",
+    "it": "Colorante marrone prodotto con composti ammoniacali.",
+    "fr": "Colorant brun produit avec des composés ammoniacaux.",
+    "de": "Brauner Farbstoff, mit Ammoniumverbindungen hergestellt."
+   }
+  },
+  {
+   "code": "E150D",
+   "origin": "synthetic",
+   "name": {
+    "es": "Caramelo sulfito amónico",
+    "en": "Sulphite ammonia caramel",
+    "pt": "Caramelo sulfito amoniacal",
+    "it": "Caramello solfito-ammoniacale",
+    "fr": "Caramel au sulfite d'ammonium",
+    "de": "Ammoniumsulfit-Zuckerkulör"
+   },
+   "note": {
+    "es": "Colorante marrón obtenido con sulfitos y amonio.",
+    "en": "Brown colouring made with sulphites and ammonium.",
+    "pt": "Corante castanho obtido com sulfitos e amónio.",
+    "it": "Colorante marrone ottenuto con solfiti e ammonio.",
+    "fr": "Colorant brun obtenu avec des sulfites et de l'ammonium.",
+    "de": "Brauner Farbstoff, mit Sulfiten und Ammonium hergestellt."
+   }
+  },
+  {
+   "code": "E151",
+   "origin": "synthetic",
+   "name": {
+    "es": "Negro brillante BN",
+    "en": "Brilliant Black BN",
+    "pt": "Negro brilhante BN",
+    "it": "Nero brillante BN",
+    "fr": "Noir brillant BN",
+    "de": "Brillantschwarz BN"
+   },
+   "note": {
+    "es": "Colorante negro azoico de síntesis.",
+    "en": "Synthetic azo black colour.",
+    "pt": "Corante preto azoico sintético.",
+    "it": "Colorante nero azoico di sintesi.",
+    "fr": "Colorant noir azoïque de synthèse.",
+    "de": "Synthetischer schwarzer Azofarbstoff."
+   }
+  },
+  {
+   "code": "E153",
+   "origin": "plant",
+   "name": {
+    "es": "Carbón vegetal",
+    "en": "Vegetable carbon",
+    "pt": "Carvão vegetal",
+    "it": "Carbone vegetale",
+    "fr": "Charbon végétal",
+    "de": "Pflanzenkohle"
+   },
+   "note": {
+    "es": "Colorante negro de origen vegetal.",
+    "en": "Black coloring of plant origin.",
+    "pt": "Corante preto de origem vegetal.",
+    "it": "Colorante nero di origine vegetale.",
+    "fr": "Colorant noir d'origine végétale.",
+    "de": "Schwarzer Farbstoff pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E155",
+   "origin": "synthetic",
+   "name": {
+    "es": "Marrón HT",
+    "en": "Brown HT",
+    "pt": "Castanho HT",
+    "it": "Marrone HT",
+    "fr": "Brun HT",
+    "de": "Braun HT"
+   },
+   "note": {
+    "es": "Colorante marrón azoico de síntesis.",
+    "en": "Synthetic azo brown colour.",
+    "pt": "Corante castanho azoico sintético.",
+    "it": "Colorante marrone azoico di sintesi.",
+    "fr": "Colorant brun azoïque de synthèse.",
+    "de": "Synthetischer brauner Azofarbstoff."
+   }
+  },
+  {
+   "code": "E160A",
+   "origin": "plant",
+   "name": {
+    "es": "Carotenos",
+    "en": "Carotenes",
+    "pt": "Carotenos",
+    "it": "Caroteni",
+    "fr": "Carotènes",
+    "de": "Carotine"
+   },
+   "note": {
+    "es": "Pigmentos anaranjados de origen vegetal.",
+    "en": "Orange pigments of plant origin.",
+    "pt": "Pigmentos alaranjados de origem vegetal.",
+    "it": "Pigmenti arancioni di origine vegetale.",
+    "fr": "Pigments orangés d'origine végétale.",
+    "de": "Orangefarbene Pigmente pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E160B",
+   "origin": "plant",
+   "name": {
+    "es": "Annatto",
+    "en": "Annatto",
+    "pt": "Urucum",
+    "it": "Annatto",
+    "fr": "Rocou",
+    "de": "Annatto"
+   },
+   "note": {
+    "es": "Colorante amarillo-anaranjado procedente de semillas vegetales.",
+    "en": "Yellow-orange colouring from plant seeds.",
+    "pt": "Corante amarelo-alaranjado proveniente de sementes vegetais.",
+    "it": "Colorante giallo-arancio ricavato da semi vegetali.",
+    "fr": "Colorant jaune orangé issu de graines végétales.",
+    "de": "Gelb-oranger Farbstoff aus Pflanzensamen."
+   }
+  },
+  {
+   "code": "E160C",
+   "origin": "plant",
+   "name": {
+    "es": "Extracto de pimentón",
+    "en": "Paprika extract",
+    "pt": "Extrato de pimentão",
+    "it": "Estratto di paprica",
+    "fr": "Extrait de paprika",
+    "de": "Paprikaextrakt"
+   },
+   "note": {
+    "es": "Colorante rojo extraído del pimentón.",
+    "en": "Red colouring extracted from paprika.",
+    "pt": "Corante vermelho extraído do pimentão.",
+    "it": "Colorante rosso estratto dalla paprica.",
+    "fr": "Colorant rouge extrait du paprika.",
+    "de": "Roter Farbstoff aus Paprika."
+   }
+  },
+  {
+   "code": "E160D",
+   "origin": "plant",
+   "name": {
+    "es": "Licopeno",
+    "en": "Lycopene",
+    "pt": "Licopeno",
+    "it": "Licopene",
+    "fr": "Lycopène",
+    "de": "Lycopin"
+   },
+   "note": {
+    "es": "Pigmento rojo presente en tomate y otras frutas.",
+    "en": "Red pigment found in tomatoes and other fruits.",
+    "pt": "Pigmento vermelho presente no tomate e noutras frutas.",
+    "it": "Pigmento rosso presente nel pomodoro e in altri frutti.",
+    "fr": "Pigment rouge présent dans la tomate et d'autres fruits.",
+    "de": "Rotes Pigment aus Tomaten und anderen Früchten."
+   }
+  },
+  {
+   "code": "E160E",
+   "origin": "synthetic",
+   "name": {
+    "es": "Beta-apo-8'-carotenal",
+    "en": "Beta-apo-8'-carotenal",
+    "pt": "Beta-apo-8'-carotenal",
+    "it": "Beta-apo-8'-carotenale",
+    "fr": "Bêta-apo-8'-caroténal",
+    "de": "Beta-Apo-8'-Carotinal"
+   },
+   "note": {
+    "es": "Colorante anaranjado de síntesis.",
+    "en": "Synthetic orange colouring.",
+    "pt": "Corante alaranjado sintético.",
+    "it": "Colorante arancione di sintesi.",
+    "fr": "Colorant orangé de synthèse.",
+    "de": "Synthetischer orangefarbener Farbstoff."
+   }
+  },
+  {
+   "code": "E160F",
+   "origin": "synthetic",
+   "name": {
+    "es": "Éster etílico del ácido beta-apo-8'-carotenoico",
+    "en": "Ethyl ester of beta-apo-8'-carotenoic acid",
+    "pt": "Éster etílico do ácido beta-apo-8'-carotenoico",
+    "it": "Estere etilico dell'acido beta-apo-8'-carotenoico",
+    "fr": "Ester éthylique de l'acide bêta-apo-8'-caroténoïque",
+    "de": "Beta-Apo-8'-Carotinsäureethylester"
+   },
+   "note": {
+    "es": "Colorante anaranjado de síntesis.",
+    "en": "Synthetic orange colouring.",
+    "pt": "Corante alaranjado sintético.",
+    "it": "Colorante arancione di sintesi.",
+    "fr": "Colorant orangé de synthèse.",
+    "de": "Synthetischer orangefarbener Farbstoff."
+   }
+  },
+  {
+   "code": "E161B",
+   "origin": "plant",
+   "name": {
+    "es": "Luteína",
+    "en": "Lutein",
+    "pt": "Luteína",
+    "it": "Luteina",
+    "fr": "Lutéine",
+    "de": "Lutein"
+   },
+   "note": {
+    "es": "Pigmento amarillo de hojas y flores.",
+    "en": "Yellow pigment from leaves and flowers.",
+    "pt": "Pigmento amarelo de folhas e flores.",
+    "it": "Pigmento giallo di foglie e fiori.",
+    "fr": "Pigment jaune issu de feuilles et de fleurs.",
+    "de": "Gelbes Pigment aus Blättern und Blüten."
+   }
+  },
+  {
+   "code": "E161G",
+   "origin": "synthetic",
+   "name": {
+    "es": "Cantaxantina",
+    "en": "Canthaxanthin",
+    "pt": "Cantaxantina",
+    "it": "Cantaxantina",
+    "fr": "Canthaxanthine",
+    "de": "Canthaxanthin"
+   },
+   "note": {
+    "es": "Carotenoide rojo anaranjado obtenido por síntesis.",
+    "en": "Synthetic orange-red carotenoid.",
+    "pt": "Carotenoide vermelho-alaranjado obtido por síntese.",
+    "it": "Carotenoide rosso-arancio ottenuto per sintesi.",
+    "fr": "Caroténoïde rouge orangé obtenu par synthèse.",
+    "de": "Orangeroter Carotinoid, synthetisch hergestellt."
+   }
+  },
+  {
+   "code": "E162",
+   "origin": "plant",
+   "name": {
+    "es": "Rojo de remolacha",
+    "en": "Beetroot red",
+    "pt": "Vermelho de beterraba",
+    "it": "Rosso di barbabietola",
+    "fr": "Rouge de betterave",
+    "de": "Beetenrot"
+   },
+   "note": {
+    "es": "Colorante rojo de la remolacha.",
+    "en": "Red colouring from beetroot.",
+    "pt": "Corante vermelho da beterraba.",
+    "it": "Colorante rosso della barbabietola.",
+    "fr": "Colorant rouge issu de la betterave.",
+    "de": "Roter Farbstoff aus Roter Bete."
+   }
+  },
+  {
+   "code": "E163",
+   "origin": "plant",
+   "name": {
+    "es": "Antocianinas",
+    "en": "Anthocyanins",
+    "pt": "Antocianinas",
+    "it": "Antociani",
+    "fr": "Anthocyanes",
+    "de": "Anthocyane"
+   },
+   "note": {
+    "es": "Pigmentos vegetales rojos y morados.",
+    "en": "Red and purple plant pigments.",
+    "pt": "Pigmentos vegetais vermelhos e roxos.",
+    "it": "Pigmenti vegetali rossi e viola.",
+    "fr": "Pigments végétaux rouges et violets.",
+    "de": "Rote und violette Pflanzenpigmente."
+   }
+  },
+  {
+   "code": "E170",
+   "origin": "synthetic",
+   "name": {
+    "es": "Carbonato cálcico",
+    "en": "Calcium carbonate",
+    "pt": "Carbonato de cálcio",
+    "it": "Carbonato di calcio",
+    "fr": "Carbonate de calcium",
+    "de": "Calciumcarbonat"
+   },
+   "note": {
+    "es": "Colorante blanco y regulador de acidez de origen mineral.",
+    "en": "White colouring and acidity regulator of mineral origin.",
+    "pt": "Corante branco e regulador de acidez de origem mineral.",
+    "it": "Colorante bianco e correttore di acidità di origine minerale.",
+    "fr": "Colorant blanc et correcteur d'acidité d'origine minérale.",
+    "de": "Weißer Farbstoff und Säureregulator mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E171",
+   "origin": "synthetic",
+   "name": {
+    "es": "Dióxido de titanio",
+    "en": "Titanium dioxide",
+    "pt": "Dióxido de titânio",
+    "it": "Biossido di titanio",
+    "fr": "Dioxyde de titane",
+    "de": "Titandioxid"
+   },
+   "note": {
+    "es": "Colorante blanco de origen mineral.",
+    "en": "White colouring of mineral origin.",
+    "pt": "Corante branco de origem mineral.",
+    "it": "Colorante bianco di origine minerale.",
+    "fr": "Colorant blanc d'origine minérale.",
+    "de": "Weißer Farbstoff mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E172",
+   "origin": "synthetic",
+   "name": {
+    "es": "Óxidos e hidróxidos de hierro",
+    "en": "Iron oxides and hydroxides",
+    "pt": "Óxidos e hidróxidos de ferro",
+    "it": "Ossidi e idrossidi di ferro",
+    "fr": "Oxydes et hydroxydes de fer",
+    "de": "Eisenoxide und -hydroxide"
+   },
+   "note": {
+    "es": "Pigmentos minerales amarillos, rojos y negros.",
+    "en": "Yellow, red and black mineral pigments.",
+    "pt": "Pigmentos minerais amarelos, vermelhos e pretos.",
+    "it": "Pigmenti minerali gialli, rossi e neri.",
+    "fr": "Pigments minéraux jaunes, rouges et noirs.",
+    "de": "Gelbe, rote und schwarze Mineralpigmente."
+   }
+  },
+  {
+   "code": "E173",
+   "origin": "synthetic",
+   "name": {
+    "es": "Aluminio",
+    "en": "Aluminium",
+    "pt": "Alumínio",
+    "it": "Alluminio",
+    "fr": "Aluminium",
+    "de": "Aluminium"
+   },
+   "note": {
+    "es": "Colorante metálico de uso muy limitado.",
+    "en": "Metallic colouring with very restricted use.",
+    "pt": "Corante metálico de uso muito limitado.",
+    "it": "Colorante metallico di uso molto limitato.",
+    "fr": "Colorant métallique à usage très limité.",
+    "de": "Metallischer Farbstoff mit sehr eingeschränkter Verwendung."
+   }
+  },
+  {
+   "code": "E174",
+   "origin": "synthetic",
+   "name": {
+    "es": "Plata",
+    "en": "Silver",
+    "pt": "Prata",
+    "it": "Argento",
+    "fr": "Argent",
+    "de": "Silber"
+   },
+   "note": {
+    "es": "Colorante metálico usado como decorativo.",
+    "en": "Metallic colouring used for decoration.",
+    "pt": "Corante metálico usado como decoração.",
+    "it": "Colorante metallico usato per decorazione.",
+    "fr": "Colorant métallique utilisé en décoration.",
+    "de": "Metallischer Farbstoff zur Dekoration."
+   }
+  },
+  {
+   "code": "E180",
+   "origin": "synthetic",
+   "name": {
+    "es": "Litolrubina BK",
+    "en": "Lithol Rubine BK",
+    "pt": "Litolrubina BK",
+    "it": "Litolrubina BK",
+    "fr": "Lithol-rubine BK",
+    "de": "Litholrubin BK"
+   },
+   "note": {
+    "es": "Colorante rojo usado en la corteza de quesos.",
+    "en": "Synthetic red colour used on cheese rind.",
+    "pt": "Corante vermelho usado na casca de queijos.",
+    "it": "Colorante rosso usato sulla crosta dei formaggi.",
+    "fr": "Colorant rouge utilisé sur la croûte des fromages.",
+    "de": "Roter Farbstoff für Käserinden."
+   }
+  },
+  {
+   "code": "E200",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido sórbico",
+    "en": "Sorbic acid",
+    "pt": "Ácido sórbico",
+    "it": "Acido sorbico",
+    "fr": "Acide sorbique",
+    "de": "Sorbinsäure"
+   },
+   "note": {
+    "es": "Conservante contra mohos y levaduras.",
+    "en": "Preservative against mould and yeast.",
+    "pt": "Conservante contra bolores e leveduras.",
+    "it": "Conservante contro muffe e lieviti.",
+    "fr": "Conservateur contre les moisissures et les levures.",
+    "de": "Konservierungsstoff gegen Schimmel und Hefen."
+   }
+  },
+  {
+   "code": "E201",
+   "origin": "synthetic",
+   "name": {
+    "es": "Sorbato sódico",
+    "en": "Sodium sorbate",
+    "pt": "Sorbato de sódio",
+    "it": "Sorbato di sodio",
+    "fr": "Sorbate de sodium",
+    "de": "Natriumsorbat"
+   },
+   "note": {
+    "es": "Conservante derivado del ácido sórbico.",
+    "en": "Preservative derived from sorbic acid.",
+    "pt": "Conservante derivado do ácido sórbico.",
+    "it": "Conservante derivato dall'acido sorbico.",
+    "fr": "Conservateur dérivé de l'acide sorbique.",
+    "de": "Konservierungsstoff aus Sorbinsäure."
+   }
+  },
+  {
+   "code": "E202",
+   "origin": "synthetic",
+   "name": {
+    "es": "Sorbato potásico",
+    "en": "Potassium sorbate",
+    "pt": "Sorbato de potássio",
+    "it": "Sorbato di potassio",
+    "fr": "Sorbate de potassium",
+    "de": "Kaliumsorbat"
+   },
+   "note": {
+    "es": "Conservante derivado del ácido sórbico.",
+    "en": "Preservative derived from sorbic acid.",
+    "pt": "Conservante derivado do ácido sórbico.",
+    "it": "Conservante derivato dall'acido sorbico.",
+    "fr": "Conservateur dérivé de l'acide sorbique.",
+    "de": "Konservierungsstoff aus Sorbinsäure."
+   }
+  },
+  {
+   "code": "E203",
+   "origin": "synthetic",
+   "name": {
+    "es": "Sorbato cálcico",
+    "en": "Calcium sorbate",
+    "pt": "Sorbato de cálcio",
+    "it": "Sorbato di calcio",
+    "fr": "Sorbate de calcium",
+    "de": "Calciumsorbat"
+   },
+   "note": {
+    "es": "Conservante derivado del ácido sórbico.",
+    "en": "Preservative derived from sorbic acid.",
+    "pt": "Conservante derivado do ácido sórbico.",
+    "it": "Conservante derivato dall'acido sorbico.",
+    "fr": "Conservateur dérivé de l'acide sorbique.",
+    "de": "Konservierungsstoff aus Sorbinsäure."
+   }
+  },
+  {
+   "code": "E210",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido benzoico",
+    "en": "Benzoic acid",
+    "pt": "Ácido benzoico",
+    "it": "Acido benzoico",
+    "fr": "Acide benzoïque",
+    "de": "Benzoesäure"
+   },
+   "note": {
+    "es": "Conservante contra bacterias y mohos.",
+    "en": "Preservative against bacteria and moulds.",
+    "pt": "Conservante contra bactérias e bolores.",
+    "it": "Conservante contro batteri e muffe.",
+    "fr": "Conservateur contre les bactéries et les moisissures.",
+    "de": "Konservierungsstoff gegen Bakterien und Schimmel."
+   }
+  },
+  {
+   "code": "E211",
+   "origin": "synthetic",
+   "name": {
+    "es": "Benzoato sódico",
+    "en": "Sodium benzoate",
+    "pt": "Benzoato de sódio",
+    "it": "Benzoato di sodio",
+    "fr": "Benzoate de sodium",
+    "de": "Natriumbenzoat"
+   },
+   "note": {
+    "es": "Conservante que inhibe el deterioro.",
+    "en": "Preservative that helps prevent spoilage.",
+    "pt": "Conservante que inibe a deterioração.",
+    "it": "Conservante che inibisce il deterioramento.",
+    "fr": "Conservateur qui freine l'altération.",
+    "de": "Konservierungsstoff, der den Verderb hemmt."
+   }
+  },
+  {
+   "code": "E212",
+   "origin": "synthetic",
+   "name": {
+    "es": "Benzoato cálcico",
+    "en": "Calcium benzoate",
+    "pt": "Benzoato de cálcio",
+    "it": "Benzoato di calcio",
+    "fr": "Benzoate de calcium",
+    "de": "Calciumbenzoat"
+   },
+   "note": {
+    "es": "Conservante de la familia de los benzoatos.",
+    "en": "Preservative from the benzoate family.",
+    "pt": "Conservante da família dos benzoatos.",
+    "it": "Conservante della famiglia dei benzoati.",
+    "fr": "Conservateur de la famille des benzoates.",
+    "de": "Konservierungsstoff aus der Familie der Benzoate."
+   }
+  },
+  {
+   "code": "E213",
+   "origin": "synthetic",
+   "name": {
+    "es": "Benzoato potásico",
+    "en": "Potassium benzoate",
+    "pt": "Benzoato de potássio",
+    "it": "Benzoato di potassio",
+    "fr": "Benzoate de potassium",
+    "de": "Kaliumbenzoat"
+   },
+   "note": {
+    "es": "Conservante de la familia de los benzoatos.",
+    "en": "Preservative from the benzoate family.",
+    "pt": "Conservante da família dos benzoatos.",
+    "it": "Conservante della famiglia dei benzoati.",
+    "fr": "Conservateur de la famille des benzoates.",
+    "de": "Konservierungsstoff aus der Familie der Benzoate."
+   }
+  },
+  {
+   "code": "E214",
+   "origin": "synthetic",
+   "name": {
+    "es": "Etilparabeno",
+    "en": "Ethylparaben",
+    "pt": "Etilparabeno",
+    "it": "Etilparabene",
+    "fr": "Éthylparabène",
+    "de": "Ethylparaben"
+   },
+   "note": {
+    "es": "Conservante parabeno de síntesis.",
+    "en": "Synthetic paraben preservative.",
+    "pt": "Conservante parabeno sintético.",
+    "it": "Conservante parabene di sintesi.",
+    "fr": "Conservateur parabène de synthèse.",
+    "de": "Synthetischer Paraben-Konservierungsstoff."
+   }
+  },
+  {
+   "code": "E218",
+   "origin": "synthetic",
+   "name": {
+    "es": "Metilparabeno",
+    "en": "Methylparaben",
+    "pt": "Metilparabeno",
+    "it": "Metilparabene",
+    "fr": "Méthylparabène",
+    "de": "Methylparaben"
+   },
+   "note": {
+    "es": "Conservante parabeno de síntesis.",
+    "en": "Synthetic paraben preservative.",
+    "pt": "Conservante parabeno sintético.",
+    "it": "Conservante parabene di sintesi.",
+    "fr": "Conservateur parabène de synthèse.",
+    "de": "Synthetischer Paraben-Konservierungsstoff."
+   }
+  },
+  {
+   "code": "E220",
+   "origin": "synthetic",
+   "name": {
+    "es": "Dióxido de azufre",
+    "en": "Sulphur dioxide",
+    "pt": "Dióxido de enxofre",
+    "it": "Anidride solforosa",
+    "fr": "Anhydride sulfureux",
+    "de": "Schwefeldioxid"
+   },
+   "note": {
+    "es": "Conservante y antioxidante.",
+    "en": "Preservative and antioxidant.",
+    "pt": "Conservante e antioxidante.",
+    "it": "Conservante e antiossidante.",
+    "fr": "Conservateur et antioxydant.",
+    "de": "Konservierungsstoff und Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E221",
+   "origin": "synthetic",
+   "name": {
+    "es": "Sulfito sódico",
+    "en": "Sodium sulphite",
+    "pt": "Sulfito de sódio",
+    "it": "Solfito di sodio",
+    "fr": "Sulfite de sodium",
+    "de": "Natriumsulfit"
+   },
+   "note": {
+    "es": "Conservante y antioxidante sulfitado.",
+    "en": "Sulphite preservative and antioxidant.",
+    "pt": "Conservante e antioxidante sulfitado.",
+    "it": "Conservante e antiossidante solfitico.",
+    "fr": "Conservateur et antioxydant sulfité.",
+    "de": "Sulfithaltiger Konservierungsstoff und Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E222",
+   "origin": "synthetic",
+   "name": {
+    "es": "Bisulfito sódico",
+    "en": "Sodium bisulphite",
+    "pt": "Bissulfito de sódio",
+    "it": "Bisolfito di sodio",
+    "fr": "Bisulfite de sodium",
+    "de": "Natriumhydrogensulfit"
+   },
+   "note": {
+    "es": "Conservante y antioxidante sulfitado.",
+    "en": "Sulphite preservative and antioxidant.",
+    "pt": "Conservante e antioxidante sulfitado.",
+    "it": "Conservante e antiossidante solfitico.",
+    "fr": "Conservateur et antioxydant sulfité.",
+    "de": "Sulfithaltiger Konservierungsstoff und Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E223",
+   "origin": "synthetic",
+   "name": {
+    "es": "Metabisulfito sódico",
+    "en": "Sodium metabisulphite",
+    "pt": "Metabissulfito de sódio",
+    "it": "Metabisolfito di sodio",
+    "fr": "Métabisulfite de sodium",
+    "de": "Natriummetabisulfit"
+   },
+   "note": {
+    "es": "Conservante sulfitado.",
+    "en": "Sulphite preservative.",
+    "pt": "Conservante sulfitado.",
+    "it": "Conservante solfitico.",
+    "fr": "Conservateur sulfité.",
+    "de": "Sulfithaltiger Konservierungsstoff."
+   }
+  },
+  {
+   "code": "E224",
+   "origin": "synthetic",
+   "name": {
+    "es": "Metabisulfito potásico",
+    "en": "Potassium metabisulphite",
+    "pt": "Metabissulfito de potássio",
+    "it": "Metabisolfito di potassio",
+    "fr": "Métabisulfite de potassium",
+    "de": "Kaliummetabisulfit"
+   },
+   "note": {
+    "es": "Conservante sulfitado.",
+    "en": "Sulphite preservative.",
+    "pt": "Conservante sulfitado.",
+    "it": "Conservante solfitico.",
+    "fr": "Conservateur sulfité.",
+    "de": "Sulfithaltiger Konservierungsstoff."
+   }
+  },
+  {
+   "code": "E226",
+   "origin": "synthetic",
+   "name": {
+    "es": "Sulfito cálcico",
+    "en": "Calcium sulphite",
+    "pt": "Sulfito de cálcio",
+    "it": "Solfito di calcio",
+    "fr": "Sulfite de calcium",
+    "de": "Calciumsulfit"
+   },
+   "note": {
+    "es": "Conservante sulfitado.",
+    "en": "Sulphite preservative.",
+    "pt": "Conservante sulfitado.",
+    "it": "Conservante solfitico.",
+    "fr": "Conservateur sulfité.",
+    "de": "Sulfithaltiger Konservierungsstoff."
+   }
+  },
+  {
+   "code": "E227",
+   "origin": "synthetic",
+   "name": {
+    "es": "Bisulfito cálcico",
+    "en": "Calcium bisulphite",
+    "pt": "Bissulfito de cálcio",
+    "it": "Bisolfito di calcio",
+    "fr": "Bisulfite de calcium",
+    "de": "Calciumhydrogensulfit"
+   },
+   "note": {
+    "es": "Conservante y antioxidante sulfitado.",
+    "en": "Sulphite preservative and antioxidant.",
+    "pt": "Conservante e antioxidante sulfitado.",
+    "it": "Conservante e antiossidante solfitico.",
+    "fr": "Conservateur et antioxydant sulfité.",
+    "de": "Sulfithaltiger Konservierungsstoff und Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E228",
+   "origin": "synthetic",
+   "name": {
+    "es": "Bisulfito potásico",
+    "en": "Potassium bisulphite",
+    "pt": "Bissulfito de potássio",
+    "it": "Bisolfito di potassio",
+    "fr": "Bisulfite de potassium",
+    "de": "Kaliumhydrogensulfit"
+   },
+   "note": {
+    "es": "Conservante y antioxidante sulfitado.",
+    "en": "Sulphite preservative and antioxidant.",
+    "pt": "Conservante e antioxidante sulfitado.",
+    "it": "Conservante e antiossidante solfitico.",
+    "fr": "Conservateur et antioxydant sulfité.",
+    "de": "Sulfithaltiger Konservierungsstoff und Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E230",
+   "origin": "synthetic",
+   "name": {
+    "es": "Bifenilo",
+    "en": "Biphenyl",
+    "pt": "Bifenilo",
+    "it": "Bifenile",
+    "fr": "Biphényle",
+    "de": "Biphenyl"
+   },
+   "note": {
+    "es": "Conservante de cáscaras de frutas.",
+    "en": "Preservative for fruit peels.",
+    "pt": "Conservante para cascas de frutas.",
+    "it": "Conservante per bucce di frutta.",
+    "fr": "Conservateur pour écorces de fruits.",
+    "de": "Konservierungsstoff für Fruchtschalen."
+   }
+  },
+  {
+   "code": "E231",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ortofenilfenol",
+    "en": "Orthophenylphenol",
+    "pt": "Ortofenilfenol",
+    "it": "Ortofenilfenolo",
+    "fr": "Orthophénylphénol",
+    "de": "Orthophenylphenol"
+   },
+   "note": {
+    "es": "Conservante superficial para cítricos.",
+    "en": "Surface preservative for citrus fruits.",
+    "pt": "Conservante de superfície para citrinos.",
+    "it": "Conservante superficiale per agrumi.",
+    "fr": "Conservateur de surface pour agrumes.",
+    "de": "Oberflächenkonservierungsstoff für Zitrusfrüchte."
+   }
+  },
+  {
+   "code": "E234",
+   "origin": "uncertain",
+   "name": {
+    "es": "Nisina",
+    "en": "Nisin",
+    "pt": "Nisina",
+    "it": "Nisina",
+    "fr": "Nisine",
+    "de": "Nisin"
+   },
+   "note": {
+    "es": "Bacteriocina producida por fermentación bacteriana.",
+    "en": "Bacteriocin produced by bacterial fermentation.",
+    "pt": "Bacteriocina produzida por fermentação bacteriana.",
+    "it": "Batteriocina prodotta per fermentazione batterica.",
+    "fr": "Bactériocine produite par fermentation bactérienne.",
+    "de": "Bakteriozin aus bakterieller Fermentation."
+   }
+  },
+  {
+   "code": "E235",
+   "origin": "uncertain",
+   "name": {
+    "es": "Natamicina",
+    "en": "Natamycin",
+    "pt": "Natamicina",
+    "it": "Natamicina",
+    "fr": "Natamycine",
+    "de": "Natamycin"
+   },
+   "note": {
+    "es": "Antifúngico obtenido por fermentación microbiana.",
+    "en": "Antifungal obtained by microbial fermentation.",
+    "pt": "Antifúngico obtido por fermentação microbiana.",
+    "it": "Antifungino ottenuto per fermentazione microbica.",
+    "fr": "Antifongique obtenu par fermentation microbienne.",
+    "de": "Antimykotikum aus mikrobieller Fermentation."
+   }
+  },
+  {
+   "code": "E242",
+   "origin": "synthetic",
+   "name": {
+    "es": "Dicarbonato de dimetilo",
+    "en": "Dimethyl dicarbonate",
+    "pt": "Dicarbonato de dimetilo",
+    "it": "Dicarbonato di dimetile",
+    "fr": "Dicarbonate de diméthyle",
+    "de": "Dimethyldicarbonat"
+   },
+   "note": {
+    "es": "Conservante usado en bebidas.",
+    "en": "Preservative used in beverages.",
+    "pt": "Conservante usado em bebidas.",
+    "it": "Conservante usato nelle bevande.",
+    "fr": "Conservateur utilisé dans les boissons.",
+    "de": "Konservierungsstoff für Getränke."
+   }
+  },
+  {
+   "code": "E249",
+   "origin": "synthetic",
+   "name": {
+    "es": "Nitrito potásico",
+    "en": "Potassium nitrite",
+    "pt": "Nitrito de potássio",
+    "it": "Nitrito di potassio",
+    "fr": "Nitrite de potassium",
+    "de": "Kaliumnitrit"
+   },
+   "note": {
+    "es": "Conservante de curado usado en carnes.",
+    "en": "Curing preservative used in meat.",
+    "pt": "Conservante de cura usado em carnes.",
+    "it": "Conservante di stagionatura usato nelle carni.",
+    "fr": "Conservateur de salaison utilisé dans les viandes.",
+    "de": "Pökelstoff für Fleisch."
+   }
+  },
+  {
+   "code": "E250",
+   "origin": "synthetic",
+   "name": {
+    "es": "Nitrito sódico",
+    "en": "Sodium nitrite",
+    "pt": "Nitrito de sódio",
+    "it": "Nitrito di sodio",
+    "fr": "Nitrite de sodium",
+    "de": "Natriumnitrit"
+   },
+   "note": {
+    "es": "Conservante de carnes curadas.",
+    "en": "Preservative for cured meats.",
+    "pt": "Conservante de carnes curadas.",
+    "it": "Conservante per carni stagionate.",
+    "fr": "Conservateur des viandes salées.",
+    "de": "Konservierungsstoff für Pökelfleisch."
+   }
+  },
+  {
+   "code": "E251",
+   "origin": "synthetic",
+   "name": {
+    "es": "Nitrato sódico",
+    "en": "Sodium nitrate",
+    "pt": "Nitrato de sódio",
+    "it": "Nitrato di sodio",
+    "fr": "Nitrate de sodium",
+    "de": "Natriumnitrat"
+   },
+   "note": {
+    "es": "Conservante de carnes curadas.",
+    "en": "Preservative for cured meats.",
+    "pt": "Conservante de carnes curadas.",
+    "it": "Conservante per carni stagionate.",
+    "fr": "Conservateur des viandes salées.",
+    "de": "Konservierungsstoff für Pökelfleisch."
+   }
+  },
+  {
+   "code": "E252",
+   "origin": "synthetic",
+   "name": {
+    "es": "Nitrato potásico",
+    "en": "Potassium nitrate",
+    "pt": "Nitrato de potássio",
+    "it": "Nitrato di potassio",
+    "fr": "Nitrate de potassium",
+    "de": "Kaliumnitrat"
+   },
+   "note": {
+    "es": "Conservante de carnes curadas.",
+    "en": "Preservative for cured meats.",
+    "pt": "Conservante de carnes curadas.",
+    "it": "Conservante per carni stagionate.",
+    "fr": "Conservateur des viandes salées.",
+    "de": "Konservierungsstoff für Pökelfleisch."
+   }
+  },
+  {
+   "code": "E260",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido acético",
+    "en": "Acetic acid",
+    "pt": "Ácido acético",
+    "it": "Acido acetico",
+    "fr": "Acide acétique",
+    "de": "Essigsäure"
+   },
+   "note": {
+    "es": "Regulador de acidez y conservante, el ácido del vinagre.",
+    "en": "Acidity regulator and preservative, the acid in vinegar.",
+    "pt": "Regulador de acidez e conservante; é o ácido do vinagre.",
+    "it": "Correttore di acidità e conservante; è l'acido dell'aceto.",
+    "fr": "Correcteur d'acidité et conservateur ; c'est l'acide du vinaigre.",
+    "de": "Säureregulator und Konservierungsstoff; die Säure im Essig."
+   }
+  },
+  {
+   "code": "E261",
+   "origin": "synthetic",
+   "name": {
+    "es": "Acetato potásico",
+    "en": "Potassium acetate",
+    "pt": "Acetato de potássio",
+    "it": "Acetato di potassio",
+    "fr": "Acétate de potassium",
+    "de": "Kaliumacetat"
+   },
+   "note": {
+    "es": "Conservante y regulador de acidez.",
+    "en": "Preservative and acidity regulator.",
+    "pt": "Conservante e regulador de acidez.",
+    "it": "Conservante e correttore di acidità.",
+    "fr": "Conservateur et correcteur d'acidité.",
+    "de": "Konservierungsstoff und Säureregulator."
+   }
+  },
+  {
+   "code": "E262",
+   "origin": "synthetic",
+   "name": {
+    "es": "Acetatos de sodio",
+    "en": "Sodium acetates",
+    "pt": "Acetatos de sódio",
+    "it": "Acetati di sodio",
+    "fr": "Acétates de sodium",
+    "de": "Natriumacetate"
+   },
+   "note": {
+    "es": "Conservante y regulador de acidez.",
+    "en": "Preservative and acidity regulator.",
+    "pt": "Conservante e regulador de acidez.",
+    "it": "Conservante e correttore di acidità.",
+    "fr": "Conservateur et correcteur d'acidité.",
+    "de": "Konservierungsstoff und Säureregulator."
+   }
+  },
+  {
+   "code": "E263",
+   "origin": "synthetic",
+   "name": {
+    "es": "Acetato cálcico",
+    "en": "Calcium acetate",
+    "pt": "Acetato de cálcio",
+    "it": "Acetato di calcio",
+    "fr": "Acétate de calcium",
+    "de": "Calciumacetat"
+   },
+   "note": {
+    "es": "Conservante y regulador de acidez.",
+    "en": "Preservative and acidity regulator.",
+    "pt": "Conservante e regulador de acidez.",
+    "it": "Conservante e correttore di acidità.",
+    "fr": "Conservateur et correcteur d'acidité.",
+    "de": "Konservierungsstoff und Säureregulator."
+   }
+  },
+  {
+   "code": "E270",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ácido láctico",
+    "en": "Lactic acid",
+    "pt": "Ácido láctico",
+    "it": "Acido lattico",
+    "fr": "Acide lactique",
+    "de": "Milchsäure"
+   },
+   "note": {
+    "es": "Regulador de acidez; se obtiene casi siempre por fermentación de azúcares vegetales, pero puede proceder de lácteos.",
+    "en": "Acidity regulator; almost always produced by fermenting plant sugars, but it may come from dairy.",
+    "pt": "Regulador de acidez; obtém-se quase sempre por fermentação de açúcares vegetais, mas pode provir de lacticínios.",
+    "it": "Correttore di acidità; si ottiene quasi sempre per fermentazione di zuccheri vegetali, ma può derivare dai latticini.",
+    "fr": "Correcteur d'acidité ; presque toujours obtenu par fermentation de sucres végétaux, mais il peut provenir de produits laitiers.",
+    "de": "Säureregulator; fast immer durch Fermentation pflanzlicher Zucker gewonnen, kann aber aus Milchprodukten stammen."
+   }
+  },
+  {
+   "code": "E280",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido propiónico",
+    "en": "Propionic acid",
+    "pt": "Ácido propiónico",
+    "it": "Acido propionico",
+    "fr": "Acide propionique",
+    "de": "Propionsäure"
+   },
+   "note": {
+    "es": "Conservante antifúngico usado en panadería.",
+    "en": "Antifungal preservative used in bakery.",
+    "pt": "Conservante antifúngico usado em panificação.",
+    "it": "Conservante antifungino usato in panetteria.",
+    "fr": "Conservateur antifongique utilisé en boulangerie.",
+    "de": "Schimmelhemmender Konservierungsstoff für Backwaren."
+   }
+  },
+  {
+   "code": "E281",
+   "origin": "synthetic",
+   "name": {
+    "es": "Propionato sódico",
+    "en": "Sodium propionate",
+    "pt": "Propionato de sódio",
+    "it": "Propionato di sodio",
+    "fr": "Propionate de sodium",
+    "de": "Natriumpropionat"
+   },
+   "note": {
+    "es": "Conservante antifúngico usado en panadería.",
+    "en": "Antifungal preservative used in bakery.",
+    "pt": "Conservante antifúngico usado em panificação.",
+    "it": "Conservante antifungino usato in panetteria.",
+    "fr": "Conservateur antifongique utilisé en boulangerie.",
+    "de": "Schimmelhemmender Konservierungsstoff für Backwaren."
+   }
+  },
+  {
+   "code": "E282",
+   "origin": "synthetic",
+   "name": {
+    "es": "Propionato cálcico",
+    "en": "Calcium propionate",
+    "pt": "Propionato de cálcio",
+    "it": "Propionato di calcio",
+    "fr": "Propionate de calcium",
+    "de": "Calciumpropionat"
+   },
+   "note": {
+    "es": "Conservante antifúngico usado en panadería.",
+    "en": "Antifungal preservative used in bakery.",
+    "pt": "Conservante antifúngico usado em panificação.",
+    "it": "Conservante antifungino usato in panetteria.",
+    "fr": "Conservateur antifongique utilisé en boulangerie.",
+    "de": "Schimmelhemmender Konservierungsstoff für Backwaren."
+   }
+  },
+  {
+   "code": "E283",
+   "origin": "synthetic",
+   "name": {
+    "es": "Propionato potásico",
+    "en": "Potassium propionate",
+    "pt": "Propionato de potássio",
+    "it": "Propionato di potassio",
+    "fr": "Propionate de potassium",
+    "de": "Kaliumpropionat"
+   },
+   "note": {
+    "es": "Conservante antifúngico usado en panadería.",
+    "en": "Antifungal preservative used in bakery.",
+    "pt": "Conservante antifúngico usado em panificação.",
+    "it": "Conservante antifungino usato in panetteria.",
+    "fr": "Conservateur antifongique utilisé en boulangerie.",
+    "de": "Schimmelhemmender Konservierungsstoff für Backwaren."
+   }
+  },
+  {
+   "code": "E284",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido bórico",
+    "en": "Boric acid",
+    "pt": "Ácido bórico",
+    "it": "Acido borico",
+    "fr": "Acide borique",
+    "de": "Borsäure"
+   },
+   "note": {
+    "es": "Conservante de uso muy limitado.",
+    "en": "Preservative with very limited use.",
+    "pt": "Conservante de uso muito limitado.",
+    "it": "Conservante di uso molto limitato.",
+    "fr": "Conservateur à usage très limité.",
+    "de": "Konservierungsstoff mit sehr eingeschränkter Verwendung."
+   }
+  },
+  {
+   "code": "E285",
+   "origin": "synthetic",
+   "name": {
+    "es": "Tetraborato sódico",
+    "en": "Sodium tetraborate",
+    "pt": "Tetraborato de sódio",
+    "it": "Tetraborato di sodio",
+    "fr": "Tétraborate de sodium",
+    "de": "Natriumtetraborat"
+   },
+   "note": {
+    "es": "Conservante de uso muy limitado.",
+    "en": "Preservative with very limited use.",
+    "pt": "Conservante de uso muito limitado.",
+    "it": "Conservante di uso molto limitato.",
+    "fr": "Conservateur à usage très limité.",
+    "de": "Konservierungsstoff mit sehr eingeschränkter Verwendung."
+   }
+  },
+  {
+   "code": "E290",
+   "origin": "synthetic",
+   "name": {
+    "es": "Dióxido de carbono",
+    "en": "Carbon dioxide",
+    "pt": "Dióxido de carbono",
+    "it": "Anidride carbonica",
+    "fr": "Dioxyde de carbone",
+    "de": "Kohlendioxid"
+   },
+   "note": {
+    "es": "Gas de envasado y carbonatación.",
+    "en": "Packaging and carbonation gas.",
+    "pt": "Gás de embalagem e gaseificação.",
+    "it": "Gas di confezionamento e carbonatazione.",
+    "fr": "Gaz de conditionnement et de gazéification.",
+    "de": "Schutz- und Kohlensäuregas."
+   }
+  },
+  {
+   "code": "E296",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido málico",
+    "en": "Malic acid",
+    "pt": "Ácido málico",
+    "it": "Acido malico",
+    "fr": "Acide malique",
+    "de": "Äpfelsäure"
+   },
+   "note": {
+    "es": "Regulador de acidez y sabor ácido.",
+    "en": "Acidity regulator that adds a sour taste.",
+    "pt": "Regulador de acidez e sabor ácido.",
+    "it": "Correttore di acidità e sapore acido.",
+    "fr": "Correcteur d'acidité au goût acide.",
+    "de": "Säureregulator mit saurem Geschmack."
+   }
+  },
+  {
+   "code": "E297",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido fumárico",
+    "en": "Fumaric acid",
+    "pt": "Ácido fumárico",
+    "it": "Acido fumarico",
+    "fr": "Acide fumarique",
+    "de": "Fumarsäure"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E300",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ácido ascórbico",
+    "en": "Ascorbic acid",
+    "pt": "Ácido ascórbico",
+    "it": "Acido ascorbico",
+    "fr": "Acide ascorbique",
+    "de": "Ascorbinsäure"
+   },
+   "note": {
+    "es": "Puede ser de origen vegetal o por síntesis.",
+    "en": "May be of plant origin or synthetic.",
+    "pt": "Pode ser de origem vegetal ou sintética.",
+    "it": "Può essere di origine vegetale o di sintesi.",
+    "fr": "Peut être d'origine végétale ou de synthèse.",
+    "de": "Kann pflanzlichen Ursprungs oder synthetisch sein."
+   }
+  },
+  {
+   "code": "E301",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ascorbato sódico",
+    "en": "Sodium ascorbate",
+    "pt": "Ascorbato de sódio",
+    "it": "Ascorbato di sodio",
+    "fr": "Ascorbate de sodium",
+    "de": "Natriumascorbat"
+   },
+   "note": {
+    "es": "Antioxidante derivado del ácido ascórbico.",
+    "en": "Antioxidant derived from ascorbic acid.",
+    "pt": "Antioxidante derivado do ácido ascórbico.",
+    "it": "Antiossidante derivato dall'acido ascorbico.",
+    "fr": "Antioxydant dérivé de l'acide ascorbique.",
+    "de": "Antioxidationsmittel aus Ascorbinsäure."
+   }
+  },
+  {
+   "code": "E302",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ascorbato cálcico",
+    "en": "Calcium ascorbate",
+    "pt": "Ascorbato de cálcio",
+    "it": "Ascorbato di calcio",
+    "fr": "Ascorbate de calcium",
+    "de": "Calciumascorbat"
+   },
+   "note": {
+    "es": "Antioxidante derivado del ácido ascórbico.",
+    "en": "Antioxidant derived from ascorbic acid.",
+    "pt": "Antioxidante derivado do ácido ascórbico.",
+    "it": "Antiossidante derivato dall'acido ascorbico.",
+    "fr": "Antioxydant dérivé de l'acide ascorbique.",
+    "de": "Antioxidationsmittel aus Ascorbinsäure."
+   }
+  },
+  {
+   "code": "E304",
+   "origin": "synthetic",
+   "name": {
+    "es": "Palmitato de ascorbilo",
+    "en": "Ascorbyl palmitate",
+    "pt": "Palmitato de ascorbilo",
+    "it": "Ascorbil palmitato",
+    "fr": "Palmitate d'ascorbyle",
+    "de": "Ascorbylpalmitat"
+   },
+   "note": {
+    "es": "Antioxidante liposoluble derivado de la vitamina C.",
+    "en": "Fat-soluble antioxidant derived from vitamin C.",
+    "pt": "Antioxidante lipossolúvel derivado da vitamina C.",
+    "it": "Antiossidante liposolubile derivato dalla vitamina C.",
+    "fr": "Antioxydant liposoluble dérivé de la vitamine C.",
+    "de": "Fettlösliches Antioxidationsmittel aus Vitamin C."
+   }
+  },
+  {
+   "code": "E306",
+   "origin": "plant",
+   "name": {
+    "es": "Extracto rico en tocoferoles",
+    "en": "Tocopherol-rich extract",
+    "pt": "Extrato rico em tocoferóis",
+    "it": "Estratto ricco di tocoferoli",
+    "fr": "Extrait riche en tocophérols",
+    "de": "Stark tocopherolhaltiger Extrakt"
+   },
+   "note": {
+    "es": "Extracto de vitamina E con función antioxidante.",
+    "en": "Vitamin E extract with antioxidant function.",
+    "pt": "Extrato de vitamina E com função antioxidante.",
+    "it": "Estratto di vitamina E con funzione antiossidante.",
+    "fr": "Extrait de vitamine E à fonction antioxydante.",
+    "de": "Vitamin-E-Extrakt mit antioxidativer Wirkung."
+   }
+  },
+  {
+   "code": "E307",
+   "origin": "plant",
+   "name": {
+    "es": "Alfa-tocoferol",
+    "en": "Alpha-tocopherol",
+    "pt": "Alfa-tocoferol",
+    "it": "Alfa-tocoferolo",
+    "fr": "Alpha-tocophérol",
+    "de": "Alpha-Tocopherol"
+   },
+   "note": {
+    "es": "Vitamina E con función antioxidante.",
+    "en": "Vitamin E used as an antioxidant.",
+    "pt": "Vitamina E com função antioxidante.",
+    "it": "Vitamina E con funzione antiossidante.",
+    "fr": "Vitamine E à fonction antioxydante.",
+    "de": "Vitamin E mit antioxidativer Wirkung."
+   }
+  },
+  {
+   "code": "E308",
+   "origin": "plant",
+   "name": {
+    "es": "Gamma-tocoferol",
+    "en": "Gamma-tocopherol",
+    "pt": "Gama-tocoferol",
+    "it": "Gamma-tocoferolo",
+    "fr": "Gamma-tocophérol",
+    "de": "Gamma-Tocopherol"
+   },
+   "note": {
+    "es": "Vitamina E con función antioxidante.",
+    "en": "Vitamin E used as an antioxidant.",
+    "pt": "Vitamina E com função antioxidante.",
+    "it": "Vitamina E con funzione antiossidante.",
+    "fr": "Vitamine E à fonction antioxydante.",
+    "de": "Vitamin E mit antioxidativer Wirkung."
+   }
+  },
+  {
+   "code": "E309",
+   "origin": "plant",
+   "name": {
+    "es": "Delta-tocoferol",
+    "en": "Delta-tocopherol",
+    "pt": "Delta-tocoferol",
+    "it": "Delta-tocoferolo",
+    "fr": "Delta-tocophérol",
+    "de": "Delta-Tocopherol"
+   },
+   "note": {
+    "es": "Vitamina E con función antioxidante.",
+    "en": "Vitamin E used as an antioxidant.",
+    "pt": "Vitamina E com função antioxidante.",
+    "it": "Vitamina E con funzione antiossidante.",
+    "fr": "Vitamine E à fonction antioxydante.",
+    "de": "Vitamin E mit antioxidativer Wirkung."
+   }
+  },
+  {
+   "code": "E310",
+   "origin": "synthetic",
+   "name": {
+    "es": "Galato de propilo",
+    "en": "Propyl gallate",
+    "pt": "Galato de propilo",
+    "it": "Gallato di propile",
+    "fr": "Gallate de propyle",
+    "de": "Propylgallat"
+   },
+   "note": {
+    "es": "Antioxidante sintético.",
+    "en": "Synthetic antioxidant.",
+    "pt": "Antioxidante sintético.",
+    "it": "Antiossidante sintetico.",
+    "fr": "Antioxydant synthétique.",
+    "de": "Synthetisches Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E311",
+   "origin": "synthetic",
+   "name": {
+    "es": "Galato de octilo",
+    "en": "Octyl gallate",
+    "pt": "Galato de octilo",
+    "it": "Gallato di ottile",
+    "fr": "Gallate d'octyle",
+    "de": "Octylgallat"
+   },
+   "note": {
+    "es": "Antioxidante sintético.",
+    "en": "Synthetic antioxidant.",
+    "pt": "Antioxidante sintético.",
+    "it": "Antiossidante sintetico.",
+    "fr": "Antioxydant synthétique.",
+    "de": "Synthetisches Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E312",
+   "origin": "synthetic",
+   "name": {
+    "es": "Galato de dodecilo",
+    "en": "Dodecyl gallate",
+    "pt": "Galato de dodecilo",
+    "it": "Gallato di dodecile",
+    "fr": "Gallate de dodécyle",
+    "de": "Dodecylgallat"
+   },
+   "note": {
+    "es": "Antioxidante sintético.",
+    "en": "Synthetic antioxidant.",
+    "pt": "Antioxidante sintético.",
+    "it": "Antiossidante sintetico.",
+    "fr": "Antioxydant synthétique.",
+    "de": "Synthetisches Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E315",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido eritórbico",
+    "en": "Erythorbic acid",
+    "pt": "Ácido eritórbico",
+    "it": "Acido eritorbico",
+    "fr": "Acide érythorbique",
+    "de": "Isoascorbinsäure"
+   },
+   "note": {
+    "es": "Antioxidante isómero del ácido ascórbico.",
+    "en": "Antioxidant isomer of ascorbic acid.",
+    "pt": "Antioxidante isómero do ácido ascórbico.",
+    "it": "Antiossidante isomero dell'acido ascorbico.",
+    "fr": "Antioxydant isomère de l'acide ascorbique.",
+    "de": "Antioxidationsmittel, Isomer der Ascorbinsäure."
+   }
+  },
+  {
+   "code": "E316",
+   "origin": "synthetic",
+   "name": {
+    "es": "Eritorbato sódico",
+    "en": "Sodium erythorbate",
+    "pt": "Eritorbato de sódio",
+    "it": "Eritorbato di sodio",
+    "fr": "Érythorbate de sodium",
+    "de": "Natriumisoascorbat"
+   },
+   "note": {
+    "es": "Antioxidante derivado del ácido eritórbico.",
+    "en": "Antioxidant derived from erythorbic acid.",
+    "pt": "Antioxidante derivado do ácido eritórbico.",
+    "it": "Antiossidante derivato dall'acido eritorbico.",
+    "fr": "Antioxydant dérivé de l'acide érythorbique.",
+    "de": "Antioxidationsmittel aus Isoascorbinsäure."
+   }
+  },
+  {
+   "code": "E319",
+   "origin": "synthetic",
+   "name": {
+    "es": "TBHQ",
+    "en": "TBHQ",
+    "pt": "TBHQ",
+    "it": "TBHQ",
+    "fr": "TBHQ",
+    "de": "TBHQ"
+   },
+   "note": {
+    "es": "Antioxidante sintético.",
+    "en": "Synthetic antioxidant.",
+    "pt": "Antioxidante sintético.",
+    "it": "Antiossidante sintetico.",
+    "fr": "Antioxydant synthétique.",
+    "de": "Synthetisches Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E320",
+   "origin": "synthetic",
+   "name": {
+    "es": "BHA",
+    "en": "BHA",
+    "pt": "BHA",
+    "it": "BHA",
+    "fr": "BHA",
+    "de": "BHA"
+   },
+   "note": {
+    "es": "Antioxidante sintético.",
+    "en": "Synthetic antioxidant.",
+    "pt": "Antioxidante sintético.",
+    "it": "Antiossidante sintetico.",
+    "fr": "Antioxydant synthétique.",
+    "de": "Synthetisches Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E321",
+   "origin": "synthetic",
+   "name": {
+    "es": "BHT",
+    "en": "BHT",
+    "pt": "BHT",
+    "it": "BHT",
+    "fr": "BHT",
+    "de": "BHT"
+   },
+   "note": {
+    "es": "Antioxidante sintético.",
+    "en": "Synthetic antioxidant.",
+    "pt": "Antioxidante sintético.",
+    "it": "Antiossidante sintetico.",
+    "fr": "Antioxydant synthétique.",
+    "de": "Synthetisches Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E322",
+   "origin": "uncertain",
+   "name": {
+    "es": "Lecitinas",
+    "en": "Lecithins",
+    "pt": "Lecitinas",
+    "it": "Lecitine",
+    "fr": "Lécithines",
+    "de": "Lecithine"
+   },
+   "note": {
+    "es": "Puede proceder de soja, girasol o huevo.",
+    "en": "May come from soy, sunflower, or egg.",
+    "pt": "Pode provir de soja, girassol ou ovo.",
+    "it": "Può provenire da soia, girasole o uovo.",
+    "fr": "Peut provenir du soja, du tournesol ou de l'œuf.",
+    "de": "Kann aus Soja, Sonnenblumen oder Ei stammen."
+   }
+  },
+  {
+   "code": "E325",
+   "origin": "uncertain",
+   "name": {
+    "es": "Lactato sódico",
+    "en": "Sodium lactate",
+    "pt": "Lactato de sódio",
+    "it": "Lattato di sodio",
+    "fr": "Lactate de sodium",
+    "de": "Natriumlactat"
+   },
+   "note": {
+    "es": "Sal del ácido láctico; la fermentación puede partir de sustratos lácteos.",
+    "en": "Lactic acid salt; fermentation may start from dairy substrates.",
+    "pt": "Sal do ácido láctico; a fermentação pode partir de substratos lácteos.",
+    "it": "Sale dell'acido lattico; la fermentazione può partire da substrati lattiero-caseari.",
+    "fr": "Sel de l'acide lactique ; la fermentation peut partir de substrats laitiers.",
+    "de": "Salz der Milchsäure; die Fermentation kann von Milchsubstraten ausgehen."
+   }
+  },
+  {
+   "code": "E326",
+   "origin": "uncertain",
+   "name": {
+    "es": "Lactato potásico",
+    "en": "Potassium lactate",
+    "pt": "Lactato de potássio",
+    "it": "Lattato di potassio",
+    "fr": "Lactate de potassium",
+    "de": "Kaliumlactat"
+   },
+   "note": {
+    "es": "Sal del ácido láctico; la fermentación puede partir de sustratos lácteos.",
+    "en": "Lactic acid salt; fermentation may start from dairy substrates.",
+    "pt": "Sal do ácido láctico; a fermentação pode partir de substratos lácteos.",
+    "it": "Sale dell'acido lattico; la fermentazione può partire da substrati lattiero-caseari.",
+    "fr": "Sel de l'acide lactique ; la fermentation peut partir de substrats laitiers.",
+    "de": "Salz der Milchsäure; die Fermentation kann von Milchsubstraten ausgehen."
+   }
+  },
+  {
+   "code": "E327",
+   "origin": "uncertain",
+   "name": {
+    "es": "Lactato cálcico",
+    "en": "Calcium lactate",
+    "pt": "Lactato de cálcio",
+    "it": "Lattato di calcio",
+    "fr": "Lactate de calcium",
+    "de": "Calciumlactat"
+   },
+   "note": {
+    "es": "Sal del ácido láctico; la fermentación puede partir de sustratos lácteos.",
+    "en": "Lactic acid salt; fermentation may start from dairy substrates.",
+    "pt": "Sal do ácido láctico; a fermentação pode partir de substratos lácteos.",
+    "it": "Sale dell'acido lattico; la fermentazione può partire da substrati lattiero-caseari.",
+    "fr": "Sel de l'acide lactique ; la fermentation peut partir de substrats laitiers.",
+    "de": "Salz der Milchsäure; die Fermentation kann von Milchsubstraten ausgehen."
+   }
+  },
+  {
+   "code": "E330",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido cítrico",
+    "en": "Citric acid",
+    "pt": "Ácido cítrico",
+    "it": "Acido citrico",
+    "fr": "Acide citrique",
+    "de": "Zitronensäure"
+   },
+   "note": {
+    "es": "Regulador de acidez y antioxidante.",
+    "en": "Acidity regulator and antioxidant.",
+    "pt": "Regulador de acidez e antioxidante.",
+    "it": "Correttore di acidità e antiossidante.",
+    "fr": "Correcteur d'acidité et antioxydant.",
+    "de": "Säureregulator und Antioxidationsmittel."
+   }
+  },
+  {
+   "code": "E331",
+   "origin": "synthetic",
+   "name": {
+    "es": "Citrato sódico",
+    "en": "Sodium citrate",
+    "pt": "Citrato de sódio",
+    "it": "Citrato di sodio",
+    "fr": "Citrate de sodium",
+    "de": "Natriumcitrat"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E332",
+   "origin": "synthetic",
+   "name": {
+    "es": "Citrato potásico",
+    "en": "Potassium citrate",
+    "pt": "Citrato de potássio",
+    "it": "Citrato di potassio",
+    "fr": "Citrate de potassium",
+    "de": "Kaliumcitrat"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E333",
+   "origin": "synthetic",
+   "name": {
+    "es": "Citrato cálcico",
+    "en": "Calcium citrate",
+    "pt": "Citrato de cálcio",
+    "it": "Citrato di calcio",
+    "fr": "Citrate de calcium",
+    "de": "Calciumcitrat"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E334",
+   "origin": "plant",
+   "name": {
+    "es": "Ácido tartárico",
+    "en": "Tartaric acid",
+    "pt": "Ácido tartárico",
+    "it": "Acido tartarico",
+    "fr": "Acide tartrique",
+    "de": "Weinsäure"
+   },
+   "note": {
+    "es": "Regulador de acidez presente en uvas y vino.",
+    "en": "Acidity regulator found in grapes and wine.",
+    "pt": "Regulador de acidez presente nas uvas e no vinho.",
+    "it": "Correttore di acidità presente nell'uva e nel vino.",
+    "fr": "Correcteur d'acidité présent dans le raisin et le vin.",
+    "de": "Säureregulator aus Trauben und Wein."
+   }
+  },
+  {
+   "code": "E335",
+   "origin": "synthetic",
+   "name": {
+    "es": "Tartrato sódico",
+    "en": "Sodium tartrate",
+    "pt": "Tartarato de sódio",
+    "it": "Tartrato di sodio",
+    "fr": "Tartrate de sodium",
+    "de": "Natriumtartrat"
+   },
+   "note": {
+    "es": "Regulador de acidez derivado del ácido tartárico.",
+    "en": "Acidity regulator derived from tartaric acid.",
+    "pt": "Regulador de acidez derivado do ácido tartárico.",
+    "it": "Correttore di acidità derivato dall'acido tartarico.",
+    "fr": "Correcteur d'acidité dérivé de l'acide tartrique.",
+    "de": "Säureregulator aus Weinsäure."
+   }
+  },
+  {
+   "code": "E336",
+   "origin": "synthetic",
+   "name": {
+    "es": "Tartrato potásico",
+    "en": "Potassium tartrate",
+    "pt": "Tartarato de potássio",
+    "it": "Tartrato di potassio",
+    "fr": "Tartrate de potassium",
+    "de": "Kaliumtartrat"
+   },
+   "note": {
+    "es": "Regulador de acidez derivado del ácido tartárico.",
+    "en": "Acidity regulator derived from tartaric acid.",
+    "pt": "Regulador de acidez derivado do ácido tartárico.",
+    "it": "Correttore di acidità derivato dall'acido tartarico.",
+    "fr": "Correcteur d'acidité dérivé de l'acide tartrique.",
+    "de": "Säureregulator aus Weinsäure."
+   }
+  },
+  {
+   "code": "E337",
+   "origin": "synthetic",
+   "name": {
+    "es": "Tartrato sódico y potásico",
+    "en": "Sodium potassium tartrate",
+    "pt": "Tartarato de sódio e potássio",
+    "it": "Tartrato di sodio e potassio",
+    "fr": "Tartrate double de sodium et de potassium",
+    "de": "Natriumkaliumtartrat"
+   },
+   "note": {
+    "es": "Regulador de acidez derivado del ácido tartárico.",
+    "en": "Acidity regulator derived from tartaric acid.",
+    "pt": "Regulador de acidez derivado do ácido tartárico.",
+    "it": "Correttore di acidità derivato dall'acido tartarico.",
+    "fr": "Correcteur d'acidité dérivé de l'acide tartrique.",
+    "de": "Säureregulator aus Weinsäure."
+   }
+  },
+  {
+   "code": "E338",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido fosfórico",
+    "en": "Phosphoric acid",
+    "pt": "Ácido fosfórico",
+    "it": "Acido fosforico",
+    "fr": "Acide phosphorique",
+    "de": "Phosphorsäure"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E339",
+   "origin": "synthetic",
+   "name": {
+    "es": "Fosfatos de sodio",
+    "en": "Sodium phosphates",
+    "pt": "Fosfatos de sódio",
+    "it": "Fosfati di sodio",
+    "fr": "Phosphates de sodium",
+    "de": "Natriumphosphate"
+   },
+   "note": {
+    "es": "Regulador de acidez y sales tampón.",
+    "en": "Acidity regulator and buffer salts.",
+    "pt": "Regulador de acidez e sais tampão.",
+    "it": "Correttore di acidità e sali tampone.",
+    "fr": "Correcteur d'acidité et sels tampons.",
+    "de": "Säureregulator und Puffersalze."
+   }
+  },
+  {
+   "code": "E340",
+   "origin": "synthetic",
+   "name": {
+    "es": "Fosfatos de potasio",
+    "en": "Potassium phosphates",
+    "pt": "Fosfatos de potássio",
+    "it": "Fosfati di potassio",
+    "fr": "Phosphates de potassium",
+    "de": "Kaliumphosphate"
+   },
+   "note": {
+    "es": "Regulador de acidez y sales tampón.",
+    "en": "Acidity regulator and buffer salts.",
+    "pt": "Regulador de acidez e sais tampão.",
+    "it": "Correttore di acidità e sali tampone.",
+    "fr": "Correcteur d'acidité et sels tampons.",
+    "de": "Säureregulator und Puffersalze."
+   }
+  },
+  {
+   "code": "E341",
+   "origin": "synthetic",
+   "name": {
+    "es": "Fosfatos de calcio",
+    "en": "Calcium phosphates",
+    "pt": "Fosfatos de cálcio",
+    "it": "Fosfati di calcio",
+    "fr": "Phosphates de calcium",
+    "de": "Calciumphosphate"
+   },
+   "note": {
+    "es": "Regulador de acidez y sales tampón.",
+    "en": "Acidity regulator and buffer salts.",
+    "pt": "Regulador de acidez e sais tampão.",
+    "it": "Correttore di acidità e sali tampone.",
+    "fr": "Correcteur d'acidité et sels tampons.",
+    "de": "Säureregulator und Puffersalze."
+   }
+  },
+  {
+   "code": "E343",
+   "origin": "synthetic",
+   "name": {
+    "es": "Fosfatos de magnesio",
+    "en": "Magnesium phosphates",
+    "pt": "Fosfatos de magnésio",
+    "it": "Fosfati di magnesio",
+    "fr": "Phosphates de magnésium",
+    "de": "Magnesiumphosphate"
+   },
+   "note": {
+    "es": "Regulador de acidez y antiaglomerante de origen mineral.",
+    "en": "Mineral acidity regulator and anti-caking agent.",
+    "pt": "Regulador de acidez e antiaglomerante de origem mineral.",
+    "it": "Correttore di acidità e antiagglomerante di origine minerale.",
+    "fr": "Correcteur d'acidité et antiagglomérant d'origine minérale.",
+    "de": "Säureregulator und Trennmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E350",
+   "origin": "synthetic",
+   "name": {
+    "es": "Malatos de sodio",
+    "en": "Sodium malates",
+    "pt": "Malatos de sódio",
+    "it": "Malati di sodio",
+    "fr": "Malates de sodium",
+    "de": "Natriummalate"
+   },
+   "note": {
+    "es": "Regulador de acidez derivado del ácido málico.",
+    "en": "Acidity regulator derived from malic acid.",
+    "pt": "Regulador de acidez derivado do ácido málico.",
+    "it": "Correttore di acidità derivato dall'acido malico.",
+    "fr": "Correcteur d'acidité dérivé de l'acide malique.",
+    "de": "Säureregulator aus Äpfelsäure."
+   }
+  },
+  {
+   "code": "E351",
+   "origin": "synthetic",
+   "name": {
+    "es": "Malato potásico",
+    "en": "Potassium malate",
+    "pt": "Malato de potássio",
+    "it": "Malato di potassio",
+    "fr": "Malate de potassium",
+    "de": "Kaliummalat"
+   },
+   "note": {
+    "es": "Regulador de acidez derivado del ácido málico.",
+    "en": "Acidity regulator derived from malic acid.",
+    "pt": "Regulador de acidez derivado do ácido málico.",
+    "it": "Correttore di acidità derivato dall'acido malico.",
+    "fr": "Correcteur d'acidité dérivé de l'acide malique.",
+    "de": "Säureregulator aus Äpfelsäure."
+   }
+  },
+  {
+   "code": "E352",
+   "origin": "synthetic",
+   "name": {
+    "es": "Malatos de calcio",
+    "en": "Calcium malates",
+    "pt": "Malatos de cálcio",
+    "it": "Malati di calcio",
+    "fr": "Malates de calcium",
+    "de": "Calciummalate"
+   },
+   "note": {
+    "es": "Regulador de acidez derivado del ácido málico.",
+    "en": "Acidity regulator derived from malic acid.",
+    "pt": "Regulador de acidez derivado do ácido málico.",
+    "it": "Correttore di acidità derivato dall'acido malico.",
+    "fr": "Correcteur d'acidité dérivé de l'acide malique.",
+    "de": "Säureregulator aus Äpfelsäure."
+   }
+  },
+  {
+   "code": "E353",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido metatartárico",
+    "en": "Metatartaric acid",
+    "pt": "Ácido metatartárico",
+    "it": "Acido metatartarico",
+    "fr": "Acide métatartrique",
+    "de": "Metaweinsäure"
+   },
+   "note": {
+    "es": "Estabilizante derivado del ácido tartárico usado en vinos.",
+    "en": "Stabiliser derived from tartaric acid, used in wine.",
+    "pt": "Estabilizante derivado do ácido tartárico usado em vinhos.",
+    "it": "Stabilizzante derivato dall'acido tartarico usato nei vini.",
+    "fr": "Stabilisant dérivé de l'acide tartrique utilisé dans les vins.",
+    "de": "Stabilisator aus Weinsäure für Wein."
+   }
+  },
+  {
+   "code": "E354",
+   "origin": "synthetic",
+   "name": {
+    "es": "Tartrato cálcico",
+    "en": "Calcium tartrate",
+    "pt": "Tartarato de cálcio",
+    "it": "Tartrato di calcio",
+    "fr": "Tartrate de calcium",
+    "de": "Calciumtartrat"
+   },
+   "note": {
+    "es": "Regulador de acidez derivado del ácido tartárico.",
+    "en": "Acidity regulator derived from tartaric acid.",
+    "pt": "Regulador de acidez derivado do ácido tartárico.",
+    "it": "Correttore di acidità derivato dall'acido tartarico.",
+    "fr": "Correcteur d'acidité dérivé de l'acide tartrique.",
+    "de": "Säureregulator aus Weinsäure."
+   }
+  },
+  {
+   "code": "E355",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido adípico",
+    "en": "Adipic acid",
+    "pt": "Ácido adípico",
+    "it": "Acido adipico",
+    "fr": "Acide adipique",
+    "de": "Adipinsäure"
+   },
+   "note": {
+    "es": "Regulador de acidez de síntesis.",
+    "en": "Synthetic acidity regulator.",
+    "pt": "Regulador de acidez sintético.",
+    "it": "Correttore di acidità di sintesi.",
+    "fr": "Correcteur d'acidité de synthèse.",
+    "de": "Synthetischer Säureregulator."
+   }
+  },
+  {
+   "code": "E363",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido succínico",
+    "en": "Succinic acid",
+    "pt": "Ácido succínico",
+    "it": "Acido succinico",
+    "fr": "Acide succinique",
+    "de": "Bernsteinsäure"
+   },
+   "note": {
+    "es": "Regulador de acidez de síntesis.",
+    "en": "Synthetic acidity regulator.",
+    "pt": "Regulador de acidez sintético.",
+    "it": "Correttore di acidità di sintesi.",
+    "fr": "Correcteur d'acidité de synthèse.",
+    "de": "Synthetischer Säureregulator."
+   }
+  },
+  {
+   "code": "E380",
+   "origin": "synthetic",
+   "name": {
+    "es": "Citrato triamónico",
+    "en": "Triammonium citrate",
+    "pt": "Citrato triamónico",
+    "it": "Citrato triammonico",
+    "fr": "Citrate triammonique",
+    "de": "Triammoniumcitrat"
+   },
+   "note": {
+    "es": "Regulador de acidez derivado del ácido cítrico.",
+    "en": "Acidity regulator derived from citric acid.",
+    "pt": "Regulador de acidez derivado do ácido cítrico.",
+    "it": "Correttore di acidità derivato dall'acido citrico.",
+    "fr": "Correcteur d'acidité dérivé de l'acide citrique.",
+    "de": "Säureregulator aus Zitronensäure."
+   }
+  },
+  {
+   "code": "E385",
+   "origin": "synthetic",
+   "name": {
+    "es": "EDTA cálcico disódico",
+    "en": "Calcium disodium EDTA",
+    "pt": "EDTA cálcico dissódico",
+    "it": "EDTA di calcio disodico",
+    "fr": "EDTA calcique disodique",
+    "de": "Calciumdinatrium-EDTA"
+   },
+   "note": {
+    "es": "Secuestrante que protege contra la oxidación.",
+    "en": "Sequestrant that protects against oxidation.",
+    "pt": "Sequestrante que protege contra a oxidação.",
+    "it": "Sequestrante che protegge dall'ossidazione.",
+    "fr": "Séquestrant qui protège contre l'oxydation.",
+    "de": "Komplexbildner, der vor Oxidation schützt."
+   }
+  },
+  {
+   "code": "E386",
+   "origin": "synthetic",
+   "name": {
+    "es": "EDTA disódico",
+    "en": "Disodium EDTA",
+    "pt": "EDTA dissódico",
+    "it": "EDTA disodico",
+    "fr": "EDTA disodique",
+    "de": "Dinatrium-EDTA"
+   },
+   "note": {
+    "es": "Secuestrante que protege contra la oxidación.",
+    "en": "Sequestrant that protects against oxidation.",
+    "pt": "Sequestrante que protege contra a oxidação.",
+    "it": "Sequestrante che protegge dall'ossidazione.",
+    "fr": "Séquestrant qui protège contre l'oxydation.",
+    "de": "Komplexbildner, der vor Oxidation schützt."
+   }
+  },
+  {
+   "code": "E400",
+   "origin": "plant",
+   "name": {
+    "es": "Ácido algínico",
+    "en": "Alginic acid",
+    "pt": "Ácido algínico",
+    "it": "Acido alginico",
+    "fr": "Acide alginique",
+    "de": "Alginsäure"
+   },
+   "note": {
+    "es": "Espesante extraído de algas.",
+    "en": "Thickener extracted from seaweed.",
+    "pt": "Espessante extraído de algas.",
+    "it": "Addensante estratto dalle alghe.",
+    "fr": "Épaississant extrait d'algues.",
+    "de": "Verdickungsmittel aus Algen."
+   }
+  },
+  {
+   "code": "E401",
+   "origin": "plant",
+   "name": {
+    "es": "Alginato sódico",
+    "en": "Sodium alginate",
+    "pt": "Alginato de sódio",
+    "it": "Alginato di sodio",
+    "fr": "Alginate de sodium",
+    "de": "Natriumalginat"
+   },
+   "note": {
+    "es": "Espesante extraído de algas.",
+    "en": "Thickener extracted from seaweed.",
+    "pt": "Espessante extraído de algas.",
+    "it": "Addensante estratto dalle alghe.",
+    "fr": "Épaississant extrait d'algues.",
+    "de": "Verdickungsmittel aus Algen."
+   }
+  },
+  {
+   "code": "E402",
+   "origin": "plant",
+   "name": {
+    "es": "Alginato potásico",
+    "en": "Potassium alginate",
+    "pt": "Alginato de potássio",
+    "it": "Alginato di potassio",
+    "fr": "Alginate de potassium",
+    "de": "Kaliumalginat"
+   },
+   "note": {
+    "es": "Espesante extraído de algas.",
+    "en": "Thickener extracted from seaweed.",
+    "pt": "Espessante extraído de algas.",
+    "it": "Addensante estratto dalle alghe.",
+    "fr": "Épaississant extrait d'algues.",
+    "de": "Verdickungsmittel aus Algen."
+   }
+  },
+  {
+   "code": "E403",
+   "origin": "plant",
+   "name": {
+    "es": "Alginato amónico",
+    "en": "Ammonium alginate",
+    "pt": "Alginato de amónio",
+    "it": "Alginato di ammonio",
+    "fr": "Alginate d'ammonium",
+    "de": "Ammoniumalginat"
+   },
+   "note": {
+    "es": "Espesante extraído de algas.",
+    "en": "Thickener extracted from seaweed.",
+    "pt": "Espessante extraído de algas.",
+    "it": "Addensante estratto dalle alghe.",
+    "fr": "Épaississant extrait d'algues.",
+    "de": "Verdickungsmittel aus Algen."
+   }
+  },
+  {
+   "code": "E404",
+   "origin": "plant",
+   "name": {
+    "es": "Alginato cálcico",
+    "en": "Calcium alginate",
+    "pt": "Alginato de cálcio",
+    "it": "Alginato di calcio",
+    "fr": "Alginate de calcium",
+    "de": "Calciumalginat"
+   },
+   "note": {
+    "es": "Espesante extraído de algas.",
+    "en": "Thickener extracted from seaweed.",
+    "pt": "Espessante extraído de algas.",
+    "it": "Addensante estratto dalle alghe.",
+    "fr": "Épaississant extrait d'algues.",
+    "de": "Verdickungsmittel aus Algen."
+   }
+  },
+  {
+   "code": "E405",
+   "origin": "plant",
+   "name": {
+    "es": "Alginato de propilenglicol",
+    "en": "Propylene glycol alginate",
+    "pt": "Alginato de propilenoglicol",
+    "it": "Alginato di glicole propilenico",
+    "fr": "Alginate de propylène-glycol",
+    "de": "Propylenglycolalginat"
+   },
+   "note": {
+    "es": "Derivado de alginatos de algas.",
+    "en": "Derived from seaweed alginates.",
+    "pt": "Derivado de alginatos de algas.",
+    "it": "Derivato degli alginati delle alghe.",
+    "fr": "Dérivé d'alginates d'algues.",
+    "de": "Aus Algenalginaten gewonnen."
+   }
+  },
+  {
+   "code": "E406",
+   "origin": "plant",
+   "name": {
+    "es": "Agar",
+    "en": "Agar",
+    "pt": "Ágar-ágar",
+    "it": "Agar-agar",
+    "fr": "Agar-agar",
+    "de": "Agar-Agar"
+   },
+   "note": {
+    "es": "Gelificante de algas rojas.",
+    "en": "Gelling agent from red algae.",
+    "pt": "Gelificante de algas vermelhas.",
+    "it": "Gelificante da alghe rosse.",
+    "fr": "Gélifiant issu d'algues rouges.",
+    "de": "Geliermittel aus Rotalgen."
+   }
+  },
+  {
+   "code": "E407",
+   "origin": "plant",
+   "name": {
+    "es": "Carragenano",
+    "en": "Carrageenan",
+    "pt": "Carragenina",
+    "it": "Carragenina",
+    "fr": "Carraghénanes",
+    "de": "Carrageen"
+   },
+   "note": {
+    "es": "Gelificante y espesante de algas rojas.",
+    "en": "Gelling agent and thickener from red seaweed.",
+    "pt": "Gelificante e espessante de algas vermelhas.",
+    "it": "Gelificante e addensante da alghe rosse.",
+    "fr": "Gélifiant et épaississant issu d'algues rouges.",
+    "de": "Gelier- und Verdickungsmittel aus Rotalgen."
+   }
+  },
+  {
+   "code": "E407A",
+   "origin": "plant",
+   "name": {
+    "es": "Carragenano procesado de Eucheuma",
+    "en": "Processed Eucheuma seaweed",
+    "pt": "Alga Eucheuma transformada",
+    "it": "Alga Eucheuma trasformata",
+    "fr": "Algues Eucheuma transformées",
+    "de": "Verarbeitete Eucheuma-Algen"
+   },
+   "note": {
+    "es": "Derivado de algas rojas.",
+    "en": "Derived from red seaweed.",
+    "pt": "Derivado de algas vermelhas.",
+    "it": "Derivato da alghe rosse.",
+    "fr": "Dérivé d'algues rouges.",
+    "de": "Aus Rotalgen gewonnen."
+   }
+  },
+  {
+   "code": "E410",
+   "origin": "plant",
+   "name": {
+    "es": "Harina de algarroba",
+    "en": "Locust bean gum",
+    "pt": "Goma de alfarroba",
+    "it": "Farina di semi di carruba",
+    "fr": "Farine de graines de caroube",
+    "de": "Johannisbrotkernmehl"
+   },
+   "note": {
+    "es": "Espesante vegetal de la semilla de algarrobo.",
+    "en": "Plant thickener from carob seeds.",
+    "pt": "Espessante vegetal da semente de alfarroba.",
+    "it": "Addensante vegetale dai semi di carruba.",
+    "fr": "Épaississant végétal issu des graines de caroube.",
+    "de": "Pflanzliches Verdickungsmittel aus Johannisbrotkernen."
+   }
+  },
+  {
+   "code": "E412",
+   "origin": "plant",
+   "name": {
+    "es": "Goma guar",
+    "en": "Guar gum",
+    "pt": "Goma de guar",
+    "it": "Gomma di guar",
+    "fr": "Gomme guar",
+    "de": "Guarkernmehl"
+   },
+   "note": {
+    "es": "Espesante de la semilla de guar.",
+    "en": "Thickener from guar beans.",
+    "pt": "Espessante da semente de guar.",
+    "it": "Addensante dai semi di guar.",
+    "fr": "Épaississant issu des graines de guar.",
+    "de": "Verdickungsmittel aus Guarsamen."
+   }
+  },
+  {
+   "code": "E413",
+   "origin": "plant",
+   "name": {
+    "es": "Goma tragacanto",
+    "en": "Tragacanth",
+    "pt": "Goma adragante",
+    "it": "Gomma adragante",
+    "fr": "Gomme adragante",
+    "de": "Traganth"
+   },
+   "note": {
+    "es": "Espesante vegetal de la savia de plantas leguminosas.",
+    "en": "Plant thickener from the sap of leguminous plants.",
+    "pt": "Espessante vegetal da seiva de plantas leguminosas.",
+    "it": "Addensante vegetale dalla linfa di piante leguminose.",
+    "fr": "Épaississant végétal issu de la sève de légumineuses.",
+    "de": "Pflanzliches Verdickungsmittel aus dem Saft von Hülsenfruchtpflanzen."
+   }
+  },
+  {
+   "code": "E414",
+   "origin": "plant",
+   "name": {
+    "es": "Goma arábiga",
+    "en": "Gum arabic",
+    "pt": "Goma-arábica",
+    "it": "Gomma arabica",
+    "fr": "Gomme arabique",
+    "de": "Gummi arabicum"
+   },
+   "note": {
+    "es": "Goma natural de la acacia.",
+    "en": "Natural gum from acacia trees.",
+    "pt": "Goma natural da acácia.",
+    "it": "Gomma naturale dell'acacia.",
+    "fr": "Gomme naturelle d'acacia.",
+    "de": "Natürliches Gummi aus Akazien."
+   }
+  },
+  {
+   "code": "E415",
+   "origin": "plant",
+   "name": {
+    "es": "Goma xantana",
+    "en": "Xanthan gum",
+    "pt": "Goma xantana",
+    "it": "Gomma di xantano",
+    "fr": "Gomme xanthane",
+    "de": "Xanthan"
+   },
+   "note": {
+    "es": "Espesante producido por fermentación microbiana.",
+    "en": "Thickener produced by microbial fermentation.",
+    "pt": "Espessante produzido por fermentação microbiana.",
+    "it": "Addensante prodotto per fermentazione microbica.",
+    "fr": "Épaississant produit par fermentation microbienne.",
+    "de": "Verdickungsmittel aus mikrobieller Fermentation."
+   }
+  },
+  {
+   "code": "E416",
+   "origin": "plant",
+   "name": {
+    "es": "Goma karaya",
+    "en": "Karaya gum",
+    "pt": "Goma caraia",
+    "it": "Gomma karaya",
+    "fr": "Gomme karaya",
+    "de": "Karaya"
+   },
+   "note": {
+    "es": "Espesante vegetal de exudados arbóreos.",
+    "en": "Plant thickener from tree exudates.",
+    "pt": "Espessante vegetal de exsudados de árvores.",
+    "it": "Addensante vegetale da essudati di alberi.",
+    "fr": "Épaississant végétal issu d'exsudats d'arbres.",
+    "de": "Pflanzliches Verdickungsmittel aus Baumharzen."
+   }
+  },
+  {
+   "code": "E417",
+   "origin": "plant",
+   "name": {
+    "es": "Goma tara",
+    "en": "Tara gum",
+    "pt": "Goma de tara",
+    "it": "Gomma di tara",
+    "fr": "Gomme tara",
+    "de": "Tarakernmehl"
+   },
+   "note": {
+    "es": "Espesante de la semilla de tara.",
+    "en": "Thickener from tara seed.",
+    "pt": "Espessante da semente de tara.",
+    "it": "Addensante dai semi di tara.",
+    "fr": "Épaississant issu des graines de tara.",
+    "de": "Verdickungsmittel aus Tarasamen."
+   }
+  },
+  {
+   "code": "E418",
+   "origin": "plant",
+   "name": {
+    "es": "Goma gellan",
+    "en": "Gellan gum",
+    "pt": "Goma gelana",
+    "it": "Gomma di gellano",
+    "fr": "Gomme gellane",
+    "de": "Gellan"
+   },
+   "note": {
+    "es": "Espesante producido por fermentación microbiana.",
+    "en": "Thickener produced by microbial fermentation.",
+    "pt": "Espessante produzido por fermentação microbiana.",
+    "it": "Addensante prodotto per fermentazione microbica.",
+    "fr": "Épaississant produit par fermentation microbienne.",
+    "de": "Verdickungsmittel aus mikrobieller Fermentation."
+   }
+  },
+  {
+   "code": "E420",
+   "origin": "uncertain",
+   "name": {
+    "es": "Sorbitol",
+    "en": "Sorbitol",
+    "pt": "Sorbitol",
+    "it": "Sorbitolo",
+    "fr": "Sorbitol",
+    "de": "Sorbit"
+   },
+   "note": {
+    "es": "Poliol obtenido de glucosa; la fuente puede variar.",
+    "en": "Polyol made from glucose; the source may vary.",
+    "pt": "Poliol obtido a partir de glicose; a fonte pode variar.",
+    "it": "Poliolo ottenuto dal glucosio; la fonte può variare.",
+    "fr": "Polyol obtenu à partir de glucose ; la source peut varier.",
+    "de": "Polyol aus Glukose; die Quelle kann variieren."
+   }
+  },
+  {
+   "code": "E421",
+   "origin": "uncertain",
+   "name": {
+    "es": "Manitol",
+    "en": "Mannitol",
+    "pt": "Manitol",
+    "it": "Mannitolo",
+    "fr": "Mannitol",
+    "de": "Mannit"
+   },
+   "note": {
+    "es": "Poliol de origen vegetal, fúngico o por síntesis.",
+    "en": "Polyol of plant, fungal or synthetic origin.",
+    "pt": "Poliol de origem vegetal, fúngica ou sintética.",
+    "it": "Poliolo di origine vegetale, fungina o di sintesi.",
+    "fr": "Polyol d'origine végétale, fongique ou de synthèse.",
+    "de": "Polyol pflanzlichen, pilzlichen oder synthetischen Ursprungs."
+   }
+  },
+  {
+   "code": "E422",
+   "origin": "uncertain",
+   "name": {
+    "es": "Glicerina / glicerol",
+    "en": "Glycerin / glycerol",
+    "pt": "Glicerina / glicerol",
+    "it": "Glicerina / glicerolo",
+    "fr": "Glycérine / glycérol",
+    "de": "Glycerin"
+   },
+   "note": {
+    "es": "Puede ser de origen vegetal, animal o sintético.",
+    "en": "May be of plant, animal, or synthetic origin.",
+    "pt": "Pode ser de origem vegetal, animal ou sintética.",
+    "it": "Può essere di origine vegetale, animale o sintetica.",
+    "fr": "Peut être d'origine végétale, animale ou synthétique.",
+    "de": "Kann pflanzlichen, tierischen oder synthetischen Ursprungs sein."
+   }
+  },
+  {
+   "code": "E425",
+   "origin": "plant",
+   "name": {
+    "es": "Konjac",
+    "en": "Konjac",
+    "pt": "Konjac",
+    "it": "Konjac",
+    "fr": "Konjac",
+    "de": "Konjak"
+   },
+   "note": {
+    "es": "Gelificante de la raíz de konjac.",
+    "en": "Gelling agent from konjac root.",
+    "pt": "Gelificante da raiz de konjac.",
+    "it": "Gelificante dalla radice di konjac.",
+    "fr": "Gélifiant issu de la racine de konjac.",
+    "de": "Geliermittel aus der Konjakwurzel."
+   }
+  },
+  {
+   "code": "E426",
+   "origin": "plant",
+   "name": {
+    "es": "Hemicelulosa de soja",
+    "en": "Soybean hemicellulose",
+    "pt": "Hemicelulose de soja",
+    "it": "Emicellulosa di soia",
+    "fr": "Hémicellulose de soja",
+    "de": "Sojabohnen-Polyose"
+   },
+   "note": {
+    "es": "Espesante obtenido de la soja.",
+    "en": "Thickener obtained from soybean.",
+    "pt": "Espessante obtido da soja.",
+    "it": "Addensante ottenuto dalla soia.",
+    "fr": "Épaississant obtenu à partir du soja.",
+    "de": "Verdickungsmittel aus Soja."
+   }
+  },
+  {
+   "code": "E427",
+   "origin": "plant",
+   "name": {
+    "es": "Goma cassia",
+    "en": "Cassia gum",
+    "pt": "Goma de cássia",
+    "it": "Gomma di cassia",
+    "fr": "Gomme de cassia",
+    "de": "Cassiagummi"
+   },
+   "note": {
+    "es": "Espesante de la semilla de casia.",
+    "en": "Thickener from cassia seed.",
+    "pt": "Espessante da semente de cássia.",
+    "it": "Addensante dai semi di cassia.",
+    "fr": "Épaississant issu des graines de cassia.",
+    "de": "Verdickungsmittel aus Kassiasamen."
+   }
+  },
+  {
+   "code": "E428",
+   "origin": "animal",
+   "name": {
+    "es": "Gelatina",
+    "en": "Gelatine",
+    "pt": "Gelatina",
+    "it": "Gelatina",
+    "fr": "Gélatine",
+    "de": "Gelatine"
+   },
+   "note": {
+    "es": "Gelificante proteico obtenido de colágeno animal.",
+    "en": "Protein gelling agent obtained from animal collagen.",
+    "pt": "Gelificante proteico obtido de colagénio animal.",
+    "it": "Gelificante proteico ottenuto dal collagene animale.",
+    "fr": "Gélifiant protéique obtenu à partir de collagène animal.",
+    "de": "Eiweißhaltiges Geliermittel aus tierischem Kollagen."
+   }
+  },
+  {
+   "code": "E432",
+   "origin": "synthetic",
+   "name": {
+    "es": "Polisorbato 20",
+    "en": "Polysorbate 20",
+    "pt": "Polissorbato 20",
+    "it": "Polisorbato 20",
+    "fr": "Polysorbate 20",
+    "de": "Polysorbat 20"
+   },
+   "note": {
+    "es": "Emulsionante de síntesis.",
+    "en": "Synthetic emulsifier.",
+    "pt": "Emulsionante sintético.",
+    "it": "Emulsionante di sintesi.",
+    "fr": "Émulsifiant de synthèse.",
+    "de": "Synthetischer Emulgator."
+   }
+  },
+  {
+   "code": "E433",
+   "origin": "synthetic",
+   "name": {
+    "es": "Polisorbato 80",
+    "en": "Polysorbate 80",
+    "pt": "Polissorbato 80",
+    "it": "Polisorbato 80",
+    "fr": "Polysorbate 80",
+    "de": "Polysorbat 80"
+   },
+   "note": {
+    "es": "Emulsionante de síntesis.",
+    "en": "Synthetic emulsifier.",
+    "pt": "Emulsionante sintético.",
+    "it": "Emulsionante di sintesi.",
+    "fr": "Émulsifiant de synthèse.",
+    "de": "Synthetischer Emulgator."
+   }
+  },
+  {
+   "code": "E434",
+   "origin": "synthetic",
+   "name": {
+    "es": "Polisorbato 40",
+    "en": "Polysorbate 40",
+    "pt": "Polissorbato 40",
+    "it": "Polisorbato 40",
+    "fr": "Polysorbate 40",
+    "de": "Polysorbat 40"
+   },
+   "note": {
+    "es": "Emulsionante de síntesis.",
+    "en": "Synthetic emulsifier.",
+    "pt": "Emulsionante sintético.",
+    "it": "Emulsionante di sintesi.",
+    "fr": "Émulsifiant de synthèse.",
+    "de": "Synthetischer Emulgator."
+   }
+  },
+  {
+   "code": "E435",
+   "origin": "synthetic",
+   "name": {
+    "es": "Polisorbato 60",
+    "en": "Polysorbate 60",
+    "pt": "Polissorbato 60",
+    "it": "Polisorbato 60",
+    "fr": "Polysorbate 60",
+    "de": "Polysorbat 60"
+   },
+   "note": {
+    "es": "Emulsionante de síntesis.",
+    "en": "Synthetic emulsifier.",
+    "pt": "Emulsionante sintético.",
+    "it": "Emulsionante di sintesi.",
+    "fr": "Émulsifiant de synthèse.",
+    "de": "Synthetischer Emulgator."
+   }
+  },
+  {
+   "code": "E436",
+   "origin": "synthetic",
+   "name": {
+    "es": "Polisorbato 65",
+    "en": "Polysorbate 65",
+    "pt": "Polissorbato 65",
+    "it": "Polisorbato 65",
+    "fr": "Polysorbate 65",
+    "de": "Polysorbat 65"
+   },
+   "note": {
+    "es": "Emulsionante de síntesis.",
+    "en": "Synthetic emulsifier.",
+    "pt": "Emulsionante sintético.",
+    "it": "Emulsionante di sintesi.",
+    "fr": "Émulsifiant de synthèse.",
+    "de": "Synthetischer Emulgator."
+   }
+  },
+  {
+   "code": "E440",
+   "origin": "plant",
+   "name": {
+    "es": "Pectinas",
+    "en": "Pectins",
+    "pt": "Pectinas",
+    "it": "Pectine",
+    "fr": "Pectines",
+    "de": "Pektine"
+   },
+   "note": {
+    "es": "Gelificante de fibras de fruta.",
+    "en": "Gelling agent from fruit fibres.",
+    "pt": "Gelificante de fibras de fruta.",
+    "it": "Gelificante da fibre di frutta.",
+    "fr": "Gélifiant issu de fibres de fruits.",
+    "de": "Geliermittel aus Fruchtfasern."
+   }
+  },
+  {
+   "code": "E441",
+   "origin": "animal",
+   "name": {
+    "es": "Gelatina",
+    "en": "Gelatine",
+    "pt": "Gelatina",
+    "it": "Gelatina",
+    "fr": "Gélatine",
+    "de": "Gelatine"
+   },
+   "note": {
+    "es": "Gelificante proteico procedente de colágeno animal.",
+    "en": "Protein gelling agent from animal collagen.",
+    "pt": "Gelificante proteico proveniente de colagénio animal.",
+    "it": "Gelificante proteico derivato dal collagene animale.",
+    "fr": "Gélifiant protéique issu de collagène animal.",
+    "de": "Eiweißhaltiges Geliermittel aus tierischem Kollagen."
+   }
+  },
+  {
+   "code": "E442",
+   "origin": "synthetic",
+   "name": {
+    "es": "Fosfatidos de amonio",
+    "en": "Ammonium phosphatides",
+    "pt": "Fosfatídeos de amónio",
+    "it": "Fosfatidi di ammonio",
+    "fr": "Phosphatides d'ammonium",
+    "de": "Ammoniumphosphatide"
+   },
+   "note": {
+    "es": "Emulsionante usado en chocolate y repostería.",
+    "en": "Emulsifier used in chocolate and baking.",
+    "pt": "Emulsionante usado em chocolate e pastelaria.",
+    "it": "Emulsionante usato nel cioccolato e in pasticceria.",
+    "fr": "Émulsifiant utilisé dans le chocolat et la pâtisserie.",
+    "de": "Emulgator für Schokolade und Backwaren."
+   }
+  },
+  {
+   "code": "E444",
+   "origin": "synthetic",
+   "name": {
+    "es": "Acetato isobutirato de sacarosa",
+    "en": "Sucrose acetate isobutyrate",
+    "pt": "Acetato isobutirato de sacarose",
+    "it": "Acetato isobutirrato di saccarosio",
+    "fr": "Acétate isobutyrate de saccharose",
+    "de": "Saccharoseacetatisobutyrat"
+   },
+   "note": {
+    "es": "Emulsionante usado en bebidas.",
+    "en": "Emulsifier used in beverages.",
+    "pt": "Emulsionante usado em bebidas.",
+    "it": "Emulsionante usato nelle bevande.",
+    "fr": "Émulsifiant utilisé dans les boissons.",
+    "de": "Emulgator für Getränke."
+   }
+  },
+  {
+   "code": "E445",
+   "origin": "plant",
+   "name": {
+    "es": "Ésteres glicéricos de resina de madera",
+    "en": "Glycerol esters of wood rosin",
+    "pt": "Ésteres de glicerol de colofónia",
+    "it": "Esteri di glicerolo della resina di legno",
+    "fr": "Esters glycériques de résine de bois",
+    "de": "Glycerinester aus Wurzelharz"
+   },
+   "note": {
+    "es": "Estabilizante de bebidas obtenido de resina de pino.",
+    "en": "Beverage stabiliser obtained from pine rosin.",
+    "pt": "Estabilizante de bebidas obtido de resina de pinheiro.",
+    "it": "Stabilizzante per bevande ottenuto dalla resina di pino.",
+    "fr": "Stabilisant de boissons obtenu à partir de résine de pin.",
+    "de": "Getränkestabilisator aus Kiefernharz."
+   }
+  },
+  {
+   "code": "E450",
+   "origin": "synthetic",
+   "name": {
+    "es": "Difosfatos",
+    "en": "Diphosphates",
+    "pt": "Difosfatos",
+    "it": "Difosfati",
+    "fr": "Diphosphates",
+    "de": "Diphosphate"
+   },
+   "note": {
+    "es": "Estabilizante y gasificante de origen mineral.",
+    "en": "Mineral stabiliser and raising agent.",
+    "pt": "Estabilizante e levedante de origem mineral.",
+    "it": "Stabilizzante e agente lievitante di origine minerale.",
+    "fr": "Stabilisant et poudre levante d'origine minérale.",
+    "de": "Stabilisator und Backtriebmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E451",
+   "origin": "synthetic",
+   "name": {
+    "es": "Trifosfatos",
+    "en": "Triphosphates",
+    "pt": "Trifosfatos",
+    "it": "Trifosfati",
+    "fr": "Triphosphates",
+    "de": "Triphosphate"
+   },
+   "note": {
+    "es": "Estabilizante y regulador de acidez de origen mineral.",
+    "en": "Mineral stabiliser and acidity regulator.",
+    "pt": "Estabilizante e regulador de acidez de origem mineral.",
+    "it": "Stabilizzante e correttore di acidità di origine minerale.",
+    "fr": "Stabilisant et correcteur d'acidité d'origine minérale.",
+    "de": "Stabilisator und Säureregulator mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E452",
+   "origin": "synthetic",
+   "name": {
+    "es": "Polifosfatos",
+    "en": "Polyphosphates",
+    "pt": "Polifosfatos",
+    "it": "Polifosfati",
+    "fr": "Polyphosphates",
+    "de": "Polyphosphate"
+   },
+   "note": {
+    "es": "Estabilizante y emulsionante de origen mineral.",
+    "en": "Mineral stabiliser and emulsifier.",
+    "pt": "Estabilizante e emulsionante de origem mineral.",
+    "it": "Stabilizzante ed emulsionante di origine minerale.",
+    "fr": "Stabilisant et émulsifiant d'origine minérale.",
+    "de": "Stabilisator und Emulgator mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E459",
+   "origin": "plant",
+   "name": {
+    "es": "Beta-ciclodextrina",
+    "en": "Beta-cyclodextrin",
+    "pt": "Beta-ciclodextrina",
+    "it": "Beta-ciclodestrina",
+    "fr": "Bêta-cyclodextrine",
+    "de": "Beta-Cyclodextrin"
+   },
+   "note": {
+    "es": "Estabilizante obtenido a partir de almidón.",
+    "en": "Stabiliser obtained from starch.",
+    "pt": "Estabilizante obtido a partir de amido.",
+    "it": "Stabilizzante ottenuto dall'amido.",
+    "fr": "Stabilisant obtenu à partir d'amidon.",
+    "de": "Stabilisator aus Stärke."
+   }
+  },
+  {
+   "code": "E460",
+   "origin": "plant",
+   "name": {
+    "es": "Celulosa",
+    "en": "Cellulose",
+    "pt": "Celulose",
+    "it": "Cellulosa",
+    "fr": "Cellulose",
+    "de": "Cellulose"
+   },
+   "note": {
+    "es": "Fibra vegetal usada como agente de carga.",
+    "en": "Plant fibre used as a bulking agent.",
+    "pt": "Fibra vegetal usada como agente de volume.",
+    "it": "Fibra vegetale usata come agente di carica.",
+    "fr": "Fibre végétale utilisée comme agent de charge.",
+    "de": "Pflanzenfaser als Füllstoff."
+   }
+  },
+  {
+   "code": "E461",
+   "origin": "plant",
+   "name": {
+    "es": "Metilcelulosa",
+    "en": "Methyl cellulose",
+    "pt": "Metilcelulose",
+    "it": "Metilcellulosa",
+    "fr": "Méthylcellulose",
+    "de": "Methylcellulose"
+   },
+   "note": {
+    "es": "Derivado de la celulosa vegetal.",
+    "en": "Derived from plant cellulose.",
+    "pt": "Derivado da celulose vegetal.",
+    "it": "Derivato della cellulosa vegetale.",
+    "fr": "Dérivé de la cellulose végétale.",
+    "de": "Aus pflanzlicher Cellulose gewonnen."
+   }
+  },
+  {
+   "code": "E462",
+   "origin": "plant",
+   "name": {
+    "es": "Etilcelulosa",
+    "en": "Ethyl cellulose",
+    "pt": "Etilcelulose",
+    "it": "Etilcellulosa",
+    "fr": "Éthylcellulose",
+    "de": "Ethylcellulose"
+   },
+   "note": {
+    "es": "Derivado de la celulosa vegetal.",
+    "en": "Derived from plant cellulose.",
+    "pt": "Derivado da celulose vegetal.",
+    "it": "Derivato della cellulosa vegetale.",
+    "fr": "Dérivé de la cellulose végétale.",
+    "de": "Aus pflanzlicher Cellulose gewonnen."
+   }
+  },
+  {
+   "code": "E463",
+   "origin": "plant",
+   "name": {
+    "es": "Hidroxipropilcelulosa",
+    "en": "Hydroxypropyl cellulose",
+    "pt": "Hidroxipropilcelulose",
+    "it": "Idrossipropilcellulosa",
+    "fr": "Hydroxypropylcellulose",
+    "de": "Hydroxypropylcellulose"
+   },
+   "note": {
+    "es": "Derivado de la celulosa vegetal.",
+    "en": "Derived from plant cellulose.",
+    "pt": "Derivado da celulose vegetal.",
+    "it": "Derivato della cellulosa vegetale.",
+    "fr": "Dérivé de la cellulose végétale.",
+    "de": "Aus pflanzlicher Cellulose gewonnen."
+   }
+  },
+  {
+   "code": "E464",
+   "origin": "plant",
+   "name": {
+    "es": "Hidroxipropilmetilcelulosa",
+    "en": "Hydroxypropyl methyl cellulose",
+    "pt": "Hidroxipropilmetilcelulose",
+    "it": "Idrossipropilmetilcellulosa",
+    "fr": "Hydroxypropylméthylcellulose",
+    "de": "Hydroxypropylmethylcellulose"
+   },
+   "note": {
+    "es": "Derivado de la celulosa vegetal.",
+    "en": "Derived from plant cellulose.",
+    "pt": "Derivado da celulose vegetal.",
+    "it": "Derivato della cellulosa vegetale.",
+    "fr": "Dérivé de la cellulose végétale.",
+    "de": "Aus pflanzlicher Cellulose gewonnen."
+   }
+  },
+  {
+   "code": "E465",
+   "origin": "plant",
+   "name": {
+    "es": "Etilmetilcelulosa",
+    "en": "Ethyl methyl cellulose",
+    "pt": "Etilmetilcelulose",
+    "it": "Etilmetilcellulosa",
+    "fr": "Éthylméthylcellulose",
+    "de": "Ethylmethylcellulose"
+   },
+   "note": {
+    "es": "Derivado de la celulosa vegetal.",
+    "en": "Derived from plant cellulose.",
+    "pt": "Derivado da celulose vegetal.",
+    "it": "Derivato della cellulosa vegetale.",
+    "fr": "Dérivé de la cellulose végétale.",
+    "de": "Aus pflanzlicher Cellulose gewonnen."
+   }
+  },
+  {
+   "code": "E466",
+   "origin": "plant",
+   "name": {
+    "es": "Carboximetilcelulosa sódica",
+    "en": "Sodium carboxymethyl cellulose",
+    "pt": "Carboximetilcelulose de sódio",
+    "it": "Carbossimetilcellulosa sodica",
+    "fr": "Carboxyméthylcellulose sodique",
+    "de": "Natriumcarboxymethylcellulose"
+   },
+   "note": {
+    "es": "Derivado de la celulosa vegetal.",
+    "en": "Derived from plant cellulose.",
+    "pt": "Derivado da celulose vegetal.",
+    "it": "Derivato della cellulosa vegetale.",
+    "fr": "Dérivé de la cellulose végétale.",
+    "de": "Aus pflanzlicher Cellulose gewonnen."
+   }
+  },
+  {
+   "code": "E467",
+   "origin": "plant",
+   "name": {
+    "es": "Etilhidroxietilcelulosa",
+    "en": "Ethyl hydroxyethyl cellulose",
+    "pt": "Etil-hidroxietilcelulose",
+    "it": "Etilidrossietilcellulosa",
+    "fr": "Éthylhydroxyéthylcellulose",
+    "de": "Ethylhydroxyethylcellulose"
+   },
+   "note": {
+    "es": "Derivado de la celulosa vegetal.",
+    "en": "Derived from plant cellulose.",
+    "pt": "Derivado da celulose vegetal.",
+    "it": "Derivato della cellulosa vegetale.",
+    "fr": "Dérivé de la cellulose végétale.",
+    "de": "Aus pflanzlicher Cellulose gewonnen."
+   }
+  },
+  {
+   "code": "E468",
+   "origin": "plant",
+   "name": {
+    "es": "Carboximetilcelulosa sódica reticulada",
+    "en": "Crosslinked sodium carboxymethyl cellulose",
+    "pt": "Carboximetilcelulose de sódio reticulada",
+    "it": "Carbossimetilcellulosa sodica reticolata",
+    "fr": "Carboxyméthylcellulose sodique réticulée",
+    "de": "Vernetzte Natriumcarboxymethylcellulose"
+   },
+   "note": {
+    "es": "Derivado de la celulosa vegetal.",
+    "en": "Derived from plant cellulose.",
+    "pt": "Derivado da celulose vegetal.",
+    "it": "Derivato della cellulosa vegetale.",
+    "fr": "Dérivé de la cellulose végétale.",
+    "de": "Aus pflanzlicher Cellulose gewonnen."
+   }
+  },
+  {
+   "code": "E469",
+   "origin": "plant",
+   "name": {
+    "es": "Carboximetilcelulosa hidrolizada enzimáticamente",
+    "en": "Enzymatically hydrolysed carboxymethyl cellulose",
+    "pt": "Carboximetilcelulose hidrolisada enzimaticamente",
+    "it": "Carbossimetilcellulosa idrolizzata enzimaticamente",
+    "fr": "Carboxyméthylcellulose hydrolysée par voie enzymatique",
+    "de": "Enzymatisch hydrolysierte Carboxymethylcellulose"
+   },
+   "note": {
+    "es": "Derivado de la celulosa vegetal.",
+    "en": "Derived from plant cellulose.",
+    "pt": "Derivado da celulose vegetal.",
+    "it": "Derivato della cellulosa vegetale.",
+    "fr": "Dérivé de la cellulose végétale.",
+    "de": "Aus pflanzlicher Cellulose gewonnen."
+   }
+  },
+  {
+   "code": "E470A",
+   "origin": "uncertain",
+   "name": {
+    "es": "Sales sódicas de ácidos grasos",
+    "en": "Sodium salts of fatty acids",
+    "pt": "Sais de sódio de ácidos gordos",
+    "it": "Sali di sodio degli acidi grassi",
+    "fr": "Sels de sodium d'acides gras",
+    "de": "Natriumsalze von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Emulsionante obtenido a partir de grasas; la fuente puede variar.",
+    "en": "Emulsifier made from fats; the source may vary.",
+    "pt": "Emulsionante obtido a partir de gorduras; a fonte pode variar.",
+    "it": "Emulsionante ottenuto da grassi; la fonte può variare.",
+    "fr": "Émulsifiant obtenu à partir de graisses ; la source peut varier.",
+    "de": "Emulgator aus Fetten; die Quelle kann variieren."
+   }
+  },
+  {
+   "code": "E470B",
+   "origin": "uncertain",
+   "name": {
+    "es": "Sales de potasio de ácidos grasos",
+    "en": "Potassium salts of fatty acids",
+    "pt": "Sais de potássio de ácidos gordos",
+    "it": "Sali di potassio degli acidi grassi",
+    "fr": "Sels de potassium d'acides gras",
+    "de": "Kaliumsalze von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Emulsionante obtenido a partir de grasas; la fuente puede variar.",
+    "en": "Emulsifier made from fats; the source may vary.",
+    "pt": "Emulsionante obtido a partir de gorduras; a fonte pode variar.",
+    "it": "Emulsionante ottenuto da grassi; la fonte può variare.",
+    "fr": "Émulsifiant obtenu à partir de graisses ; la source peut varier.",
+    "de": "Emulgator aus Fetten; die Quelle kann variieren."
+   }
+  },
+  {
+   "code": "E471",
+   "origin": "uncertain",
+   "name": {
+    "es": "Mono y diglicéridos de ácidos grasos",
+    "en": "Mono- and diglycerides of fatty acids",
+    "pt": "Mono e diglicéridos de ácidos gordos",
+    "it": "Mono e digliceridi degli acidi grassi",
+    "fr": "Mono- et diglycérides d'acides gras",
+    "de": "Mono- und Diglyceride von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Puede proceder de grasas vegetales o animales.",
+    "en": "May be derived from plant or animal fats.",
+    "pt": "Pode provir de gorduras vegetais ou animais.",
+    "it": "Può provenire da grassi vegetali o animali.",
+    "fr": "Peut provenir de graisses végétales ou animales.",
+    "de": "Kann aus pflanzlichen oder tierischen Fetten stammen."
+   }
+  },
+  {
+   "code": "E472A",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ésteres acéticos de mono y diglicéridos de ácidos grasos",
+    "en": "Acetic acid esters of mono- and diglycerides of fatty acids",
+    "pt": "Ésteres acéticos de mono e diglicéridos de ácidos gordos",
+    "it": "Esteri acetici di mono e digliceridi degli acidi grassi",
+    "fr": "Esters acétiques des mono- et diglycérides d'acides gras",
+    "de": "Essigsäureester von Mono- und Diglyceriden von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E472B",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ésteres lácticos de mono y diglicéridos de ácidos grasos",
+    "en": "Lactic acid esters of mono- and diglycerides of fatty acids",
+    "pt": "Ésteres lácticos de mono e diglicéridos de ácidos gordos",
+    "it": "Esteri lattici di mono e digliceridi degli acidi grassi",
+    "fr": "Esters lactiques des mono- et diglycérides d'acides gras",
+    "de": "Milchsäureester von Mono- und Diglyceriden von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E472C",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ésteres cítricos de mono y diglicéridos de ácidos grasos",
+    "en": "Citric acid esters of mono- and diglycerides of fatty acids",
+    "pt": "Ésteres cítricos de mono e diglicéridos de ácidos gordos",
+    "it": "Esteri citrici di mono e digliceridi degli acidi grassi",
+    "fr": "Esters citriques des mono- et diglycérides d'acides gras",
+    "de": "Citronensäureester von Mono- und Diglyceriden von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E472D",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ésteres tartáricos de mono y diglicéridos de ácidos grasos",
+    "en": "Tartaric acid esters of mono- and diglycerides of fatty acids",
+    "pt": "Ésteres tartáricos de mono e diglicéridos de ácidos gordos",
+    "it": "Esteri tartarici di mono e digliceridi degli acidi grassi",
+    "fr": "Esters tartriques des mono- et diglycérides d'acides gras",
+    "de": "Weinsäureester von Mono- und Diglyceriden von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E472E",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ésteres monoacetiltartáricos de mono y diglicéridos de ácidos grasos",
+    "en": "Mono- and diacetyl tartaric acid esters of mono- and diglycerides of fatty acids",
+    "pt": "Ésteres monoacetiltartáricos de mono e diglicéridos de ácidos gordos",
+    "it": "Esteri mono e diacetiltartarici di mono e digliceridi degli acidi grassi",
+    "fr": "Esters monoacétyltartriques des mono- et diglycérides d'acides gras",
+    "de": "Mono- und Diacetylweinsäureester von Mono- und Diglyceriden von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E472F",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ésteres mixtos de mono y diglicéridos de ácidos grasos",
+    "en": "Mixed acetic and tartaric acid esters of mono- and diglycerides of fatty acids",
+    "pt": "Ésteres mistos de mono e diglicéridos de ácidos gordos",
+    "it": "Esteri misti di mono e digliceridi degli acidi grassi",
+    "fr": "Esters mixtes des mono- et diglycérides d'acides gras",
+    "de": "Gemischte Essig- und Weinsäureester von Mono- und Diglyceriden von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E473",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ésteres de sacarosa de ácidos grasos",
+    "en": "Sucrose esters of fatty acids",
+    "pt": "Ésteres de sacarose de ácidos gordos",
+    "it": "Esteri di saccarosio degli acidi grassi",
+    "fr": "Sucroesters d'acides gras",
+    "de": "Zuckerester von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E474",
+   "origin": "uncertain",
+   "name": {
+    "es": "Sacaroglicéridos",
+    "en": "Sucroglycerides",
+    "pt": "Sacaroglicéridos",
+    "it": "Sucrogliceridi",
+    "fr": "Sucroglycérides",
+    "de": "Zuckerglyceride"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E475",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ésteres poliglicéricos de ácidos grasos",
+    "en": "Polyglycerol esters of fatty acids",
+    "pt": "Ésteres de poliglicerol de ácidos gordos",
+    "it": "Esteri di poliglicerolo degli acidi grassi",
+    "fr": "Esters polyglycériques d'acides gras",
+    "de": "Polyglycerinester von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E476",
+   "origin": "uncertain",
+   "name": {
+    "es": "Polirricinoleato de poliglicerol",
+    "en": "Polyglycerol polyricinoleate",
+    "pt": "Polirricinoleato de poliglicerol",
+    "it": "Poliricinoleato di poliglicerolo",
+    "fr": "Polyricinoléate de polyglycérol",
+    "de": "Polyglycerin-Polyricinoleat"
+   },
+   "note": {
+    "es": "Emulsionante del chocolate obtenido de aceite de ricino y glicerol de origen variable.",
+    "en": "Chocolate emulsifier obtained from castor oil and glycerol of variable origin.",
+    "pt": "Emulsionante do chocolate obtido de óleo de rícino e glicerol de origem variável.",
+    "it": "Emulsionante del cioccolato ottenuto da olio di ricino e glicerolo di origine variabile.",
+    "fr": "Émulsifiant du chocolat obtenu à partir d'huile de ricin et de glycérol d'origine variable.",
+    "de": "Schokoladenemulgator aus Rizinusöl und Glycerin unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E477",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ésteres de propilenglicol de ácidos grasos",
+    "en": "Propylene glycol esters of fatty acids",
+    "pt": "Ésteres de propilenoglicol de ácidos gordos",
+    "it": "Esteri di glicole propilenico degli acidi grassi",
+    "fr": "Esters de propylène-glycol d'acides gras",
+    "de": "Propylenglycolester von Speisefettsäuren"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier with variable fat source.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E479B",
+   "origin": "uncertain",
+   "name": {
+    "es": "Aceite de soja oxidado térmicamente con mono y diglicéridos",
+    "en": "Thermally oxidised soya bean oil with mono- and diglycerides",
+    "pt": "Óleo de soja oxidado termicamente com mono e diglicéridos",
+    "it": "Olio di soia ossidato termicamente con mono e digliceridi",
+    "fr": "Huile de soja oxydée thermiquement avec mono- et diglycérides",
+    "de": "Thermooxidiertes Sojaöl mit Mono- und Diglyceriden"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier with variable fat source.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E481",
+   "origin": "uncertain",
+   "name": {
+    "es": "Estearoil-2-lactilato sódico",
+    "en": "Sodium stearoyl-2-lactylate",
+    "pt": "Estearoil-2-lactilato de sódio",
+    "it": "Stearoil-2-lattilato di sodio",
+    "fr": "Stéaroyl-2-lactylate de sodium",
+    "de": "Natriumstearoyl-2-lactylat"
+   },
+   "note": {
+    "es": "Emulsionante con origen graso variable.",
+    "en": "Emulsifier whose fat source may vary.",
+    "pt": "Emulsionante com origem gorda variável.",
+    "it": "Emulsionante con origine grassa variabile.",
+    "fr": "Émulsifiant dont l'origine des graisses peut varier.",
+    "de": "Emulgator, dessen Fettquelle variieren kann."
+   }
+  },
+  {
+   "code": "E482",
+   "origin": "uncertain",
+   "name": {
+    "es": "Estearoil-2-lactilato cálcico",
+    "en": "Calcium stearoyl-2-lactylate",
+    "pt": "Estearoil-2-lactilato de cálcio",
+    "it": "Stearoil-2-lattilato di calcio",
+    "fr": "Stéaroyl-2-lactylate de calcium",
+    "de": "Calciumstearoyl-2-lactylat"
+   },
+   "note": {
+    "es": "Emulsionante con origen graso variable.",
+    "en": "Emulsifier whose fat source may vary.",
+    "pt": "Emulsionante com origem gorda variável.",
+    "it": "Emulsionante con origine grassa variabile.",
+    "fr": "Émulsifiant dont l'origine des graisses peut varier.",
+    "de": "Emulgator, dessen Fettquelle variieren kann."
+   }
+  },
+  {
+   "code": "E483",
+   "origin": "uncertain",
+   "name": {
+    "es": "Tartrato de estearilo",
+    "en": "Stearyl tartrate",
+    "pt": "Tartarato de estearilo",
+    "it": "Tartrato di stearile",
+    "fr": "Tartrate de stéaryle",
+    "de": "Stearyltartrat"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier with variable fat source.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E491",
+   "origin": "uncertain",
+   "name": {
+    "es": "Monoestearato de sorbitán",
+    "en": "Sorbitan monostearate",
+    "pt": "Monoestearato de sorbitano",
+    "it": "Monostearato di sorbitano",
+    "fr": "Monostéarate de sorbitane",
+    "de": "Sorbitanmonostearat"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E492",
+   "origin": "uncertain",
+   "name": {
+    "es": "Triestearato de sorbitán",
+    "en": "Sorbitan tristearate",
+    "pt": "Triestearato de sorbitano",
+    "it": "Tristearato di sorbitano",
+    "fr": "Tristéarate de sorbitane",
+    "de": "Sorbitantristearat"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E493",
+   "origin": "uncertain",
+   "name": {
+    "es": "Monolaurato de sorbitán",
+    "en": "Sorbitan monolaurate",
+    "pt": "Monolaurato de sorbitano",
+    "it": "Monolaurato di sorbitano",
+    "fr": "Monolaurate de sorbitane",
+    "de": "Sorbitanmonolaurat"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E494",
+   "origin": "uncertain",
+   "name": {
+    "es": "Monooleato de sorbitán",
+    "en": "Sorbitan monooleate",
+    "pt": "Mono-oleato de sorbitano",
+    "it": "Monooleato di sorbitano",
+    "fr": "Monooléate de sorbitane",
+    "de": "Sorbitanmonooleat"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E495",
+   "origin": "uncertain",
+   "name": {
+    "es": "Monopalmitato de sorbitán",
+    "en": "Sorbitan monopalmitate",
+    "pt": "Monopalmitato de sorbitano",
+    "it": "Monopalmitato di sorbitano",
+    "fr": "Monopalmitate de sorbitane",
+    "de": "Sorbitanmonopalmitat"
+   },
+   "note": {
+    "es": "Emulsionante de origen graso variable.",
+    "en": "Emulsifier from fats of variable origin.",
+    "pt": "Emulsionante de origem gorda variável.",
+    "it": "Emulsionante da grassi di origine variabile.",
+    "fr": "Émulsifiant issu de graisses d'origine variable.",
+    "de": "Emulgator aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E500",
+   "origin": "synthetic",
+   "name": {
+    "es": "Carbonatos de sodio",
+    "en": "Sodium carbonates",
+    "pt": "Carbonatos de sódio",
+    "it": "Carbonati di sodio",
+    "fr": "Carbonates de sodium",
+    "de": "Natriumcarbonate"
+   },
+   "note": {
+    "es": "Gasificante y regulador de acidez.",
+    "en": "Raising agent and acidity regulator.",
+    "pt": "Levedante e regulador de acidez.",
+    "it": "Agente lievitante e correttore di acidità.",
+    "fr": "Poudre levante et correcteur d'acidité.",
+    "de": "Backtriebmittel und Säureregulator."
+   }
+  },
+  {
+   "code": "E501",
+   "origin": "synthetic",
+   "name": {
+    "es": "Carbonatos de potasio",
+    "en": "Potassium carbonates",
+    "pt": "Carbonatos de potássio",
+    "it": "Carbonati di potassio",
+    "fr": "Carbonates de potassium",
+    "de": "Kaliumcarbonate"
+   },
+   "note": {
+    "es": "Gasificante y regulador de acidez.",
+    "en": "Raising agent and acidity regulator.",
+    "pt": "Levedante e regulador de acidez.",
+    "it": "Agente lievitante e correttore di acidità.",
+    "fr": "Poudre levante et correcteur d'acidité.",
+    "de": "Backtriebmittel und Säureregulator."
+   }
+  },
+  {
+   "code": "E503",
+   "origin": "synthetic",
+   "name": {
+    "es": "Carbonatos de amonio",
+    "en": "Ammonium carbonates",
+    "pt": "Carbonatos de amónio",
+    "it": "Carbonati di ammonio",
+    "fr": "Carbonates d'ammonium",
+    "de": "Ammoniumcarbonate"
+   },
+   "note": {
+    "es": "Gasificante usado en repostería.",
+    "en": "Raising agent used in baking.",
+    "pt": "Levedante usado em pastelaria.",
+    "it": "Agente lievitante usato in pasticceria.",
+    "fr": "Poudre levante utilisée en pâtisserie.",
+    "de": "Backtriebmittel für Backwaren."
+   }
+  },
+  {
+   "code": "E504",
+   "origin": "synthetic",
+   "name": {
+    "es": "Carbonatos de magnesio",
+    "en": "Magnesium carbonates",
+    "pt": "Carbonatos de magnésio",
+    "it": "Carbonati di magnesio",
+    "fr": "Carbonates de magnésium",
+    "de": "Magnesiumcarbonate"
+   },
+   "note": {
+    "es": "Antiaglomerante y regulador de acidez.",
+    "en": "Anti-caking agent and acidity regulator.",
+    "pt": "Antiaglomerante e regulador de acidez.",
+    "it": "Antiagglomerante e correttore di acidità.",
+    "fr": "Antiagglomérant et correcteur d'acidité.",
+    "de": "Trennmittel und Säureregulator."
+   }
+  },
+  {
+   "code": "E507",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido clorhídrico",
+    "en": "Hydrochloric acid",
+    "pt": "Ácido clorídrico",
+    "it": "Acido cloridrico",
+    "fr": "Acide chlorhydrique",
+    "de": "Salzsäure"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E509",
+   "origin": "synthetic",
+   "name": {
+    "es": "Cloruro cálcico",
+    "en": "Calcium chloride",
+    "pt": "Cloreto de cálcio",
+    "it": "Cloruro di calcio",
+    "fr": "Chlorure de calcium",
+    "de": "Calciumchlorid"
+   },
+   "note": {
+    "es": "Regulador de acidez y firmeza.",
+    "en": "Acidity regulator and firming agent.",
+    "pt": "Regulador de acidez e de firmeza.",
+    "it": "Correttore di acidità e agente di resistenza.",
+    "fr": "Correcteur d'acidité et affermissant.",
+    "de": "Säureregulator und Festigungsmittel."
+   }
+  },
+  {
+   "code": "E510",
+   "origin": "synthetic",
+   "name": {
+    "es": "Cloruro amónico",
+    "en": "Ammonium chloride",
+    "pt": "Cloreto de amónio",
+    "it": "Cloruro di ammonio",
+    "fr": "Chlorure d'ammonium",
+    "de": "Ammoniumchlorid"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E524",
+   "origin": "synthetic",
+   "name": {
+    "es": "Hidróxido sódico",
+    "en": "Sodium hydroxide",
+    "pt": "Hidróxido de sódio",
+    "it": "Idrossido di sodio",
+    "fr": "Hydroxyde de sodium",
+    "de": "Natriumhydroxid"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E525",
+   "origin": "synthetic",
+   "name": {
+    "es": "Hidróxido potásico",
+    "en": "Potassium hydroxide",
+    "pt": "Hidróxido de potássio",
+    "it": "Idrossido di potassio",
+    "fr": "Hydroxyde de potassium",
+    "de": "Kaliumhydroxid"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E526",
+   "origin": "synthetic",
+   "name": {
+    "es": "Hidróxido cálcico",
+    "en": "Calcium hydroxide",
+    "pt": "Hidróxido de cálcio",
+    "it": "Idrossido di calcio",
+    "fr": "Hydroxyde de calcium",
+    "de": "Calciumhydroxid"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E527",
+   "origin": "synthetic",
+   "name": {
+    "es": "Hidróxido amónico",
+    "en": "Ammonium hydroxide",
+    "pt": "Hidróxido de amónio",
+    "it": "Idrossido di ammonio",
+    "fr": "Hydroxyde d'ammonium",
+    "de": "Ammoniumhydroxid"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E528",
+   "origin": "synthetic",
+   "name": {
+    "es": "Hidróxido magnésico",
+    "en": "Magnesium hydroxide",
+    "pt": "Hidróxido de magnésio",
+    "it": "Idrossido di magnesio",
+    "fr": "Hydroxyde de magnésium",
+    "de": "Magnesiumhydroxid"
+   },
+   "note": {
+    "es": "Regulador de acidez.",
+    "en": "Acidity regulator.",
+    "pt": "Regulador de acidez.",
+    "it": "Correttore di acidità.",
+    "fr": "Correcteur d'acidité.",
+    "de": "Säureregulator."
+   }
+  },
+  {
+   "code": "E530",
+   "origin": "synthetic",
+   "name": {
+    "es": "Óxido magnésico",
+    "en": "Magnesium oxide",
+    "pt": "Óxido de magnésio",
+    "it": "Ossido di magnesio",
+    "fr": "Oxyde de magnésium",
+    "de": "Magnesiumoxid"
+   },
+   "note": {
+    "es": "Antiaglomerante y regulador de acidez.",
+    "en": "Anti-caking agent and acidity regulator.",
+    "pt": "Antiaglomerante e regulador de acidez.",
+    "it": "Antiagglomerante e correttore di acidità.",
+    "fr": "Antiagglomérant et correcteur d'acidité.",
+    "de": "Trennmittel und Säureregulator."
+   }
+  },
+  {
+   "code": "E535",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ferrocianuro sódico",
+    "en": "Sodium ferrocyanide",
+    "pt": "Ferrocianeto de sódio",
+    "it": "Ferrocianuro di sodio",
+    "fr": "Ferrocyanure de sodium",
+    "de": "Natriumferrocyanid"
+   },
+   "note": {
+    "es": "Antiaglomerante de la sal de origen mineral.",
+    "en": "Mineral anti-caking agent used in salt.",
+    "pt": "Antiaglomerante do sal de origem mineral.",
+    "it": "Antiagglomerante del sale di origine minerale.",
+    "fr": "Antiagglomérant du sel d'origine minérale.",
+    "de": "Trennmittel für Salz, mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E536",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ferrocianuro potásico",
+    "en": "Potassium ferrocyanide",
+    "pt": "Ferrocianeto de potássio",
+    "it": "Ferrocianuro di potassio",
+    "fr": "Ferrocyanure de potassium",
+    "de": "Kaliumferrocyanid"
+   },
+   "note": {
+    "es": "Antiaglomerante de la sal de origen mineral.",
+    "en": "Mineral anti-caking agent used in salt.",
+    "pt": "Antiaglomerante do sal de origem mineral.",
+    "it": "Antiagglomerante del sale di origine minerale.",
+    "fr": "Antiagglomérant du sel d'origine minérale.",
+    "de": "Trennmittel für Salz, mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E538",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ferrocianuro cálcico",
+    "en": "Calcium ferrocyanide",
+    "pt": "Ferrocianeto de cálcio",
+    "it": "Ferrocianuro di calcio",
+    "fr": "Ferrocyanure de calcium",
+    "de": "Calciumferrocyanid"
+   },
+   "note": {
+    "es": "Antiaglomerante de la sal de origen mineral.",
+    "en": "Mineral anti-caking agent used in salt.",
+    "pt": "Antiaglomerante do sal de origem mineral.",
+    "it": "Antiagglomerante del sale di origine minerale.",
+    "fr": "Antiagglomérant du sel d'origine minérale.",
+    "de": "Trennmittel für Salz, mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E541",
+   "origin": "synthetic",
+   "name": {
+    "es": "Fosfato de aluminio y sodio ácido",
+    "en": "Sodium aluminium phosphate, acidic",
+    "pt": "Fosfato ácido de alumínio e sódio",
+    "it": "Fosfato acido di sodio e alluminio",
+    "fr": "Phosphate d'aluminium sodique acide",
+    "de": "Saures Natriumaluminiumphosphat"
+   },
+   "note": {
+    "es": "Gasificante de origen mineral usado en repostería.",
+    "en": "Mineral raising agent used in bakery.",
+    "pt": "Levedante de origem mineral usado em pastelaria.",
+    "it": "Agente lievitante di origine minerale usato in pasticceria.",
+    "fr": "Poudre levante d'origine minérale utilisée en pâtisserie.",
+    "de": "Backtriebmittel mineralischen Ursprungs für Backwaren."
+   }
+  },
+  {
+   "code": "E542",
+   "origin": "animal",
+   "name": {
+    "es": "Fosfato de hueso",
+    "en": "Bone phosphate",
+    "pt": "Fosfato de osso",
+    "it": "Fosfato d'ossa",
+    "fr": "Phosphate d'os",
+    "de": "Knochenphosphat"
+   },
+   "note": {
+    "es": "Fosfato obtenido de huesos animales.",
+    "en": "Phosphate obtained from animal bones.",
+    "pt": "Fosfato obtido de ossos de animais.",
+    "it": "Fosfato ottenuto da ossa animali.",
+    "fr": "Phosphate obtenu à partir d'os d'animaux.",
+    "de": "Phosphat aus Tierknochen."
+   }
+  },
+  {
+   "code": "E550",
+   "origin": "synthetic",
+   "name": {
+    "es": "Silicatos de sodio",
+    "en": "Sodium silicates",
+    "pt": "Silicatos de sódio",
+    "it": "Silicati di sodio",
+    "fr": "Silicates de sodium",
+    "de": "Natriumsilikate"
+   },
+   "note": {
+    "es": "Antiaglomerante de origen mineral.",
+    "en": "Mineral anti-caking agent.",
+    "pt": "Antiaglomerante de origem mineral.",
+    "it": "Antiagglomerante di origine minerale.",
+    "fr": "Antiagglomérant d'origine minérale.",
+    "de": "Trennmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E551",
+   "origin": "synthetic",
+   "name": {
+    "es": "Dióxido de silicio",
+    "en": "Silicon dioxide",
+    "pt": "Dióxido de silício",
+    "it": "Biossido di silicio",
+    "fr": "Dioxyde de silicium",
+    "de": "Siliciumdioxid"
+   },
+   "note": {
+    "es": "Antiaglomerante de origen mineral.",
+    "en": "Anti-caking agent of mineral origin.",
+    "pt": "Antiaglomerante de origem mineral.",
+    "it": "Antiagglomerante di origine minerale.",
+    "fr": "Antiagglomérant d'origine minérale.",
+    "de": "Trennmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E552",
+   "origin": "synthetic",
+   "name": {
+    "es": "Silicato cálcico",
+    "en": "Calcium silicate",
+    "pt": "Silicato de cálcio",
+    "it": "Silicato di calcio",
+    "fr": "Silicate de calcium",
+    "de": "Calciumsilikat"
+   },
+   "note": {
+    "es": "Antiaglomerante de origen mineral.",
+    "en": "Mineral anti-caking agent.",
+    "pt": "Antiaglomerante de origem mineral.",
+    "it": "Antiagglomerante di origine minerale.",
+    "fr": "Antiagglomérant d'origine minérale.",
+    "de": "Trennmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E553A",
+   "origin": "synthetic",
+   "name": {
+    "es": "Silicato de magnesio",
+    "en": "Magnesium silicate",
+    "pt": "Silicato de magnésio",
+    "it": "Silicato di magnesio",
+    "fr": "Silicate de magnésium",
+    "de": "Magnesiumsilikat"
+   },
+   "note": {
+    "es": "Antiaglomerante de origen mineral.",
+    "en": "Mineral anti-caking agent.",
+    "pt": "Antiaglomerante de origem mineral.",
+    "it": "Antiagglomerante di origine minerale.",
+    "fr": "Antiagglomérant d'origine minérale.",
+    "de": "Trennmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E553B",
+   "origin": "synthetic",
+   "name": {
+    "es": "Talco",
+    "en": "Talc",
+    "pt": "Talco",
+    "it": "Talco",
+    "fr": "Talc",
+    "de": "Talkum"
+   },
+   "note": {
+    "es": "Antiaglomerante de origen mineral.",
+    "en": "Anti-caking agent of mineral origin.",
+    "pt": "Antiaglomerante de origem mineral.",
+    "it": "Antiagglomerante di origine minerale.",
+    "fr": "Antiagglomérant d'origine minérale.",
+    "de": "Trennmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E554",
+   "origin": "synthetic",
+   "name": {
+    "es": "Silicato de aluminio y sodio",
+    "en": "Sodium aluminium silicate",
+    "pt": "Silicato de alumínio e sódio",
+    "it": "Silicato di sodio e alluminio",
+    "fr": "Silicate alumino-sodique",
+    "de": "Natriumaluminiumsilikat"
+   },
+   "note": {
+    "es": "Antiaglomerante de origen mineral.",
+    "en": "Mineral anti-caking agent.",
+    "pt": "Antiaglomerante de origem mineral.",
+    "it": "Antiagglomerante di origine minerale.",
+    "fr": "Antiagglomérant d'origine minérale.",
+    "de": "Trennmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E555",
+   "origin": "synthetic",
+   "name": {
+    "es": "Silicato de aluminio y potasio",
+    "en": "Potassium aluminium silicate",
+    "pt": "Silicato de alumínio e potássio",
+    "it": "Silicato di potassio e alluminio",
+    "fr": "Silicate alumino-potassique",
+    "de": "Kaliumaluminiumsilikat"
+   },
+   "note": {
+    "es": "Antiaglomerante de origen mineral.",
+    "en": "Mineral anti-caking agent.",
+    "pt": "Antiaglomerante de origem mineral.",
+    "it": "Antiagglomerante di origine minerale.",
+    "fr": "Antiagglomérant d'origine minérale.",
+    "de": "Trennmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E556",
+   "origin": "synthetic",
+   "name": {
+    "es": "Silicato de aluminio y calcio",
+    "en": "Calcium aluminium silicate",
+    "pt": "Silicato de alumínio e cálcio",
+    "it": "Silicato di calcio e alluminio",
+    "fr": "Silicate alumino-calcique",
+    "de": "Calciumaluminiumsilikat"
+   },
+   "note": {
+    "es": "Antiaglomerante de origen mineral.",
+    "en": "Mineral anti-caking agent.",
+    "pt": "Antiaglomerante de origem mineral.",
+    "it": "Antiagglomerante di origine minerale.",
+    "fr": "Antiagglomérant d'origine minérale.",
+    "de": "Trennmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E558",
+   "origin": "synthetic",
+   "name": {
+    "es": "Bentonita",
+    "en": "Bentonite",
+    "pt": "Bentonite",
+    "it": "Bentonite",
+    "fr": "Bentonite",
+    "de": "Bentonit"
+   },
+   "note": {
+    "es": "Antiaglomerante de origen mineral.",
+    "en": "Mineral anti-caking agent.",
+    "pt": "Antiaglomerante de origem mineral.",
+    "it": "Antiagglomerante di origine minerale.",
+    "fr": "Antiagglomérant d'origine minérale.",
+    "de": "Trennmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E559",
+   "origin": "synthetic",
+   "name": {
+    "es": "Silicato de aluminio",
+    "en": "Aluminium silicate",
+    "pt": "Silicato de alumínio",
+    "it": "Silicato di alluminio",
+    "fr": "Silicate d'aluminium",
+    "de": "Aluminiumsilikat"
+   },
+   "note": {
+    "es": "Antiaglomerante de origen mineral.",
+    "en": "Mineral anti-caking agent.",
+    "pt": "Antiaglomerante de origem mineral.",
+    "it": "Antiagglomerante di origine minerale.",
+    "fr": "Antiagglomérant d'origine minérale.",
+    "de": "Trennmittel mineralischen Ursprungs."
+   }
+  },
+  {
+   "code": "E570",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ácidos grasos",
+    "en": "Fatty acids",
+    "pt": "Ácidos gordos",
+    "it": "Acidi grassi",
+    "fr": "Acides gras",
+    "de": "Fettsäuren"
+   },
+   "note": {
+    "es": "Puede proceder de grasas vegetales o animales.",
+    "en": "May come from plant or animal fats.",
+    "pt": "Pode provir de gorduras vegetais ou animais.",
+    "it": "Può provenire da grassi vegetali o animali.",
+    "fr": "Peut provenir de graisses végétales ou animales.",
+    "de": "Kann aus pflanzlichen oder tierischen Fetten stammen."
+   }
+  },
+  {
+   "code": "E574",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido glucónico",
+    "en": "Gluconic acid",
+    "pt": "Ácido glucónico",
+    "it": "Acido gluconico",
+    "fr": "Acide gluconique",
+    "de": "Gluconsäure"
+   },
+   "note": {
+    "es": "Regulador de acidez obtenido por fermentación.",
+    "en": "Acidity regulator obtained by fermentation.",
+    "pt": "Regulador de acidez obtido por fermentação.",
+    "it": "Correttore di acidità ottenuto per fermentazione.",
+    "fr": "Correcteur d'acidité obtenu par fermentation.",
+    "de": "Säureregulator aus Fermentation."
+   }
+  },
+  {
+   "code": "E575",
+   "origin": "synthetic",
+   "name": {
+    "es": "Glucono-delta-lactona",
+    "en": "Glucono-delta-lactone",
+    "pt": "Glucono-delta-lactona",
+    "it": "Glucono-delta-lattone",
+    "fr": "Glucono-delta-lactone",
+    "de": "Glucono-delta-Lacton"
+   },
+   "note": {
+    "es": "Regulador de acidez y coagulante obtenido por fermentación.",
+    "en": "Acidity regulator and coagulant obtained by fermentation.",
+    "pt": "Regulador de acidez e coagulante obtido por fermentação.",
+    "it": "Correttore di acidità e coagulante ottenuto per fermentazione.",
+    "fr": "Correcteur d'acidité et coagulant obtenu par fermentation.",
+    "de": "Säureregulator und Gerinnungsmittel aus Fermentation."
+   }
+  },
+  {
+   "code": "E576",
+   "origin": "synthetic",
+   "name": {
+    "es": "Gluconato sódico",
+    "en": "Sodium gluconate",
+    "pt": "Gluconato de sódio",
+    "it": "Gluconato di sodio",
+    "fr": "Gluconate de sodium",
+    "de": "Natriumgluconat"
+   },
+   "note": {
+    "es": "Secuestrante derivado del ácido glucónico.",
+    "en": "Sequestrant derived from gluconic acid.",
+    "pt": "Sequestrante derivado do ácido glucónico.",
+    "it": "Sequestrante derivato dall'acido gluconico.",
+    "fr": "Séquestrant dérivé de l'acide gluconique.",
+    "de": "Komplexbildner aus Gluconsäure."
+   }
+  },
+  {
+   "code": "E577",
+   "origin": "synthetic",
+   "name": {
+    "es": "Gluconato potásico",
+    "en": "Potassium gluconate",
+    "pt": "Gluconato de potássio",
+    "it": "Gluconato di potassio",
+    "fr": "Gluconate de potassium",
+    "de": "Kaliumgluconat"
+   },
+   "note": {
+    "es": "Secuestrante derivado del ácido glucónico.",
+    "en": "Sequestrant derived from gluconic acid.",
+    "pt": "Sequestrante derivado do ácido glucónico.",
+    "it": "Sequestrante derivato dall'acido gluconico.",
+    "fr": "Séquestrant dérivé de l'acide gluconique.",
+    "de": "Komplexbildner aus Gluconsäure."
+   }
+  },
+  {
+   "code": "E578",
+   "origin": "synthetic",
+   "name": {
+    "es": "Gluconato cálcico",
+    "en": "Calcium gluconate",
+    "pt": "Gluconato de cálcio",
+    "it": "Gluconato di calcio",
+    "fr": "Gluconate de calcium",
+    "de": "Calciumgluconat"
+   },
+   "note": {
+    "es": "Secuestrante derivado del ácido glucónico.",
+    "en": "Sequestrant derived from gluconic acid.",
+    "pt": "Sequestrante derivado do ácido glucónico.",
+    "it": "Sequestrante derivato dall'acido gluconico.",
+    "fr": "Séquestrant dérivé de l'acide gluconique.",
+    "de": "Komplexbildner aus Gluconsäure."
+   }
+  },
+  {
+   "code": "E579",
+   "origin": "synthetic",
+   "name": {
+    "es": "Gluconato ferroso",
+    "en": "Ferrous gluconate",
+    "pt": "Gluconato ferroso",
+    "it": "Gluconato ferroso",
+    "fr": "Gluconate ferreux",
+    "de": "Eisen(II)-gluconat"
+   },
+   "note": {
+    "es": "Estabilizante del color usado en aceitunas.",
+    "en": "Colour stabiliser used in olives.",
+    "pt": "Estabilizante da cor usado em azeitonas.",
+    "it": "Stabilizzante del colore usato nelle olive.",
+    "fr": "Stabilisant de couleur utilisé dans les olives.",
+    "de": "Farbstabilisator für Oliven."
+   }
+  },
+  {
+   "code": "E585",
+   "origin": "uncertain",
+   "name": {
+    "es": "Lactato ferroso",
+    "en": "Ferrous lactate",
+    "pt": "Lactato ferroso",
+    "it": "Lattato ferroso",
+    "fr": "Lactate ferreux",
+    "de": "Eisen(II)-lactat"
+   },
+   "note": {
+    "es": "Sal del ácido láctico; la fermentación puede partir de sustratos lácteos.",
+    "en": "Lactic acid salt; fermentation may start from dairy substrates.",
+    "pt": "Sal do ácido láctico; a fermentação pode partir de substratos lácteos.",
+    "it": "Sale dell'acido lattico; la fermentazione può partire da substrati lattiero-caseari.",
+    "fr": "Sel de l'acide lactique ; la fermentation peut partir de substrats laitiers.",
+    "de": "Salz der Milchsäure; die Fermentation kann von Milchsubstraten ausgehen."
+   }
+  },
+  {
+   "code": "E586",
+   "origin": "synthetic",
+   "name": {
+    "es": "4-hexilresorcinol",
+    "en": "4-hexylresorcinol",
+    "pt": "4-hexilresorcinol",
+    "it": "4-esilresorcinolo",
+    "fr": "4-hexylrésorcinol",
+    "de": "4-Hexylresorcin"
+   },
+   "note": {
+    "es": "Antioxidante usado en crustáceos frescos.",
+    "en": "Antioxidant used on fresh crustaceans.",
+    "pt": "Antioxidante usado em crustáceos frescos.",
+    "it": "Antiossidante usato nei crostacei freschi.",
+    "fr": "Antioxydant utilisé sur les crustacés frais.",
+    "de": "Antioxidationsmittel für frische Krebstiere."
+   }
+  },
+  {
+   "code": "E620",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ácido glutámico",
+    "en": "Glutamic acid",
+    "pt": "Ácido glutâmico",
+    "it": "Acido glutammico",
+    "fr": "Acide glutamique",
+    "de": "Glutaminsäure"
+   },
+   "note": {
+    "es": "Potenciador del sabor.",
+    "en": "Flavour enhancer.",
+    "pt": "Intensificador de sabor.",
+    "it": "Esaltatore di sapidità.",
+    "fr": "Exhausteur de goût.",
+    "de": "Geschmacksverstärker."
+   }
+  },
+  {
+   "code": "E621",
+   "origin": "synthetic",
+   "name": {
+    "es": "Glutamato monosódico",
+    "en": "Monosodium glutamate",
+    "pt": "Glutamato monossódico",
+    "it": "Glutammato monosodico",
+    "fr": "Glutamate monosodique",
+    "de": "Mononatriumglutamat"
+   },
+   "note": {
+    "es": "Potenciador del sabor.",
+    "en": "Flavour enhancer.",
+    "pt": "Intensificador de sabor.",
+    "it": "Esaltatore di sapidità.",
+    "fr": "Exhausteur de goût.",
+    "de": "Geschmacksverstärker."
+   }
+  },
+  {
+   "code": "E622",
+   "origin": "synthetic",
+   "name": {
+    "es": "Glutamato monopotásico",
+    "en": "Monopotassium glutamate",
+    "pt": "Glutamato monopotássico",
+    "it": "Glutammato monopotassico",
+    "fr": "Glutamate monopotassique",
+    "de": "Monokaliumglutamat"
+   },
+   "note": {
+    "es": "Potenciador del sabor.",
+    "en": "Flavour enhancer.",
+    "pt": "Intensificador de sabor.",
+    "it": "Esaltatore di sapidità.",
+    "fr": "Exhausteur de goût.",
+    "de": "Geschmacksverstärker."
+   }
+  },
+  {
+   "code": "E623",
+   "origin": "synthetic",
+   "name": {
+    "es": "Glutamato cálcico",
+    "en": "Calcium diglutamate",
+    "pt": "Glutamato de cálcio",
+    "it": "Glutammato di calcio",
+    "fr": "Diglutamate de calcium",
+    "de": "Calciumdiglutamat"
+   },
+   "note": {
+    "es": "Potenciador del sabor.",
+    "en": "Flavour enhancer.",
+    "pt": "Intensificador de sabor.",
+    "it": "Esaltatore di sapidità.",
+    "fr": "Exhausteur de goût.",
+    "de": "Geschmacksverstärker."
+   }
+  },
+  {
+   "code": "E624",
+   "origin": "synthetic",
+   "name": {
+    "es": "Glutamato monoamónico",
+    "en": "Monoammonium glutamate",
+    "pt": "Glutamato monoamónico",
+    "it": "Glutammato monoammonico",
+    "fr": "Glutamate monoammonique",
+    "de": "Monoammoniumglutamat"
+   },
+   "note": {
+    "es": "Potenciador del sabor.",
+    "en": "Flavour enhancer.",
+    "pt": "Intensificador de sabor.",
+    "it": "Esaltatore di sapidità.",
+    "fr": "Exhausteur de goût.",
+    "de": "Geschmacksverstärker."
+   }
+  },
+  {
+   "code": "E625",
+   "origin": "synthetic",
+   "name": {
+    "es": "Glutamato magnésico",
+    "en": "Magnesium diglutamate",
+    "pt": "Glutamato de magnésio",
+    "it": "Glutammato di magnesio",
+    "fr": "Diglutamate de magnésium",
+    "de": "Magnesiumdiglutamat"
+   },
+   "note": {
+    "es": "Potenciador del sabor.",
+    "en": "Flavour enhancer.",
+    "pt": "Intensificador de sabor.",
+    "it": "Esaltatore di sapidità.",
+    "fr": "Exhausteur de goût.",
+    "de": "Geschmacksverstärker."
+   }
+  },
+  {
+   "code": "E626",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ácido guanílico",
+    "en": "Guanylic acid",
+    "pt": "Ácido guanílico",
+    "it": "Acido guanilico",
+    "fr": "Acide guanylique",
+    "de": "Guanylsäure"
+   },
+   "note": {
+    "es": "Potenciador del sabor de origen variable.",
+    "en": "Flavour enhancer with variable source.",
+    "pt": "Intensificador de sabor de origem variável.",
+    "it": "Esaltatore di sapidità di origine variabile.",
+    "fr": "Exhausteur de goût d'origine variable.",
+    "de": "Geschmacksverstärker unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E627",
+   "origin": "uncertain",
+   "name": {
+    "es": "Guanilato disódico",
+    "en": "Disodium guanylate",
+    "pt": "Guanilato dissódico",
+    "it": "Guanilato disodico",
+    "fr": "Guanylate disodique",
+    "de": "Dinatriumguanylat"
+   },
+   "note": {
+    "es": "Potenciador del sabor de origen variable.",
+    "en": "Flavour enhancer of variable origin.",
+    "pt": "Intensificador de sabor de origem variável.",
+    "it": "Esaltatore di sapidità di origine variabile.",
+    "fr": "Exhausteur de goût d'origine variable.",
+    "de": "Geschmacksverstärker unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E628",
+   "origin": "uncertain",
+   "name": {
+    "es": "Guanilato dipotásico",
+    "en": "Dipotassium guanylate",
+    "pt": "Guanilato dipotássico",
+    "it": "Guanilato dipotassico",
+    "fr": "Guanylate dipotassique",
+    "de": "Dikaliumguanylat"
+   },
+   "note": {
+    "es": "Potenciador del sabor de origen variable.",
+    "en": "Flavour enhancer of variable origin.",
+    "pt": "Intensificador de sabor de origem variável.",
+    "it": "Esaltatore di sapidità di origine variabile.",
+    "fr": "Exhausteur de goût d'origine variable.",
+    "de": "Geschmacksverstärker unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E629",
+   "origin": "uncertain",
+   "name": {
+    "es": "Guanilato cálcico",
+    "en": "Calcium guanylate",
+    "pt": "Guanilato de cálcio",
+    "it": "Guanilato di calcio",
+    "fr": "Guanylate de calcium",
+    "de": "Calciumguanylat"
+   },
+   "note": {
+    "es": "Potenciador del sabor de origen variable.",
+    "en": "Flavour enhancer with variable source.",
+    "pt": "Intensificador de sabor de origem variável.",
+    "it": "Esaltatore di sapidità di origine variabile.",
+    "fr": "Exhausteur de goût d'origine variable.",
+    "de": "Geschmacksverstärker unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E630",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ácido inosínico",
+    "en": "Inosinic acid",
+    "pt": "Ácido inosínico",
+    "it": "Acido inosinico",
+    "fr": "Acide inosinique",
+    "de": "Inosinsäure"
+   },
+   "note": {
+    "es": "Potenciador del sabor de origen variable.",
+    "en": "Flavour enhancer with variable source.",
+    "pt": "Intensificador de sabor de origem variável.",
+    "it": "Esaltatore di sapidità di origine variabile.",
+    "fr": "Exhausteur de goût d'origine variable.",
+    "de": "Geschmacksverstärker unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E631",
+   "origin": "uncertain",
+   "name": {
+    "es": "Inosinato disódico",
+    "en": "Disodium inosinate",
+    "pt": "Inosinato dissódico",
+    "it": "Inosinato disodico",
+    "fr": "Inosinate disodique",
+    "de": "Dinatriuminosinat"
+   },
+   "note": {
+    "es": "Potenciador del sabor de origen variable.",
+    "en": "Flavour enhancer with variable origin.",
+    "pt": "Intensificador de sabor de origem variável.",
+    "it": "Esaltatore di sapidità di origine variabile.",
+    "fr": "Exhausteur de goût d'origine variable.",
+    "de": "Geschmacksverstärker unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E632",
+   "origin": "uncertain",
+   "name": {
+    "es": "Inosinato dipotásico",
+    "en": "Dipotassium inosinate",
+    "pt": "Inosinato dipotássico",
+    "it": "Inosinato dipotassico",
+    "fr": "Inosinate dipotassique",
+    "de": "Dikaliuminosinat"
+   },
+   "note": {
+    "es": "Potenciador del sabor de origen variable.",
+    "en": "Flavour enhancer with variable source.",
+    "pt": "Intensificador de sabor de origem variável.",
+    "it": "Esaltatore di sapidità di origine variabile.",
+    "fr": "Exhausteur de goût d'origine variable.",
+    "de": "Geschmacksverstärker unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E633",
+   "origin": "uncertain",
+   "name": {
+    "es": "Inosinato cálcico",
+    "en": "Calcium inosinate",
+    "pt": "Inosinato de cálcio",
+    "it": "Inosinato di calcio",
+    "fr": "Inosinate de calcium",
+    "de": "Calciuminosinat"
+   },
+   "note": {
+    "es": "Potenciador del sabor de origen variable.",
+    "en": "Flavour enhancer with variable source.",
+    "pt": "Intensificador de sabor de origem variável.",
+    "it": "Esaltatore di sapidità di origine variabile.",
+    "fr": "Exhausteur de goût d'origine variable.",
+    "de": "Geschmacksverstärker unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E634",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ribonucleótidos cálcicos",
+    "en": "Calcium ribonucleotides",
+    "pt": "Ribonucleótidos de cálcio",
+    "it": "Ribonucleotidi di calcio",
+    "fr": "Ribonucléotides calciques",
+    "de": "Calcium-5'-ribonucleotide"
+   },
+   "note": {
+    "es": "Potenciador del sabor de origen variable.",
+    "en": "Flavour enhancer with variable source.",
+    "pt": "Intensificador de sabor de origem variável.",
+    "it": "Esaltatore di sapidità di origine variabile.",
+    "fr": "Exhausteur de goût d'origine variable.",
+    "de": "Geschmacksverstärker unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E635",
+   "origin": "uncertain",
+   "name": {
+    "es": "Ribonucleótidos disódicos",
+    "en": "Disodium ribonucleotides",
+    "pt": "Ribonucleótidos dissódicos",
+    "it": "Ribonucleotidi disodici",
+    "fr": "Ribonucléotides disodiques",
+    "de": "Dinatrium-5'-ribonucleotide"
+   },
+   "note": {
+    "es": "Potenciador del sabor de origen variable.",
+    "en": "Flavour enhancer with variable origin.",
+    "pt": "Intensificador de sabor de origem variável.",
+    "it": "Esaltatore di sapidità di origine variabile.",
+    "fr": "Exhausteur de goût d'origine variable.",
+    "de": "Geschmacksverstärker unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E636",
+   "origin": "synthetic",
+   "name": {
+    "es": "Maltol",
+    "en": "Maltol",
+    "pt": "Maltol",
+    "it": "Maltolo",
+    "fr": "Maltol",
+    "de": "Maltol"
+   },
+   "note": {
+    "es": "Potenciador del sabor con aroma a caramelo.",
+    "en": "Flavour enhancer with a caramel aroma.",
+    "pt": "Intensificador de sabor com aroma a caramelo.",
+    "it": "Esaltatore di sapidità con aroma di caramello.",
+    "fr": "Exhausteur de goût à l'arôme de caramel.",
+    "de": "Geschmacksverstärker mit Karamellaroma."
+   }
+  },
+  {
+   "code": "E637",
+   "origin": "synthetic",
+   "name": {
+    "es": "Etilmaltol",
+    "en": "Ethyl maltol",
+    "pt": "Etilmaltol",
+    "it": "Etilmaltolo",
+    "fr": "Éthylmaltol",
+    "de": "Ethylmaltol"
+   },
+   "note": {
+    "es": "Potenciador del sabor con aroma a caramelo.",
+    "en": "Flavour enhancer with a caramel aroma.",
+    "pt": "Intensificador de sabor com aroma a caramelo.",
+    "it": "Esaltatore di sapidità con aroma di caramello.",
+    "fr": "Exhausteur de goût à l'arôme de caramel.",
+    "de": "Geschmacksverstärker mit Karamellaroma."
+   }
+  },
+  {
+   "code": "E640",
+   "origin": "uncertain",
+   "name": {
+    "es": "Glicina y su sal sódica",
+    "en": "Glycine and its sodium salt",
+    "pt": "Glicina e o seu sal de sódio",
+    "it": "Glicina e il suo sale sodico",
+    "fr": "Glycine et son sel de sodium",
+    "de": "Glycin und dessen Natriumsalz"
+   },
+   "note": {
+    "es": "Suele obtenerse por síntesis, pero puede proceder de hidrolizados animales.",
+    "en": "Usually produced synthetically, but may come from animal hydrolysates.",
+    "pt": "Costuma obter-se por síntese, mas pode provir de hidrolisados animais.",
+    "it": "Di solito si ottiene per sintesi, ma può derivare da idrolizzati animali.",
+    "fr": "Généralement obtenu par synthèse, mais il peut provenir d'hydrolysats animaux.",
+    "de": "Meist synthetisch, kann aber aus tierischen Hydrolysaten stammen."
+   }
+  },
+  {
+   "code": "E650",
+   "origin": "synthetic",
+   "name": {
+    "es": "Acetato de zinc",
+    "en": "Zinc acetate",
+    "pt": "Acetato de zinco",
+    "it": "Acetato di zinco",
+    "fr": "Acétate de zinc",
+    "de": "Zinkacetat"
+   },
+   "note": {
+    "es": "Potenciador del sabor usado en chicles.",
+    "en": "Flavour enhancer used in chewing gum.",
+    "pt": "Intensificador de sabor usado em pastilhas elásticas.",
+    "it": "Esaltatore di sapidità usato nelle gomme da masticare.",
+    "fr": "Exhausteur de goût utilisé dans les chewing-gums.",
+    "de": "Geschmacksverstärker für Kaugummi."
+   }
+  },
+  {
+   "code": "E900",
+   "origin": "synthetic",
+   "name": {
+    "es": "Dimetilpolisiloxano",
+    "en": "Dimethylpolysiloxane",
+    "pt": "Dimetilpolissiloxano",
+    "it": "Dimetilpolisilossano",
+    "fr": "Diméthylpolysiloxane",
+    "de": "Dimethylpolysiloxan"
+   },
+   "note": {
+    "es": "Antiespumante de origen sintético.",
+    "en": "Synthetic anti-foaming agent.",
+    "pt": "Antiespumante de origem sintética.",
+    "it": "Antischiumogeno di origine sintetica.",
+    "fr": "Antimoussant d'origine synthétique.",
+    "de": "Synthetischer Schaumverhüter."
+   }
+  },
+  {
+   "code": "E901",
+   "origin": "animal",
+   "name": {
+    "es": "Cera de abejas",
+    "en": "Beeswax",
+    "pt": "Cera de abelha",
+    "it": "Cera d'api",
+    "fr": "Cire d'abeille",
+    "de": "Bienenwachs"
+   },
+   "note": {
+    "es": "Cera producida por las abejas.",
+    "en": "Wax produced by bees.",
+    "pt": "Cera produzida pelas abelhas.",
+    "it": "Cera prodotta dalle api.",
+    "fr": "Cire produite par les abeilles.",
+    "de": "Von Bienen erzeugtes Wachs."
+   }
+  },
+  {
+   "code": "E902",
+   "origin": "plant",
+   "name": {
+    "es": "Cera de candelilla",
+    "en": "Candelilla wax",
+    "pt": "Cera de candelila",
+    "it": "Cera di candelilla",
+    "fr": "Cire de candelilla",
+    "de": "Candelillawachs"
+   },
+   "note": {
+    "es": "Cera vegetal usada como recubrimiento.",
+    "en": "Plant wax used as a coating.",
+    "pt": "Cera vegetal usada como revestimento.",
+    "it": "Cera vegetale usata come rivestimento.",
+    "fr": "Cire végétale utilisée comme enrobage.",
+    "de": "Pflanzliches Wachs als Überzugsmittel."
+   }
+  },
+  {
+   "code": "E903",
+   "origin": "plant",
+   "name": {
+    "es": "Cera de carnauba",
+    "en": "Carnauba wax",
+    "pt": "Cera de carnaúba",
+    "it": "Cera carnauba",
+    "fr": "Cire de carnauba",
+    "de": "Carnaubawachs"
+   },
+   "note": {
+    "es": "Cera vegetal de brillo alimentario.",
+    "en": "Plant-based glazing wax.",
+    "pt": "Cera vegetal de brilho alimentar.",
+    "it": "Cera vegetale usata come agente di rivestimento lucido.",
+    "fr": "Cire végétale utilisée comme agent d'enrobage brillant.",
+    "de": "Pflanzliches Wachs als Glanzmittel für Lebensmittel."
+   }
+  },
+  {
+   "code": "E904",
+   "origin": "animal",
+   "name": {
+    "es": "Goma laca",
+    "en": "Shellac",
+    "pt": "Goma-laca",
+    "it": "Gommalacca",
+    "fr": "Gomme-laque",
+    "de": "Schellack"
+   },
+   "note": {
+    "es": "Agente de recubrimiento procedente del insecto lac.",
+    "en": "Coating agent from the lac insect.",
+    "pt": "Agente de revestimento proveniente do inseto lac.",
+    "it": "Agente di rivestimento ricavato dall'insetto della lacca.",
+    "fr": "Agent d'enrobage issu de la cochenille à laque.",
+    "de": "Überzugsmittel aus der Lackschildlaus."
+   }
+  },
+  {
+   "code": "E905",
+   "origin": "synthetic",
+   "name": {
+    "es": "Parafina",
+    "en": "Paraffin",
+    "pt": "Parafina",
+    "it": "Paraffina",
+    "fr": "Paraffine",
+    "de": "Paraffin"
+   },
+   "note": {
+    "es": "Agente de recubrimiento de origen petroquímico.",
+    "en": "Petrochemical glazing agent.",
+    "pt": "Agente de revestimento de origem petroquímica.",
+    "it": "Agente di rivestimento di origine petrolchimica.",
+    "fr": "Agent d'enrobage d'origine pétrochimique.",
+    "de": "Überzugsmittel petrochemischen Ursprungs."
+   }
+  },
+  {
+   "code": "E907",
+   "origin": "synthetic",
+   "name": {
+    "es": "Polietileno hidrogenado",
+    "en": "Hydrogenated polyethylene",
+    "pt": "Polietileno hidrogenado",
+    "it": "Polietilene idrogenato",
+    "fr": "Polyéthylène hydrogéné",
+    "de": "Hydriertes Polyethylen"
+   },
+   "note": {
+    "es": "Agente de recubrimiento sintético.",
+    "en": "Synthetic glazing agent.",
+    "pt": "Agente de revestimento sintético.",
+    "it": "Agente di rivestimento sintetico.",
+    "fr": "Agent d'enrobage synthétique.",
+    "de": "Synthetisches Überzugsmittel."
+   }
+  },
+  {
+   "code": "E913",
+   "origin": "animal",
+   "name": {
+    "es": "Lanolina",
+    "en": "Lanolin",
+    "pt": "Lanolina",
+    "it": "Lanolina",
+    "fr": "Lanoline",
+    "de": "Lanolin"
+   },
+   "note": {
+    "es": "Agente de recubrimiento procedente de la lana.",
+    "en": "Glazing agent obtained from wool.",
+    "pt": "Agente de revestimento proveniente da lã.",
+    "it": "Agente di rivestimento ricavato dalla lana.",
+    "fr": "Agent d'enrobage issu de la laine.",
+    "de": "Überzugsmittel aus Schafwolle."
+   }
+  },
+  {
+   "code": "E914",
+   "origin": "synthetic",
+   "name": {
+    "es": "Cera oxidada de polietileno",
+    "en": "Oxidised polyethylene wax",
+    "pt": "Cera de polietileno oxidada",
+    "it": "Cera di polietilene ossidata",
+    "fr": "Cire de polyéthylène oxydée",
+    "de": "Oxidiertes Polyethylenwachs"
+   },
+   "note": {
+    "es": "Agente de recubrimiento sintético.",
+    "en": "Synthetic glazing agent.",
+    "pt": "Agente de revestimento sintético.",
+    "it": "Agente di rivestimento sintetico.",
+    "fr": "Agent d'enrobage synthétique.",
+    "de": "Synthetisches Überzugsmittel."
+   }
+  },
+  {
+   "code": "E920",
+   "origin": "uncertain",
+   "name": {
+    "es": "L-cisteína",
+    "en": "L-cysteine",
+    "pt": "L-cisteína",
+    "it": "L-cisteina",
+    "fr": "L-cystéine",
+    "de": "L-Cystein"
+   },
+   "note": {
+    "es": "A menudo procede de pelo, plumas o fermentación.",
+    "en": "Often comes from hair, feathers, or fermentation.",
+    "pt": "Provém frequentemente de pelo, penas ou fermentação.",
+    "it": "Spesso proviene da peli, piume o fermentazione.",
+    "fr": "Provient souvent de poils, de plumes ou de fermentation.",
+    "de": "Stammt oft aus Haaren, Federn oder Fermentation."
+   }
+  },
+  {
+   "code": "E938",
+   "origin": "synthetic",
+   "name": {
+    "es": "Argón",
+    "en": "Argon",
+    "pt": "Árgon",
+    "it": "Argon",
+    "fr": "Argon",
+    "de": "Argon"
+   },
+   "note": {
+    "es": "Gas inerte de envasado.",
+    "en": "Inert packaging gas.",
+    "pt": "Gás inerte de embalagem.",
+    "it": "Gas inerte di confezionamento.",
+    "fr": "Gaz inerte de conditionnement.",
+    "de": "Inertes Schutzgas für Verpackungen."
+   }
+  },
+  {
+   "code": "E939",
+   "origin": "synthetic",
+   "name": {
+    "es": "Helio",
+    "en": "Helium",
+    "pt": "Hélio",
+    "it": "Elio",
+    "fr": "Hélium",
+    "de": "Helium"
+   },
+   "note": {
+    "es": "Gas inerte de envasado.",
+    "en": "Inert packaging gas.",
+    "pt": "Gás inerte de embalagem.",
+    "it": "Gas inerte di confezionamento.",
+    "fr": "Gaz inerte de conditionnement.",
+    "de": "Inertes Schutzgas für Verpackungen."
+   }
+  },
+  {
+   "code": "E941",
+   "origin": "synthetic",
+   "name": {
+    "es": "Nitrógeno",
+    "en": "Nitrogen",
+    "pt": "Azoto",
+    "it": "Azoto",
+    "fr": "Azote",
+    "de": "Stickstoff"
+   },
+   "note": {
+    "es": "Gas inerte de envasado.",
+    "en": "Inert packaging gas.",
+    "pt": "Gás inerte de embalagem.",
+    "it": "Gas inerte di confezionamento.",
+    "fr": "Gaz inerte de conditionnement.",
+    "de": "Inertes Schutzgas für Verpackungen."
+   }
+  },
+  {
+   "code": "E942",
+   "origin": "synthetic",
+   "name": {
+    "es": "Óxido nitroso",
+    "en": "Nitrous oxide",
+    "pt": "Óxido nitroso",
+    "it": "Protossido di azoto",
+    "fr": "Protoxyde d'azote",
+    "de": "Distickstoffmonoxid"
+   },
+   "note": {
+    "es": "Gas propelente usado en nata en espray.",
+    "en": "Propellant gas used in whipped cream.",
+    "pt": "Gás propulsor usado em natas em spray.",
+    "it": "Gas propellente usato nella panna spray.",
+    "fr": "Gaz propulseur utilisé dans la crème en bombe.",
+    "de": "Treibgas für Sprühsahne."
+   }
+  },
+  {
+   "code": "E943A",
+   "origin": "synthetic",
+   "name": {
+    "es": "Butano",
+    "en": "Butane",
+    "pt": "Butano",
+    "it": "Butano",
+    "fr": "Butane",
+    "de": "Butan"
+   },
+   "note": {
+    "es": "Gas propelente de origen petroquímico.",
+    "en": "Petrochemical propellant gas.",
+    "pt": "Gás propulsor de origem petroquímica.",
+    "it": "Gas propellente di origine petrolchimica.",
+    "fr": "Gaz propulseur d'origine pétrochimique.",
+    "de": "Treibgas petrochemischen Ursprungs."
+   }
+  },
+  {
+   "code": "E943B",
+   "origin": "synthetic",
+   "name": {
+    "es": "Isobutano",
+    "en": "Isobutane",
+    "pt": "Isobutano",
+    "it": "Isobutano",
+    "fr": "Isobutane",
+    "de": "Isobutan"
+   },
+   "note": {
+    "es": "Gas propelente de origen petroquímico.",
+    "en": "Petrochemical propellant gas.",
+    "pt": "Gás propulsor de origem petroquímica.",
+    "it": "Gas propellente di origine petrolchimica.",
+    "fr": "Gaz propulseur d'origine pétrochimique.",
+    "de": "Treibgas petrochemischen Ursprungs."
+   }
+  },
+  {
+   "code": "E944",
+   "origin": "synthetic",
+   "name": {
+    "es": "Propano",
+    "en": "Propane",
+    "pt": "Propano",
+    "it": "Propano",
+    "fr": "Propane",
+    "de": "Propan"
+   },
+   "note": {
+    "es": "Gas propelente de origen petroquímico.",
+    "en": "Petrochemical propellant gas.",
+    "pt": "Gás propulsor de origem petroquímica.",
+    "it": "Gas propellente di origine petrolchimica.",
+    "fr": "Gaz propulseur d'origine pétrochimique.",
+    "de": "Treibgas petrochemischen Ursprungs."
+   }
+  },
+  {
+   "code": "E948",
+   "origin": "synthetic",
+   "name": {
+    "es": "Oxígeno",
+    "en": "Oxygen",
+    "pt": "Oxigénio",
+    "it": "Ossigeno",
+    "fr": "Oxygène",
+    "de": "Sauerstoff"
+   },
+   "note": {
+    "es": "Gas de envasado.",
+    "en": "Packaging gas.",
+    "pt": "Gás de embalagem.",
+    "it": "Gas di confezionamento.",
+    "fr": "Gaz de conditionnement.",
+    "de": "Schutzgas für Verpackungen."
+   }
+  },
+  {
+   "code": "E949",
+   "origin": "synthetic",
+   "name": {
+    "es": "Hidrógeno",
+    "en": "Hydrogen",
+    "pt": "Hidrogénio",
+    "it": "Idrogeno",
+    "fr": "Hydrogène",
+    "de": "Wasserstoff"
+   },
+   "note": {
+    "es": "Gas de envasado.",
+    "en": "Packaging gas.",
+    "pt": "Gás de embalagem.",
+    "it": "Gas di confezionamento.",
+    "fr": "Gaz de conditionnement.",
+    "de": "Schutzgas für Verpackungen."
+   }
+  },
+  {
+   "code": "E950",
+   "origin": "synthetic",
+   "name": {
+    "es": "Acesulfamo K",
+    "en": "Acesulfame K",
+    "pt": "Acessulfame K",
+    "it": "Acesulfame K",
+    "fr": "Acésulfame K",
+    "de": "Acesulfam K"
+   },
+   "note": {
+    "es": "Edulcorante intenso.",
+    "en": "Intense sweetener.",
+    "pt": "Edulcorante intenso.",
+    "it": "Edulcorante intensivo.",
+    "fr": "Édulcorant intense.",
+    "de": "Süßstoff."
+   }
+  },
+  {
+   "code": "E951",
+   "origin": "synthetic",
+   "name": {
+    "es": "Aspartamo",
+    "en": "Aspartame",
+    "pt": "Aspartame",
+    "it": "Aspartame",
+    "fr": "Aspartame",
+    "de": "Aspartam"
+   },
+   "note": {
+    "es": "Edulcorante artificial.",
+    "en": "Artificial sweetener.",
+    "pt": "Edulcorante artificial.",
+    "it": "Edulcorante artificiale.",
+    "fr": "Édulcorant artificiel.",
+    "de": "Künstlicher Süßstoff."
+   }
+  },
+  {
+   "code": "E952",
+   "origin": "synthetic",
+   "name": {
+    "es": "Ciclamato",
+    "en": "Cyclamate",
+    "pt": "Ciclamato",
+    "it": "Ciclammato",
+    "fr": "Cyclamate",
+    "de": "Cyclamat"
+   },
+   "note": {
+    "es": "Edulcorante intenso de síntesis.",
+    "en": "Synthetic intense sweetener.",
+    "pt": "Edulcorante intenso sintético.",
+    "it": "Edulcorante intensivo di sintesi.",
+    "fr": "Édulcorant intense de synthèse.",
+    "de": "Synthetischer Süßstoff."
+   }
+  },
+  {
+   "code": "E953",
+   "origin": "plant",
+   "name": {
+    "es": "Isomalt",
+    "en": "Isomalt",
+    "pt": "Isomalte",
+    "it": "Isomalto",
+    "fr": "Isomalt",
+    "de": "Isomalt"
+   },
+   "note": {
+    "es": "Poliol obtenido a partir de azúcar de remolacha.",
+    "en": "Polyol obtained from beet sugar.",
+    "pt": "Poliol obtido a partir de açúcar de beterraba.",
+    "it": "Poliolo ottenuto dallo zucchero di barbabietola.",
+    "fr": "Polyol obtenu à partir de sucre de betterave.",
+    "de": "Polyol aus Rübenzucker."
+   }
+  },
+  {
+   "code": "E954",
+   "origin": "synthetic",
+   "name": {
+    "es": "Sacarina",
+    "en": "Saccharin",
+    "pt": "Sacarina",
+    "it": "Saccarina",
+    "fr": "Saccharine",
+    "de": "Saccharin"
+   },
+   "note": {
+    "es": "Edulcorante intenso de síntesis.",
+    "en": "Synthetic intense sweetener.",
+    "pt": "Edulcorante intenso sintético.",
+    "it": "Edulcorante intensivo di sintesi.",
+    "fr": "Édulcorant intense de synthèse.",
+    "de": "Synthetischer Süßstoff."
+   }
+  },
+  {
+   "code": "E955",
+   "origin": "synthetic",
+   "name": {
+    "es": "Sucralosa",
+    "en": "Sucralose",
+    "pt": "Sucralose",
+    "it": "Sucralosio",
+    "fr": "Sucralose",
+    "de": "Sucralose"
+   },
+   "note": {
+    "es": "Edulcorante intenso obtenido a partir del azúcar.",
+    "en": "Intense sweetener obtained from sugar.",
+    "pt": "Edulcorante intenso obtido a partir do açúcar.",
+    "it": "Edulcorante intensivo ottenuto dallo zucchero.",
+    "fr": "Édulcorant intense obtenu à partir du sucre.",
+    "de": "Süßstoff aus Zucker."
+   }
+  },
+  {
+   "code": "E957",
+   "origin": "plant",
+   "name": {
+    "es": "Taumatina",
+    "en": "Thaumatin",
+    "pt": "Taumatina",
+    "it": "Taumatina",
+    "fr": "Thaumatine",
+    "de": "Thaumatin"
+   },
+   "note": {
+    "es": "Proteína edulcorante de origen vegetal.",
+    "en": "Sweet protein of plant origin.",
+    "pt": "Proteína edulcorante de origem vegetal.",
+    "it": "Proteina dolcificante di origine vegetale.",
+    "fr": "Protéine édulcorante d'origine végétale.",
+    "de": "Süßendes Protein pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E959",
+   "origin": "plant",
+   "name": {
+    "es": "Neohesperidina dihidrochalcona",
+    "en": "Neohesperidin dihydrochalcone",
+    "pt": "Neo-hesperidina di-hidrochalcona",
+    "it": "Neoesperidina diidrocalcone",
+    "fr": "Néohespéridine dihydrochalcone",
+    "de": "Neohesperidin-Dihydrochalcon"
+   },
+   "note": {
+    "es": "Edulcorante derivado de cítricos.",
+    "en": "Sweetener derived from citrus fruit.",
+    "pt": "Edulcorante derivado de citrinos.",
+    "it": "Edulcorante derivato dagli agrumi.",
+    "fr": "Édulcorant dérivé d'agrumes.",
+    "de": "Süßstoff aus Zitrusfrüchten."
+   }
+  },
+  {
+   "code": "E961",
+   "origin": "synthetic",
+   "name": {
+    "es": "Neotamo",
+    "en": "Neotame",
+    "pt": "Neotame",
+    "it": "Neotame",
+    "fr": "Néotame",
+    "de": "Neotam"
+   },
+   "note": {
+    "es": "Edulcorante intenso de síntesis.",
+    "en": "Synthetic intense sweetener.",
+    "pt": "Edulcorante intenso sintético.",
+    "it": "Edulcorante intensivo di sintesi.",
+    "fr": "Édulcorant intense de synthèse.",
+    "de": "Synthetischer Süßstoff."
+   }
+  },
+  {
+   "code": "E962",
+   "origin": "synthetic",
+   "name": {
+    "es": "Sal de aspartamo y acesulfamo",
+    "en": "Salt of aspartame-acesulfame",
+    "pt": "Sal de aspartame-acessulfame",
+    "it": "Sale di aspartame-acesulfame",
+    "fr": "Sel d'aspartame-acésulfame",
+    "de": "Aspartam-Acesulfamsalz"
+   },
+   "note": {
+    "es": "Edulcorante intenso de síntesis.",
+    "en": "Synthetic intense sweetener.",
+    "pt": "Edulcorante intenso sintético.",
+    "it": "Edulcorante intensivo di sintesi.",
+    "fr": "Édulcorant intense de synthèse.",
+    "de": "Synthetischer Süßstoff."
+   }
+  },
+  {
+   "code": "E964",
+   "origin": "plant",
+   "name": {
+    "es": "Jarabe de poliglicitol",
+    "en": "Polyglycitol syrup",
+    "pt": "Xarope de poliglicitol",
+    "it": "Sciroppo di poliglicitolo",
+    "fr": "Sirop de polyglycitol",
+    "de": "Polyglycitsirup"
+   },
+   "note": {
+    "es": "Poliol obtenido a partir de almidón.",
+    "en": "Polyol obtained from starch.",
+    "pt": "Poliol obtido a partir de amido.",
+    "it": "Poliolo ottenuto dall'amido.",
+    "fr": "Polyol obtenu à partir d'amidon.",
+    "de": "Polyol aus Stärke."
+   }
+  },
+  {
+   "code": "E965",
+   "origin": "synthetic",
+   "name": {
+    "es": "Maltitol",
+    "en": "Maltitol",
+    "pt": "Maltitol",
+    "it": "Maltitolo",
+    "fr": "Maltitol",
+    "de": "Maltit"
+   },
+   "note": {
+    "es": "Poliol obtenido industrialmente a partir de almidón.",
+    "en": "Polyol made industrially from starch.",
+    "pt": "Poliol obtido industrialmente a partir de amido.",
+    "it": "Poliolo ottenuto industrialmente dall'amido.",
+    "fr": "Polyol obtenu industriellement à partir d'amidon.",
+    "de": "Industriell aus Stärke gewonnenes Polyol."
+   }
+  },
+  {
+   "code": "E966",
+   "origin": "uncertain",
+   "name": {
+    "es": "Lactitol",
+    "en": "Lactitol",
+    "pt": "Lactitol",
+    "it": "Lattitolo",
+    "fr": "Lactitol",
+    "de": "Lactit"
+   },
+   "note": {
+    "es": "Poliol con vínculo lácteo; la materia prima puede variar.",
+    "en": "Polyol linked to dairy; the raw material may vary.",
+    "pt": "Poliol com ligação a lacticínios; a matéria-prima pode variar.",
+    "it": "Poliolo legato ai latticini; la materia prima può variare.",
+    "fr": "Polyol lié aux produits laitiers ; la matière première peut varier.",
+    "de": "Polyol mit Milchbezug; der Rohstoff kann variieren."
+   }
+  },
+  {
+   "code": "E967",
+   "origin": "plant",
+   "name": {
+    "es": "Xilitol",
+    "en": "Xylitol",
+    "pt": "Xilitol",
+    "it": "Xilitolo",
+    "fr": "Xylitol",
+    "de": "Xylit"
+   },
+   "note": {
+    "es": "Poliol de origen vegetal usado como edulcorante.",
+    "en": "Polyol of plant origin used as a sweetener.",
+    "pt": "Poliol de origem vegetal usado como edulcorante.",
+    "it": "Poliolo di origine vegetale usato come edulcorante.",
+    "fr": "Polyol d'origine végétale utilisé comme édulcorant.",
+    "de": "Polyol pflanzlichen Ursprungs als Süßungsmittel."
+   }
+  },
+  {
+   "code": "E968",
+   "origin": "plant",
+   "name": {
+    "es": "Eritritol",
+    "en": "Erythritol",
+    "pt": "Eritritol",
+    "it": "Eritritolo",
+    "fr": "Érythritol",
+    "de": "Erythrit"
+   },
+   "note": {
+    "es": "Poliol obtenido por fermentación de azúcares.",
+    "en": "Polyol made by fermenting sugars.",
+    "pt": "Poliol obtido por fermentação de açúcares.",
+    "it": "Poliolo ottenuto per fermentazione di zuccheri.",
+    "fr": "Polyol obtenu par fermentation de sucres.",
+    "de": "Polyol aus der Fermentation von Zucker."
+   }
+  },
+  {
+   "code": "E960",
+   "origin": "plant",
+   "name": {
+    "es": "Glicósidos de esteviol",
+    "en": "Steviol glycosides",
+    "pt": "Glicosídeos de esteviol",
+    "it": "Glicosidi steviolici",
+    "fr": "Glycosides de stéviol",
+    "de": "Steviolglycoside"
+   },
+   "note": {
+    "es": "Edulcorantes extraídos de la estevia.",
+    "en": "Sweeteners extracted from stevia.",
+    "pt": "Edulcorantes extraídos da estévia.",
+    "it": "Edulcoranti estratti dalla stevia.",
+    "fr": "Édulcorants extraits de la stévia.",
+    "de": "Süßstoffe aus Stevia."
+   }
+  },
+  {
+   "code": "E969",
+   "origin": "synthetic",
+   "name": {
+    "es": "Advantamo",
+    "en": "Advantame",
+    "pt": "Advantame",
+    "it": "Advantame",
+    "fr": "Advantame",
+    "de": "Advantam"
+   },
+   "note": {
+    "es": "Edulcorante intenso de síntesis.",
+    "en": "Synthetic intense sweetener.",
+    "pt": "Edulcorante intenso sintético.",
+    "it": "Edulcorante intensivo di sintesi.",
+    "fr": "Édulcorant intense de synthèse.",
+    "de": "Synthetischer Süßstoff."
+   }
+  },
+  {
+   "code": "E999",
+   "origin": "plant",
+   "name": {
+    "es": "Quilaya",
+    "en": "Quillaia extract",
+    "pt": "Extrato de quilaia",
+    "it": "Estratto di quillaia",
+    "fr": "Extrait de quillaia",
+    "de": "Quillajaextrakt"
+   },
+   "note": {
+    "es": "Extracto vegetal usado como agente espumante.",
+    "en": "Plant extract used as a foaming agent.",
+    "pt": "Extrato vegetal usado como agente espumante.",
+    "it": "Estratto vegetale usato come agente schiumogeno.",
+    "fr": "Extrait végétal utilisé comme agent moussant.",
+    "de": "Pflanzenextrakt als Schaummittel."
+   }
+  },
+  {
+   "code": "E1000",
+   "origin": "animal",
+   "name": {
+    "es": "Ácido cólico",
+    "en": "Cholic acid",
+    "pt": "Ácido cólico",
+    "it": "Acido colico",
+    "fr": "Acide cholique",
+    "de": "Cholsäure"
+   },
+   "note": {
+    "es": "Emulsionante obtenido de la bilis animal.",
+    "en": "Emulsifier obtained from animal bile.",
+    "pt": "Emulsionante obtido da bílis animal.",
+    "it": "Emulsionante ottenuto dalla bile animale.",
+    "fr": "Émulsifiant obtenu à partir de bile animale.",
+    "de": "Emulgator aus tierischer Galle."
+   }
+  },
+  {
+   "code": "E1103",
+   "origin": "synthetic",
+   "name": {
+    "es": "Invertasa",
+    "en": "Invertase",
+    "pt": "Invertase",
+    "it": "Invertasi",
+    "fr": "Invertase",
+    "de": "Invertase"
+   },
+   "note": {
+    "es": "Enzima obtenida por fermentación de levaduras.",
+    "en": "Enzyme obtained by yeast fermentation.",
+    "pt": "Enzima obtida por fermentação de leveduras.",
+    "it": "Enzima ottenuto per fermentazione di lieviti.",
+    "fr": "Enzyme obtenue par fermentation de levures.",
+    "de": "Enzym aus Hefefermentation."
+   }
+  },
+  {
+   "code": "E1105",
+   "origin": "animal",
+   "name": {
+    "es": "Lisozima",
+    "en": "Lysozyme",
+    "pt": "Lisozima",
+    "it": "Lisozima",
+    "fr": "Lysozyme",
+    "de": "Lysozym"
+   },
+   "note": {
+    "es": "Enzima obtenida habitualmente de la clara de huevo.",
+    "en": "Enzyme usually obtained from egg white.",
+    "pt": "Enzima obtida habitualmente da clara de ovo.",
+    "it": "Enzima ottenuto solitamente dall'albume d'uovo.",
+    "fr": "Enzyme généralement obtenue à partir du blanc d'œuf.",
+    "de": "Enzym, meist aus Eiklar gewonnen."
+   }
+  },
+  {
+   "code": "E1200",
+   "origin": "plant",
+   "name": {
+    "es": "Polidextrosa",
+    "en": "Polydextrose",
+    "pt": "Polidextrose",
+    "it": "Polidestrosio",
+    "fr": "Polydextrose",
+    "de": "Polydextrose"
+   },
+   "note": {
+    "es": "Agente de carga obtenido a partir de glucosa.",
+    "en": "Bulking agent obtained from glucose.",
+    "pt": "Agente de volume obtido a partir de glicose.",
+    "it": "Agente di carica ottenuto dal glucosio.",
+    "fr": "Agent de charge obtenu à partir de glucose.",
+    "de": "Füllstoff aus Glukose."
+   }
+  },
+  {
+   "code": "E1201",
+   "origin": "synthetic",
+   "name": {
+    "es": "Polivinilpirrolidona",
+    "en": "Polyvinylpyrrolidone",
+    "pt": "Polivinilpirrolidona",
+    "it": "Polivinilpirrolidone",
+    "fr": "Polyvinylpyrrolidone",
+    "de": "Polyvinylpyrrolidon"
+   },
+   "note": {
+    "es": "Estabilizante sintético usado en comprimidos.",
+    "en": "Synthetic stabiliser used in tablets.",
+    "pt": "Estabilizante sintético usado em comprimidos.",
+    "it": "Stabilizzante sintetico usato nelle compresse.",
+    "fr": "Stabilisant synthétique utilisé dans les comprimés.",
+    "de": "Synthetischer Stabilisator für Tabletten."
+   }
+  },
+  {
+   "code": "E1202",
+   "origin": "synthetic",
+   "name": {
+    "es": "Polivinilpolipirrolidona",
+    "en": "Polyvinylpolypyrrolidone",
+    "pt": "Polivinilpolipirrolidona",
+    "it": "Polivinilpolipirrolidone",
+    "fr": "Polyvinylpolypyrrolidone",
+    "de": "Polyvinylpolypyrrolidon"
+   },
+   "note": {
+    "es": "Clarificante sintético usado en bebidas.",
+    "en": "Synthetic clarifying agent used in beverages.",
+    "pt": "Clarificante sintético usado em bebidas.",
+    "it": "Chiarificante sintetico usato nelle bevande.",
+    "fr": "Agent clarifiant synthétique utilisé dans les boissons.",
+    "de": "Synthetisches Klärmittel für Getränke."
+   }
+  },
+  {
+   "code": "E1204",
+   "origin": "plant",
+   "name": {
+    "es": "Pululano",
+    "en": "Pullulan",
+    "pt": "Pululano",
+    "it": "Pullulano",
+    "fr": "Pullulane",
+    "de": "Pullulan"
+   },
+   "note": {
+    "es": "Agente de recubrimiento obtenido por fermentación.",
+    "en": "Coating agent obtained by fermentation.",
+    "pt": "Agente de revestimento obtido por fermentação.",
+    "it": "Agente di rivestimento ottenuto per fermentazione.",
+    "fr": "Agent d'enrobage obtenu par fermentation.",
+    "de": "Überzugsmittel aus Fermentation."
+   }
+  },
+  {
+   "code": "E1400",
+   "origin": "plant",
+   "name": {
+    "es": "Dextrinas",
+    "en": "Dextrins",
+    "pt": "Dextrinas",
+    "it": "Destrine",
+    "fr": "Dextrines",
+    "de": "Dextrine"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1401",
+   "origin": "plant",
+   "name": {
+    "es": "Almidón tratado con ácido",
+    "en": "Acid-treated starch",
+    "pt": "Amido tratado com ácido",
+    "it": "Amido trattato con acidi",
+    "fr": "Amidon traité aux acides",
+    "de": "Säurebehandelte Stärke"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1402",
+   "origin": "plant",
+   "name": {
+    "es": "Almidón tratado con álcali",
+    "en": "Alkaline-treated starch",
+    "pt": "Amido tratado com álcalis",
+    "it": "Amido trattato con alcali",
+    "fr": "Amidon traité aux alcalis",
+    "de": "Alkalisch modifizierte Stärke"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1403",
+   "origin": "plant",
+   "name": {
+    "es": "Almidón blanqueado",
+    "en": "Bleached starch",
+    "pt": "Amido branqueado",
+    "it": "Amido sbiancato",
+    "fr": "Amidon blanchi",
+    "de": "Gebleichte Stärke"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1404",
+   "origin": "plant",
+   "name": {
+    "es": "Almidón oxidado",
+    "en": "Oxidised starch",
+    "pt": "Amido oxidado",
+    "it": "Amido ossidato",
+    "fr": "Amidon oxydé",
+    "de": "Oxidierte Stärke"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1410",
+   "origin": "plant",
+   "name": {
+    "es": "Fosfato de monoalmidón",
+    "en": "Monostarch phosphate",
+    "pt": "Fosfato de monoamido",
+    "it": "Fosfato di monoamido",
+    "fr": "Phosphate d'amidon",
+    "de": "Monostärkephosphat"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1412",
+   "origin": "plant",
+   "name": {
+    "es": "Fosfato de dialmidón",
+    "en": "Distarch phosphate",
+    "pt": "Fosfato de diamido",
+    "it": "Fosfato di diamido",
+    "fr": "Phosphate de diamidon",
+    "de": "Distärkephosphat"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1413",
+   "origin": "plant",
+   "name": {
+    "es": "Fosfato de dialmidón fosfatado",
+    "en": "Phosphated distarch phosphate",
+    "pt": "Fosfato de diamido fosfatado",
+    "it": "Fosfato di diamido fosfatato",
+    "fr": "Phosphate de diamidon phosphaté",
+    "de": "Phosphatiertes Distärkephosphat"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1414",
+   "origin": "plant",
+   "name": {
+    "es": "Fosfato de dialmidón acetilado",
+    "en": "Acetylated distarch phosphate",
+    "pt": "Fosfato de diamido acetilado",
+    "it": "Fosfato di diamido acetilato",
+    "fr": "Phosphate de diamidon acétylé",
+    "de": "Acetyliertes Distärkephosphat"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1420",
+   "origin": "plant",
+   "name": {
+    "es": "Almidón acetilado",
+    "en": "Acetylated starch",
+    "pt": "Amido acetilado",
+    "it": "Amido acetilato",
+    "fr": "Amidon acétylé",
+    "de": "Acetylierte Stärke"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1422",
+   "origin": "plant",
+   "name": {
+    "es": "Adipato de dialmidón acetilado",
+    "en": "Acetylated distarch adipate",
+    "pt": "Adipato de diamido acetilado",
+    "it": "Adipato di diamido acetilato",
+    "fr": "Adipate de diamidon acétylé",
+    "de": "Acetyliertes Distärkeadipat"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1440",
+   "origin": "plant",
+   "name": {
+    "es": "Almidón hidroxipropilado",
+    "en": "Hydroxypropyl starch",
+    "pt": "Amido hidroxipropilado",
+    "it": "Amido idrossipropilato",
+    "fr": "Amidon hydroxypropylé",
+    "de": "Hydroxypropylstärke"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1442",
+   "origin": "plant",
+   "name": {
+    "es": "Fosfato de dialmidón hidroxipropilado",
+    "en": "Hydroxypropyl distarch phosphate",
+    "pt": "Fosfato de diamido hidroxipropilado",
+    "it": "Fosfato di diamido idrossipropilato",
+    "fr": "Phosphate de diamidon hydroxypropylé",
+    "de": "Hydroxypropyldistärkephosphat"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1450",
+   "origin": "plant",
+   "name": {
+    "es": "Octenilsuccinato sódico de almidón",
+    "en": "Starch sodium octenyl succinate",
+    "pt": "Octenilsuccinato de amido e sódio",
+    "it": "Ottenilsuccinato di amido e sodio",
+    "fr": "Octényle succinate d'amidon sodique",
+    "de": "Stärkenatriumoctenylsuccinat"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1451",
+   "origin": "plant",
+   "name": {
+    "es": "Almidón oxidado acetilado",
+    "en": "Acetylated oxidised starch",
+    "pt": "Amido oxidado acetilado",
+    "it": "Amido ossidato acetilato",
+    "fr": "Amidon oxydé acétylé",
+    "de": "Acetylierte oxidierte Stärke"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1452",
+   "origin": "plant",
+   "name": {
+    "es": "Octenilsuccinato de almidón y aluminio",
+    "en": "Starch aluminium octenyl succinate",
+    "pt": "Octenilsuccinato de amido e alumínio",
+    "it": "Ottenilsuccinato di amido e alluminio",
+    "fr": "Octényle succinate d'amidon d'aluminium",
+    "de": "Stärkealuminiumoctenylsuccinat"
+   },
+   "note": {
+    "es": "Almidón modificado de origen vegetal.",
+    "en": "Plant-based modified starch.",
+    "pt": "Amido modificado de origem vegetal.",
+    "it": "Amido modificato di origine vegetale.",
+    "fr": "Amidon modifié d'origine végétale.",
+    "de": "Modifizierte Stärke pflanzlichen Ursprungs."
+   }
+  },
+  {
+   "code": "E1505",
+   "origin": "synthetic",
+   "name": {
+    "es": "Citrato de trietilo",
+    "en": "Triethyl citrate",
+    "pt": "Citrato de trietilo",
+    "it": "Citrato di trietile",
+    "fr": "Citrate de triéthyle",
+    "de": "Triethylcitrat"
+   },
+   "note": {
+    "es": "Disolvente y agente de recubrimiento de síntesis.",
+    "en": "Synthetic solvent and coating agent.",
+    "pt": "Solvente e agente de revestimento sintético.",
+    "it": "Solvente e agente di rivestimento di sintesi.",
+    "fr": "Solvant et agent d'enrobage de synthèse.",
+    "de": "Synthetisches Lösungs- und Überzugsmittel."
+   }
+  },
+  {
+   "code": "E1517",
+   "origin": "uncertain",
+   "name": {
+    "es": "Diacetato de glicerilo",
+    "en": "Glyceryl diacetate",
+    "pt": "Diacetato de glicerilo",
+    "it": "Diacetato di glicerile",
+    "fr": "Diacétate de glycéryle",
+    "de": "Glycerindiacetat"
+   },
+   "note": {
+    "es": "Disolvente de origen graso variable.",
+    "en": "Solvent with variable fat source.",
+    "pt": "Solvente de origem gorda variável.",
+    "it": "Solvente da grassi di origine variabile.",
+    "fr": "Solvant issu de graisses d'origine variable.",
+    "de": "Lösungsmittel aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E1518",
+   "origin": "uncertain",
+   "name": {
+    "es": "Triacetato de glicerilo",
+    "en": "Glyceryl triacetate",
+    "pt": "Triacetato de glicerilo",
+    "it": "Triacetato di glicerile",
+    "fr": "Triacétate de glycéryle",
+    "de": "Glycerintriacetat"
+   },
+   "note": {
+    "es": "Disolvente de origen graso variable.",
+    "en": "Solvent with variable fat source.",
+    "pt": "Solvente de origem gorda variável.",
+    "it": "Solvente da grassi di origine variabile.",
+    "fr": "Solvant issu de graisses d'origine variable.",
+    "de": "Lösungsmittel aus Fetten unterschiedlicher Herkunft."
+   }
+  },
+  {
+   "code": "E1519",
+   "origin": "synthetic",
+   "name": {
+    "es": "Alcohol bencílico",
+    "en": "Benzyl alcohol",
+    "pt": "Álcool benzílico",
+    "it": "Alcol benzilico",
+    "fr": "Alcool benzylique",
+    "de": "Benzylalkohol"
+   },
+   "note": {
+    "es": "Disolvente de aromas de síntesis.",
+    "en": "Synthetic flavour solvent.",
+    "pt": "Solvente de aromas sintético.",
+    "it": "Solvente per aromi di sintesi.",
+    "fr": "Solvant d'arômes de synthèse.",
+    "de": "Synthetisches Lösungsmittel für Aromen."
+   }
+  },
+  {
+   "code": "E1520",
+   "origin": "synthetic",
+   "name": {
+    "es": "Propilenglicol",
+    "en": "Propylene glycol",
+    "pt": "Propilenoglicol",
+    "it": "Glicole propilenico",
+    "fr": "Propylène-glycol",
+    "de": "Propylenglycol"
+   },
+   "note": {
+    "es": "Humectante y disolvente de síntesis.",
+    "en": "Synthetic humectant and solvent.",
+    "pt": "Humectante e solvente sintético.",
+    "it": "Umettante e solvente di sintesi.",
+    "fr": "Humectant et solvant de synthèse.",
+    "de": "Synthetisches Feuchthalte- und Lösungsmittel."
+   }
+  }
+ ]
+}

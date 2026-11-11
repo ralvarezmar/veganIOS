@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Los nombres y explicaciones de aditivos (glosario y resultado) están ahora en los 6 idiomas de la app, con un catálogo compartido entre Android e iOS.
+
 ## [1.25.1 (67)] - 2026-11-11
 
 ### Añadido
