@@ -9,6 +9,17 @@ version so that App Store Connect can provide notes in both languages.
 ## [Unreleased]
 
 ### Added
+- Dish photo: recognises many more foods (bread, rice, soup, sushi, meat, fish, cheese, egg, legumes…), shows calories per food with a portion selector (small, normal, large), gives a non-binding animal/plant hint and can analyse a photo from the gallery.
+
+### Fixed
+- Dish photo food names were shown as untranslated keys.
+
+### Changed
+- Additive names and explanations (glossary and result) are now available in all 6 app languages, from a catalogue shared by Android and iOS.
+
+## [1.25.1 (67)] - 2026-11-11
+
+### Added
 - Cherry character back in the cover rotation and mascot gallery, with the new artwork.
 
 ## [1.25.0 (66)] - 2026-11-05
