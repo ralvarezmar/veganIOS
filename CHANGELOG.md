@@ -8,6 +8,12 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Verdict reasons now show animal ingredients in the app language (e.g. Dutch "garnaal" appears as "shrimp"), using Open Food Facts ingredient ids and a catalogue shared by Android and iOS.
+- Redesigned share card: fixed 4:5 format with a large verdict icon, product card and a random VeganLens character each time you share.
+
+## [1.25.2 (68)] - 2026-11-11
+
 ### Added
 - Dish photo: recognises many more foods (bread, rice, soup, sushi, meat, fish, cheese, egg, legumes…), shows calories per food with a portion selector (small, normal, large), gives a non-binding animal/plant hint and can analyse a photo from the gallery.
 

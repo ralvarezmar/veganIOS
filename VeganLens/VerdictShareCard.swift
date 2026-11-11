@@ -50,52 +50,113 @@ func verdictShareHeadline(for analysis: VeganAnalysis) -> String {
     }
 }
 
+func verdictShareSymbolName(for status: VeganStatus) -> String {
+    switch status {
+    case .vegan: return "checkmark"
+    case .notVegan: return "xmark"
+    case .maybe: return "questionmark"
+    case .unknown: return "minus"
+    }
+}
+
+func randomVerdictShareMascot() -> String {
+    portadaCharacterNames.randomElement() ?? "apple"
+}
+
 struct VerdictShareCardView: View {
     let content: VerdictShareCardContent
+    var mascot: String = randomVerdictShareMascot()
 
     private var accent: Color {
         veganVerdictColor(for: content.status, colorblindSafe: content.colorblindSafe)
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            Capsule()
-                .fill(accent)
-                .frame(width: 60, height: 6)
-            Text("VeganLens")
-                .font(.system(size: 20, weight: .bold))
-                .foregroundStyle(accent)
-            Text(content.headline)
-                .font(.system(size: 28, weight: .heavy))
-                .foregroundStyle(accent)
-                .fixedSize(horizontal: false, vertical: true)
-            VStack(alignment: .leading, spacing: 6) {
-                Text(content.title)
-                    .font(.system(size: 26, weight: .bold))
-                    .foregroundStyle(Color(white: 0.12))
-                    .lineLimit(3)
-                if let brand = content.brand {
-                    Text(brand)
-                        .font(.system(size: 18))
-                        .foregroundStyle(Color(white: 0.42))
-                        .lineLimit(1)
+        ZStack(alignment: .top) {
+            accent
+            Circle()
+                .fill(Color.white.opacity(0.11))
+                .frame(width: 260, height: 260)
+                .offset(x: 230, y: -90)
+            Circle()
+                .fill(Color.white.opacity(0.11))
+                .frame(width: 170, height: 170)
+                .offset(x: -250, y: 215)
+
+            VStack(spacing: 0) {
+                Text("VeganLens")
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 36)
+                    .padding(.top, 30)
+
+                ZStack {
+                    Circle().fill(.white)
+                    Image(systemName: verdictShareSymbolName(for: content.status))
+                        .font(.system(size: 70, weight: .heavy))
+                        .foregroundStyle(accent)
                 }
+                .frame(width: 132, height: 132)
+                .padding(.top, 34)
+
+                Text(content.headline)
+                    .font(.system(size: 32, weight: .heavy))
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .padding(.horizontal, 28)
+                    .padding(.top, 20)
+                    .frame(height: 100, alignment: .top)
+
+                ZStack(alignment: .bottomTrailing) {
+                    RoundedRectangle(cornerRadius: 28, style: .continuous)
+                        .fill(.white)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(content.title)
+                            .font(.system(size: 27, weight: .bold))
+                            .foregroundStyle(Color(white: 0.12))
+                            .lineLimit(3)
+                        if let brand = content.brand {
+                            Text(brand)
+                                .font(.system(size: 19))
+                                .foregroundStyle(Color(white: 0.42))
+                                .lineLimit(1)
+                        }
+                        if !content.details.isEmpty {
+                            Capsule()
+                                .fill(accent)
+                                .frame(width: 48, height: 5)
+                                .padding(.top, 12)
+                            Text(content.details)
+                                .font(.system(size: 19))
+                                .foregroundStyle(Color(white: 0.12))
+                                .lineLimit(5)
+                                .padding(.trailing, 130)
+                                .padding(.top, 8)
+                        }
+                        Spacer(minLength: 0)
+                        Text(content.sourceName)
+                            .font(.system(size: 15))
+                            .foregroundStyle(Color(white: 0.42))
+                            .lineLimit(2)
+                            .padding(.trailing, 130)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .padding(32)
+                    Image("portada_\(mascot)")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 150, height: 150)
+                        .padding(.trailing, 12)
+                        .padding(.bottom, 8)
+                }
+                .padding(.horizontal, 28)
+                .padding(.bottom, 28)
             }
-            if !content.details.isEmpty {
-                Text(content.details)
-                    .font(.system(size: 18))
-                    .foregroundStyle(Color(white: 0.12))
-                    .lineLimit(6)
-            }
-            Text(content.sourceName)
-                .font(.system(size: 15))
-                .foregroundStyle(Color(white: 0.42))
         }
-        .padding(36)
-        .frame(width: 468, alignment: .leading)
-        .background(Color.white, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .padding(36)
-        .background(accent)
+        .frame(width: 540, height: 675)
+        .clipped()
         .environment(\.colorScheme, .light)
     }
 }
