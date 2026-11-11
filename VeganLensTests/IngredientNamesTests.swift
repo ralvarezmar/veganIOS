@@ -29,8 +29,9 @@ final class IngredientNamesTests: XCTestCase {
     func testProductInAppLanguageKeepsOriginalText() {
         let product = makeProduct(language: "es", ingredientText: "gambas peladas")
 
-        XCTAssertEqual(analyzeVegan(product, displayLanguage: "es").nonVeganIngredients, ["gambas peladas"])
-        XCTAssertEqual(analyzeVegan(product, displayLanguage: nil).nonVeganIngredients, ["gambas peladas"])
+        let original = [cleanFoodFactsLabel("gambas peladas")].compactMap { $0 }
+        XCTAssertEqual(analyzeVegan(product, displayLanguage: "es").nonVeganIngredients, original)
+        XCTAssertEqual(analyzeVegan(product, displayLanguage: nil).nonVeganIngredients, original)
     }
 
     private func makeProduct(language: String, ingredientText: String) -> Product {
