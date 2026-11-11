@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.25.1 (67)] - 2026-11-11
+
 ### Added
 - Cherry character back in the cover rotation and mascot gallery, with the new artwork.
 
