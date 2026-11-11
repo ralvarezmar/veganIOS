@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.25.2 (68)] - 2026-11-11
+
 ### Added
 - Dish photo: recognises many more foods (bread, rice, soup, sushi, meat, fish, cheese, egg, legumes…), shows calories per food with a portion selector (small, normal, large), gives a non-binding animal/plant hint and can analyse a photo from the gallery.
 
