@@ -13,6 +13,7 @@ let portadaCharacterNames = [
     "blueberries",
     "broccoli",
     "carrot",
+    "cherry",
     "chili",
     "coconut",
     "corn",
