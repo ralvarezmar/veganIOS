@@ -33,6 +33,7 @@ struct Product: Codable {
     let brands: String?
     let imageUrl: String?
     let ingredientsText: String?
+    let ingredientsLanguage: String?
     let ingredientsAnalysisTags: [String]?
     let categoriesTags: [String]?
     let labelsTags: [String]?
@@ -58,6 +59,7 @@ struct Product: Codable {
         case brands
         case imageUrl = "image_url"
         case ingredientsText = "ingredients_text"
+        case ingredientsLanguage = "ingredients_lc"
         case ingredientsAnalysisTags = "ingredients_analysis_tags"
         case categoriesTags = "categories_tags"
         case labelsTags = "labels_tags"
@@ -102,9 +104,11 @@ struct Product: Codable {
         environmentalScoreData: EnvironmentalScoreData? = nil,
         nutrientLevels: NutrientLevels? = nil,
         ecoscoreData: EnvironmentalScoreData? = nil,
-        packagings: [PackagingData]? = nil
+        packagings: [PackagingData]? = nil,
+        ingredientsLanguage: String? = nil
     ) {
         self.productName = productName
+        self.ingredientsLanguage = ingredientsLanguage
         self.brands = brands
         self.imageUrl = imageUrl
         self.ingredientsText = ingredientsText
@@ -135,6 +139,9 @@ struct Product: Codable {
         brands = try? container.decodeIfPresent(String.self, forKey: .brands)
         imageUrl = try? container.decodeIfPresent(String.self, forKey: .imageUrl)
         ingredientsText = try? container.decodeIfPresent(String.self, forKey: .ingredientsText)
+        let languageContainer = try? decoder.container(keyedBy: ProductLanguageKeys.self)
+        ingredientsLanguage = (try? container.decodeIfPresent(String.self, forKey: .ingredientsLanguage))
+            ?? (try? languageContainer?.decodeIfPresent(String.self, forKey: .lang))
         ingredientsAnalysisTags = try? container.decodeIfPresent([String].self, forKey: .ingredientsAnalysisTags)
         categoriesTags = try? container.decodeIfPresent([String].self, forKey: .categoriesTags)
         labelsTags = try? container.decodeIfPresent([String].self, forKey: .labelsTags)
@@ -157,18 +164,25 @@ struct Product: Codable {
     }
 }
 
+private enum ProductLanguageKeys: String, CodingKey {
+    case lang
+}
+
 struct OffIngredient: Codable {
+    let id: String?
     let text: String?
     let vegan: String?
     let vegetarian: String?
     let ingredients: [OffIngredient]?
 
     init(
+        id: String? = nil,
         text: String?,
         vegan: String?,
         vegetarian: String?,
         ingredients: [OffIngredient]? = nil
     ) {
+        self.id = id
         self.text = text
         self.vegan = vegan
         self.vegetarian = vegetarian

@@ -1,0 +1,670 @@
+{
+ "format": "veganlens-ingredient-names",
+ "version": 1,
+ "ingredients": {
+  "en:milk": {
+   "es": "leche",
+   "en": "milk",
+   "pt": "leite",
+   "it": "latte",
+   "fr": "lait",
+   "de": "Milch"
+  },
+  "en:whole-milk": {
+   "es": "leche entera",
+   "en": "whole milk",
+   "pt": "leite gordo",
+   "it": "latte intero",
+   "fr": "lait entier",
+   "de": "Vollmilch"
+  },
+  "en:skimmed-milk": {
+   "es": "leche desnatada",
+   "en": "skimmed milk",
+   "pt": "leite magro",
+   "it": "latte scremato",
+   "fr": "lait écrémé",
+   "de": "Magermilch"
+  },
+  "en:semi-skimmed-milk": {
+   "es": "leche semidesnatada",
+   "en": "semi-skimmed milk",
+   "pt": "leite meio-gordo",
+   "it": "latte parzialmente scremato",
+   "fr": "lait demi-écrémé",
+   "de": "fettarme Milch"
+  },
+  "en:pasteurised-milk": {
+   "es": "leche pasteurizada",
+   "en": "pasteurised milk",
+   "pt": "leite pasteurizado",
+   "it": "latte pastorizzato",
+   "fr": "lait pasteurisé",
+   "de": "pasteurisierte Milch"
+  },
+  "en:milk-powder": {
+   "es": "leche en polvo",
+   "en": "milk powder",
+   "pt": "leite em pó",
+   "it": "latte in polvere",
+   "fr": "lait en poudre",
+   "de": "Milchpulver"
+  },
+  "en:whole-milk-powder": {
+   "es": "leche entera en polvo",
+   "en": "whole milk powder",
+   "pt": "leite gordo em pó",
+   "it": "latte intero in polvere",
+   "fr": "lait entier en poudre",
+   "de": "Vollmilchpulver"
+  },
+  "en:skimmed-milk-powder": {
+   "es": "leche desnatada en polvo",
+   "en": "skimmed milk powder",
+   "pt": "leite magro em pó",
+   "it": "latte scremato in polvere",
+   "fr": "lait écrémé en poudre",
+   "de": "Magermilchpulver"
+  },
+  "en:milk-chocolate": {
+   "es": "chocolate con leche",
+   "en": "milk chocolate",
+   "pt": "chocolate de leite",
+   "it": "cioccolato al latte",
+   "fr": "chocolat au lait",
+   "de": "Milchschokolade"
+  },
+  "en:cream": {
+   "es": "nata",
+   "en": "cream",
+   "pt": "natas",
+   "it": "panna",
+   "fr": "crème",
+   "de": "Sahne"
+  },
+  "en:cream-powder": {
+   "es": "nata en polvo",
+   "en": "cream powder",
+   "pt": "natas em pó",
+   "it": "panna in polvere",
+   "fr": "crème en poudre",
+   "de": "Sahnepulver"
+  },
+  "en:butter": {
+   "es": "mantequilla",
+   "en": "butter",
+   "pt": "manteiga",
+   "it": "burro",
+   "fr": "beurre",
+   "de": "Butter"
+  },
+  "en:butterfat": {
+   "es": "grasa láctea",
+   "en": "butterfat",
+   "pt": "gordura láctea",
+   "it": "grasso del latte",
+   "fr": "matière grasse laitière",
+   "de": "Butterreinfett"
+  },
+  "en:anhydrous-milk-fat": {
+   "es": "grasa láctea anhidra",
+   "en": "anhydrous milk fat",
+   "pt": "gordura láctea anidra",
+   "it": "grasso del latte anidro",
+   "fr": "matière grasse laitière anhydre",
+   "de": "Butterreinfett"
+  },
+  "en:milk-fat": {
+   "es": "grasa de leche",
+   "en": "milk fat",
+   "pt": "gordura de leite",
+   "it": "grasso del latte",
+   "fr": "matière grasse de lait",
+   "de": "Milchfett"
+  },
+  "en:buttermilk": {
+   "es": "suero de mantequilla",
+   "en": "buttermilk",
+   "pt": "leitelho",
+   "it": "latticello",
+   "fr": "babeurre",
+   "de": "Buttermilch"
+  },
+  "en:whey": {
+   "es": "suero de leche",
+   "en": "whey",
+   "pt": "soro de leite",
+   "it": "siero di latte",
+   "fr": "lactosérum",
+   "de": "Molke"
+  },
+  "en:whey-powder": {
+   "es": "suero de leche en polvo",
+   "en": "whey powder",
+   "pt": "soro de leite em pó",
+   "it": "siero di latte in polvere",
+   "fr": "lactosérum en poudre",
+   "de": "Molkenpulver"
+  },
+  "en:lactose": {
+   "es": "lactosa",
+   "en": "lactose",
+   "pt": "lactose",
+   "it": "lattosio",
+   "fr": "lactose",
+   "de": "Laktose"
+  },
+  "en:casein": {
+   "es": "caseína",
+   "en": "casein",
+   "pt": "caseína",
+   "it": "caseina",
+   "fr": "caséine",
+   "de": "Kasein"
+  },
+  "en:caseinate": {
+   "es": "caseinato",
+   "en": "caseinate",
+   "pt": "caseinato",
+   "it": "caseinato",
+   "fr": "caséinate",
+   "de": "Kaseinat"
+  },
+  "en:sodium-caseinate": {
+   "es": "caseinato sódico",
+   "en": "sodium caseinate",
+   "pt": "caseinato de sódio",
+   "it": "caseinato di sodio",
+   "fr": "caséinate de sodium",
+   "de": "Natriumkaseinat"
+  },
+  "en:milk-proteins": {
+   "es": "proteínas de leche",
+   "en": "milk proteins",
+   "pt": "proteínas do leite",
+   "it": "proteine del latte",
+   "fr": "protéines de lait",
+   "de": "Milcheiweiß"
+  },
+  "en:cheese": {
+   "es": "queso",
+   "en": "cheese",
+   "pt": "queijo",
+   "it": "formaggio",
+   "fr": "fromage",
+   "de": "Käse"
+  },
+  "en:yogurt": {
+   "es": "yogur",
+   "en": "yogurt",
+   "pt": "iogurte",
+   "it": "yogurt",
+   "fr": "yaourt",
+   "de": "Joghurt"
+  },
+  "en:mozzarella": {
+   "es": "mozzarella",
+   "en": "mozzarella",
+   "pt": "mozzarella",
+   "it": "mozzarella",
+   "fr": "mozzarella",
+   "de": "Mozzarella"
+  },
+  "en:parmigiano-reggiano": {
+   "es": "parmesano",
+   "en": "Parmesan",
+   "pt": "parmesão",
+   "it": "parmigiano reggiano",
+   "fr": "parmesan",
+   "de": "Parmesan"
+  },
+  "en:egg": {
+   "es": "huevo",
+   "en": "egg",
+   "pt": "ovo",
+   "it": "uovo",
+   "fr": "œuf",
+   "de": "Ei"
+  },
+  "en:whole-egg": {
+   "es": "huevo entero",
+   "en": "whole egg",
+   "pt": "ovo inteiro",
+   "it": "uovo intero",
+   "fr": "œuf entier",
+   "de": "Vollei"
+  },
+  "en:egg-white": {
+   "es": "clara de huevo",
+   "en": "egg white",
+   "pt": "clara de ovo",
+   "it": "albume d'uovo",
+   "fr": "blanc d'œuf",
+   "de": "Eiklar"
+  },
+  "en:egg-yolk": {
+   "es": "yema de huevo",
+   "en": "egg yolk",
+   "pt": "gema de ovo",
+   "it": "tuorlo d'uovo",
+   "fr": "jaune d'œuf",
+   "de": "Eigelb"
+  },
+  "en:egg-powder": {
+   "es": "huevo en polvo",
+   "en": "egg powder",
+   "pt": "ovo em pó",
+   "it": "uovo in polvere",
+   "fr": "œuf en poudre",
+   "de": "Eipulver"
+  },
+  "en:honey": {
+   "es": "miel",
+   "en": "honey",
+   "pt": "mel",
+   "it": "miele",
+   "fr": "miel",
+   "de": "Honig"
+  },
+  "en:gelatin": {
+   "es": "gelatina",
+   "en": "gelatine",
+   "pt": "gelatina",
+   "it": "gelatina",
+   "fr": "gélatine",
+   "de": "Gelatine"
+  },
+  "en:beef-gelatin": {
+   "es": "gelatina de vacuno",
+   "en": "beef gelatine",
+   "pt": "gelatina de bovino",
+   "it": "gelatina bovina",
+   "fr": "gélatine de bœuf",
+   "de": "Rindergelatine"
+  },
+  "en:pork-gelatin": {
+   "es": "gelatina de cerdo",
+   "en": "pork gelatine",
+   "pt": "gelatina de porco",
+   "it": "gelatina di maiale",
+   "fr": "gélatine de porc",
+   "de": "Schweinegelatine"
+  },
+  "en:meat": {
+   "es": "carne",
+   "en": "meat",
+   "pt": "carne",
+   "it": "carne",
+   "fr": "viande",
+   "de": "Fleisch"
+  },
+  "en:beef": {
+   "es": "carne de vacuno",
+   "en": "beef",
+   "pt": "carne de vaca",
+   "it": "manzo",
+   "fr": "bœuf",
+   "de": "Rindfleisch"
+  },
+  "en:pork": {
+   "es": "carne de cerdo",
+   "en": "pork",
+   "pt": "carne de porco",
+   "it": "maiale",
+   "fr": "porc",
+   "de": "Schweinefleisch"
+  },
+  "en:chicken": {
+   "es": "pollo",
+   "en": "chicken",
+   "pt": "frango",
+   "it": "pollo",
+   "fr": "poulet",
+   "de": "Huhn"
+  },
+  "en:chicken-meat": {
+   "es": "carne de pollo",
+   "en": "chicken meat",
+   "pt": "carne de frango",
+   "it": "carne di pollo",
+   "fr": "viande de poulet",
+   "de": "Hähnchenfleisch"
+  },
+  "en:turkey": {
+   "es": "pavo",
+   "en": "turkey",
+   "pt": "peru",
+   "it": "tacchino",
+   "fr": "dinde",
+   "de": "Truthahn"
+  },
+  "en:duck": {
+   "es": "pato",
+   "en": "duck",
+   "pt": "pato",
+   "it": "anatra",
+   "fr": "canard",
+   "de": "Ente"
+  },
+  "en:lamb": {
+   "es": "cordero",
+   "en": "lamb",
+   "pt": "borrego",
+   "it": "agnello",
+   "fr": "agneau",
+   "de": "Lamm"
+  },
+  "en:veal": {
+   "es": "ternera",
+   "en": "veal",
+   "pt": "vitela",
+   "it": "vitello",
+   "fr": "veau",
+   "de": "Kalbfleisch"
+  },
+  "en:ham": {
+   "es": "jamón",
+   "en": "ham",
+   "pt": "fiambre",
+   "it": "prosciutto",
+   "fr": "jambon",
+   "de": "Schinken"
+  },
+  "en:bacon": {
+   "es": "beicon",
+   "en": "bacon",
+   "pt": "bacon",
+   "it": "pancetta",
+   "fr": "lard fumé",
+   "de": "Speck"
+  },
+  "en:sausage": {
+   "es": "salchicha",
+   "en": "sausage",
+   "pt": "salsicha",
+   "it": "salsiccia",
+   "fr": "saucisse",
+   "de": "Wurst"
+  },
+  "en:lard": {
+   "es": "manteca de cerdo",
+   "en": "lard",
+   "pt": "banha",
+   "it": "strutto",
+   "fr": "saindoux",
+   "de": "Schweineschmalz"
+  },
+  "en:animal-fat": {
+   "es": "grasa animal",
+   "en": "animal fat",
+   "pt": "gordura animal",
+   "it": "grasso animale",
+   "fr": "graisse animale",
+   "de": "tierisches Fett"
+  },
+  "en:beef-fat": {
+   "es": "grasa de vacuno",
+   "en": "beef fat",
+   "pt": "gordura de vaca",
+   "it": "grasso di manzo",
+   "fr": "graisse de bœuf",
+   "de": "Rindertalg"
+  },
+  "en:fish": {
+   "es": "pescado",
+   "en": "fish",
+   "pt": "peixe",
+   "it": "pesce",
+   "fr": "poisson",
+   "de": "Fisch"
+  },
+  "en:tuna": {
+   "es": "atún",
+   "en": "tuna",
+   "pt": "atum",
+   "it": "tonno",
+   "fr": "thon",
+   "de": "Thunfisch"
+  },
+  "en:salmon": {
+   "es": "salmón",
+   "en": "salmon",
+   "pt": "salmão",
+   "it": "salmone",
+   "fr": "saumon",
+   "de": "Lachs"
+  },
+  "en:cod": {
+   "es": "bacalao",
+   "en": "cod",
+   "pt": "bacalhau",
+   "it": "merluzzo",
+   "fr": "cabillaud",
+   "de": "Kabeljau"
+  },
+  "en:anchovy": {
+   "es": "anchoa",
+   "en": "anchovy",
+   "pt": "anchova",
+   "it": "acciuga",
+   "fr": "anchois",
+   "de": "Sardelle"
+  },
+  "en:sardine": {
+   "es": "sardina",
+   "en": "sardine",
+   "pt": "sardinha",
+   "it": "sardina",
+   "fr": "sardine",
+   "de": "Sardine"
+  },
+  "en:mackerel": {
+   "es": "caballa",
+   "en": "mackerel",
+   "pt": "cavala",
+   "it": "sgombro",
+   "fr": "maquereau",
+   "de": "Makrele"
+  },
+  "en:herring": {
+   "es": "arenque",
+   "en": "herring",
+   "pt": "arenque",
+   "it": "aringa",
+   "fr": "hareng",
+   "de": "Hering"
+  },
+  "en:fish-sauce": {
+   "es": "salsa de pescado",
+   "en": "fish sauce",
+   "pt": "molho de peixe",
+   "it": "salsa di pesce",
+   "fr": "sauce de poisson",
+   "de": "Fischsauce"
+  },
+  "en:fish-oil": {
+   "es": "aceite de pescado",
+   "en": "fish oil",
+   "pt": "óleo de peixe",
+   "it": "olio di pesce",
+   "fr": "huile de poisson",
+   "de": "Fischöl"
+  },
+  "en:crustacean": {
+   "es": "crustáceo",
+   "en": "crustacean",
+   "pt": "crustáceo",
+   "it": "crostaceo",
+   "fr": "crustacé",
+   "de": "Krebstier"
+  },
+  "en:shrimp": {
+   "es": "gamba",
+   "en": "shrimp",
+   "pt": "camarão",
+   "it": "gambero",
+   "fr": "crevette",
+   "de": "Garnele"
+  },
+  "en:prawn": {
+   "es": "langostino",
+   "en": "prawn",
+   "pt": "gamba",
+   "it": "gambero",
+   "fr": "crevette",
+   "de": "Garnele"
+  },
+  "en:crab": {
+   "es": "cangrejo",
+   "en": "crab",
+   "pt": "caranguejo",
+   "it": "granchio",
+   "fr": "crabe",
+   "de": "Krabbe"
+  },
+  "en:lobster": {
+   "es": "langosta",
+   "en": "lobster",
+   "pt": "lagosta",
+   "it": "aragosta",
+   "fr": "homard",
+   "de": "Hummer"
+  },
+  "en:mollusc": {
+   "es": "molusco",
+   "en": "mollusc",
+   "pt": "molusco",
+   "it": "mollusco",
+   "fr": "mollusque",
+   "de": "Weichtier"
+  },
+  "en:squid": {
+   "es": "calamar",
+   "en": "squid",
+   "pt": "lula",
+   "it": "calamaro",
+   "fr": "calmar",
+   "de": "Tintenfisch"
+  },
+  "en:octopus": {
+   "es": "pulpo",
+   "en": "octopus",
+   "pt": "polvo",
+   "it": "polpo",
+   "fr": "poulpe",
+   "de": "Krake"
+  },
+  "en:mussel": {
+   "es": "mejillón",
+   "en": "mussel",
+   "pt": "mexilhão",
+   "it": "cozza",
+   "fr": "moule",
+   "de": "Miesmuschel"
+  },
+  "en:oyster": {
+   "es": "ostra",
+   "en": "oyster",
+   "pt": "ostra",
+   "it": "ostrica",
+   "fr": "huître",
+   "de": "Auster"
+  },
+  "en:clam": {
+   "es": "almeja",
+   "en": "clam",
+   "pt": "amêijoa",
+   "it": "vongola",
+   "fr": "palourde",
+   "de": "Venusmuschel"
+  },
+  "en:oyster-sauce": {
+   "es": "salsa de ostras",
+   "en": "oyster sauce",
+   "pt": "molho de ostra",
+   "it": "salsa di ostriche",
+   "fr": "sauce d'huître",
+   "de": "Austernsauce"
+  },
+  "en:surimi": {
+   "es": "surimi",
+   "en": "surimi",
+   "pt": "surimi",
+   "it": "surimi",
+   "fr": "surimi",
+   "de": "Surimi"
+  },
+  "en:beeswax": {
+   "es": "cera de abejas",
+   "en": "beeswax",
+   "pt": "cera de abelha",
+   "it": "cera d'api",
+   "fr": "cire d'abeille",
+   "de": "Bienenwachs"
+  },
+  "en:carmine": {
+   "es": "carmín",
+   "en": "carmine",
+   "pt": "carmim",
+   "it": "carminio",
+   "fr": "carmin",
+   "de": "Karmin"
+  },
+  "en:shellac": {
+   "es": "goma laca",
+   "en": "shellac",
+   "pt": "goma-laca",
+   "it": "gommalacca",
+   "fr": "gomme-laque",
+   "de": "Schellack"
+  },
+  "en:collagen": {
+   "es": "colágeno",
+   "en": "collagen",
+   "pt": "colagénio",
+   "it": "collagene",
+   "fr": "collagène",
+   "de": "Kollagen"
+  },
+  "en:rennet": {
+   "es": "cuajo",
+   "en": "rennet",
+   "pt": "coalho",
+   "it": "caglio",
+   "fr": "présure",
+   "de": "Lab"
+  },
+  "en:royal-jelly": {
+   "es": "jalea real",
+   "en": "royal jelly",
+   "pt": "geleia real",
+   "it": "pappa reale",
+   "fr": "gelée royale",
+   "de": "Gelée royale"
+  },
+  "en:propolis": {
+   "es": "propóleo",
+   "en": "propolis",
+   "pt": "própolis",
+   "it": "propoli",
+   "fr": "propolis",
+   "de": "Propolis"
+  },
+  "en:lanolin": {
+   "es": "lanolina",
+   "en": "lanolin",
+   "pt": "lanolina",
+   "it": "lanolina",
+   "fr": "lanoline",
+   "de": "Lanolin"
+  },
+  "en:isinglass": {
+   "es": "cola de pescado",
+   "en": "isinglass",
+   "pt": "cola de peixe",
+   "it": "colla di pesce",
+   "fr": "colle de poisson",
+   "de": "Hausenblase"
+  }
+ }
+}
