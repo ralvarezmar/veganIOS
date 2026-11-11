@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- Vuelve el personaje de la cereza a la rotación de portada y a la galería, con el nuevo dibujo.
+
 ## [1.25.0 (66)] - 2026-11-05
 
 ### Añadido

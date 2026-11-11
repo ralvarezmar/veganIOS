@@ -384,6 +384,7 @@
 "mascot_blueberries" = "Mirtilos";
 "mascot_broccoli" = "Brócolos";
 "mascot_carrot" = "Cenoura";
+"mascot_cherry" = "Cereja";
 "mascot_chili" = "Malagueta";
 "mascot_coconut" = "Coco";
 "mascot_corn" = "Milho";
@@ -428,6 +429,7 @@
 "mascot_nick_blueberries" = "Arandachu";
 "mascot_nick_broccoli" = "Brocozard";
 "mascot_nick_carrot" = "Zanahochu";
+"mascot_nick_cherry" = "Cerezard";
 "mascot_nick_chili" = "Chilizard";
 "mascot_nick_coconut" = "Cocomon";
 "mascot_nick_corn" = "Maizeon";
