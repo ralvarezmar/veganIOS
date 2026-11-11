@@ -10,6 +10,12 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- Foto de plato: reconoce muchos más alimentos (pan, arroz, sopa, sushi, carne, pescado, queso, huevo, legumbres…), muestra las kcal de cada alimento con selector de ración (pequeña, normal o grande), da un aviso orientativo animal/vegetal y permite analizar una foto de la galería.
+
+### Corregido
+- Los nombres de alimentos de la foto de plato se mostraban como claves sin traducir.
+
 ### Cambiado
 - Los nombres y explicaciones de aditivos (glosario y resultado) están ahora en los 6 idiomas de la app, con un catálogo compartido entre Android e iOS.
 
