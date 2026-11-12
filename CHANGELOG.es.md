@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Chapas VEGAN de los personajes redibujadas, nítidas y bien proporcionadas.
+
 ## [1.25.5 (71)] - 2026-11-12
 
 ### Cambiado
