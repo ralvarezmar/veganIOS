@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Character VEGAN badges redrawn as sharp, evenly proportioned badges.
+
 ## [1.25.5 (71)] - 2026-11-12
 
 ### Changed
