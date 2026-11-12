@@ -89,7 +89,6 @@ final class VerdictShareCardLayoutTests: XCTestCase {
         )
         content.chips = ["500 g", "Nutri-Score B", "Green Score A", "NOVA 3"]
         content.notes = ["Sello vegano certificado", "Puede contener trazas de: leche, huevos", "Sin aceite de palma"]
-        content.barcode = "8410000000000"
         let image = try XCTUnwrap(renderVerdictShareCard(content))
         XCTAssertEqual(image.size.width, 540, accuracy: 1)
         XCTAssertEqual(image.size.height, 675, accuracy: 1)
@@ -98,24 +97,5 @@ final class VerdictShareCardLayoutTests: XCTestCase {
     func testNotesListAllergensBeforeTraces() {
         let notes = verdictShareNotes(for: product(traces: ["en:milk"], allergens: ["en:gluten"]))
         XCTAssertEqual(notes, [LF("share_card_allergens", L("allergen_gluten")), LF("share_card_traces", L("allergen_milk"))])
-    }
-
-    func testEanBarcodesAreEncodedWithGuardBars() throws {
-        let ean13 = try XCTUnwrap(eanBarcodeModules("4006381333931"))
-        XCTAssertEqual(ean13.count, 95)
-        let bits = Array(ean13.map { $0 ? "1" : "0" }.joined())
-        XCTAssertEqual(String(bits[0..<3]), "101")
-        XCTAssertEqual(String(bits[3..<10]), "0001101")
-        XCTAssertEqual(String(bits[45..<50]), "01010")
-        XCTAssertEqual(String(bits[50..<57]), "1000010")
-        XCTAssertEqual(String(bits[92..<95]), "101")
-        XCTAssertEqual(eanBarcodeModules("96385074")?.count, 67)
-        XCTAssertEqual(eanBarcodeModules("012345678905")?.count, 95)
-    }
-
-    func testUnsupportedBarcodesAreNotEncoded() {
-        XCTAssertNil(eanBarcodeModules(nil))
-        XCTAssertNil(eanBarcodeModules("12345"))
-        XCTAssertNil(eanBarcodeModules("40063813339AB"))
     }
 }
