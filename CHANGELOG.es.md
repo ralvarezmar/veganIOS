@@ -13,6 +13,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ### Añadido
 - La tarjeta de compartir rellena el espacio libre con un aviso de alérgenos, el pie "Analizado con VeganLens" y, en productos aptos, una frase con el motivo, la foto del producto más grande y el checklist "Sin lácteos · Sin huevo · Sin carne ni pescado · Sin miel".
 
+### Cambiado
+- Personaje del calabacín mejorado: contorno limpio sin el borde blanco, manchas eliminadas, el doble de resolución y chapa VEGAN nítida.
+
 ## [1.25.6 (72)] - 2026-11-12
 
 ### Añadido
