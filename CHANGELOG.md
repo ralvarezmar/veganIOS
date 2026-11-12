@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.25.5 (71)] - 2026-11-12
+
 ### Changed
 - Share card layout: smaller verdict icon, headline and character; larger product card with the product photo next to its name.
 
