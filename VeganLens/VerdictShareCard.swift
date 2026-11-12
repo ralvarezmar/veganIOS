@@ -12,6 +12,7 @@ struct VerdictShareCardContent {
     var productImage: UIImage? = nil
     var chips: [String] = []
     var notes: [String] = []
+    var checks: [String] = []
 }
 
 func verdictShareChips(for product: Product) -> [String] {
@@ -36,6 +37,10 @@ func verdictShareNotes(for product: Product) -> [String] {
     var notes: [String] = []
     if product.labelsTags?.contains(where: isVeganSealTag) == true {
         notes.append(L("share_card_vegan_seal"))
+    }
+    let allergens = buildAllergenDisplayItems(tags: product.allergensTags ?? []).map(\.label)
+    if !allergens.isEmpty {
+        notes.append(LF("share_card_allergens", allergens.joined(separator: ", ")))
     }
     let traces = buildAllergenDisplayItems(tags: product.tracesTags ?? []).map(\.label)
     if !traces.isEmpty {
@@ -109,6 +114,8 @@ extension VerdictShareCardContent {
             details = LF("share_card_non_vegan_ingredients", analysis.nonVeganIngredients.joined(separator: separator))
         case .maybe where !analysis.doubtfulIngredients.isEmpty:
             details = LF("share_card_doubtful_ingredients", analysis.doubtfulIngredients.joined(separator: separator))
+        case .vegan:
+            details = L("share_card_vegan_details")
         default:
             details = ""
         }
@@ -121,7 +128,10 @@ extension VerdictShareCardContent {
             status: analysis.status,
             colorblindSafe: colorblindSafe,
             chips: verdictShareChips(for: product),
-            notes: verdictShareNotes(for: product)
+            notes: verdictShareNotes(for: product),
+            checks: analysis.status == .vegan
+                ? ["share_card_check_no_dairy", "share_card_check_no_eggs", "share_card_check_no_meat_fish", "share_card_check_no_honey"].map { L($0) }
+                : []
         )
     }
 }
@@ -158,6 +168,10 @@ struct VerdictShareCardView: View {
 
     private var accent: Color {
         veganVerdictColor(for: content.status, colorblindSafe: content.colorblindSafe)
+    }
+
+    private var productImageSize: CGFloat {
+        content.status == .vegan ? 200 : 150
     }
 
     var body: some View {
@@ -207,7 +221,7 @@ struct VerdictShareCardView: View {
                                 Image(uiImage: productImage)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 150, height: 150)
+                                    .frame(width: productImageSize, height: productImageSize)
                                     .background(Color(white: 0.95))
                                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                             }
@@ -251,6 +265,21 @@ struct VerdictShareCardView: View {
                                 .padding(.trailing, 80)
                                 .padding(.top, 8)
                         }
+                        if !content.checks.isEmpty {
+                            VerdictShareChipsLayout {
+                                ForEach(content.checks, id: \.self) { check in
+                                    Text("✓ \(check)")
+                                        .font(.system(size: 14, weight: .bold))
+                                        .foregroundStyle(accent)
+                                        .lineLimit(1)
+                                        .padding(.horizontal, 11)
+                                        .padding(.vertical, 5)
+                                        .background(Capsule().fill(Color(white: 0.95)))
+                                }
+                            }
+                            .padding(.trailing, 80)
+                            .padding(.top, 12)
+                        }
                         if !content.notes.isEmpty {
                             VStack(alignment: .leading, spacing: 6) {
                                 ForEach(content.notes, id: \.self) { note in
@@ -270,7 +299,7 @@ struct VerdictShareCardView: View {
                             .layoutPriority(-1)
                         }
                         Spacer(minLength: 0)
-                        Text(content.sourceName)
+                        Text([L("share_card_tagline"), content.sourceName].filter { !$0.isEmpty }.joined(separator: " · "))
                             .font(.system(size: 15))
                             .foregroundStyle(Color(white: 0.42))
                             .lineLimit(2)

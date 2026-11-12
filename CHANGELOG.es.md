@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- La tarjeta de compartir rellena el espacio libre con un aviso de alérgenos, el pie "Analizado con VeganLens" y, en productos aptos, una frase con el motivo, la foto del producto más grande y el checklist "Sin lácteos · Sin huevo · Sin carne ni pescado · Sin miel".
+
 ## [1.25.6 (72)] - 2026-11-12
 
 ### Añadido
