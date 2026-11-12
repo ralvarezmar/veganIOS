@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- Share card shows quantity, Nutri-Score, Green Score and NOVA chips, plus vegan label, traces and palm oil notes when available.
+
 ### Changed
 - Character VEGAN badges redrawn as sharp, evenly proportioned badges.
 

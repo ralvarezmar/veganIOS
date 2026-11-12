@@ -528,7 +528,7 @@ private func isMeatAlternativeCategoryTag(_ tag: String) -> Bool {
         (normalizedTag.contains("carne") && spanishMarkers.contains { normalizedTag.contains($0) })
 }
 
-private func isVeganSealTag(_ tag: String) -> Bool {
+func isVeganSealTag(_ tag: String) -> Bool {
     let normalizedTag = tag.lowercased().split(separator: ":", maxSplits: 1).last.map(String.init) ?? tag.lowercased()
     return normalizedTag.contains("vegan") &&
         !normalizedTag.contains("non") &&

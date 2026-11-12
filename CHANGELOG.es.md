@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- La tarjeta de compartir muestra chips de cantidad, Nutri-Score, Green Score y NOVA, y avisos de sello vegano, trazas y aceite de palma cuando hay datos.
+
 ### Cambiado
 - Chapas VEGAN de los personajes redibujadas, nítidas y bien proporcionadas.
 
