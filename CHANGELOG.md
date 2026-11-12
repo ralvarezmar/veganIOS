@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- Share card fills its free space with an allergens note, an "Analyzed with VeganLens" footer and, for vegan products, a short verdict reason, a larger product photo and a "No dairy · No eggs · No meat or fish · No honey" checklist.
+
 ### Changed
 - Zucchini character redrawn: clean outline without the white halo, stray marks removed, double resolution and a sharp VEGAN badge.
 
