@@ -96,6 +96,10 @@
 "share_card_allergens" = "Contém: %@";
 "share_card_tagline" = "Analisado com VeganLens";
 "share_card_vegan_details" = "Não foram detetados ingredientes de origem animal.";
+"share_card_check_no_dairy" = "Sem lácteos";
+"share_card_check_no_eggs" = "Sem ovo";
+"share_card_check_no_meat_fish" = "Sem carne nem peixe";
+"share_card_check_no_honey" = "Sem mel";
 "share_result_template" = "%@\nAvaliação: %@\nFonte: %@\n%@";
 "product_not_found" = "Produto não encontrado no Open Food Facts";
 "product_not_found_sources" = "Não foram encontradas informações suficientes em nenhuma das bases consultadas: %@.";

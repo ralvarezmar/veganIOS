@@ -89,6 +89,7 @@ final class VerdictShareCardLayoutTests: XCTestCase {
         )
         content.chips = ["500 g", "Nutri-Score B", "Green Score A", "NOVA 3"]
         content.notes = ["Sello vegano certificado", "Puede contener trazas de: leche, huevos", "Sin aceite de palma"]
+        content.checks = ["Sin lácteos", "Sin huevo", "Sin carne ni pescado", "Sin miel"]
         let image = try XCTUnwrap(renderVerdictShareCard(content))
         XCTAssertEqual(image.size.width, 540, accuracy: 1)
         XCTAssertEqual(image.size.height, 675, accuracy: 1)

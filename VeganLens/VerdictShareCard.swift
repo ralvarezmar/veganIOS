@@ -12,6 +12,7 @@ struct VerdictShareCardContent {
     var productImage: UIImage? = nil
     var chips: [String] = []
     var notes: [String] = []
+    var checks: [String] = []
 }
 
 func verdictShareChips(for product: Product) -> [String] {
@@ -127,7 +128,10 @@ extension VerdictShareCardContent {
             status: analysis.status,
             colorblindSafe: colorblindSafe,
             chips: verdictShareChips(for: product),
-            notes: verdictShareNotes(for: product)
+            notes: verdictShareNotes(for: product),
+            checks: analysis.status == .vegan
+                ? ["share_card_check_no_dairy", "share_card_check_no_eggs", "share_card_check_no_meat_fish", "share_card_check_no_honey"].map { L($0) }
+                : []
         )
     }
 }
@@ -164,6 +168,10 @@ struct VerdictShareCardView: View {
 
     private var accent: Color {
         veganVerdictColor(for: content.status, colorblindSafe: content.colorblindSafe)
+    }
+
+    private var productImageSize: CGFloat {
+        content.status == .vegan ? 200 : 150
     }
 
     var body: some View {
@@ -213,7 +221,7 @@ struct VerdictShareCardView: View {
                                 Image(uiImage: productImage)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 150, height: 150)
+                                    .frame(width: productImageSize, height: productImageSize)
                                     .background(Color(white: 0.95))
                                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                             }
@@ -256,6 +264,21 @@ struct VerdictShareCardView: View {
                                 .lineLimit(4)
                                 .padding(.trailing, 80)
                                 .padding(.top, 8)
+                        }
+                        if !content.checks.isEmpty {
+                            VerdictShareChipsLayout {
+                                ForEach(content.checks, id: \.self) { check in
+                                    Text("✓ \(check)")
+                                        .font(.system(size: 14, weight: .bold))
+                                        .foregroundStyle(accent)
+                                        .lineLimit(1)
+                                        .padding(.horizontal, 11)
+                                        .padding(.vertical, 5)
+                                        .background(Capsule().fill(Color(white: 0.95)))
+                                }
+                            }
+                            .padding(.trailing, 80)
+                            .padding(.top, 12)
                         }
                         if !content.notes.isEmpty {
                             VStack(alignment: .leading, spacing: 6) {

@@ -98,6 +98,10 @@
 "share_card_allergens" = "Contiene: %@";
 "share_card_tagline" = "Analizado con VeganLens";
 "share_card_vegan_details" = "No se han detectado ingredientes de origen animal.";
+"share_card_check_no_dairy" = "Sin lácteos";
+"share_card_check_no_eggs" = "Sin huevo";
+"share_card_check_no_meat_fish" = "Sin carne ni pescado";
+"share_card_check_no_honey" = "Sin miel";
 "share_result_template" = "%@
 Veredicto: %@
 Fuente: %@
