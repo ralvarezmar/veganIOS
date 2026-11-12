@@ -1456,16 +1456,22 @@ struct ResultView: View {
     private func prepareShare(text: String) {
         shareTextForPresentation = text
         shareImageForPresentation = nil
-        if case .success(let product, let source, _, _) = loadState {
-            shareImageForPresentation = renderVerdictShareCard(VerdictShareCardContent(
-                product: product,
-                barcode: barcode,
-                source: source,
-                analysis: analyzeVegan(product),
-                colorblindSafe: UserDefaults.standard.bool(forKey: AccessibilityPreferences.colorblindPaletteKey)
-            ))
+        guard case .success(let product, let source, _, _) = loadState else {
+            showingShareSheet = true
+            return
         }
-        showingShareSheet = true
+        var content = VerdictShareCardContent(
+            product: product,
+            barcode: barcode,
+            source: source,
+            analysis: analyzeVegan(product),
+            colorblindSafe: UserDefaults.standard.bool(forKey: AccessibilityPreferences.colorblindPaletteKey)
+        )
+        Task { @MainActor in
+            content.productImage = await loadShareProductImage(from: product.imageUrl)
+            shareImageForPresentation = renderVerdictShareCard(content)
+            showingShareSheet = true
+        }
     }
 
     private func shareVerdictLabel(for status: VeganStatus) -> String {

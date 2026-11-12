@@ -9,6 +9,7 @@ struct VerdictShareCardContent {
     let sourceName: String
     let status: VeganStatus
     let colorblindSafe: Bool
+    var productImage: UIImage? = nil
 }
 
 extension VerdictShareCardContent {
@@ -113,15 +114,28 @@ struct VerdictShareCardView: View {
                     RoundedRectangle(cornerRadius: 28, style: .continuous)
                         .fill(.white)
                     VStack(alignment: .leading, spacing: 6) {
-                        Text(content.title)
-                            .font(.system(size: 27, weight: .bold))
-                            .foregroundStyle(Color(white: 0.12))
-                            .lineLimit(3)
-                        if let brand = content.brand {
-                            Text(brand)
-                                .font(.system(size: 19))
-                                .foregroundStyle(Color(white: 0.42))
-                                .lineLimit(1)
+                        HStack(alignment: .top, spacing: 16) {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(content.title)
+                                    .font(.system(size: 27, weight: .bold))
+                                    .foregroundStyle(Color(white: 0.12))
+                                    .lineLimit(3)
+                                if let brand = content.brand {
+                                    Text(brand)
+                                        .font(.system(size: 19))
+                                        .foregroundStyle(Color(white: 0.42))
+                                        .lineLimit(1)
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            if let productImage = content.productImage {
+                                Image(uiImage: productImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 110, height: 110)
+                                    .background(Color(white: 0.95))
+                                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            }
                         }
                         if !content.details.isEmpty {
                             Capsule()
@@ -166,4 +180,12 @@ func renderVerdictShareCard(_ content: VerdictShareCardContent) -> UIImage? {
     let renderer = ImageRenderer(content: VerdictShareCardView(content: content))
     renderer.scale = 2
     return renderer.uiImage
+}
+
+func loadShareProductImage(from urlString: String?) async -> UIImage? {
+    guard let urlString, let url = URL(string: urlString) else { return nil }
+    var request = URLRequest(url: url)
+    request.timeoutInterval = 8
+    guard let (data, _) = try? await URLSession.shared.data(for: request) else { return nil }
+    return UIImage(data: data)
 }

@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- The share card now includes a small photo of the product when one is available.
+
 ## [1.25.3 (69)] - 2026-11-11
 
 ### Changed
