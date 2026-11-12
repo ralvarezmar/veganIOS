@@ -91,6 +91,8 @@
 "share_verdict_sin_datos" = "Données insuffisantes 🔍";
 "share_card_non_vegan_ingredients" = "Ingrédients d’origine animale : %@";
 "share_card_doubtful_ingredients" = "Ingrédients d’origine douteuse : %@";
+"share_card_vegan_seal" = "Label vegan certifié";
+"share_card_traces" = "Peut contenir des traces de : %@";
 "share_result_template" = "%@\nVerdict : %@\nSource : %@\n%@";
 "product_not_found" = "Produit introuvable dans Open Food Facts";
 "product_not_found_sources" = "Nous n’avons pas trouvé suffisamment d’informations dans les bases consultées : %@.";

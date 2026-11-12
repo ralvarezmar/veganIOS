@@ -10,6 +10,92 @@ struct VerdictShareCardContent {
     let status: VeganStatus
     let colorblindSafe: Bool
     var productImage: UIImage? = nil
+    var chips: [String] = []
+    var notes: [String] = []
+}
+
+func verdictShareChips(for product: Product) -> [String] {
+    let grades: Set<String> = ["A", "B", "C", "D", "E"]
+    var chips: [String] = []
+    if let quantity = product.quantity?.trimmingCharacters(in: .whitespacesAndNewlines), !quantity.isEmpty {
+        chips.append(quantity)
+    }
+    if let grade = product.nutriscoreGrade?.trimmingCharacters(in: .whitespacesAndNewlines).uppercased(), grades.contains(grade) {
+        chips.append("\(L("nutriscore_badge_title")) \(grade)")
+    }
+    if let grade = product.greenScoreGrade {
+        chips.append("\(L("green_score_badge_title")) \(grade)")
+    }
+    if let nova = product.novaGroup, (1...4).contains(nova) {
+        chips.append("\(L("nova_group_badge_title")) \(nova)")
+    }
+    return chips
+}
+
+func verdictShareNotes(for product: Product) -> [String] {
+    var notes: [String] = []
+    if product.labelsTags?.contains(where: isVeganSealTag) == true {
+        notes.append(L("share_card_vegan_seal"))
+    }
+    let traces = buildAllergenDisplayItems(tags: product.tracesTags ?? []).map(\.label)
+    if !traces.isEmpty {
+        notes.append(LF("share_card_traces", traces.joined(separator: ", ")))
+    }
+    switch palmOilStatus(product.ingredientsAnalysisTags) {
+    case .present: notes.append(L("palm_oil_present"))
+    case .maybe: notes.append(L("palm_oil_maybe"))
+    case .free: notes.append(L("palm_oil_free"))
+    case nil: break
+    }
+    return notes
+}
+
+struct VerdictShareChipsLayout: Layout {
+    var spacing: CGFloat = 6
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let rows = arrange(subviews: subviews, maxWidth: proposal.width ?? .infinity)
+        let width = rows.map { $0.width }.max() ?? 0
+        let height = rows.map { $0.height }.reduce(0, +) + spacing * CGFloat(max(rows.count - 1, 0))
+        return CGSize(width: width, height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        var y = bounds.minY
+        for row in arrange(subviews: subviews, maxWidth: bounds.width) {
+            var x = bounds.minX
+            for index in row.indices {
+                let size = subviews[index].sizeThatFits(ProposedViewSize(width: bounds.width, height: nil))
+                subviews[index].place(at: CGPoint(x: x, y: y), proposal: ProposedViewSize(width: min(size.width, bounds.width), height: size.height))
+                x += min(size.width, bounds.width) + spacing
+            }
+            y += row.height + spacing
+        }
+    }
+
+    private struct Row {
+        var indices: [Int] = []
+        var width: CGFloat = 0
+        var height: CGFloat = 0
+    }
+
+    private func arrange(subviews: Subviews, maxWidth: CGFloat) -> [Row] {
+        var rows: [Row] = []
+        var current = Row()
+        for index in subviews.indices {
+            let size = subviews[index].sizeThatFits(ProposedViewSize(width: maxWidth, height: nil))
+            let width = min(size.width, maxWidth)
+            if !current.indices.isEmpty && current.width + spacing + width > maxWidth {
+                rows.append(current)
+                current = Row()
+            }
+            current.width += (current.indices.isEmpty ? 0 : spacing) + width
+            current.height = max(current.height, size.height)
+            current.indices.append(index)
+        }
+        if !current.indices.isEmpty { rows.append(current) }
+        return rows
+    }
 }
 
 extension VerdictShareCardContent {
@@ -33,7 +119,9 @@ extension VerdictShareCardContent {
             details: details,
             sourceName: source.displayName,
             status: analysis.status,
-            colorblindSafe: colorblindSafe
+            colorblindSafe: colorblindSafe,
+            chips: verdictShareChips(for: product),
+            notes: verdictShareNotes(for: product)
         )
     }
 }
@@ -134,6 +222,20 @@ struct VerdictShareCardView: View {
                                         .foregroundStyle(Color(white: 0.42))
                                         .lineLimit(2)
                                 }
+                                if !content.chips.isEmpty {
+                                    VerdictShareChipsLayout {
+                                        ForEach(content.chips, id: \.self) { chip in
+                                            Text(chip)
+                                                .font(.system(size: 14, weight: .bold))
+                                                .foregroundStyle(Color(white: 0.12))
+                                                .lineLimit(1)
+                                                .padding(.horizontal, 11)
+                                                .padding(.vertical, 5)
+                                                .background(Capsule().fill(Color(white: 0.95)))
+                                        }
+                                    }
+                                    .padding(.top, 6)
+                                }
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
@@ -145,9 +247,27 @@ struct VerdictShareCardView: View {
                             Text(content.details)
                                 .font(.system(size: 19))
                                 .foregroundStyle(Color(white: 0.12))
-                                .lineLimit(5)
+                                .lineLimit(4)
                                 .padding(.trailing, 80)
                                 .padding(.top, 8)
+                        }
+                        if !content.notes.isEmpty {
+                            VStack(alignment: .leading, spacing: 6) {
+                                ForEach(content.notes, id: \.self) { note in
+                                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                                        Circle()
+                                            .fill(accent)
+                                            .frame(width: 8, height: 8)
+                                        Text(note)
+                                            .font(.system(size: 16))
+                                            .foregroundStyle(Color(white: 0.25))
+                                            .lineLimit(2)
+                                    }
+                                }
+                            }
+                            .padding(.trailing, 80)
+                            .padding(.top, 12)
+                            .layoutPriority(-1)
                         }
                         Spacer(minLength: 0)
                         Text(content.sourceName)
