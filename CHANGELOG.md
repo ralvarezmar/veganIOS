@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.25.6 (72)] - 2026-11-12
+
 ### Added
 - Share card shows quantity, Nutri-Score, Green Score and NOVA chips, plus vegan label, traces and palm oil notes when available.
 
