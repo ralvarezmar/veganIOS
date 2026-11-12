@@ -96,6 +96,7 @@
 "share_card_allergens" = "Enthält: %@";
 "share_card_tagline" = "Analysiert mit VeganLens";
 "share_card_vegan_details" = "Keine Zutaten tierischen Ursprungs erkannt.";
+"share_card_ingredients" = "Zutaten: %@";
 "share_result_template" = "%@\nBewertung: %@\nQuelle: %@\n%@";
 "product_not_found" = "Produkt in Open Food Facts nicht gefunden";
 "product_not_found_sources" = "Wir konnten in keiner der abgefragten Datenbanken genügend Informationen finden: %@.";

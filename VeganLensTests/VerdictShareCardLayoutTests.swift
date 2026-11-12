@@ -89,6 +89,7 @@ final class VerdictShareCardLayoutTests: XCTestCase {
         )
         content.chips = ["500 g", "Nutri-Score B", "Green Score A", "NOVA 3"]
         content.notes = ["Sello vegano certificado", "Puede contener trazas de: leche, huevos", "Sin aceite de palma"]
+        content.ingredients = "Ingredientes: agua, soja 8 %, sal, " + String(repeating: "aroma natural, ", count: 30)
         let image = try XCTUnwrap(renderVerdictShareCard(content))
         XCTAssertEqual(image.size.width, 540, accuracy: 1)
         XCTAssertEqual(image.size.height, 675, accuracy: 1)
@@ -97,5 +98,11 @@ final class VerdictShareCardLayoutTests: XCTestCase {
     func testNotesListAllergensBeforeTraces() {
         let notes = verdictShareNotes(for: product(traces: ["en:milk"], allergens: ["en:gluten"]))
         XCTAssertEqual(notes, [LF("share_card_allergens", L("allergen_gluten")), LF("share_card_traces", L("allergen_milk"))])
+    }
+
+    func testIngredientsAreCleanedForTheCard() {
+        XCTAssertEqual(verdictShareIngredients("  Agua,\n _soja_ 8%,   sal. "), "Agua, soja 8%, sal.")
+        XCTAssertNil(verdictShareIngredients(" _ "))
+        XCTAssertNil(verdictShareIngredients(nil))
     }
 }

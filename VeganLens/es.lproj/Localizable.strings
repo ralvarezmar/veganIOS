@@ -98,6 +98,7 @@
 "share_card_allergens" = "Contiene: %@";
 "share_card_tagline" = "Analizado con VeganLens";
 "share_card_vegan_details" = "No se han detectado ingredientes de origen animal.";
+"share_card_ingredients" = "Ingredientes: %@";
 "share_result_template" = "%@
 Veredicto: %@
 Fuente: %@

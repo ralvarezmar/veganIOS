@@ -96,6 +96,7 @@
 "share_card_allergens" = "Contient : %@";
 "share_card_tagline" = "Analysé avec VeganLens";
 "share_card_vegan_details" = "Aucun ingrédient d’origine animale détecté.";
+"share_card_ingredients" = "Ingrédients : %@";
 "share_result_template" = "%@\nVerdict : %@\nSource : %@\n%@";
 "product_not_found" = "Produit introuvable dans Open Food Facts";
 "product_not_found_sources" = "Nous n’avons pas trouvé suffisamment d’informations dans les bases consultées : %@.";

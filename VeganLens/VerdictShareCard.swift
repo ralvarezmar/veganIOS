@@ -12,6 +12,15 @@ struct VerdictShareCardContent {
     var productImage: UIImage? = nil
     var chips: [String] = []
     var notes: [String] = []
+    var ingredients: String? = nil
+}
+
+func verdictShareIngredients(_ text: String?) -> String? {
+    let cleaned = (text ?? "")
+        .replacingOccurrences(of: "_", with: "")
+        .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+    return cleaned.isEmpty ? nil : cleaned
 }
 
 func verdictShareChips(for product: Product) -> [String] {
@@ -127,7 +136,10 @@ extension VerdictShareCardContent {
             status: analysis.status,
             colorblindSafe: colorblindSafe,
             chips: verdictShareChips(for: product),
-            notes: verdictShareNotes(for: product)
+            notes: verdictShareNotes(for: product),
+            ingredients: analysis.status == .vegan
+                ? verdictShareIngredients(product.ingredientsText).map { LF("share_card_ingredients", $0) }
+                : nil
         )
     }
 }
@@ -274,6 +286,15 @@ struct VerdictShareCardView: View {
                             .padding(.trailing, 80)
                             .padding(.top, 12)
                             .layoutPriority(-1)
+                        }
+                        if let ingredients = content.ingredients {
+                            Text(ingredients)
+                                .font(.system(size: 15))
+                                .foregroundStyle(Color(white: 0.42))
+                                .lineLimit(5)
+                                .padding(.trailing, 80)
+                                .padding(.top, 12)
+                                .layoutPriority(-2)
                         }
                         Spacer(minLength: 0)
                         Text([L("share_card_tagline"), content.sourceName].filter { !$0.isEmpty }.joined(separator: " · "))
