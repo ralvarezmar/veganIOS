@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Zucchini character redrawn: clean outline without the white halo, stray marks removed, double resolution and a sharp VEGAN badge.
+
 ## [1.25.6 (72)] - 2026-11-12
 
 ### Added

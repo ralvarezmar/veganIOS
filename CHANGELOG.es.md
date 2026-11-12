@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Personaje del calabacín mejorado: contorno limpio sin el borde blanco, manchas eliminadas, el doble de resolución y chapa VEGAN nítida.
+
 ## [1.25.6 (72)] - 2026-11-12
 
 ### Añadido
