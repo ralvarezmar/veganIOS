@@ -11,6 +11,11 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 ### Cambiado
+- Diseño de la tarjeta para compartir: icono, titular y personaje más pequeños; ficha del producto más grande con la foto junto al nombre.
+
+## [1.25.4 (70)] - 2026-11-12
+
+### Cambiado
 - La tarjeta para compartir incluye una miniatura de la foto del producto cuando está disponible.
 
 ## [1.25.3 (69)] - 2026-11-11
