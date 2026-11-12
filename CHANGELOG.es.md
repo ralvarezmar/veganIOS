@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.25.6 (72)] - 2026-11-12
+
 ### Añadido
 - La tarjeta de compartir muestra chips de cantidad, Nutri-Score, Green Score y NOVA, y avisos de sello vegano, trazas y aceite de palma cuando hay datos.
 
