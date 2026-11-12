@@ -95,47 +95,47 @@ struct VerdictShareCardView: View {
                 ZStack {
                     Circle().fill(.white)
                     Image(systemName: verdictShareSymbolName(for: content.status))
-                        .font(.system(size: 70, weight: .heavy))
+                        .font(.system(size: 46, weight: .heavy))
                         .foregroundStyle(accent)
                 }
-                .frame(width: 132, height: 132)
-                .padding(.top, 34)
+                .frame(width: 88, height: 88)
+                .padding(.top, 18)
 
                 Text(content.headline)
-                    .font(.system(size: 32, weight: .heavy))
+                    .font(.system(size: 24, weight: .heavy))
                     .foregroundStyle(.white)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                     .padding(.horizontal, 28)
-                    .padding(.top, 20)
-                    .frame(height: 100, alignment: .top)
+                    .padding(.top, 12)
+                    .frame(height: 70, alignment: .top)
 
                 ZStack(alignment: .bottomTrailing) {
                     RoundedRectangle(cornerRadius: 28, style: .continuous)
                         .fill(.white)
                     VStack(alignment: .leading, spacing: 6) {
                         HStack(alignment: .top, spacing: 16) {
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(content.title)
-                                    .font(.system(size: 27, weight: .bold))
-                                    .foregroundStyle(Color(white: 0.12))
-                                    .lineLimit(3)
-                                if let brand = content.brand {
-                                    Text(brand)
-                                        .font(.system(size: 19))
-                                        .foregroundStyle(Color(white: 0.42))
-                                        .lineLimit(1)
-                                }
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
                             if let productImage = content.productImage {
                                 Image(uiImage: productImage)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 110, height: 110)
+                                    .frame(width: 150, height: 150)
                                     .background(Color(white: 0.95))
-                                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                             }
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(content.title)
+                                    .font(.system(size: 25, weight: .bold))
+                                    .foregroundStyle(Color(white: 0.12))
+                                    .lineLimit(4)
+                                if let brand = content.brand {
+                                    Text(brand)
+                                        .font(.system(size: 18))
+                                        .foregroundStyle(Color(white: 0.42))
+                                        .lineLimit(2)
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
                         if !content.details.isEmpty {
                             Capsule()
@@ -146,7 +146,7 @@ struct VerdictShareCardView: View {
                                 .font(.system(size: 19))
                                 .foregroundStyle(Color(white: 0.12))
                                 .lineLimit(5)
-                                .padding(.trailing, 130)
+                                .padding(.trailing, 80)
                                 .padding(.top, 8)
                         }
                         Spacer(minLength: 0)
@@ -154,14 +154,14 @@ struct VerdictShareCardView: View {
                             .font(.system(size: 15))
                             .foregroundStyle(Color(white: 0.42))
                             .lineLimit(2)
-                            .padding(.trailing, 130)
+                            .padding(.trailing, 80)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     .padding(32)
                     Image("portada_\(mascot)")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 150, height: 150)
+                        .frame(width: 85, height: 85)
                         .padding(.trailing, 12)
                         .padding(.bottom, 8)
                 }
