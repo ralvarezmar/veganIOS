@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- Share card fills its free space with the product barcode, an allergens note, an "Analyzed with VeganLens" footer and, for vegan products, a short verdict reason.
+
 ## [1.25.6 (72)] - 2026-11-12
 
 ### Added

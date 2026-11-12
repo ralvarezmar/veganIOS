@@ -12,6 +12,7 @@ struct VerdictShareCardContent {
     var productImage: UIImage? = nil
     var chips: [String] = []
     var notes: [String] = []
+    var barcode: String? = nil
 }
 
 func verdictShareChips(for product: Product) -> [String] {
@@ -37,6 +38,10 @@ func verdictShareNotes(for product: Product) -> [String] {
     if product.labelsTags?.contains(where: isVeganSealTag) == true {
         notes.append(L("share_card_vegan_seal"))
     }
+    let allergens = buildAllergenDisplayItems(tags: product.allergensTags ?? []).map(\.label)
+    if !allergens.isEmpty {
+        notes.append(LF("share_card_allergens", allergens.joined(separator: ", ")))
+    }
     let traces = buildAllergenDisplayItems(tags: product.tracesTags ?? []).map(\.label)
     if !traces.isEmpty {
         notes.append(LF("share_card_traces", traces.joined(separator: ", ")))
@@ -48,6 +53,68 @@ func verdictShareNotes(for product: Product) -> [String] {
     case nil: break
     }
     return notes
+}
+
+private let eanLCodes = [
+    "0001101", "0011001", "0010011", "0111101", "0100011",
+    "0110001", "0101111", "0111011", "0110111", "0001011",
+]
+private let ean13Parity = [
+    "LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG",
+    "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL",
+]
+
+/// EAN-13 / EAN-8 bar modules (true = bar); UPC-A codes are encoded as EAN-13. Nil for other formats.
+func eanBarcodeModules(_ code: String?) -> [Bool]? {
+    let raw = code?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    guard !raw.isEmpty, raw.allSatisfy({ ("0"..."9").contains($0) }) else { return nil }
+    let digits = (raw.count == 12 ? "0" + raw : raw).compactMap { $0.wholeNumberValue }
+    func inverted(_ pattern: String) -> String { String(pattern.map { $0 == "0" ? "1" : "0" }) }
+    func left(_ digit: Int, _ parity: Character) -> String {
+        parity == "G" ? String(inverted(eanLCodes[digit]).reversed()) : eanLCodes[digit]
+    }
+    var pattern = "101"
+    switch digits.count {
+    case 13:
+        let parity = Array(ean13Parity[digits[0]])
+        for (index, digit) in digits[1...6].enumerated() { pattern += left(digit, parity[index]) }
+        pattern += "01010"
+        for digit in digits[7...12] { pattern += inverted(eanLCodes[digit]) }
+    case 8:
+        for digit in digits[0...3] { pattern += left(digit, "L") }
+        pattern += "01010"
+        for digit in digits[4...7] { pattern += inverted(eanLCodes[digit]) }
+    default:
+        return nil
+    }
+    pattern += "101"
+    return pattern.map { $0 == "1" }
+}
+
+struct VerdictShareBarcodeView: View {
+    let code: String
+    let modules: [Bool]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Canvas { context, size in
+                let width = size.width / CGFloat(modules.count)
+                for (index, bar) in modules.enumerated() where bar {
+                    context.fill(
+                        Path(CGRect(x: CGFloat(index) * width, y: 0, width: width, height: size.height)),
+                        with: .color(Color(white: 0.12))
+                    )
+                }
+            }
+            .frame(width: CGFloat(modules.count) * 1.5, height: 42)
+            Text(code)
+                .font(.system(size: 13))
+                .foregroundStyle(Color(white: 0.42))
+                .lineLimit(1)
+        }
+        .padding(.top, 12)
+        .padding(.bottom, 10)
+    }
 }
 
 struct VerdictShareChipsLayout: Layout {
@@ -109,6 +176,8 @@ extension VerdictShareCardContent {
             details = LF("share_card_non_vegan_ingredients", analysis.nonVeganIngredients.joined(separator: separator))
         case .maybe where !analysis.doubtfulIngredients.isEmpty:
             details = LF("share_card_doubtful_ingredients", analysis.doubtfulIngredients.joined(separator: separator))
+        case .vegan:
+            details = L("share_card_vegan_details")
         default:
             details = ""
         }
@@ -121,7 +190,8 @@ extension VerdictShareCardContent {
             status: analysis.status,
             colorblindSafe: colorblindSafe,
             chips: verdictShareChips(for: product),
-            notes: verdictShareNotes(for: product)
+            notes: verdictShareNotes(for: product),
+            barcode: barcode
         )
     }
 }
@@ -270,7 +340,14 @@ struct VerdictShareCardView: View {
                             .layoutPriority(-1)
                         }
                         Spacer(minLength: 0)
-                        Text(content.sourceName)
+                        if let barcode = content.barcode?.trimmingCharacters(in: .whitespacesAndNewlines),
+                           let modules = eanBarcodeModules(barcode) {
+                            ViewThatFits(in: .vertical) {
+                                VerdictShareBarcodeView(code: barcode, modules: modules)
+                                Color.clear.frame(height: 0)
+                            }
+                        }
+                        Text([L("share_card_tagline"), content.sourceName].filter { !$0.isEmpty }.joined(separator: " · "))
                             .font(.system(size: 15))
                             .foregroundStyle(Color(white: 0.42))
                             .lineLimit(2)
