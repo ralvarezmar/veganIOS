@@ -38,12 +38,13 @@ final class VerdictShareCardLayoutTests: XCTestCase {
         ecoscore: String? = nil,
         nova: Int? = nil,
         quantity: String? = nil,
-        traces: [String]? = nil
+        traces: [String]? = nil,
+        allergens: [String]? = nil
     ) -> Product {
         Product(
             productName: "Galletas", brands: nil, imageUrl: nil, ingredientsText: nil,
             ingredientsAnalysisTags: analysis, categoriesTags: nil, labelsTags: labels,
-            ingredients: nil, additivesTags: nil, allergensTags: nil, nutriments: nil,
+            ingredients: nil, additivesTags: nil, allergensTags: allergens, nutriments: nil,
             nutriscoreGrade: nutriscore, ecoscoreGrade: ecoscore, novaGroup: nova,
             quantity: quantity, tracesTags: traces
         )
@@ -88,8 +89,14 @@ final class VerdictShareCardLayoutTests: XCTestCase {
         )
         content.chips = ["500 g", "Nutri-Score B", "Green Score A", "NOVA 3"]
         content.notes = ["Sello vegano certificado", "Puede contener trazas de: leche, huevos", "Sin aceite de palma"]
+        content.checks = ["Sin lácteos", "Sin huevo", "Sin carne ni pescado", "Sin miel"]
         let image = try XCTUnwrap(renderVerdictShareCard(content))
         XCTAssertEqual(image.size.width, 540, accuracy: 1)
         XCTAssertEqual(image.size.height, 675, accuracy: 1)
+    }
+
+    func testNotesListAllergensBeforeTraces() {
+        let notes = verdictShareNotes(for: product(traces: ["en:milk"], allergens: ["en:gluten"]))
+        XCTAssertEqual(notes, [LF("share_card_allergens", L("allergen_gluten")), LF("share_card_traces", L("allergen_milk"))])
     }
 }
