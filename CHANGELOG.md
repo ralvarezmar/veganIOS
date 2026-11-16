@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.25.9 (75)] - 2026-11-16
+
 ### Changed
 - Zucchini character has a friendlier face: new bright eyes with highlights, a cute smile and rosy cheeks, the dark streak under its eye removed and a fresher green.
 

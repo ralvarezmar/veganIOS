@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.25.9 (75)] - 2026-11-16
+
 ### Cambiado
 - El calabacín tiene una cara más simpática: ojos nuevos con brillo, una sonrisa más amable y mejillas sonrosadas, sin la mancha oscura bajo el ojo y con un verde más fresco.
 
