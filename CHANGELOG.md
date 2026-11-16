@@ -8,6 +8,11 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Zucchini character has a friendlier face: new bright eyes with highlights, a cute smile and rosy cheeks, the dark streak under its eye removed and a fresher green.
+
+## [1.25.8 (74)] - 2026-11-12
+
 ### Added
 - Share card fills its free space with an allergens note, an "Analyzed with VeganLens" footer and, for vegan products, a short verdict reason, a larger product photo and a "No dairy · No eggs · No meat or fish · No honey" checklist.
 
