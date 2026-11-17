@@ -605,6 +605,11 @@ Fuente: %@
 "product_update_notification_title" = "Novedades del historial";
 "product_update_notification_single" = "%@ ya tiene información en Open Food Facts. Ábrelo para ver el veredicto.";
 "product_update_notification_multiple" = "%d productos de tu historial ya tienen información en Open Food Facts.";
+"favorite_update_notification_title" = "Cambios en tus favoritos";
+"favorite_update_notification_vegan" = "%@ ha cambiado: ahora es apto para veganos.";
+"favorite_update_notification_not_vegan" = "%@ ha cambiado: ahora no es apto para veganos. Revisa sus ingredientes.";
+"favorite_update_notification_maybe" = "%@ ha cambiado: ahora tiene un ingrediente de origen dudoso.";
+"favorite_update_notification_multiple" = "Ha cambiado el veredicto de %d de tus favoritos.";
 "b12_reminder_time" = "Hora";
 "b12_reminder_frequency" = "Cada cuánto";
 "b12_reminder_every_day" = "Cada día";

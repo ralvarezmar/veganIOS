@@ -12,6 +12,10 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ### Añadido
 - Nuevo personaje: el melón verde, con brazos y piernas, ya sale en la rotación de personajes.
+- Los favoritos se revisan en la comprobación diaria que se hace al abrir la app (hasta 10 al día, por turnos) y una notificación te avisa cuando cambia el veredicto vegano de alguno, por ejemplo tras un cambio de receta.
+
+### Cambiado
+- El calabacín está repintado con un sombreado suave y uniforme y un reflejo brillante: sin manchas a parches, con más volumen, el tallo más fresco y los brazos y las piernas del mismo color que el cuerpo.
 
 ## [1.25.9 (75)] - 2026-11-16
 

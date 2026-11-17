@@ -10,6 +10,10 @@ version so that App Store Connect can provide notes in both languages.
 
 ### Added
 - New green melon character, with arms and legs, added to the character rotation.
+- Favorites are rechecked in the daily update check when the app opens (up to 10 per day, taking turns), and a notification tells you when a favorite's vegan verdict changes, for example after a recipe change.
+
+### Changed
+- Zucchini character repainted with smooth, even shading and a glossy highlight: no more blotchy patches, more volume, a fresher stem, and its arms and legs now match the body colour.
 
 ## [1.25.9 (75)] - 2026-11-16
 
