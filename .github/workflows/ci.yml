@@ -11,18 +11,19 @@ on:
       - development
   workflow_dispatch:
 
+concurrency:
+  group: ios-ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
 jobs:
-  build:
-    runs-on: macos-15
-    permissions:
-      contents: write
-    env:
-      EXPECTED_SCREENSHOTS: 7
+  localization:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Check localization key parity
         run: |
@@ -64,6 +65,14 @@ jobs:
           )
           PY
 
+
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Install XcodeGen
         run: |
           export HOMEBREW_NO_AUTO_UPDATE=1
@@ -72,6 +81,64 @@ jobs:
 
       - name: Generate Xcode project
         run: xcodegen generate
+
+
+      - name: Build for testing
+        run: |
+          mkdir -p build
+          set -o pipefail
+          xcodebuild \
+            -project VeganLens.xcodeproj \
+            -scheme VeganLens \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath build/DerivedData \
+            ARCHS=arm64 \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build-for-testing 2>&1 | tee build/xcodebuild.log
+
+      - name: Pack test build
+        run: tar -czf ios-test-build.tgz -C build/DerivedData/Build Products
+
+      - name: Upload test build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-build
+          path: ios-test-build.tgz
+          retention-days: 3
+          if-no-files-found: error
+
+      - name: Surface build failure
+        if: failure()
+        run: |
+          grep -nE 'error:|fatal error:|BUILD FAILED' build/xcodebuild.log 2>/dev/null | head -n 200 | while IFS= read -r line; do
+            echo "::error file=VeganLens/Build.swift::$line"
+          done
+
+  unit-tests:
+    needs: build
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download test build
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-test-build
+
+      - name: Unpack test build
+        id: products
+        run: |
+          mkdir -p build/DerivedData/Build
+          tar -xzf ios-test-build.tgz -C build/DerivedData/Build
+          XCTESTRUN=$(find build/DerivedData/Build/Products -maxdepth 1 -name '*.xctestrun' | head -n 1)
+          if [ -z "$XCTESTRUN" ]; then
+            echo "::error::No .xctestrun file found in the test build artifact"
+            exit 1
+          fi
+          echo "xctestrun=$XCTESTRUN" >> "$GITHUB_OUTPUT"
 
       - name: Pick iOS simulator
         id: simulator
@@ -109,33 +176,18 @@ jobs:
           echo "name=$SIMULATOR_NAME" >> "$GITHUB_OUTPUT"
           echo "runtime=$SIMULATOR_RUNTIME" >> "$GITHUB_OUTPUT"
 
-      - name: Build for iOS Simulator
-        run: |
-          mkdir -p build
-          set -o pipefail
-          xcodebuild \
-            -project VeganLens.xcodeproj \
-            -scheme VeganLens \
-            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
-            -destination-timeout 60 \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            build 2>&1 | tee build/xcodebuild.log
 
       - name: Run unit tests on iOS Simulator
         run: |
           rm -rf build/Result-unit.xcresult
           set -o pipefail
           xcodebuild \
-            -project VeganLens.xcodeproj \
-            -scheme VeganLens \
+            -xctestrun "${{ steps.products.outputs.xctestrun }}" \
             -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
             -destination-timeout 60 \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
             -resultBundlePath build/Result-unit.xcresult \
             -only-testing:VeganLensTests \
-            test 2>&1 | tee build/xcodebuild-unit-tests.log
+            test-without-building 2>&1 | tee build/xcodebuild-unit-tests.log
           if ! grep -Eq 'Executed [1-9][0-9]* tests?' build/xcodebuild-unit-tests.log; then
             echo "::error::iOS unit-test run did not report any executed tests"
             exit 1
@@ -153,6 +205,7 @@ jobs:
               done
           fi
 
+
       - name: Upload unit test diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -164,19 +217,80 @@ jobs:
             build/xcodebuild-unit-tests.log
           if-no-files-found: warn
 
+
+  ui-tests:
+    needs: build
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download test build
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-test-build
+
+      - name: Unpack test build
+        id: products
+        run: |
+          mkdir -p build/DerivedData/Build
+          tar -xzf ios-test-build.tgz -C build/DerivedData/Build
+          XCTESTRUN=$(find build/DerivedData/Build/Products -maxdepth 1 -name '*.xctestrun' | head -n 1)
+          if [ -z "$XCTESTRUN" ]; then
+            echo "::error::No .xctestrun file found in the test build artifact"
+            exit 1
+          fi
+          echo "xctestrun=$XCTESTRUN" >> "$GITHUB_OUTPUT"
+
+      - name: Pick iOS simulator
+        id: simulator
+        run: |
+          SIMULATOR_INFO=$(python3 - <<'PY'
+          import json
+          import subprocess
+
+          devices = json.loads(subprocess.check_output([
+              "xcrun",
+              "simctl",
+              "list",
+              "devices",
+              "available",
+              "-j",
+          ]))["devices"]
+
+          for runtime, runtime_devices in devices.items():
+              for device in runtime_devices:
+                  if device.get("isAvailable") and device.get("name", "").startswith("iPhone "):
+                      print(f'{device["udid"]}\t{device["name"]}\t{runtime}')
+                      raise SystemExit
+
+          raise SystemExit("No available iPhone simulator found")
+          PY
+          )
+          IFS=$'\t' read -r SIMULATOR_UDID SIMULATOR_NAME SIMULATOR_RUNTIME <<< "$SIMULATOR_INFO"
+          echo "Selected iOS simulator: name=$SIMULATOR_NAME runtime=$SIMULATOR_RUNTIME udid=$SIMULATOR_UDID"
+          echo "::notice title=iOS simulator::name=$SIMULATOR_NAME runtime=$SIMULATOR_RUNTIME udid=$SIMULATOR_UDID"
+          xcrun simctl boot "$SIMULATOR_UDID" || true
+          xcrun simctl bootstatus "$SIMULATOR_UDID" -b || true
+          xcrun simctl privacy "$SIMULATOR_UDID" grant camera com.ralvarezmar.vcheck ||
+            echo "warn: could not pre-grant camera permission"
+          echo "udid=$SIMULATOR_UDID" >> "$GITHUB_OUTPUT"
+          echo "name=$SIMULATOR_NAME" >> "$GITHUB_OUTPUT"
+          echo "runtime=$SIMULATOR_RUNTIME" >> "$GITHUB_OUTPUT"
+
+
       - name: Run UI tests on iOS Simulator
         run: |
           rm -rf build/Result.xcresult
           set -o pipefail
           xcodebuild \
-            -project VeganLens.xcodeproj \
-            -scheme VeganLens \
+            -xctestrun "${{ steps.products.outputs.xctestrun }}" \
             -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
             -destination-timeout 60 \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
             -resultBundlePath build/Result.xcresult \
-            test 2>&1 | tee build/xcodebuild-ui-tests.log
+            -skip-testing:VeganLensTests \
+            test-without-building 2>&1 | tee build/xcodebuild-ui-tests.log
 
       - name: Export UI test screenshots
         if: always()
@@ -243,6 +357,7 @@ jobs:
                   used_names.add(destination.name)
           PY
 
+
       - name: Upload UI screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -253,9 +368,41 @@ jobs:
             build/xcodebuild-ui-tests.log
           if-no-files-found: warn
 
+
+      - name: Surface UI test failure
+        if: failure()
+        run: |
+          if [ -f build/xcodebuild-ui-tests.log ]; then
+            grep -En "error:|Failed to|XCTAssert|Test Case '-\\[.*\\]' failed|UI-DIAG" build/xcodebuild-ui-tests.log |
+              tail -60 |
+              while IFS= read -r line; do
+                echo "::error file=VeganLensUITests/ToolbarInteraction.swift::$line"
+              done
+          fi
+
+  appstore-screenshots:
+    needs: [unit-tests, ui-tests]
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: macos-15
+    timeout-minutes: 75
+    continue-on-error: true
+    env:
+      EXPECTED_SCREENSHOTS: 7
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: |
+          export HOMEBREW_NO_AUTO_UPDATE=1
+          export HOMEBREW_NO_INSTALL_CLEANUP=1
+          brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+
       - name: Capture App Store screenshots
-        if: always()
-        continue-on-error: true
         run: |
           set -o pipefail
           mkdir -p build/appstore build/appstore-screenshots
@@ -574,6 +721,7 @@ jobs:
           normalize_pngs iphone-6-5 2688 1242
           normalize_pngs ipad-13 2752 2064
 
+
       - name: Upload App Store screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -582,16 +730,3 @@ jobs:
           path: build/appstore-screenshots/**
           if-no-files-found: warn
 
-      - name: Surface build failure
-        if: failure()
-        run: |
-          grep -nE 'error:|fatal error:|BUILD FAILED' build/xcodebuild.log build/xcodebuild-ui-tests.log 2>/dev/null | head -n 200 | while IFS= read -r line; do
-            echo "::error file=VeganLens/Build.swift::$line"
-          done
-          if [ -f build/xcodebuild-ui-tests.log ]; then
-            grep -En "error:|Failed to|XCTAssert|Test Case '-\\[.*\\]' failed|UI-DIAG" build/xcodebuild-ui-tests.log |
-              tail -60 |
-              while IFS= read -r line; do
-                echo "::error file=VeganLensUITests/ToolbarInteraction.swift::$line"
-              done
-          fi
