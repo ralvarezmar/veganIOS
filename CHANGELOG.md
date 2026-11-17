@@ -9,6 +9,7 @@ version so that App Store Connect can provide notes in both languages.
 ## [Unreleased]
 
 ### Added
+- New green melon character, with arms and legs, added to the character rotation.
 - Favorites are rechecked in the daily update check when the app opens (up to 10 per day, taking turns), and a notification tells you when a favorite's vegan verdict changes, for example after a recipe change.
 
 ### Changed

@@ -405,6 +405,7 @@
 "mascot_leek" = "Porree";
 "mascot_mango" = "Mango";
 "mascot_melon" = "Melone";
+"mascot_greenmelon" = "Grüne Melone";
 "mascot_mushrooms" = "Pilze";
 "mascot_orange" = "Orange";
 "mascot_passionfruit" = "Maracuja";
@@ -450,6 +451,7 @@
 "mascot_nick_leek" = "Puerrox";
 "mascot_nick_mango" = "Mangoreon";
 "mascot_nick_melon" = "Melonix";
+"mascot_nick_greenmelon" = "Melonchu";
 "mascot_nick_mushrooms" = "Champichu";
 "mascot_nick_orange" = "Naranjaur";
 "mascot_nick_passionfruit" = "Maracuyeon";
