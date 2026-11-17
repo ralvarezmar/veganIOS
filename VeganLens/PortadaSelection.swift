@@ -34,6 +34,7 @@ let portadaCharacterNames = [
     "peanut",
     "walnut",
     "oat",
+    "oatmilk",
     "tomato",
     "garlic",
     "cauliflower",

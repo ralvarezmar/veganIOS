@@ -414,6 +414,7 @@
 "mascot_peanut" = "Peanut";
 "mascot_walnut" = "Walnut";
 "mascot_oat" = "Oat";
+"mascot_oatmilk" = "Oat milk";
 "mascot_tomato" = "Tomato";
 "mascot_garlic" = "Garlic";
 "mascot_cauliflower" = "Cauliflower";
@@ -474,6 +475,7 @@
 "mascot_nick_peanut" = "Cacahuetín";
 "mascot_nick_walnut" = "Nuezardo";
 "mascot_nick_oat" = "Avenix";
+"mascot_nick_oatmilk" = "Brikavena";
 "mascot_nick_tomato" = "Tomatín";
 "mascot_nick_garlic" = "Ajolote";
 "mascot_nick_cauliflower" = "Colifluff";

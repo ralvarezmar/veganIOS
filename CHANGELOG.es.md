@@ -11,7 +11,7 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 ### Añadido
-- 14 personajes nuevos en la rotación: garbanzo, lenteja, edamame, tempeh, almendra, cacahuete, nuez, avena, tomate, ajo, coliflor, remolacha, aceituna e higo.
+- 15 personajes nuevos en la rotación: garbanzo, lenteja, edamame, tempeh, almendra, cacahuete, nuez, avena, un brik de bebida de avena, tomate, ajo, coliflor, remolacha, aceituna e higo.
 
 ### Cambiado
 - Los apodos de personajes acabados en "-chu" tienen nombres nuevos (por ejemplo, Manzachu ahora es Manzaflor y Fresachu, Fresalix).

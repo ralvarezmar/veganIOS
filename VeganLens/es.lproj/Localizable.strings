@@ -419,6 +419,7 @@ Fuente: %@
 "mascot_peanut" = "Cacahuete";
 "mascot_walnut" = "Nuez";
 "mascot_oat" = "Avena";
+"mascot_oatmilk" = "Bebida de avena";
 "mascot_tomato" = "Tomate";
 "mascot_garlic" = "Ajo";
 "mascot_cauliflower" = "Coliflor";
@@ -479,6 +480,7 @@ Fuente: %@
 "mascot_nick_peanut" = "Cacahuetín";
 "mascot_nick_walnut" = "Nuezardo";
 "mascot_nick_oat" = "Avenix";
+"mascot_nick_oatmilk" = "Brikavena";
 "mascot_nick_tomato" = "Tomatín";
 "mascot_nick_garlic" = "Ajolote";
 "mascot_nick_cauliflower" = "Colifluff";
