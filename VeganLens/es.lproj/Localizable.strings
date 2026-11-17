@@ -410,6 +410,7 @@ Fuente: %@
 "mascot_leek" = "Puerro";
 "mascot_mango" = "Mango";
 "mascot_melon" = "Melón";
+"mascot_greenmelon" = "Melón verde";
 "mascot_mushrooms" = "Setas";
 "mascot_orange" = "Naranja";
 "mascot_passionfruit" = "Maracuyá";
@@ -455,6 +456,7 @@ Fuente: %@
 "mascot_nick_leek" = "Puerrox";
 "mascot_nick_mango" = "Mangoreon";
 "mascot_nick_melon" = "Melonix";
+"mascot_nick_greenmelon" = "Melonchu";
 "mascot_nick_mushrooms" = "Champichu";
 "mascot_nick_orange" = "Naranjaur";
 "mascot_nick_passionfruit" = "Maracuyeon";
@@ -603,6 +605,11 @@ Fuente: %@
 "product_update_notification_title" = "Novedades del historial";
 "product_update_notification_single" = "%@ ya tiene información en Open Food Facts. Ábrelo para ver el veredicto.";
 "product_update_notification_multiple" = "%d productos de tu historial ya tienen información en Open Food Facts.";
+"favorite_update_notification_title" = "Cambios en tus favoritos";
+"favorite_update_notification_vegan" = "%@ ha cambiado: ahora es apto para veganos.";
+"favorite_update_notification_not_vegan" = "%@ ha cambiado: ahora no es apto para veganos. Revisa sus ingredientes.";
+"favorite_update_notification_maybe" = "%@ ha cambiado: ahora tiene un ingrediente de origen dudoso.";
+"favorite_update_notification_multiple" = "Ha cambiado el veredicto de %d de tus favoritos.";
 "b12_reminder_time" = "Hora";
 "b12_reminder_frequency" = "Cada cuánto";
 "b12_reminder_every_day" = "Cada día";

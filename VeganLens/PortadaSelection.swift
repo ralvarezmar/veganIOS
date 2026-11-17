@@ -25,6 +25,7 @@ let portadaCharacterNames = [
     "leek",
     "mango",
     "melon",
+    "greenmelon",
     "mushrooms",
     "orange",
     "passionfruit",
