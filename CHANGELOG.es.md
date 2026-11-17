@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- El calabacín está repintado con un sombreado suave y uniforme: sin manchas a parches, y los brazos y las piernas tienen ya el mismo color que el cuerpo.
+
 ## [1.25.9 (75)] - 2026-11-16
 
 ### Cambiado
