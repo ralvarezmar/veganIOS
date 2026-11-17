@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- New green melon character, with arms and legs, added to the character rotation.
+
 ## [1.25.9 (75)] - 2026-11-16
 
 ### Changed

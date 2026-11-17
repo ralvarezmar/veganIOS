@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- Nuevo personaje: el melón verde, con brazos y piernas, ya sale en la rotación de personajes.
+
 ## [1.25.9 (75)] - 2026-11-16
 
 ### Cambiado
