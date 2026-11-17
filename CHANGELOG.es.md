@@ -11,6 +11,14 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 ### Añadido
+- 15 personajes nuevos en la rotación: garbanzo, lenteja, edamame, tempeh, almendra, cacahuete, nuez, avena, un brik de bebida de avena, tomate, ajo, coliflor, remolacha, aceituna e higo.
+
+### Cambiado
+- Los apodos de personajes acabados en "-chu" tienen nombres nuevos (por ejemplo, Manzachu ahora es Manzaflor y Fresachu, Fresalix).
+
+## [1.25.12 (76)] - 2026-11-17
+
+### Añadido
 - Nuevo personaje: el melón verde, con brazos y piernas, ya sale en la rotación de personajes.
 - Los favoritos se revisan en la comprobación diaria que se hace al abrir la app (hasta 10 al día, por turnos) y una notificación te avisa cuando cambia el veredicto vegano de alguno, por ejemplo tras un cambio de receta.
 
