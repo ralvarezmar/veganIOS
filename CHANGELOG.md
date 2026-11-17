@@ -9,7 +9,7 @@ version so that App Store Connect can provide notes in both languages.
 ## [Unreleased]
 
 ### Changed
-- Zucchini character repainted with smooth, even shading: no more blotchy patches, and its arms and legs now match the body colour.
+- Zucchini character repainted with smooth, even shading and a glossy highlight: no more blotchy patches, more volume, a fresher stem, and its arms and legs now match the body colour.
 
 ## [1.25.9 (75)] - 2026-11-16
 
