@@ -598,6 +598,11 @@
 "product_update_notification_title" = "History updates";
 "product_update_notification_single" = "%@ now has information on Open Food Facts. Open it to see the verdict.";
 "product_update_notification_multiple" = "%d products in your history now have information on Open Food Facts.";
+"favorite_update_notification_title" = "Changes in your favorites";
+"favorite_update_notification_vegan" = "%@ has changed: it is now suitable for vegans.";
+"favorite_update_notification_not_vegan" = "%@ has changed: it is now not suitable for vegans. Check its ingredients.";
+"favorite_update_notification_maybe" = "%@ has changed: it now has an ingredient of uncertain origin.";
+"favorite_update_notification_multiple" = "The verdict changed for %d of your favorites.";
 "b12_reminder_time" = "Time";
 "b12_reminder_frequency" = "How often";
 "b12_reminder_every_day" = "Every day";

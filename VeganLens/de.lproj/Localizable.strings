@@ -552,6 +552,11 @@
 "product_update_notification_title" = "Neues im Verlauf";
 "product_update_notification_single" = "%@ hat jetzt Informationen auf Open Food Facts. Öffne es, um das Ergebnis zu sehen.";
 "product_update_notification_multiple" = "%d Produkte in deinem Verlauf haben jetzt Informationen auf Open Food Facts.";
+"favorite_update_notification_title" = "Änderungen bei deinen Favoriten";
+"favorite_update_notification_vegan" = "%@ hat sich geändert: jetzt für Veganer geeignet.";
+"favorite_update_notification_not_vegan" = "%@ hat sich geändert: jetzt nicht für Veganer geeignet. Prüfe die Zutaten.";
+"favorite_update_notification_maybe" = "%@ hat sich geändert: enthält jetzt eine Zutat unsicherer Herkunft.";
+"favorite_update_notification_multiple" = "Das Urteil hat sich bei %d deiner Favoriten geändert.";
 "b12_reminder_time" = "Zeit";
 "b12_reminder_frequency" = "Wie oft";
 "b12_reminder_every_day" = "Jeden Tag";
