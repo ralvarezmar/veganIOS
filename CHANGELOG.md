@@ -8,6 +8,12 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- 14 new characters in the rotation: chickpea, lentil, edamame, tempeh, almond, peanut, walnut, oat, tomato, garlic, cauliflower, beetroot, olive and fig.
+
+### Changed
+- Character nicknames ending in "-chu" have been renamed (for example, Manzachu is now Manzaflor and Fresachu is now Fresalix).
+
 ## [1.25.12 (76)] - 2026-11-17
 
 ### Added
