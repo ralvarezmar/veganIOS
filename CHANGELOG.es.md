@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- Los favoritos se revisan en la comprobación diaria que se hace al abrir la app (hasta 10 al día, por turnos) y una notificación te avisa cuando cambia el veredicto vegano de alguno, por ejemplo tras un cambio de receta.
+
 ## [1.25.9 (75)] - 2026-11-16
 
 ### Cambiado

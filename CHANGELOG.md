@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- Favorites are rechecked in the daily update check when the app opens (up to 10 per day, taking turns), and a notification tells you when a favorite's vegan verdict changes, for example after a recipe change.
+
 ## [1.25.9 (75)] - 2026-11-16
 
 ### Changed
