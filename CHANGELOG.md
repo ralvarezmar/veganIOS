@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.25.13 (77)] - 2026-11-17
+
 ### Added
 - 15 new characters in the rotation: chickpea, lentil, edamame, tempeh, almond, peanut, walnut, oat, an oat milk carton, tomato, garlic, cauliflower, beetroot, olive and fig.
 
