@@ -388,7 +388,7 @@ struct MedicineShareCardView: View {
     var body: some View {
         ZStack(alignment: .top) {
             medicineBlue
-            MedicalCross().fill(Color.white.opacity(0.12)).frame(width: 150, height: 150).offset(x: 220, y: -20)
+            MedicalCross().fill(Color.white.opacity(0.12)).frame(width: 130, height: 130).offset(x: 215, y: 90)
             MedicalCross().fill(Color.white.opacity(0.12)).frame(width: 90, height: 90).offset(x: -230, y: 230)
 
             VStack(spacing: 0) {
