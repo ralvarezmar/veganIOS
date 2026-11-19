@@ -1,0 +1,240 @@
+import Foundation
+
+enum MedicineSource: String, Codable, CaseIterable {
+    case cima = "CIMA"
+    case openFDA = "OPEN_FDA"
+
+    var displayName: String {
+        switch self {
+        case .cima: return "CIMA (AEMPS)"
+        case .openFDA: return "openFDA"
+        }
+    }
+}
+
+struct MedicineInfo: Codable, Equatable {
+    let code: String
+    let source: MedicineSource
+    let name: String
+    let activeIngredients: [String]
+    let excipients: [String]
+    var laboratory: String? = nil
+    var dose: String? = nil
+    var pharmaceuticalForm: String? = nil
+    var imageURL: String? = nil
+    var leafletURL: String? = nil
+    var prescriptionRequired: Bool? = nil
+    var extraText: String? = nil
+}
+
+enum MedicineCode: Equatable {
+    /// Spanish "código nacional" (6 digits, without its control digit) encoded in an 847000 EAN-13.
+    case spanishNational(String)
+    /// US UPC-A with number system 3, whose 10 middle digits are the NDC.
+    case usNDC(upc: String, ndcCandidates: [String])
+}
+
+private let spanishMedicinePrefix = "847000"
+
+func medicineCode(for rawBarcode: String) -> MedicineCode? {
+    let digits = rawBarcode.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !digits.isEmpty, digits.allSatisfy(\.isASCIIDigit) else { return nil }
+
+    let ean13: String?
+    switch digits.count {
+    case 14: ean13 = digits.hasPrefix("0") ? String(digits.dropFirst()) : nil
+    case 13: ean13 = digits
+    default: ean13 = nil
+    }
+    if let ean13, ean13.hasPrefix(spanishMedicinePrefix) {
+        return .spanishNational(String(ean13.dropFirst(6).prefix(6)))
+    }
+
+    let upc: String?
+    switch digits.count {
+    case 12: upc = digits
+    case 13: upc = digits.hasPrefix("0") ? String(digits.dropFirst()) : nil
+    case 14: upc = digits.hasPrefix("00") ? String(digits.dropFirst(2)) : nil
+    default: upc = nil
+    }
+    guard let upc, upc.hasPrefix("3") else { return nil }
+    let ndc = String(upc.dropFirst().prefix(10))
+    return .usNDC(upc: upc, ndcCandidates: ndcCandidates(ndc))
+}
+
+/// A 10-digit NDC is written as 4-4-2, 5-3-2 or 5-4-1; the barcode does not say which.
+func ndcCandidates(_ ndc: String) -> [String] {
+    let c = Array(ndc)
+    func part(_ from: Int, _ to: Int) -> String { String(c[from..<to]) }
+    return [
+        "\(part(0, 4))-\(part(4, 8))-\(part(8, 10))",
+        "\(part(0, 5))-\(part(5, 8))-\(part(8, 10))",
+        "\(part(0, 5))-\(part(5, 9))-\(part(9, 10))",
+    ]
+}
+
+func isMedicineBarcode(_ rawBarcode: String) -> Bool {
+    medicineCode(for: rawBarcode) != nil
+}
+
+private extension Character {
+    var isASCIIDigit: Bool { ("0"..."9").contains(self) }
+}
+
+// MARK: - CIMA (AEMPS)
+
+struct CimaMedicamento: Decodable {
+    var nregistro: String?
+    var nombre: String?
+    var pactivos: String?
+    var labtitular: String?
+    var receta: Bool?
+    var dosis: String?
+    var formaFarmaceutica: CimaItem?
+    var principiosActivos: [CimaSustancia]?
+    var excipientes: [CimaSustancia]?
+    var fotos: [CimaFoto]?
+    var docs: [CimaDocumento]?
+}
+
+struct CimaItem: Decodable {
+    var nombre: String?
+}
+
+struct CimaSustancia: Decodable {
+    var nombre: String?
+    var orden: Int?
+}
+
+struct CimaFoto: Decodable {
+    var tipo: String?
+    var url: String?
+}
+
+struct CimaDocumento: Decodable {
+    var tipo: Int?
+    var url: String?
+    var urlHtml: String?
+}
+
+private let cimaLeafletDocType = 2
+
+private func nonBlank(_ value: String?) -> String? {
+    guard let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines), !trimmed.isEmpty else { return nil }
+    return trimmed
+}
+
+private func uniqued(_ values: [String]) -> [String] {
+    var seen = Set<String>()
+    return values.filter { seen.insert($0).inserted }
+}
+
+extension CimaMedicamento {
+    func toMedicineInfo(code: String) -> MedicineInfo? {
+        guard let name = nonBlank(nombre) else { return nil }
+        var actives = (principiosActivos ?? []).compactMap { nonBlank($0.nombre) }
+        if actives.isEmpty {
+            actives = (pactivos ?? "").split(separator: ",").compactMap { nonBlank(String($0)) }
+        }
+        let leaflet = (docs ?? []).first { $0.tipo == cimaLeafletDocType }
+        let photos = fotos ?? []
+        return MedicineInfo(
+            code: code,
+            source: .cima,
+            name: name,
+            activeIngredients: actives,
+            excipients: uniqued(
+                (excipientes ?? [])
+                    .sorted { ($0.orden ?? Int.max) < ($1.orden ?? Int.max) }
+                    .compactMap { nonBlank($0.nombre) }
+            ),
+            laboratory: nonBlank(labtitular),
+            dose: nonBlank(dosis),
+            pharmaceuticalForm: nonBlank(formaFarmaceutica?.nombre),
+            imageURL: photos.first { $0.tipo == "materialas" }?.url ?? photos.first?.url,
+            leafletURL: leaflet?.urlHtml ?? leaflet?.url,
+            prescriptionRequired: receta
+        )
+    }
+}
+
+// MARK: - openFDA
+
+struct OpenFDALabelResponse: Decodable {
+    var results: [OpenFDALabel]?
+}
+
+struct OpenFDALabel: Decodable {
+    var setId: String?
+    var inactiveIngredient: [String]?
+    var activeIngredient: [String]?
+    var splProductDataElements: [String]?
+    var description: [String]?
+    var openfda: OpenFDAFields?
+
+    enum CodingKeys: String, CodingKey {
+        case setId = "set_id"
+        case inactiveIngredient = "inactive_ingredient"
+        case activeIngredient = "active_ingredient"
+        case splProductDataElements = "spl_product_data_elements"
+        case description
+        case openfda
+    }
+}
+
+struct OpenFDAFields: Decodable {
+    var brandName: [String]?
+    var genericName: [String]?
+    var manufacturerName: [String]?
+    var substanceName: [String]?
+    var productType: [String]?
+    var dosageForm: [String]?
+
+    enum CodingKeys: String, CodingKey {
+        case brandName = "brand_name"
+        case genericName = "generic_name"
+        case manufacturerName = "manufacturer_name"
+        case substanceName = "substance_name"
+        case productType = "product_type"
+        case dosageForm = "dosage_form"
+    }
+}
+
+func splitIngredientList(_ text: String) -> [String] {
+    let withoutPrefix = text.replacingOccurrences(
+        of: #"^\s*(inactive ingredients?|other ingredients?)\s*[:.]?\s*"#,
+        with: "",
+        options: [.regularExpression, .caseInsensitive]
+    )
+    let parts = withoutPrefix
+        .components(separatedBy: CharacterSet(charactersIn: ",;•\n"))
+        .map { part -> String in
+            var item = part.trimmingCharacters(in: .whitespacesAndNewlines)
+            while item.hasSuffix(".") { item.removeLast() }
+            return item.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        .filter { (2...80).contains($0.count) }
+    return uniqued(parts)
+}
+
+extension OpenFDALabel {
+    func toMedicineInfo(code: String) -> MedicineInfo? {
+        let fields = openfda
+        guard let name = nonBlank(fields?.brandName?.first) ?? nonBlank(fields?.genericName?.first) else { return nil }
+        let substances = fields?.substanceName ?? []
+        let actives = uniqued((substances.isEmpty ? (fields?.genericName ?? []) : substances).compactMap(nonBlank))
+        let extra = ((splProductDataElements ?? []) + (description ?? [])).joined(separator: " ")
+        return MedicineInfo(
+            code: code,
+            source: .openFDA,
+            name: name,
+            activeIngredients: actives,
+            excipients: uniqued((inactiveIngredient ?? []).flatMap(splitIngredientList)),
+            laboratory: nonBlank(fields?.manufacturerName?.first),
+            pharmaceuticalForm: nonBlank(fields?.dosageForm?.first),
+            leafletURL: setId.map { "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=\($0)" },
+            prescriptionRequired: fields?.productType?.first.map { $0.localizedCaseInsensitiveContains("PRESCRIPTION") },
+            extraText: nonBlank(extra)
+        )
+    }
+}
