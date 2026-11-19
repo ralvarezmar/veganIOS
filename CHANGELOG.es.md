@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.25.13 (77)] - 2026-11-17
+
 ### Añadido
 - 15 personajes nuevos en la rotación: garbanzo, lenteja, edamame, tempeh, almendra, cacahuete, nuez, avena, un brik de bebida de avena, tomate, ajo, coliflor, remolacha, aceituna e higo.
 

@@ -26,28 +26,49 @@ func saveScanRecord(
     in modelContext: ModelContext,
     timestamp: Date = Date()
 ) {
+    upsertScanRecord(
+        barcode: barcode,
+        productName: product.productName,
+        brand: product.brands,
+        imageURL: product.imageUrl,
+        verdict: verdict,
+        category: categoryFor(source: source, categoriesTags: product.categoriesTags),
+        in: modelContext,
+        timestamp: timestamp
+    )
+}
+
+func upsertScanRecord(
+    barcode: String,
+    productName: String?,
+    brand: String?,
+    imageURL: String?,
+    verdict: VeganStatus?,
+    category: ProductCategory,
+    in modelContext: ModelContext,
+    timestamp: Date = Date()
+) {
     do {
-        let derivedCategory = categoryFor(source: source, categoriesTags: product.categoriesTags)
         let descriptor = FetchDescriptor<ScanRecord>(predicate: #Predicate { $0.barcode == barcode })
         if let existing = try modelContext.fetch(descriptor).first {
-            existing.productName = product.productName
-            existing.brand = product.brands
-            existing.imageURL = product.imageUrl
+            existing.productName = productName
+            existing.brand = brand
+            existing.imageURL = imageURL
             existing.timestamp = timestamp
             if let verdict {
                 existing.verdict = verdict.persistedValue
             }
-            existing.category = derivedCategory.rawValue
+            existing.category = category.rawValue
         } else {
             modelContext.insert(
                 ScanRecord(
                     barcode: barcode,
-                    productName: product.productName,
-                    brand: product.brands,
-                    imageURL: product.imageUrl,
+                    productName: productName,
+                    brand: brand,
+                    imageURL: imageURL,
                     timestamp: timestamp,
                     verdict: verdict?.persistedValue,
-                    category: derivedCategory.rawValue
+                    category: category.rawValue
                 )
             )
         }
