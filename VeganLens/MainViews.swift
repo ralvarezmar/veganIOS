@@ -3775,7 +3775,7 @@ private struct AdditiveBadgeColors {
     let content: Color
 }
 
-private struct ShareSheet: UIViewControllerRepresentable {
+struct ShareSheet: UIViewControllerRepresentable {
     let items: [Any]
 
     func makeUIViewController(context: Context) -> UIActivityViewController {

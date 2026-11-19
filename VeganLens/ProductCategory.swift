@@ -13,6 +13,7 @@ enum ProductCategory: String, CaseIterable, Codable, Hashable {
     case meatFishEggs = "MEAT_FISH_EGGS"
     case cosmeticsAndHygiene = "COSMETICS_AND_HYGIENE"
     case petFood = "PET_FOOD"
+    case medicine = "MEDICINE"
     case other = "OTHER"
 
     var localizedName: String {

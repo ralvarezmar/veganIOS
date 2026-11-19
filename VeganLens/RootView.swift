@@ -194,21 +194,23 @@ struct RootView: View {
                 case .settings:
                     SettingsView()
                 case .result(let barcode):
-                    ResultView(
-                        barcode: barcode,
-                        onContribute: { contributionBarcode, product, source in
-                            contributionProduct = product
-                            path.append(Route.contribution(contributionBarcode, source?.rawValue))
-                        },
-                        onSelectBarcode: { alternativeBarcode in
-                            path.append(Route.result(alternativeBarcode))
-                        },
-                        onBack: {
-                            if !path.isEmpty {
-                                path.removeLast()
+                    ScanResultRouter(barcode: barcode) {
+                        ResultView(
+                            barcode: barcode,
+                            onContribute: { contributionBarcode, product, source in
+                                contributionProduct = product
+                                path.append(Route.contribution(contributionBarcode, source?.rawValue))
+                            },
+                            onSelectBarcode: { alternativeBarcode in
+                                path.append(Route.result(alternativeBarcode))
+                            },
+                            onBack: {
+                                if !path.isEmpty {
+                                    path.removeLast()
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 case .contribution(let barcode, let sourceName):
                     ContributionView(
                         barcode: barcode,
