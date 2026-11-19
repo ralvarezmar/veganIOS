@@ -10,6 +10,16 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.25.14 (78)] - 2026-11-19
+
+### Añadido
+- Escaneo de medicamentos: escanea el código de barras de un medicamento para revisar sus excipientes. Los medicamentos españoles se consultan en CIMA (AEMPS) y los de EE. UU. en openFDA.
+- El resultado marca excipientes de origen animal (gelatina, lactosa, goma laca…), de origen dudoso (estearato de magnesio, glicerol…), gluten, lactosa y los alérgenos de tu perfil, con un aviso para consultar a tu médico o farmacéutico.
+- Los medicamentos tienen su propio resultado y tarjeta para compartir en azul, con un nuevo personaje píldora que solo aparece al escanear medicamentos.
+
+### Cambiado
+- El apodo en español del garbanzo ahora es "Garbancid Campeador".
+
 ## [1.25.13 (77)] - 2026-11-17
 
 ### Añadido

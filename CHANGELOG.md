@@ -8,6 +8,16 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.25.14 (78)] - 2026-11-19
+
+### Added
+- Medicine scanning: scan a medicine barcode to check its excipients. Spanish medicines are looked up in CIMA (AEMPS) and US medicines in openFDA.
+- Medicine results flag animal-derived excipients (gelatin, lactose, shellac…), ingredients of doubtful origin (magnesium stearate, glycerol…), gluten, lactose and the allergens in your profile, with a reminder to check with your doctor or pharmacist.
+- Medicines get their own blue result and share card with a new pill character, which only appears on medicine scans.
+
+### Changed
+- The Spanish nickname of the chickpea is now "Garbancid Campeador".
+
 ## [1.25.13 (77)] - 2026-11-17
 
 ### Added
