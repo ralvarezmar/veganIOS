@@ -8,6 +8,13 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- What to test: scan a medicine box (Spanish codes start with 847000; US codes are UPCs starting with 3).
+- Check the blue medicine card: excipients, animal-origin, gluten and lactose warnings, profile allergen alerts, leaflet link and sharing.
+- The pill character must appear only on medicines, never on food.
+- If a code isn't found, try "Search as a product".
+- Built with the newest Xcode and iOS SDK available on the build machines.
+
 ## [1.25.14 (78)] - 2026-11-19
 
 ### Added
