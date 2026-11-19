@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.25.15 (79)] - 2026-11-19
+
 ### Cambiado
 - Qué probar: escanea la caja de un medicamento (los españoles empiezan por 847000; los de EE. UU. son UPC que empiezan por 3).
 - Revisa la tarjeta azul: excipientes, avisos de origen animal, gluten y lactosa, alertas de tu perfil, prospecto y compartir.

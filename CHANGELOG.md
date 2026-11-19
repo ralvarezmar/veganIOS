@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.25.15 (79)] - 2026-11-19
+
 ### Changed
 - What to test: scan a medicine box (Spanish codes start with 847000; US codes are UPCs starting with 3).
 - Check the blue medicine card: excipients, animal-origin, gluten and lactose warnings, profile allergen alerts, leaflet link and sharing.
