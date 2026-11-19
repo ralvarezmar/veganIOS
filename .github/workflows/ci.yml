@@ -67,11 +67,19 @@ jobs:
 
 
   build:
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Select newest Xcode
+        run: |
+          latest="$(ls -d /Applications/Xcode_*.app 2>/dev/null | grep -viE 'beta|release_candidate' | sort -V | tail -1)"
+          if [ -n "$latest" ]; then
+            sudo xcode-select -s "$latest/Contents/Developer"
+          fi
+          echo "::notice title=Xcode::$(xcodebuild -version | tr '\n' ' ')/ $(xcodebuild -showsdks | grep -o 'iphoneos[0-9.]*' | sort -V | tail -1)"
 
       - name: Install XcodeGen
         run: |
@@ -117,11 +125,19 @@ jobs:
 
   unit-tests:
     needs: build
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Select newest Xcode
+        run: |
+          latest="$(ls -d /Applications/Xcode_*.app 2>/dev/null | grep -viE 'beta|release_candidate' | sort -V | tail -1)"
+          if [ -n "$latest" ]; then
+            sudo xcode-select -s "$latest/Contents/Developer"
+          fi
+          echo "::notice title=Xcode::$(xcodebuild -version | tr '\n' ' ')/ $(xcodebuild -showsdks | grep -o 'iphoneos[0-9.]*' | sort -V | tail -1)"
 
       - name: Download test build
         uses: actions/download-artifact@v4
@@ -220,11 +236,19 @@ jobs:
 
   ui-tests:
     needs: build
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Select newest Xcode
+        run: |
+          latest="$(ls -d /Applications/Xcode_*.app 2>/dev/null | grep -viE 'beta|release_candidate' | sort -V | tail -1)"
+          if [ -n "$latest" ]; then
+            sudo xcode-select -s "$latest/Contents/Developer"
+          fi
+          echo "::notice title=Xcode::$(xcodebuild -version | tr '\n' ' ')/ $(xcodebuild -showsdks | grep -o 'iphoneos[0-9.]*' | sort -V | tail -1)"
 
       - name: Download test build
         uses: actions/download-artifact@v4
@@ -383,7 +407,7 @@ jobs:
   appstore-screenshots:
     needs: [unit-tests, ui-tests]
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 75
     continue-on-error: true
     env:
@@ -391,6 +415,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Select newest Xcode
+        run: |
+          latest="$(ls -d /Applications/Xcode_*.app 2>/dev/null | grep -viE 'beta|release_candidate' | sort -V | tail -1)"
+          if [ -n "$latest" ]; then
+            sudo xcode-select -s "$latest/Contents/Developer"
+          fi
+          echo "::notice title=Xcode::$(xcodebuild -version | tr '\n' ' ')/ $(xcodebuild -showsdks | grep -o 'iphoneos[0-9.]*' | sort -V | tail -1)"
 
       - name: Install XcodeGen
         run: |
