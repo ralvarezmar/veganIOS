@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.25.16 (80)] - 2026-11-19
+
 ### Fixed
 - Medicine share card: the background cross no longer sits right behind the "Medicine" badge.
 

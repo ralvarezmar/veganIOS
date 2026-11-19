@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.25.16 (80)] - 2026-11-19
+
 ### Corregido
 - Tarjeta de medicamento: la cruz decorativa del fondo ya no queda pegada a la etiqueta "Medicamento".
 
