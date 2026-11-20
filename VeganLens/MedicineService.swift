@@ -6,7 +6,15 @@ enum MedicineFetchResult: Equatable {
     case error(String)
 }
 
+enum MedicineSearchResult: Equatable {
+    case success([MedicineSearchItem])
+    case empty
+    case error(String)
+}
+
 struct MedicineService {
+    static let searchLimit = 15
+
     static let cimaBaseURL = "https://cima.aemps.es/cima/rest"
     static let openFDABaseURL = "https://api.fda.gov"
 
@@ -27,11 +35,73 @@ struct MedicineService {
     }
 
     static func openFDAURL(upc: String, ndcCandidates: [String]) -> URL? {
+        openFDAURL(terms: ["openfda.upc:\"\(upc)\""] + ndcCandidates.map { "openfda.package_ndc:\"\($0)\"" }, limit: 1)
+    }
+
+    static func cimaURL(nregistro: String) -> URL? {
+        URL(string: "\(cimaBaseURL)/medicamento?nregistro=\(nregistro)")
+    }
+
+    static func openFDAURL(setId: String) -> URL? {
+        openFDAURL(terms: ["set_id:\"\(setId)\""], limit: 1)
+    }
+
+    static func cimaSearchURL(query: String) -> URL? {
+        guard let encoded = query.addingPercentEncoding(withAllowedCharacters: .alphanumerics) else { return nil }
+        return URL(string: "\(cimaBaseURL)/medicamentos?nombre=\(encoded)&comerc=1")
+    }
+
+    static func openFDASearchURL(query: String) -> URL? {
+        let phrase = query.replacingOccurrences(of: "\"", with: "")
+        return openFDAURL(terms: ["openfda.brand_name:\"\(phrase)\"", "openfda.generic_name:\"\(phrase)\""], limit: searchLimit)
+    }
+
+    private static func openFDAURL(terms: [String], limit: Int) -> URL? {
         var allowed = CharacterSet.alphanumerics
         allowed.insert(charactersIn: "-._:")
-        let terms = (["openfda.upc:\"\(upc)\""] + ndcCandidates.map { "openfda.package_ndc:\"\($0)\"" })
-            .compactMap { $0.addingPercentEncoding(withAllowedCharacters: allowed) }
-        return URL(string: "\(openFDABaseURL)/drug/label.json?search=\(terms.joined(separator: "+OR+"))&limit=1")
+        let encoded = terms.compactMap { $0.addingPercentEncoding(withAllowedCharacters: allowed) }
+        return URL(string: "\(openFDABaseURL)/drug/label.json?search=\(encoded.joined(separator: "+OR+"))&limit=\(limit)")
+    }
+
+    /// Searches CIMA and openFDA by medicine name; one source failing still returns the other's results.
+    func searchByName(query: String) async -> MedicineSearchResult {
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty,
+              let cimaURL = Self.cimaSearchURL(query: trimmed),
+              let fdaURL = Self.openFDASearchURL(query: trimmed) else { return .empty }
+        async let cima = searchItems(cimaURL) { (response: CimaSearchResponse) in
+            (response.resultados ?? []).compactMap { $0.toSearchItem() }
+        }
+        async let fda = searchItems(fdaURL) { (response: OpenFDALabelResponse) in
+            (response.results ?? []).compactMap { $0.toSearchItem() }
+        }
+        let results = await [cima, fda]
+        var seen = Set<String>()
+        let items = results
+            .flatMap { (try? $0.get()) ?? [] }
+            .filter { seen.insert($0.code).inserted }
+            .prefix(Self.searchLimit * 2)
+        if !items.isEmpty { return .success(Array(items)) }
+        let errors = results.compactMap { result -> Error? in
+            if case .failure(let error) = result { return error }
+            return nil
+        }
+        if errors.count == results.count, let error = errors.first {
+            return .error(error.localizedDescription)
+        }
+        return .empty
+    }
+
+    private func searchItems<T: Decodable>(
+        _ url: URL,
+        _ map: @escaping (T) -> [MedicineSearchItem]
+    ) async -> Result<[MedicineSearchItem], Error> {
+        do {
+            let value: T? = try await decode(url)
+            return .success(value.map(map) ?? [])
+        } catch {
+            return .failure(error)
+        }
     }
 
     func fetchMedicine(barcode: String) async -> MedicineFetchResult {
@@ -45,6 +115,10 @@ struct MedicineService {
                 result = try await fetchCima(barcode: barcode, nationalCode: nationalCode)
             case .usNDC(let upc, let candidates):
                 result = try await fetchOpenFDA(barcode: barcode, upc: upc, ndcCandidates: candidates)
+            case .cimaRegistration(let nregistro):
+                result = try await fetchCima(barcode: barcode, url: Self.cimaURL(nregistro: nregistro))
+            case .openFDASetId(let setId):
+                result = try await fetchOpenFDA(barcode: barcode, url: Self.openFDAURL(setId: setId))
             }
             if case .success(let medicine, _) = result {
                 writeCache(medicine, barcode: barcode)
@@ -69,14 +143,22 @@ struct MedicineService {
     }
 
     private func fetchCima(barcode: String, nationalCode: String) async throws -> MedicineFetchResult {
-        guard let url = Self.cimaURL(nationalCode: nationalCode) else { return .notFound([.cima]) }
+        try await fetchCima(barcode: barcode, url: Self.cimaURL(nationalCode: nationalCode))
+    }
+
+    private func fetchCima(barcode: String, url: URL?) async throws -> MedicineFetchResult {
+        guard let url else { return .notFound([.cima]) }
         let medicine: CimaMedicamento? = try await decode(url)
         guard let info = medicine?.toMedicineInfo(code: barcode) else { return .notFound([.cima]) }
         return .success(info, fromCache: false)
     }
 
     private func fetchOpenFDA(barcode: String, upc: String, ndcCandidates: [String]) async throws -> MedicineFetchResult {
-        guard let url = Self.openFDAURL(upc: upc, ndcCandidates: ndcCandidates) else { return .notFound([.openFDA]) }
+        try await fetchOpenFDA(barcode: barcode, url: Self.openFDAURL(upc: upc, ndcCandidates: ndcCandidates))
+    }
+
+    private func fetchOpenFDA(barcode: String, url: URL?) async throws -> MedicineFetchResult {
+        guard let url else { return .notFound([.openFDA]) }
         let response: OpenFDALabelResponse? = try await decode(url)
         guard let info = response?.results?.first?.toMedicineInfo(code: barcode) else { return .notFound([.openFDA]) }
         return .success(info, fromCache: false)

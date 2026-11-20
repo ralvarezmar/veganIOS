@@ -8,6 +8,10 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- Search by name now has a Food / Medicines selector. Medicines are searched in CIMA (Spain) and openFDA (US) and open the blue medicine card.
+- When a food search finds nothing, a "Search medicines" button repeats the search among medicines.
+
 ## [1.25.16 (80)] - 2026-11-19
 
 ### Fixed

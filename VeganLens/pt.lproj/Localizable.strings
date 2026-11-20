@@ -184,6 +184,12 @@
 "search_no_results_message" = "Não foram encontrados produtos para “%@”. 🔍";
 "search_error_title" = "Não foi possível pesquisar";
 "search_retry" = "Tentar novamente";
+"search_mode_food" = "Alimentos";
+"search_mode_medicine" = "Medicamentos";
+"search_medicine_hint" = "Nome do medicamento";
+"search_medicine_prompt_message" = "Escreve o nome comercial ou a substância ativa (ex. ibuprofeno). Pesquisamos no CIMA (Espanha) e na openFDA (EUA).";
+"search_medicine_no_results_message" = "Não foram encontrados medicamentos para “%@”. 💊";
+"search_try_medicines" = "Pesquisar em medicamentos";
 "favorite_add_action" = "Adicionar aos favoritos";
 "favorite_remove_action" = "Remover dos favoritos";
 "shopping_list_action" = "Lista de compras";

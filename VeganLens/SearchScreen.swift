@@ -2,9 +2,12 @@ import SwiftUI
 
 struct SearchScreen: View {
     @State private var query = ""
+    @State private var mode: SearchMode = .food
     @State private var uiState: SearchUiState = .idle
+    @State private var searchTask: Task<Void, Never>?
 
     private let service = OpenFactsService()
+    private let medicineService = MedicineService()
     let onSelectBarcode: (String) -> Void
 
     var body: some View {
@@ -23,7 +26,14 @@ struct SearchScreen: View {
             Text(L("search_title"))
                 .appFont(.title3, weight: .bold)
 
-            TextField(L("search_hint"), text: $query)
+            Picker(L("search_title"), selection: Binding(get: { mode }, set: { selectMode($0) })) {
+                Text(L("search_mode_food")).tag(SearchMode.food)
+                Text(L("search_mode_medicine")).tag(SearchMode.medicine)
+            }
+            .pickerStyle(.segmented)
+            .accessibilityIdentifier("search_mode_picker")
+
+            TextField(L(mode == .medicine ? "search_medicine_hint" : "search_hint"), text: $query)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
                 .keyboardType(.default)
@@ -42,7 +52,7 @@ struct SearchScreen: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color("AccentColor"))
+            .tint(mode == .medicine ? medicineBlue : Color("AccentColor"))
             .disabled(query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
         .padding(18)
@@ -54,11 +64,11 @@ struct SearchScreen: View {
     private var content: some View {
         switch uiState {
         case .idle:
-            SearchPromptState()
+            SearchPromptState(mode: mode)
         case .loading:
             SearchLoadingState()
         case .empty(let query):
-            SearchEmptyState(query: query)
+            SearchEmptyState(query: query, mode: mode, onSearchMedicines: { selectMode(.medicine) })
         case .error(let message, let query):
             SearchErrorState(
                 message: message,
@@ -69,7 +79,11 @@ struct SearchScreen: View {
             )
         case .success(let products):
             if products.isEmpty {
-                SearchEmptyState(query: query.trimmingCharacters(in: .whitespacesAndNewlines))
+                SearchEmptyState(
+                    query: query.trimmingCharacters(in: .whitespacesAndNewlines),
+                    mode: mode,
+                    onSearchMedicines: { selectMode(.medicine) }
+                )
             } else {
                 ScrollView {
                     LazyVStack(spacing: 12) {
@@ -83,6 +97,31 @@ struct SearchScreen: View {
                     .padding(.bottom, 12)
                 }
             }
+        case .medicineSuccess(let items):
+            ScrollView {
+                LazyVStack(spacing: 12) {
+                    ForEach(items) { item in
+                        Button {
+                            onSelectBarcode(item.code)
+                        } label: {
+                            MedicineSearchResultCard(item: item)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.bottom, 12)
+            }
+        }
+    }
+
+    private func selectMode(_ newMode: SearchMode) {
+        guard mode != newMode else { return }
+        mode = newMode
+        if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            searchTask?.cancel()
+            uiState = .idle
+        } else {
+            runSearch()
         }
     }
 
@@ -93,27 +132,58 @@ struct SearchScreen: View {
         }
 
         uiState = .loading
+        let searchMode = mode
+        searchTask?.cancel()
 
-        Task { @MainActor in
-            switch await service.searchByName(query: trimmedQuery) {
-            case .success(let products):
-                uiState = .success(products)
-            case .empty:
-                uiState = .empty(trimmedQuery)
-            case .error(let message):
-                uiState = .error(message, trimmedQuery)
+        searchTask = Task { @MainActor in
+            let newState: SearchUiState
+            switch searchMode {
+            case .food:
+                switch await service.searchByName(query: trimmedQuery) {
+                case .success(let products):
+                    newState = .success(products)
+                case .empty:
+                    newState = .empty(trimmedQuery)
+                case .error(let message):
+                    newState = .error(message, trimmedQuery)
+                }
+            case .medicine:
+                switch await medicineService.searchByName(query: trimmedQuery) {
+                case .success(let items):
+                    newState = .medicineSuccess(items)
+                case .empty:
+                    newState = .empty(trimmedQuery)
+                case .error(let message):
+                    newState = .error(message, trimmedQuery)
+                }
             }
+            guard !Task.isCancelled else { return }
+            uiState = newState
         }
     }
 }
 
+private enum SearchMode: Hashable {
+    case food
+    case medicine
+}
+
 @ViewBuilder
-private func SearchPromptState() -> some View {
-    EmptyStateCard(
-        icon: "magnifyingglass",
-        title: L("search_prompt_title"),
-        message: L("search_prompt_message")
-    )
+private func SearchPromptState(mode: SearchMode) -> some View {
+    if mode == .medicine {
+        EmptyStateCard(
+            icon: "cross.case",
+            title: L("search_prompt_title"),
+            message: L("search_medicine_prompt_message"),
+            tint: medicineBlue
+        )
+    } else {
+        EmptyStateCard(
+            icon: "magnifyingglass",
+            title: L("search_prompt_title"),
+            message: L("search_prompt_message")
+        )
+    }
 }
 
 @ViewBuilder
@@ -127,13 +197,30 @@ private func SearchLoadingState() -> some View {
 }
 
 @ViewBuilder
-private func SearchEmptyState(query: String) -> some View {
-    EmptyStateCard(
-        icon: "magnifyingglass",
-        title: L("search_empty_title"),
-        message: query.isEmpty ? L("search_empty_message") : String(format: L("search_no_results_message"), query),
-        mascot: EmptyStateMascots.search
-    )
+private func SearchEmptyState(
+    query: String,
+    mode: SearchMode,
+    onSearchMedicines: @escaping () -> Void
+) -> some View {
+    if mode == .medicine {
+        EmptyStateCard(
+            icon: "cross.case",
+            title: L("search_empty_title"),
+            message: String(format: L("search_medicine_no_results_message"), query),
+            tint: medicineBlue
+        )
+    } else {
+        EmptyStateCard(
+            icon: "magnifyingglass",
+            title: L("search_empty_title"),
+            message: query.isEmpty ? L("search_empty_message") : String(format: L("search_no_results_message"), query),
+            actionTitle: query.isEmpty ? nil : L("search_try_medicines"),
+            action: query.isEmpty ? nil : onSearchMedicines,
+            mascot: EmptyStateMascots.search,
+            tint: medicineBlue,
+            actionIdentifier: "search_try_medicines_button"
+        )
+    }
 }
 
 @ViewBuilder
@@ -158,6 +245,8 @@ private struct EmptyStateCard: View {
     let actionTitle: String?
     let action: (() -> Void)?
     let mascot: String?
+    let tint: Color?
+    let actionIdentifier: String?
 
     init(
         icon: String?,
@@ -166,7 +255,9 @@ private struct EmptyStateCard: View {
         loading: Bool = false,
         actionTitle: String? = nil,
         action: (() -> Void)? = nil,
-        mascot: String? = nil
+        mascot: String? = nil,
+        tint: Color? = nil,
+        actionIdentifier: String? = nil
     ) {
         self.icon = icon
         self.title = title
@@ -175,6 +266,8 @@ private struct EmptyStateCard: View {
         self.actionTitle = actionTitle
         self.action = action
         self.mascot = mascot
+        self.tint = tint
+        self.actionIdentifier = actionIdentifier
     }
 
     var body: some View {
@@ -190,7 +283,7 @@ private struct EmptyStateCard: View {
             } else if let icon {
                 Image(systemName: icon)
                     .appIconFont(size: 42, weight: .semibold)
-                    .foregroundStyle(.green)
+                    .foregroundStyle(tint ?? .green)
             }
 
             Text(title)
@@ -207,7 +300,8 @@ private struct EmptyStateCard: View {
             if let actionTitle, let action {
                 Button(actionTitle, action: action)
                     .buttonStyle(.borderedProminent)
-                    .tint(Color("AccentColor"))
+                    .tint(tint ?? Color("AccentColor"))
+                    .accessibilityIdentifier(actionIdentifier ?? "")
             }
         }
         .padding(28)
@@ -248,6 +342,49 @@ private struct SearchResultCard: View {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .strokeBorder(Color.secondary.opacity(0.10), lineWidth: 1)
         )
+    }
+}
+
+private struct MedicineSearchResultCard: View {
+    let item: MedicineSearchItem
+
+    var body: some View {
+        HStack(spacing: 14) {
+            if item.imageURL != nil {
+                SearchThumbnail(imageURLString: item.imageURL)
+            } else {
+                Image("medicine_pill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 72, height: 72)
+                    .accessibilityLabel(L("medicine_mascot_description"))
+            }
+
+            VStack(alignment: .leading, spacing: 5) {
+                Text(item.name)
+                    .appFont(.headline, weight: .semibold)
+                    .foregroundStyle(Color(red: 0x0D / 255, green: 0x47 / 255, blue: 0xA1 / 255))
+
+                if let laboratory = item.laboratory {
+                    Text(laboratory)
+                        .appFont(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+
+                Text(LF("medicine_source", item.source.displayName))
+                    .appFont(.caption)
+                    .foregroundStyle(medicineBlue)
+            }
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(red: 0xE3 / 255, green: 0xF2 / 255, blue: 0xFD / 255))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .strokeBorder(medicineBlue.opacity(0.25), lineWidth: 1)
+        )
+        .accessibilityIdentifier("medicine_search_result")
     }
 }
 
@@ -311,6 +448,7 @@ private enum SearchUiState {
     case idle
     case loading
     case success([OpenFoodFactsSearchProduct])
+    case medicineSuccess([MedicineSearchItem])
     case empty(String)
     case error(String, String)
 }

@@ -184,6 +184,12 @@
 "search_no_results_message" = "No products found for “%@”. 🔍";
 "search_error_title" = "Could not search";
 "search_retry" = "Retry";
+"search_mode_food" = "Food";
+"search_mode_medicine" = "Medicines";
+"search_medicine_hint" = "Medicine name";
+"search_medicine_prompt_message" = "Type the brand name or active ingredient (e.g. ibuprofen). We search CIMA (Spain) and openFDA (US).";
+"search_medicine_no_results_message" = "No medicines found for “%@”. 💊";
+"search_try_medicines" = "Search medicines";
 "favorite_add_action" = "Add to favorites";
 "favorite_remove_action" = "Remove from favorites";
 "shopping_list_action" = "Shopping list";

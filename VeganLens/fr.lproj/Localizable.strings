@@ -184,6 +184,12 @@
 "search_no_results_message" = "Aucun produit trouvé pour « %@ ». 🔍";
 "search_error_title" = "Recherche impossible";
 "search_retry" = "Réessayer";
+"search_mode_food" = "Aliments";
+"search_mode_medicine" = "Médicaments";
+"search_medicine_hint" = "Nom du médicament";
+"search_medicine_prompt_message" = "Saisis le nom commercial ou le principe actif (ex. ibuprofène). Nous cherchons dans CIMA (Espagne) et openFDA (États-Unis).";
+"search_medicine_no_results_message" = "Aucun médicament trouvé pour « %@ ». 💊";
+"search_try_medicines" = "Chercher dans les médicaments";
 "favorite_add_action" = "Ajouter aux favoris";
 "favorite_remove_action" = "Retirer des favoris";
 "shopping_list_action" = "Liste de courses";
