@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.26.0 (81)] - 2026-11-20
+
 ### Añadido
 - La búsqueda por nombre tiene un selector Alimentos / Medicamentos. Los medicamentos se buscan en CIMA (España) y openFDA (EE. UU.) y abren la tarjeta azul de medicamento.
 - Si una búsqueda de alimentos no encuentra nada, el botón "Buscar en medicamentos" repite la búsqueda entre medicamentos.
