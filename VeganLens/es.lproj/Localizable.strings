@@ -189,6 +189,12 @@ Fuente: %@
 "search_no_results_message" = "No se encontraron productos para “%@”. 🔍";
 "search_error_title" = "No se ha podido buscar";
 "search_retry" = "Reintentar";
+"search_mode_food" = "Alimentos";
+"search_mode_medicine" = "Medicamentos";
+"search_medicine_hint" = "Nombre del medicamento";
+"search_medicine_prompt_message" = "Escribe el nombre comercial o el principio activo (p. ej. ibuprofeno). Buscamos en CIMA (España) y openFDA (EE. UU.).";
+"search_medicine_no_results_message" = "No se encontraron medicamentos para “%@”. 💊";
+"search_try_medicines" = "Buscar en medicamentos";
 "favorite_add_action" = "Añadir a favoritos";
 "favorite_remove_action" = "Quitar de favoritos";
 "shopping_list_action" = "Lista de la compra";

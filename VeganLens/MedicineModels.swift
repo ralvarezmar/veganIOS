@@ -32,12 +32,40 @@ enum MedicineCode: Equatable {
     case spanishNational(String)
     /// US UPC-A with number system 3, whose 10 middle digits are the NDC.
     case usNDC(upc: String, ndcCandidates: [String])
+    /// CIMA registration number, used for medicines picked from a name search.
+    case cimaRegistration(String)
+    /// openFDA label set id, used for medicines picked from a name search.
+    case openFDASetId(String)
+}
+
+let cimaRegistrationPrefix = "cima-"
+let openFDASetIdPrefix = "fda-"
+
+func cimaRegistrationCode(_ nregistro: String) -> String { cimaRegistrationPrefix + nregistro }
+func openFDASetIdCode(_ setId: String) -> String { openFDASetIdPrefix + setId }
+
+/// True for codes that come from a medicine name search rather than a printed barcode.
+func isMedicineSearchCode(_ code: String) -> Bool {
+    switch medicineCode(for: code) {
+    case .cimaRegistration, .openFDASetId: return true
+    default: return false
+    }
+}
+
+private func searchCodeID(_ code: String, prefix: String) -> String? {
+    guard code.hasPrefix(prefix) else { return nil }
+    let id = String(code.dropFirst(prefix.count))
+    guard !id.isEmpty, id.allSatisfy({ $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-") }) else { return nil }
+    return id
 }
 
 private let spanishMedicinePrefix = "847000"
 
 func medicineCode(for rawBarcode: String) -> MedicineCode? {
     let digits = rawBarcode.trimmingCharacters(in: .whitespacesAndNewlines)
+    if let id = searchCodeID(digits, prefix: cimaRegistrationPrefix) { return .cimaRegistration(id) }
+    if let id = searchCodeID(digits, prefix: openFDASetIdPrefix) { return .openFDASetId(id) }
+    if digits.hasPrefix(cimaRegistrationPrefix) || digits.hasPrefix(openFDASetIdPrefix) { return nil }
     guard !digits.isEmpty, digits.allSatisfy(\.isASCIIDigit) else { return nil }
 
     let ean13: String?
@@ -95,6 +123,22 @@ struct CimaMedicamento: Decodable {
     var excipientes: [CimaSustancia]?
     var fotos: [CimaFoto]?
     var docs: [CimaDocumento]?
+}
+
+struct CimaSearchResponse: Decodable {
+    var totalFilas: Int?
+    var resultados: [CimaMedicamento]?
+}
+
+/// A medicine found by name; `code` opens it in the medicine result screen.
+struct MedicineSearchItem: Equatable, Identifiable {
+    var code: String
+    var name: String
+    var laboratory: String?
+    var imageURL: String?
+    var source: MedicineSource
+
+    var id: String { code }
 }
 
 struct CimaItem: Decodable {
@@ -217,7 +261,26 @@ func splitIngredientList(_ text: String) -> [String] {
     return uniqued(parts)
 }
 
+extension CimaMedicamento {
+    func toSearchItem() -> MedicineSearchItem? {
+        guard let id = nonBlank(nregistro), let name = nonBlank(nombre) else { return nil }
+        let photos = fotos ?? []
+        return MedicineSearchItem(
+            code: cimaRegistrationCode(id),
+            name: name,
+            laboratory: nonBlank(labtitular),
+            imageURL: (photos.first { $0.tipo == "materialas" } ?? photos.first)?.url,
+            source: .cima
+        )
+    }
+}
+
 extension OpenFDALabel {
+    func toSearchItem() -> MedicineSearchItem? {
+        guard let id = nonBlank(setId), let info = toMedicineInfo(code: openFDASetIdCode(id)) else { return nil }
+        return MedicineSearchItem(code: info.code, name: info.name, laboratory: info.laboratory, imageURL: nil, source: .openFDA)
+    }
+
     func toMedicineInfo(code: String) -> MedicineInfo? {
         let fields = openfda
         guard let name = nonBlank(fields?.brandName?.first) ?? nonBlank(fields?.genericName?.first) else { return nil }

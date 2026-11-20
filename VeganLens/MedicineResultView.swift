@@ -105,9 +105,15 @@ struct MedicineResultView: View {
             Text(message)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
-            Button(L("medicine_search_as_product"), action: onSearchAsProduct)
-                .buttonStyle(.borderedProminent)
-                .tint(medicineBlue)
+            if isMedicineSearchCode(barcode) {
+                Button(L("retry")) { Task { await load() } }
+                    .buttonStyle(.borderedProminent)
+                    .tint(medicineBlue)
+            } else {
+                Button(L("medicine_search_as_product"), action: onSearchAsProduct)
+                    .buttonStyle(.borderedProminent)
+                    .tint(medicineBlue)
+            }
         }
         .padding(32)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
