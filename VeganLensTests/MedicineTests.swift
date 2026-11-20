@@ -17,6 +17,16 @@ final class MedicineBarcodeTests: XCTestCase {
         XCTAssertEqual(medicineCode(for: "0312345678906"), expected)
     }
 
+    func testSearchCodesAreMedicineCodes() {
+        XCTAssertEqual(medicineCode(for: cimaRegistrationCode("64101")), .cimaRegistration("64101"))
+        XCTAssertEqual(medicineCode(for: openFDASetIdCode("ab-12")), .openFDASetId("ab-12"))
+        XCTAssertTrue(isMedicineBarcode("cima-64101"))
+        XCTAssertTrue(isMedicineSearchCode("fda-ab-12"))
+        XCTAssertFalse(isMedicineSearchCode("8470007127295"))
+        XCTAssertNil(medicineCode(for: "cima-"))
+        XCTAssertNil(medicineCode(for: "fda-a/b"))
+    }
+
     func testFoodAndInvalidBarcodesAreNotMedicines() {
         XCTAssertFalse(isMedicineBarcode("8410000810004"))
         XCTAssertFalse(isMedicineBarcode("012345678905"))
@@ -161,6 +171,57 @@ final class MedicineServiceTests: XCTestCase {
         MedicineURLProtocolStub.handler = nil
         let result = await makeService().fetchMedicine(barcode: "8470007127295")
         guard case .error = result else { return XCTFail("Expected error, got \(result)") }
+    }
+
+    func testNameSearchQueriesBothSourcesAndMapsResults() async {
+        MedicineURLProtocolStub.handler = { request in
+            if request.url?.host == "cima.aemps.es" {
+                return (200, #"{"totalFilas":1,"resultados":[{"nregistro":"64101","nombre":"IBUPROFENO CINFA","labtitular":"Cinfa"}]}"#)
+            }
+            return (200, #"{"results":[{"set_id":"abc-123","openfda":{"brand_name":["Advil"]}}]}"#)
+        }
+        let result = await makeService().searchByName(query: "ibu profeno")
+        guard case .success(let items) = result else { return XCTFail("Expected success, got \(result)") }
+        XCTAssertEqual(items.map(\.code), ["cima-64101", "fda-abc-123"])
+        XCTAssertEqual(items.first?.laboratory, "Cinfa")
+        let urls = MedicineURLProtocolStub.requests.map(\.absoluteString)
+        XCTAssertTrue(urls.contains("https://cima.aemps.es/cima/rest/medicamentos?nombre=ibu%20profeno&comerc=1"), "\(urls)")
+        let fdaURL = urls.first { $0.hasPrefix("https://api.fda.gov/drug/label.json?search=") } ?? ""
+        XCTAssertTrue(fdaURL.contains("openfda.brand_name:%22ibu%20profeno%22+OR+openfda.generic_name:"), fdaURL)
+    }
+
+    func testNameSearchKeepsResultsWhenOneSourceFails() async {
+        MedicineURLProtocolStub.handler = { request in
+            if request.url?.host == "cima.aemps.es" { return (500, "") }
+            return (200, #"{"results":[{"set_id":"abc","openfda":{"brand_name":["Advil"]}}]}"#)
+        }
+        let result = await makeService().searchByName(query: "advil")
+        XCTAssertEqual(result, .success([MedicineSearchItem(code: "fda-abc", name: "Advil", laboratory: nil, imageURL: nil, source: .openFDA)]))
+    }
+
+    func testNameSearchEmptyAndTransportError() async {
+        MedicineURLProtocolStub.handler = { _ in (200, #"{"resultados":[]}"#) }
+        let empty = await makeService().searchByName(query: "zzz")
+        XCTAssertEqual(empty, .empty)
+        let blank = await makeService().searchByName(query: "  ")
+        XCTAssertEqual(blank, .empty)
+        MedicineURLProtocolStub.handler = nil
+        let failed = await makeService().searchByName(query: "x")
+        guard case .error = failed else { return XCTFail("Expected error, got \(failed)") }
+    }
+
+    func testSearchCodesOpenTheirSource() async {
+        MedicineURLProtocolStub.handler = { _ in (200, #"{"nregistro":"64101","nombre":"IBUPROFENO"}"#) }
+        let cima = await makeService().fetchMedicine(barcode: "cima-64101")
+        guard case .success(let info, _) = cima else { return XCTFail("Expected success, got \(cima)") }
+        XCTAssertEqual(info.name, "IBUPROFENO")
+        XCTAssertEqual(MedicineURLProtocolStub.requests.last?.absoluteString, "https://cima.aemps.es/cima/rest/medicamento?nregistro=64101")
+
+        MedicineURLProtocolStub.handler = { _ in (200, #"{"results":[{"set_id":"abc-1","openfda":{"brand_name":["Advil"]}}]}"#) }
+        let fda = await makeService().fetchMedicine(barcode: "fda-abc-1")
+        guard case .success(let fdaInfo, _) = fda else { return XCTFail("Expected success, got \(fda)") }
+        XCTAssertEqual(fdaInfo.source, .openFDA)
+        XCTAssertEqual(MedicineURLProtocolStub.requests.last?.absoluteString, "https://api.fda.gov/drug/label.json?search=set_id:%22abc-1%22&limit=1")
     }
 }
 
