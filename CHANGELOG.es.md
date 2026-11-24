@@ -13,6 +13,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ### Añadido
 - El escáner ahora lee el DataMatrix (el código cuadrado pequeño) de los medicamentos con receta y financiados en España, que ya no llevan código de barras normal, y abre la ficha del medicamento a partir de su código nacional.
 
+### Corregido
+- La búsqueda de alimentos por nombre vuelve a funcionar: ahora usa el buscador nuevo de Open Food Facts, porque el antiguo fallaba con "servicio no disponible" en más de la mitad de las búsquedas. El antiguo se sigue usando como respaldo.
+
 ## [1.26.0 (81)] - 2026-11-20
 
 ### Añadido

@@ -109,6 +109,70 @@ final class OpenFactsServiceTests: XCTestCase {
         XCTAssertEqual(message, L("server_busy_error"))
     }
 
+    func testSearchByNameUsesSearchaliciousAndJoinsBrandLists() async {
+        let session = makeSession { request in
+            XCTAssertEqual(request.url?.host, "search.openfoodfacts.org")
+            XCTAssertEqual(request.url?.path, "/search")
+            return self.response(
+                statusCode: 200,
+                body: #"{"hits":[{"code":" 8414807544766 ","product_name":"Lentejas","brands":["Consum","Spar"],"image_url":"https://img/1.jpg"},{"code":"","product_name":"Sin código"}]}"#
+            )
+        }
+
+        let result = await OpenFactsService(session: session).searchByName(query: "lentejas")
+
+        guard case .success(let products) = result else {
+            return XCTFail("Expected Search-a-licious results")
+        }
+        XCTAssertEqual(products.map(\.code), ["8414807544766"])
+        XCTAssertEqual(products.first?.brands, "Consum, Spar")
+        XCTAssertEqual(URLProtocolStub.requestedHosts, ["search.openfoodfacts.org"])
+    }
+
+    func testSearchByNameFallsBackToLegacySearchWhenSearchaliciousFails() async {
+        let session = makeSession { request in
+            if request.url?.host == "search.openfoodfacts.org" {
+                return self.response(statusCode: 503, body: "<html></html>")
+            }
+            XCTAssertEqual(request.url?.path, "/cgi/search.pl")
+            return self.response(
+                statusCode: 200,
+                body: #"{"products":[{"code":"8480000260291","product_name":"Garbanzos cocidos","brands":"Hacendado"}]}"#
+            )
+        }
+
+        let result = await OpenFactsService(session: session).searchByName(query: "garbanzos")
+
+        guard case .success(let products) = result else {
+            return XCTFail("Expected legacy search results")
+        }
+        XCTAssertEqual(products.first?.brands, "Hacendado")
+    }
+
+    func testSearchByNameIsEmptyWhenSearchaliciousFindsNothingAndLegacyFails() async {
+        let session = makeSession { request in
+            request.url?.host == "search.openfoodfacts.org"
+                ? self.response(statusCode: 200, body: #"{"hits":[]}"#)
+                : self.response(statusCode: 503, body: "<html></html>")
+        }
+
+        let result = await OpenFactsService(session: session).searchByName(query: "zzzz")
+
+        guard case .empty = result else {
+            return XCTFail("Expected an empty result, got \(result)")
+        }
+    }
+
+    func testSearchByNameReturnsErrorWhenBothSearchesFail() async {
+        let session = makeSession { _ in self.response(statusCode: 503, body: "<html></html>") }
+
+        let result = await OpenFactsService(session: session).searchByName(query: "tofu")
+
+        guard case .error = result else {
+            return XCTFail("Expected an error, got \(result)")
+        }
+    }
+
     private func makeSession(
         handler: @escaping (URLRequest) -> (HTTPURLResponse, Data)
     ) -> URLSession {
