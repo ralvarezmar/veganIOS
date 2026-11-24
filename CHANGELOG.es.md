@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [1.27.1 (83)] - 2026-11-24
+
 ### Cambiado
 - Los resultados compartidos tienen mucho menos texto. La tarjeta muestra la foto, el nombre, la marca y el veredicto, y además los ✓ de "sin lácteos, sin huevo…" si es apto o los ingredientes que causan el veredicto si no lo es. El mensaje que acompaña a la tarjeta es una sola línea, por ejemplo "Galletas de avena: Apto ✅".
 
