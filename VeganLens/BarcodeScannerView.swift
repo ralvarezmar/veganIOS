@@ -165,7 +165,8 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         }
         session.addOutput(metadataOutput)
         metadataOutput.setMetadataObjectsDelegate(self, queue: .main)
-        metadataOutput.metadataObjectTypes = [.ean13, .ean8, .upce]
+        let supportedTypes: [AVMetadataObject.ObjectType] = [.ean13, .ean8, .upce, .dataMatrix]
+        metadataOutput.metadataObjectTypes = supportedTypes.filter(metadataOutput.availableMetadataObjectTypes.contains)
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.onCameraReady?(
@@ -203,11 +204,10 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
     }
 
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        guard let readableObject = metadataObjects
+        guard let barcode = metadataObjects
             .compactMap({ $0 as? AVMetadataMachineReadableCodeObject })
-            .first,
-              let barcode = readableObject.stringValue,
-              !barcode.isEmpty else {
+            .compactMap({ self.scannedValue($0) })
+            .first(where: { !$0.isEmpty }) else {
             return
         }
 
@@ -220,5 +220,10 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         DispatchQueue.main.async { [weak self] in
             self?.onDetected?(barcode)
         }
+    }
+
+    private func scannedValue(_ object: AVMetadataMachineReadableCodeObject) -> String? {
+        guard let value = object.stringValue else { return nil }
+        return object.type == .dataMatrix ? gtinFromGS1DataMatrix(value) : value
     }
 }

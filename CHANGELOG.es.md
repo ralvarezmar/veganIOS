@@ -11,6 +11,14 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 ### Añadido
+- El escáner ahora lee el DataMatrix (el código cuadrado pequeño) de los medicamentos con receta y financiados en España, que ya no llevan código de barras normal, y abre la ficha del medicamento a partir de su código nacional.
+
+### Corregido
+- La búsqueda de alimentos por nombre vuelve a funcionar: ahora usa el buscador nuevo de Open Food Facts, porque el antiguo fallaba con "servicio no disponible" en más de la mitad de las búsquedas. El antiguo se sigue usando como respaldo.
+
+## [1.26.0 (81)] - 2026-11-20
+
+### Añadido
 - La búsqueda por nombre tiene un selector Alimentos / Medicamentos. Los medicamentos se buscan en CIMA (España) y openFDA (EE. UU.) y abren la tarjeta azul de medicamento.
 - Si una búsqueda de alimentos no encuentra nada, el botón "Buscar en medicamentos" repite la búsqueda entre medicamentos.
 

@@ -9,6 +9,14 @@ version so that App Store Connect can provide notes in both languages.
 ## [Unreleased]
 
 ### Added
+- The scanner now reads the DataMatrix (the small square code) on Spanish prescription and funded medicines, which no longer carry a regular barcode, and opens the medicine card from its national code.
+
+### Fixed
+- Food search by name works again: it now uses the new Open Food Facts search engine, because the old one was failing with "service unavailable" in more than half of the searches. The old one is still used as a backup.
+
+## [1.26.0 (81)] - 2026-11-20
+
+### Added
 - Search by name now has a Food / Medicines selector. Medicines are searched in CIMA (Spain) and openFDA (US) and open the blue medicine card.
 - When a food search finds nothing, a "Search medicines" button repeats the search among medicines.
 

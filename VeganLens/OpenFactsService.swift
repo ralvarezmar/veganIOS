@@ -118,13 +118,42 @@ final class OpenFactsService {
         )
     }
 
+    /// Uses the Search-a-licious engine first; the legacy search.pl often answers 503, so it is only a fallback.
     func searchByName(query: String) async -> SearchByNameResult {
         let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedQuery.isEmpty else {
             return .empty
         }
 
-        guard let url = searchURL(for: trimmedQuery) else {
+        let primary = await searchProducts(url: searchaliciousURL(for: trimmedQuery)) { (response: SearchaliciousResponse) in
+            (response.hits ?? []).map {
+                OpenFoodFactsSearchProduct(
+                    code: $0.code,
+                    productName: $0.productName,
+                    brands: $0.brands,
+                    imageUrl: $0.imageUrl,
+                    ingredientsAnalysisTags: nil,
+                    ingredients: nil
+                )
+            }
+        }
+        if case .success = primary {
+            return primary
+        }
+        let legacy = await searchProducts(url: searchURL(for: trimmedQuery)) { (response: OpenFoodFactsSearchResponse) in
+            response.products ?? []
+        }
+        if case .error = legacy, case .empty = primary {
+            return .empty
+        }
+        return legacy
+    }
+
+    private func searchProducts<T: Decodable>(
+        url: URL?,
+        map: (T) -> [OpenFoodFactsSearchProduct]
+    ) async -> SearchByNameResult {
+        guard let url else {
             return .error(L("network_error"))
         }
 
@@ -145,11 +174,8 @@ final class OpenFactsService {
                 return .error(L("network_error"))
             }
 
-            let decoded = try JSONDecoder().decode(OpenFoodFactsSearchResponse.self, from: data)
-            guard let searchProducts = decoded.products else {
-                return .empty
-            }
-            let products: [OpenFoodFactsSearchProduct] = searchProducts.compactMap { product -> OpenFoodFactsSearchProduct? in
+            let decoded = try JSONDecoder().decode(T.self, from: data)
+            let products: [OpenFoodFactsSearchProduct] = map(decoded).compactMap { product -> OpenFoodFactsSearchProduct? in
                 let code = product.code?.trimmingCharacters(in: .whitespacesAndNewlines)
                 guard let code, !code.isEmpty else {
                     return nil
@@ -258,6 +284,19 @@ final class OpenFactsService {
         } catch {
             return .failure
         }
+    }
+
+    private func searchaliciousURL(for query: String) -> URL? {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "search.openfoodfacts.org"
+        components.path = "/search"
+        components.queryItems = [
+            URLQueryItem(name: "q", value: query),
+            URLQueryItem(name: "page_size", value: "20"),
+            URLQueryItem(name: "fields", value: "code,product_name,brands,image_url")
+        ]
+        return components.url
     }
 
     private func searchURL(for query: String) -> URL? {
