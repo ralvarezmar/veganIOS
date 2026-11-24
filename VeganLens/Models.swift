@@ -10,6 +10,36 @@ struct OpenFoodFactsSearchResponse: Codable {
     let products: [OpenFoodFactsSearchProduct]?
 }
 
+struct SearchaliciousResponse: Decodable {
+    let hits: [SearchaliciousHit]?
+}
+
+struct SearchaliciousHit: Decodable {
+    let code: String?
+    let productName: String?
+    let brands: String?
+    let imageUrl: String?
+
+    enum CodingKeys: String, CodingKey {
+        case code
+        case productName = "product_name"
+        case brands
+        case imageUrl = "image_url"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        code = try? container.decodeIfPresent(String.self, forKey: .code)
+        productName = try? container.decodeIfPresent(String.self, forKey: .productName)
+        imageUrl = try? container.decodeIfPresent(String.self, forKey: .imageUrl)
+        if let list = try? container.decodeIfPresent([String].self, forKey: .brands) {
+            brands = list.joined(separator: ", ")
+        } else {
+            brands = try? container.decodeIfPresent(String.self, forKey: .brands)
+        }
+    }
+}
+
 struct OpenFoodFactsSearchProduct: Codable {
     let code: String?
     let productName: String?
