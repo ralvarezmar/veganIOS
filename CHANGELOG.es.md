@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- El escáner ahora lee el DataMatrix (el código cuadrado pequeño) de los medicamentos con receta y financiados en España, que ya no llevan código de barras normal, y abre la ficha del medicamento a partir de su código nacional.
+
 ## [1.26.0 (81)] - 2026-11-20
 
 ### Añadido

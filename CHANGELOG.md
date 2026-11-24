@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- The scanner now reads the DataMatrix (the small square code) on Spanish prescription and funded medicines, which no longer carry a regular barcode, and opens the medicine card from its national code.
+
 ## [1.26.0 (81)] - 2026-11-20
 
 ### Added
