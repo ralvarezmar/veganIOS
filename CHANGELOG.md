@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Fixed
+- Food search by name works again: it now uses the new Open Food Facts search engine, because the old one was failing with "service unavailable" in more than half of the searches. The old one is still used as a backup.
+
 ## [1.26.0 (81)] - 2026-11-20
 
 ### Added
