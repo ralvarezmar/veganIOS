@@ -33,6 +33,24 @@ final class MedicineBarcodeTests: XCTestCase {
         XCTAssertFalse(isMedicineBarcode("84700A7127295"))
         XCTAssertFalse(isMedicineBarcode(""))
     }
+
+    func testSpanishMedicineDataMatrixYieldsNationalCode() {
+        let gtin = gtinFromGS1DataMatrix("010847000712729521ABC123XYZ\u{1D}1724123110LOT42")
+        XCTAssertEqual(gtin, "8470007127295")
+        XCTAssertEqual(gtin.flatMap { medicineCode(for: $0) }, .spanishNational("712729"))
+    }
+
+    func testDataMatrixGTINIsFoundAfterOtherAIs() {
+        XCTAssertEqual(gtinFromGS1DataMatrix("]d2172412311012345\u{1D}0108470007127295"), "8470007127295")
+        XCTAssertEqual(gtinFromGS1DataMatrix("\u{1D}21SERIAL\u{1D}0108470007127295"), "8470007127295")
+    }
+
+    func testNonGS1DataMatrixIsIgnored() {
+        XCTAssertNil(gtinFromGS1DataMatrix("https://example.com"))
+        XCTAssertNil(gtinFromGS1DataMatrix("0108470007"))
+        XCTAssertNil(gtinFromGS1DataMatrix("21SERIALWITHOUTGTIN"))
+        XCTAssertNil(gtinFromGS1DataMatrix(""))
+    }
 }
 
 final class MedicineAnalyzerTests: XCTestCase {

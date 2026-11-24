@@ -105,6 +105,41 @@ func isMedicineBarcode(_ rawBarcode: String) -> Bool {
     medicineCode(for: rawBarcode) != nil
 }
 
+private let gs1GroupSeparator: Character = "\u{1D}"
+private let gs1SymbologyIdentifiers = ["]d2", "]C1", "]Q3"]
+private let gs1FixedLengthAIs = ["01": 14, "11": 6, "15": 6, "16": 6, "17": 6]
+private let gs1VariableLengthAIs: Set<String> = ["10", "21"]
+
+/// Extracts the GTIN (AI 01) from a GS1 DataMatrix, like the one on Spanish prescription medicine
+/// packs (PC 0847000 + national code), and returns it in the form a linear barcode would have.
+func gtinFromGS1DataMatrix(_ rawValue: String) -> String? {
+    var data = Array(rawValue.trimmingCharacters(in: .whitespacesAndNewlines))
+    if let identifier = gs1SymbologyIdentifiers.first(where: { data.starts(with: $0) }) {
+        data.removeFirst(identifier.count)
+    }
+    var index = 0
+    while index < data.count {
+        if data[index] == gs1GroupSeparator {
+            index += 1
+            continue
+        }
+        let ai = String(data[index..<min(index + 2, data.count)])
+        if ai == "01" {
+            let gtin = String(data[(index + 2)...].prefix(14))
+            guard gtin.count == 14, gtin.allSatisfy(\.isASCIIDigit) else { return nil }
+            return gtin.hasPrefix("0") ? String(gtin.dropFirst()) : gtin
+        } else if let length = gs1FixedLengthAIs[ai] {
+            index += 2 + length
+        } else if gs1VariableLengthAIs.contains(ai) {
+            guard let end = data[(index + 2)...].firstIndex(of: gs1GroupSeparator) else { return nil }
+            index = end + 1
+        } else {
+            return nil
+        }
+    }
+    return nil
+}
+
 private extension Character {
     var isASCIIDigit: Bool { ("0"..."9").contains(self) }
 }
