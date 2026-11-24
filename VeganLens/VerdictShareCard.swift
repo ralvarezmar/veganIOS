@@ -15,46 +15,6 @@ struct VerdictShareCardContent {
     var checks: [String] = []
 }
 
-func verdictShareChips(for product: Product) -> [String] {
-    let grades: Set<String> = ["A", "B", "C", "D", "E"]
-    var chips: [String] = []
-    if let quantity = product.quantity?.trimmingCharacters(in: .whitespacesAndNewlines), !quantity.isEmpty {
-        chips.append(quantity)
-    }
-    if let grade = product.nutriscoreGrade?.trimmingCharacters(in: .whitespacesAndNewlines).uppercased(), grades.contains(grade) {
-        chips.append("\(L("nutriscore_badge_title")) \(grade)")
-    }
-    if let grade = product.greenScoreGrade {
-        chips.append("\(L("green_score_badge_title")) \(grade)")
-    }
-    if let nova = product.novaGroup, (1...4).contains(nova) {
-        chips.append("\(L("nova_group_badge_title")) \(nova)")
-    }
-    return chips
-}
-
-func verdictShareNotes(for product: Product) -> [String] {
-    var notes: [String] = []
-    if product.labelsTags?.contains(where: isVeganSealTag) == true {
-        notes.append(L("share_card_vegan_seal"))
-    }
-    let allergens = buildAllergenDisplayItems(tags: product.allergensTags ?? []).map(\.label)
-    if !allergens.isEmpty {
-        notes.append(LF("share_card_allergens", allergens.joined(separator: ", ")))
-    }
-    let traces = buildAllergenDisplayItems(tags: product.tracesTags ?? []).map(\.label)
-    if !traces.isEmpty {
-        notes.append(LF("share_card_traces", traces.joined(separator: ", ")))
-    }
-    switch palmOilStatus(product.ingredientsAnalysisTags) {
-    case .present: notes.append(L("palm_oil_present"))
-    case .maybe: notes.append(L("palm_oil_maybe"))
-    case .free: notes.append(L("palm_oil_free"))
-    case nil: break
-    }
-    return notes
-}
-
 struct VerdictShareChipsLayout: Layout {
     var spacing: CGFloat = 6
 
@@ -114,8 +74,6 @@ extension VerdictShareCardContent {
             details = LF("share_card_non_vegan_ingredients", analysis.nonVeganIngredients.joined(separator: separator))
         case .maybe where !analysis.doubtfulIngredients.isEmpty:
             details = LF("share_card_doubtful_ingredients", analysis.doubtfulIngredients.joined(separator: separator))
-        case .vegan:
-            details = L("share_card_vegan_details")
         default:
             details = ""
         }
@@ -124,11 +82,9 @@ extension VerdictShareCardContent {
             brand: trimmedBrand?.isEmpty == false ? trimmedBrand : nil,
             headline: verdictShareHeadline(for: analysis),
             details: details,
-            sourceName: source.displayName,
+            sourceName: "",
             status: analysis.status,
             colorblindSafe: colorblindSafe,
-            chips: verdictShareChips(for: product),
-            notes: verdictShareNotes(for: product),
             checks: analysis.status == .vegan
                 ? ["share_card_check_no_dairy", "share_card_check_no_eggs", "share_card_check_no_meat_fish", "share_card_check_no_honey"].map { L($0) }
                 : []

@@ -1448,8 +1448,7 @@ struct ResultView: View {
         let title = product.productName?.trimmingCharacters(in: .whitespacesAndNewlines)
         let shareTitle = (title?.isEmpty == false ? title : nil) ?? barcode
         let verdict = shareVerdictLabel(for: analyzeVegan(product).status)
-        let url = "https://world.openfoodfacts.org/product/\(barcode)"
-        return String(format: L("share_result_template"), shareTitle, verdict, source.displayName, url)
+        return String(format: L("share_result_template"), shareTitle, verdict)
     }
 
     @MainActor
