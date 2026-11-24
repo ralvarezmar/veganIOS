@@ -8,6 +8,11 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Shared results have much less text. The card shows the photo, name, brand and verdict, plus the "no dairy, no eggs…" checks when it is vegan or the ingredients that cause the verdict when it is not. The message sent with the card is a single line, for example "Oat cookies: Suitable ✅".
+
+## [1.27.0 (82)] - 2026-11-24
+
 ### Added
 - The scanner now reads the DataMatrix (the small square code) on Spanish prescription and funded medicines, which no longer carry a regular barcode, and opens the medicine card from its national code.
 

@@ -10,6 +10,11 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Los resultados compartidos tienen mucho menos texto. La tarjeta muestra la foto, el nombre, la marca y el veredicto, y además los ✓ de "sin lácteos, sin huevo…" si es apto o los ingredientes que causan el veredicto si no lo es. El mensaje que acompaña a la tarjeta es una sola línea, por ejemplo "Galletas de avena: Apto ✅".
+
+## [1.27.0 (82)] - 2026-11-24
+
 ### Añadido
 - El escáner ahora lee el DataMatrix (el código cuadrado pequeño) de los medicamentos con receta y financiados en España, que ya no llevan código de barras normal, y abre la ficha del medicamento a partir de su código nacional.
 
