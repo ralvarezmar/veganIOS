@@ -56,9 +56,11 @@ struct SearchScreen: View {
                         .stroke(isQueryFocused ? searchTint : Color(.separator), lineWidth: isQueryFocused ? 2 : 1)
                 )
                 .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .onTapGesture {
-                    isQueryFocused = true
-                }
+                .simultaneousGesture(
+                    TapGesture().onEnded {
+                        isQueryFocused = true
+                    }
+                )
 
             Button {
                 runSearch()
