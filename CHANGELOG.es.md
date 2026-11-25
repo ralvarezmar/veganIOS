@@ -11,6 +11,14 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 ### Cambiado
+- El mensaje que se envía al compartir un medicamento es una sola línea, como en los productos, por ejemplo "Ibuprofeno Cinfa 600 mg: Apto ✅". La tarjeta no cambia.
+
+### Corregido
+- Búsqueda por nombre: el buscador parecía desactivado porque tenía el mismo color que la tarjeta que lo rodea, y solo respondía si se tocaba justo sobre el texto. Ahora se ve como un campo de texto, con un borde que se ilumina al escribir, y tocar en cualquier parte del recuadro abre el teclado. Al elegir "Alimentos" o "Medicamentos" el cursor también se pone en él.
+
+## [1.27.1 (83)] - 2026-11-24
+
+### Cambiado
 - Los resultados compartidos tienen mucho menos texto. La tarjeta muestra la foto, el nombre, la marca y el veredicto, y además los ✓ de "sin lácteos, sin huevo…" si es apto o los ingredientes que causan el veredicto si no lo es. El mensaje que acompaña a la tarjeta es una sola línea, por ejemplo "Galletas de avena: Apto ✅".
 
 ## [1.27.0 (82)] - 2026-11-24

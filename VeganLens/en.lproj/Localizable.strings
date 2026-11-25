@@ -786,5 +786,4 @@
 "medicine_offline_error" = "Offline and no saved data for this medicine.";
 "medicine_from_cache" = "Saved data (offline)";
 "medicine_source" = "Source: %1$@";
-"medicine_share_text" = "%1$@: %2$@ (%3$@). Analyzed with VeganLens. Guidance only, ask your doctor or pharmacist.";
 "medicine_mascot_description" = "VeganLens pill character";

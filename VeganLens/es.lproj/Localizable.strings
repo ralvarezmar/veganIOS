@@ -788,5 +788,4 @@
 "medicine_offline_error" = "Sin conexión y sin datos guardados para este medicamento.";
 "medicine_from_cache" = "Datos guardados (sin conexión)";
 "medicine_source" = "Fuente: %1$@";
-"medicine_share_text" = "%1$@: %2$@ (%3$@). Analizado con VeganLens. Información orientativa, consulta a tu médico o farmacéutico.";
 "medicine_mascot_description" = "Personaje píldora de VeganLens";

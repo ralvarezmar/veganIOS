@@ -1473,19 +1473,6 @@ struct ResultView: View {
         }
     }
 
-    private func shareVerdictLabel(for status: VeganStatus) -> String {
-        switch status {
-        case .vegan:
-            return L("share_verdict_apto")
-        case .notVegan:
-            return L("share_verdict_no_apto")
-        case .maybe:
-            return L("share_verdict_dudoso")
-        case .unknown:
-            return L("share_verdict_sin_datos")
-        }
-    }
-
     private func consultedSourcesMessage(_ consultedSources: [ProductSource]) -> String {
 
         var seen = Set<String>()
@@ -3782,4 +3769,17 @@ struct ShareSheet: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ controller: UIActivityViewController, context: Context) {}
+}
+
+func shareVerdictLabel(for status: VeganStatus) -> String {
+    switch status {
+    case .vegan:
+        return L("share_verdict_apto")
+    case .notVegan:
+        return L("share_verdict_no_apto")
+    case .maybe:
+        return L("share_verdict_dudoso")
+    case .unknown:
+        return L("share_verdict_sin_datos")
+    }
 }

@@ -146,7 +146,7 @@ struct MedicineResultView: View {
     @MainActor
     private func prepareShare(_ medicine: MedicineInfo) {
         let analysis = analyzeMedicine(medicine)
-        shareText = LF("medicine_share_text", medicine.name, medicineVerdictText(analysis.veganStatus), medicine.source.displayName)
+        shareText = String(format: L("share_result_template"), medicine.name, shareVerdictLabel(for: analysis.veganStatus))
         let content = MedicineShareCardContent(medicine: medicine, analysis: analysis, colorblindSafe: colorblindSafe)
         Task { @MainActor in
             var loaded = content

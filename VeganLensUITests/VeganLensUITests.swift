@@ -19,8 +19,95 @@ final class VeganLensUITests: XCTestCase {
         XCTAssertTrue(privacyPolicyRow.waitForExistence(timeout: 5), app.debugDescription)
     }
 
-    private func launchApp() -> XCUIApplication {
+    func testMedicineSearchFieldAcceptsTyping() {
+        let app = launchApp()
+
+        XCTAssertTrue(app.tapToolbarButton("search-button"))
+
+        let picker = app.segmentedControls["search_mode_picker"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 5), app.debugDescription)
+        picker.buttons.element(boundBy: 1).tap()
+
+        let field = app.textFields["search-field"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5), app.debugDescription)
+        field.tap()
+        field.typeText("ibuprofeno")
+
+        XCTAssertEqual(field.value as? String, "ibuprofeno", app.debugDescription)
+    }
+
+    func testFoodSearchFieldAcceptsTyping() {
+        let app = launchApp()
+
+        XCTAssertTrue(app.tapToolbarButton("search-button"))
+
+        let field = app.textFields["search-field"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5), app.debugDescription)
+        field.tap()
+        field.typeText("tofu")
+
+        XCTAssertEqual(field.value as? String, "tofu", app.debugDescription)
+    }
+
+    func testMedicineSearchFieldStaysVisibleWithKeyboardAndLargeText() {
+        let app = launchApp(arguments: ["-accessibility_text_size", "extra_large"])
+
+        XCTAssertTrue(app.tapToolbarButton("search-button"))
+
+        let picker = app.segmentedControls["search_mode_picker"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 5), app.debugDescription)
+        picker.buttons.element(boundBy: 1).tap()
+
+        let field = app.textFields["search-field"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5), app.debugDescription)
+        field.tap()
+        _ = app.keyboards.firstMatch.waitForExistence(timeout: 3)
+
+        let navigationBar = app.navigationBars.firstMatch
+        XCTAssertGreaterThanOrEqual(field.frame.minY, navigationBar.frame.maxY - 1, app.debugDescription)
+        XCTAssertTrue(field.isHittable, app.debugDescription)
+        field.typeText("ibuprofeno")
+
+        XCTAssertEqual(field.value as? String, "ibuprofeno", app.debugDescription)
+    }
+
+    func testChoosingMedicinesFocusesSearchField() {
+        let app = launchApp()
+
+        XCTAssertTrue(app.tapToolbarButton("search-button"))
+
+        let picker = app.segmentedControls["search_mode_picker"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 5), app.debugDescription)
+        picker.buttons.element(boundBy: 1).tap()
+
+        let field = app.textFields["search-field"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(waitForKeyboardFocus(field), app.debugDescription)
+        app.typeText("ibuprofeno")
+
+        XCTAssertEqual(field.value as? String, "ibuprofeno", app.debugDescription)
+    }
+
+    func testTappingSearchFieldPaddingFocusesIt() {
+        let app = launchApp()
+
+        XCTAssertTrue(app.tapToolbarButton("search-button"))
+
+        let field = app.textFields["search-field"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5), app.debugDescription)
+        field.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0)).withOffset(CGVector(dx: 0, dy: -8)).tap()
+        XCTAssertTrue(waitForKeyboardFocus(field), app.debugDescription)
+    }
+
+    private func waitForKeyboardFocus(_ element: XCUIElement, timeout: TimeInterval = 5) -> Bool {
+        let predicate = NSPredicate(format: "hasKeyboardFocus == true")
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter.wait(for: [expectation], timeout: timeout) == .completed
+    }
+
+    private func launchApp(arguments: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
+        app.launchArguments += arguments
         installSystemPermissionMonitor()
         app.launch()
 
