@@ -5,6 +5,7 @@ struct SearchScreen: View {
     @State private var mode: SearchMode = .food
     @State private var uiState: SearchUiState = .idle
     @State private var searchTask: Task<Void, Never>?
+    @FocusState private var isQueryFocused: Bool
 
     private let service = OpenFactsService()
     private let medicineService = MedicineService()
@@ -38,6 +39,7 @@ struct SearchScreen: View {
                 .autocorrectionDisabled()
                 .keyboardType(.default)
                 .submitLabel(.search)
+                .focused($isQueryFocused)
                 .accessibilityIdentifier("search-field")
                 .onSubmit {
                     runSearch()
@@ -45,6 +47,10 @@ struct SearchScreen: View {
                 .padding(12)
                 .background(Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .onTapGesture {
+                    isQueryFocused = true
+                }
 
             Button {
                 runSearch()
@@ -121,6 +127,7 @@ struct SearchScreen: View {
         if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             searchTask?.cancel()
             uiState = .idle
+            isQueryFocused = true
         } else {
             runSearch()
         }

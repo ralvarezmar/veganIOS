@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Corregido
+- Búsqueda por nombre: al elegir "Medicamentos" el cursor se pone en el buscador y se abre el teclado, y tocar en cualquier parte del recuadro gris (no solo sobre el texto) también lo abre.
+
 ## [1.27.1 (83)] - 2026-11-24
 
 ### Cambiado
