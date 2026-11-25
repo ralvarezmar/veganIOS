@@ -38,6 +38,7 @@ struct SearchScreen: View {
                 .autocorrectionDisabled()
                 .keyboardType(.default)
                 .submitLabel(.search)
+                .accessibilityIdentifier("search-field")
                 .onSubmit {
                     runSearch()
                 }
