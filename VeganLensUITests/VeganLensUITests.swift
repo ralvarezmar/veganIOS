@@ -49,8 +49,31 @@ final class VeganLensUITests: XCTestCase {
         XCTAssertEqual(field.value as? String, "tofu", app.debugDescription)
     }
 
-    private func launchApp() -> XCUIApplication {
+    func testMedicineSearchFieldStaysVisibleWithKeyboardAndLargeText() {
+        let app = launchApp(arguments: ["-accessibility_text_size", "extra_large"])
+
+        XCTAssertTrue(app.tapToolbarButton("search-button"))
+
+        let picker = app.segmentedControls["search_mode_picker"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 5), app.debugDescription)
+        picker.buttons.element(boundBy: 1).tap()
+
+        let field = app.textFields["search-field"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5), app.debugDescription)
+        field.tap()
+        _ = app.keyboards.firstMatch.waitForExistence(timeout: 3)
+
+        let navigationBar = app.navigationBars.firstMatch
+        XCTAssertGreaterThanOrEqual(field.frame.minY, navigationBar.frame.maxY - 1, app.debugDescription)
+        XCTAssertTrue(field.isHittable, app.debugDescription)
+        field.typeText("ibuprofeno")
+
+        XCTAssertEqual(field.value as? String, "ibuprofeno", app.debugDescription)
+    }
+
+    private func launchApp(arguments: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
+        app.launchArguments += arguments
         installSystemPermissionMonitor()
         app.launch()
 
