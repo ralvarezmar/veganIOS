@@ -11,7 +11,7 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 ### Corregido
-- Búsqueda por nombre: al elegir "Medicamentos" el cursor se pone en el buscador y se abre el teclado, y tocar en cualquier parte del recuadro gris (no solo sobre el texto) también lo abre.
+- Búsqueda por nombre: el buscador parecía desactivado porque tenía el mismo color que la tarjeta que lo rodea, y solo respondía si se tocaba justo sobre el texto. Ahora se ve como un campo de texto, con un borde que se ilumina al escribir, y tocar en cualquier parte del recuadro abre el teclado. Al elegir "Alimentos" o "Medicamentos" el cursor también se pone en él.
 
 ## [1.27.1 (83)] - 2026-11-24
 

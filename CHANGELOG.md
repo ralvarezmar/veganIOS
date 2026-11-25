@@ -9,7 +9,7 @@ version so that App Store Connect can provide notes in both languages.
 ## [Unreleased]
 
 ### Fixed
-- Search by name: choosing "Medicines" now puts the cursor in the search box and opens the keyboard, and tapping anywhere on the grey box (not only on the text) also opens it.
+- Search by name: the search box looked inactive because it had the same colour as the card around it, and it only reacted when tapping right on the text. It now looks like a text field, with a border that lights up while typing, and tapping anywhere on it opens the keyboard. Choosing "Food" or "Medicines" also puts the cursor in it.
 
 ## [1.27.1 (83)] - 2026-11-24
 
