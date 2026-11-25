@@ -146,7 +146,7 @@ struct MedicineResultView: View {
     @MainActor
     private func prepareShare(_ medicine: MedicineInfo) {
         let analysis = analyzeMedicine(medicine)
-        shareText = LF("medicine_share_text", medicine.name, medicineVerdictText(analysis.veganStatus), medicine.source.displayName)
+        shareText = String(format: L("share_result_template"), medicine.name, shareVerdictLabel(for: analysis.veganStatus))
         let content = MedicineShareCardContent(medicine: medicine, analysis: analysis, colorblindSafe: colorblindSafe)
         Task { @MainActor in
             var loaded = content
@@ -163,6 +163,18 @@ func medicineVerdictText(_ status: VeganStatus) -> String {
     case .notVegan: return L("medicine_verdict_not_vegan")
     case .maybe: return L("medicine_verdict_maybe")
     case .unknown: return L("medicine_verdict_unknown")
+    }
+}
+
+/// Only the excipients behind a not-vegan or doubtful verdict, so the share card stays short.
+func medicineShareCauses(_ analysis: MedicineAnalysis) -> [String] {
+    switch analysis.veganStatus {
+    case .notVegan where !analysis.animalItems.isEmpty:
+        return [LF("medicine_animal_items", analysis.animalItems.joined(separator: ", "))]
+    case .maybe where !analysis.doubtfulItems.isEmpty:
+        return [LF("medicine_doubtful_items", analysis.doubtfulItems.joined(separator: ", "))]
+    default:
+        return []
     }
 }
 
@@ -355,7 +367,6 @@ struct MedicineShareCardContent {
     let headline: String
     let chips: [String]
     let notes: [String]
-    let sourceName: String
     let status: VeganStatus
     let colorblindSafe: Bool
     var productImage: UIImage? = nil
@@ -364,9 +375,8 @@ struct MedicineShareCardContent {
         title = medicine.name
         laboratory = medicine.laboratory
         headline = medicineVerdictText(analysis.veganStatus)
-        chips = [medicine.dose, medicine.pharmaceuticalForm].compactMap { $0 }.filter { !$0.isEmpty }
-        notes = Array(medicineDietNotes(analysis).prefix(4))
-        sourceName = medicine.source.displayName
+        chips = []
+        notes = medicineShareCauses(analysis)
         status = analysis.veganStatus
         self.colorblindSafe = colorblindSafe
     }
@@ -493,7 +503,7 @@ struct MedicineShareCardView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(RoundedRectangle(cornerRadius: 12).fill(medicineBlueLight))
                             .padding(.trailing, 80)
-                        Text([L("share_card_tagline"), content.sourceName].joined(separator: " · "))
+                        Text(L("share_card_tagline"))
                             .font(.system(size: 15))
                             .foregroundStyle(Color(white: 0.42))
                             .lineLimit(2)

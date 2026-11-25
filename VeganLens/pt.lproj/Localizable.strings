@@ -786,5 +786,4 @@
 "medicine_offline_error" = "Sem ligação e sem dados guardados para este medicamento.";
 "medicine_from_cache" = "Dados guardados (offline)";
 "medicine_source" = "Fonte: %1$@";
-"medicine_share_text" = "%1$@: %2$@ (%3$@). Analisado com VeganLens. Informação orientativa, consulte o seu médico ou farmacêutico.";
 "medicine_mascot_description" = "Personagem comprimido do VeganLens";

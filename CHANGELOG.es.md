@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- Los medicamentos compartidos tienen mucho menos texto, como los productos. La tarjeta muestra la foto, el nombre, el laboratorio y el veredicto, además de los excipientes que causan el veredicto si no es apto, y mantiene el aviso corto de consultar al médico o farmacéutico. El mensaje que acompaña a la tarjeta es una sola línea, por ejemplo "Ibuprofeno Cinfa 600 mg: Apto ✅".
+
 ## [1.27.1 (83)] - 2026-11-24
 
 ### Cambiado
