@@ -5,6 +5,7 @@ struct SearchScreen: View {
     @State private var mode: SearchMode = .food
     @State private var uiState: SearchUiState = .idle
     @State private var searchTask: Task<Void, Never>?
+    @FocusState private var isQueryFocused: Bool
 
     private let service = OpenFactsService()
     private let medicineService = MedicineService()
@@ -19,6 +20,10 @@ struct SearchScreen: View {
         .padding(16)
         .navigationTitle(L("search_title"))
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var searchTint: Color {
+        mode == .medicine ? medicineBlue : Color("AccentColor")
     }
 
     private var searchInputCard: some View {
@@ -38,12 +43,24 @@ struct SearchScreen: View {
                 .autocorrectionDisabled()
                 .keyboardType(.default)
                 .submitLabel(.search)
+                .focused($isQueryFocused)
+                .accessibilityIdentifier("search-field")
                 .onSubmit {
                     runSearch()
                 }
                 .padding(12)
-                .background(Color(.secondarySystemBackground))
+                .background(Color(.systemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(isQueryFocused ? searchTint : Color(.separator), lineWidth: isQueryFocused ? 2 : 1)
+                )
+                .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .simultaneousGesture(
+                    TapGesture().onEnded {
+                        isQueryFocused = true
+                    }
+                )
 
             Button {
                 runSearch()
@@ -52,7 +69,7 @@ struct SearchScreen: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .tint(mode == .medicine ? medicineBlue : Color("AccentColor"))
+            .tint(searchTint)
             .disabled(query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
         .padding(18)
@@ -120,6 +137,7 @@ struct SearchScreen: View {
         if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             searchTask?.cancel()
             uiState = .idle
+            isQueryFocused = true
         } else {
             runSearch()
         }
