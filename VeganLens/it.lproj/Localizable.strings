@@ -786,5 +786,4 @@
 "medicine_offline_error" = "Offline e nessun dato salvato per questo farmaco.";
 "medicine_from_cache" = "Dati salvati (offline)";
 "medicine_source" = "Fonte: %1$@";
-"medicine_share_text" = "%1$@: %2$@ (%3$@). Analizzato con VeganLens. Informazioni indicative, consulta medico o farmacista.";
 "medicine_mascot_description" = "Personaggio pillola di VeganLens";

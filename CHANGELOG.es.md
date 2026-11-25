@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- El mensaje que se envía al compartir un medicamento es una sola línea, como en los productos, por ejemplo "Ibuprofeno Cinfa 600 mg: Apto ✅". La tarjeta no cambia.
+
 ### Corregido
 - Búsqueda por nombre: el buscador parecía desactivado porque tenía el mismo color que la tarjeta que lo rodea, y solo respondía si se tocaba justo sobre el texto. Ahora se ve como un campo de texto, con un borde que se ilumina al escribir, y tocar en cualquier parte del recuadro abre el teclado. Al elegir "Alimentos" o "Medicamentos" el cursor también se pone en él.
 

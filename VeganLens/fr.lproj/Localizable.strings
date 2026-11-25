@@ -786,5 +786,4 @@
 "medicine_offline_error" = "Hors ligne et aucune donnée enregistrée pour ce médicament.";
 "medicine_from_cache" = "Données enregistrées (hors ligne)";
 "medicine_source" = "Source : %1$@";
-"medicine_share_text" = "%1$@ : %2$@ (%3$@). Analysé avec VeganLens. Information indicative, demandez à votre médecin ou pharmacien.";
 "medicine_mascot_description" = "Personnage pilule de VeganLens";
