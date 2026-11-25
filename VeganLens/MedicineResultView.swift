@@ -166,18 +166,6 @@ func medicineVerdictText(_ status: VeganStatus) -> String {
     }
 }
 
-/// Only the excipients behind a not-vegan or doubtful verdict, so the share card stays short.
-func medicineShareCauses(_ analysis: MedicineAnalysis) -> [String] {
-    switch analysis.veganStatus {
-    case .notVegan where !analysis.animalItems.isEmpty:
-        return [LF("medicine_animal_items", analysis.animalItems.joined(separator: ", "))]
-    case .maybe where !analysis.doubtfulItems.isEmpty:
-        return [LF("medicine_doubtful_items", analysis.doubtfulItems.joined(separator: ", "))]
-    default:
-        return []
-    }
-}
-
 func medicineDietNotes(_ analysis: MedicineAnalysis, selectedAllergenKeys: Set<String> = []) -> [String] {
     var notes: [String] = []
     if !analysis.animalItems.isEmpty {
@@ -367,6 +355,7 @@ struct MedicineShareCardContent {
     let headline: String
     let chips: [String]
     let notes: [String]
+    let sourceName: String
     let status: VeganStatus
     let colorblindSafe: Bool
     var productImage: UIImage? = nil
@@ -375,8 +364,9 @@ struct MedicineShareCardContent {
         title = medicine.name
         laboratory = medicine.laboratory
         headline = medicineVerdictText(analysis.veganStatus)
-        chips = []
-        notes = medicineShareCauses(analysis)
+        chips = [medicine.dose, medicine.pharmaceuticalForm].compactMap { $0 }.filter { !$0.isEmpty }
+        notes = Array(medicineDietNotes(analysis).prefix(4))
+        sourceName = medicine.source.displayName
         status = analysis.veganStatus
         self.colorblindSafe = colorblindSafe
     }
@@ -503,7 +493,7 @@ struct MedicineShareCardView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(RoundedRectangle(cornerRadius: 12).fill(medicineBlueLight))
                             .padding(.trailing, 80)
-                        Text(L("share_card_tagline"))
+                        Text([L("share_card_tagline"), content.sourceName].joined(separator: " · "))
                             .font(.system(size: 15))
                             .foregroundStyle(Color(white: 0.42))
                             .lineLimit(2)

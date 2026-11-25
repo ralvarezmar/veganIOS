@@ -9,7 +9,7 @@ version so that App Store Connect can provide notes in both languages.
 ## [Unreleased]
 
 ### Changed
-- Shared medicines have much less text, like products. The card shows the photo, name, laboratory and verdict, plus the excipients that cause the verdict when it is not vegan, and keeps the short "ask your doctor or pharmacist" note. The message sent with the card is a single line, for example "Ibuprofen Cinfa 600 mg: Suitable ✅".
+- The message sent when sharing a medicine is a single line, like for products, for example "Ibuprofen Cinfa 600 mg: Suitable ✅". The card does not change.
 
 ## [1.27.1 (83)] - 2026-11-24
 
