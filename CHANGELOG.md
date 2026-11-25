@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [1.27.2 (84)] - 2026-11-25
+
 ### Changed
 - The message sent when sharing a medicine is a single line, like for products, for example "Ibuprofen Cinfa 600 mg: Suitable ✅". The card does not change.
 
