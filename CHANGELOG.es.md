@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Cambiado
+- El mensaje que se envía al compartir un medicamento es una sola línea, como en los productos, por ejemplo "Ibuprofeno Cinfa 600 mg: Apto ✅". La tarjeta no cambia.
+
 ## [1.27.1 (83)] - 2026-11-24
 
 ### Cambiado
