@@ -24,6 +24,7 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 - Medicamentos: la búsqueda avisa cuando no ha podido consultar CIMA u openFDA, el veredicto solo usa los excipientes declarados (lo que aparece en la descripción se muestra como mención para revisar en el prospecto) y el resultado recuerda leer el prospecto y consultar al médico o farmacéutico.
 
 ### Corregido
+- Escáner: la tarjeta de debajo de la cámara cabe encima de la nueva barra de navegación inferior, así que ya no se desplaza en móviles como el iPhone 16.
 - Los productos de la lista de la compra y de favoritos ya no se borran de la caché sin conexión.
 - Un aviso "puede contener" entre paréntesis ya no convierte en trazas los ingredientes que van después, se reconocen los aditivos escritos como "E 120" o "E-120", y la categoría "sustituto de carne" ya no se toma como prueba de que un producto es vegano.
 

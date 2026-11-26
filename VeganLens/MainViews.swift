@@ -358,7 +358,7 @@ private struct ScannerOverlayView: View {
                     .scrollBounceBehavior(.basedOnSize)
                     .frame(
                         height: helperCardContentHeight > 0
-                            ? min(helperCardContentHeight, proxy.size.height * 0.45)
+                            ? min(helperCardContentHeight, proxy.size.height * 0.55)
                             : nil
                     )
                     .padding(.horizontal, 20)
