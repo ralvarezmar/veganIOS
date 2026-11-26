@@ -44,6 +44,12 @@
       "expected": {"status": "notVegan", "reasonSource": "photoAnimalAdditive", "culprits": ["E120"], "unrecognized": [], "traceWarning": false}
     },
     {
+      "id": "photo-spaced-animal-additive-after-scoped-warning",
+      "rationale": "A parenthetical trace warning does not cover the next real additive.",
+      "text": "Ingredients: flour (may contain egg), colour E 120.",
+      "expected": {"status": "notVegan", "reasonSource": "photoAnimalAdditive", "culprits": ["E120"], "unrecognized": [], "traceWarning": true}
+    },
+    {
       "id": "photo-uncertain-additive-needs-review",
       "rationale": "An additive of uncertain origin is not proof of an animal origin, so it must leave the verdict in review rather than condemning it.",
       "text": "Ingredientes: harina de trigo, azúcar, emulgente E471, sal.",

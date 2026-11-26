@@ -8,8 +8,10 @@ enum MedicineFetchResult: Equatable {
 
 enum MedicineSearchResult: Equatable {
     case success([MedicineSearchItem])
+    case partial([MedicineSearchItem], unavailable: MedicineSource)
     case empty
-    case error(String)
+    case offline
+    case unavailable
 }
 
 struct MedicineService {
@@ -75,30 +77,54 @@ struct MedicineService {
         async let fda = searchItems(fdaURL) { (response: OpenFDALabelResponse) in
             (response.results ?? []).compactMap { $0.toSearchItem() }
         }
-        let results = await [cima, fda]
+        let cimaResult = await cima
+        let fdaResult = await fda
+        let results = [cimaResult, fdaResult]
         var seen = Set<String>()
-        let items = results
-            .flatMap { (try? $0.get()) ?? [] }
-            .filter { seen.insert($0.code).inserted }
-            .prefix(Self.searchLimit * 2)
-        if !items.isEmpty { return .success(Array(items)) }
-        let errors = results.compactMap { result -> Error? in
-            if case .failure(let error) = result { return error }
-            return nil
+        let items = Array(
+            results
+                .flatMap { (try? $0.get()) ?? [] }
+                .filter { seen.insert($0.code).inserted }
+                .prefix(Self.searchLimit * 2)
+        )
+        let cimaFailed = (try? cimaResult.get()) == nil
+        let fdaFailed = (try? fdaResult.get()) == nil
+        switch (cimaFailed, fdaFailed) {
+        case (true, true):
+            let offline = results.allSatisfy { result in
+                guard case .failure(let error) = result else { return false }
+                return Self.isOfflineError(error)
+            }
+            return offline ? .offline : .unavailable
+        case (true, false):
+            return .partial(items, unavailable: .cima)
+        case (false, true):
+            return .partial(items, unavailable: .openFDA)
+        case (false, false):
+            return items.isEmpty ? .empty : .success(items)
         }
-        if errors.count == results.count, let error = errors.first {
-            return .error(error.localizedDescription)
-        }
-        return .empty
     }
+
+    private static func isOfflineError(_ error: Error) -> Bool {
+        guard let urlError = error as? URLError else { return false }
+        return [.notConnectedToInternet, .networkConnectionLost, .dataNotAllowed, .internationalRoamingOff]
+            .contains(urlError.code)
+    }
+
+    private struct SearchSourceUnavailable: Error {}
 
     private func searchItems<T: Decodable>(
         _ url: URL,
         _ map: @escaping (T) -> [MedicineSearchItem]
     ) async -> Result<[MedicineSearchItem], Error> {
         do {
-            let value: T? = try await decode(url)
-            return .success(value.map(map) ?? [])
+            var request = URLRequest(url: url)
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+            let (data, response) = try await session.data(for: request)
+            guard let http = response as? HTTPURLResponse else { throw SearchSourceUnavailable() }
+            if http.statusCode == 404 || http.statusCode == 204 { return .success([]) }
+            guard (200..<300).contains(http.statusCode), !data.isEmpty else { throw SearchSourceUnavailable() }
+            return .success(map(try JSONDecoder().decode(T.self, from: data)))
         } catch {
             return .failure(error)
         }

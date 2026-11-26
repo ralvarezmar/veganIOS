@@ -821,3 +821,13 @@
 "result_may_contain" = "Pode conter vestígios de: %@";
 "result_no_data" = "sem dados";
 "result_check_pack" = "Uma avaliação vegana não exclui alergénios. Verifique a embalagem.";
+
+"medicine_search_unavailable" = "Não foi possível consultar a CIMA nem a openFDA. Tente novamente mais tarde.";
+"medicine_search_partial" = "Pesquisa incompleta: não foi possível consultar %1$@.";
+"medicine_leaflet_missing" = "A fonte não fornece uma ligação para a bula.";
+"medicine_check_leaflet" = "Consulte a bula";
+"medicine_analysis_caution" = "A análise dos ingredientes declarados não confirma que o medicamento seja adequado para si. Leia a bula e consulte o médico ou farmacêutico antes de iniciar, alterar ou interromper o tratamento.";
+"medicine_animal_ingredient" = "Ingrediente de origem animal declarado";
+"medicine_uncertain_ingredient" = "Ingrediente declarado de origem incerta";
+"medicine_description_mentions" = "A descrição menciona: %1$@. Isto não confirma a sua presença. Consulte a bula.";
+"medicine_offline_search_error" = "Sem ligação. Liga-te para pesquisar medicamentos.";
