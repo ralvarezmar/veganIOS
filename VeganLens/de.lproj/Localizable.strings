@@ -592,11 +592,7 @@
 "favorite_update_notification_maybe" = "%@ hat sich geändert: enthält jetzt eine Zutat unsicherer Herkunft.";
 "favorite_update_notification_multiple" = "Das Urteil hat sich bei %d deiner Favoriten geändert.";
 "b12_reminder_time" = "Zeit";
-"b12_reminder_frequency" = "Wie oft";
-"b12_reminder_every_day" = "Jeden Tag";
-"b12_reminder_every_2_days" = "Alle 2 Tage";
-"b12_reminder_every_3_days" = "Alle 3 Tage";
-"b12_reminder_every_week" = "Jede Woche";
+"b12_reminder_weekdays" = "Wochentage";
 
 "history_count_label" = "%d von %d gespeicherten Scans";
 "filter_verdict_vegan" = "Geeignet";

@@ -23,7 +23,7 @@ struct SettingsView: View {
     @AppStorage(B12ReminderSettings.enabledKey) private var b12ReminderEnabled = false
     @AppStorage(B12ReminderSettings.hourKey) private var b12ReminderHour = 9
     @AppStorage(B12ReminderSettings.minuteKey) private var b12ReminderMinute = 0
-    @AppStorage(B12ReminderSettings.intervalDaysKey) private var b12ReminderIntervalDays = 7
+    @AppStorage(B12ReminderSettings.weekdaysKey) private var b12ReminderWeekdays = B12ReminderSettings.storedWeekdays()
 
     private let privacyURL = URL(string: "https://ralvarezmar.github.io/veganIOS/")!
 
@@ -101,13 +101,10 @@ struct SettingsView: View {
                     displayedComponents: [.hourAndMinute]
                 )
 
-                Picker(L("b12_reminder_frequency"), selection: $b12ReminderIntervalDays) {
-                    Text(L("b12_reminder_every_day")).tag(1)
-                    Text(L("b12_reminder_every_2_days")).tag(2)
-                    Text(L("b12_reminder_every_3_days")).tag(3)
-                    Text(L("b12_reminder_every_week")).tag(7)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(L("b12_reminder_weekdays"))
+                    B12WeekdayPicker(selection: $b12ReminderWeekdays)
                 }
-                .pickerStyle(.menu)
             }
             .onChange(of: b12ReminderEnabled) { _, enabled in
                 if enabled {
@@ -135,11 +132,6 @@ struct SettingsView: View {
                 }
             }
             .onChange(of: b12ReminderMinute) { _, _ in
-                if b12ReminderEnabled {
-                    B12ReminderScheduler.refreshIfEnabled()
-                }
-            }
-            .onChange(of: b12ReminderIntervalDays) { _, _ in
                 if b12ReminderEnabled {
                     B12ReminderScheduler.refreshIfEnabled()
                 }
@@ -315,6 +307,47 @@ struct SettingsView: View {
             try modelContext.save()
         } catch {
             print("No se pudo borrar la caché: \(error)")
+        }
+    }
+}
+
+private struct B12WeekdayPicker: View {
+    @Binding var selection: Int
+
+    private var calendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = Locale(identifier: Bundle.main.preferredLocalizations.first ?? "es")
+        return calendar
+    }
+
+    var body: some View {
+        let shortNames = calendar.veryShortStandaloneWeekdaySymbols
+        let fullNames = calendar.standaloneWeekdaySymbols
+        HStack(spacing: 6) {
+            ForEach(1...7, id: \.self) { isoWeekday in
+                let bit = b12WeekdayBit(isoWeekday)
+                let symbolIndex = isoWeekday % 7
+                let isOn = selection & bit != 0
+                Button {
+                    let updated = selection ^ bit
+                    if updated != 0 {
+                        selection = updated
+                    }
+                } label: {
+                    Text(shortNames[symbolIndex])
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity, minHeight: 36)
+                        .background(Circle().fill(isOn ? Color.accentColor : Color(.secondarySystemFill)))
+                        .foregroundStyle(isOn ? Color.white : Color.primary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(fullNames[symbolIndex])
+                .accessibilityAddTraits(isOn ? .isSelected : [])
+            }
+        }
+        .padding(.vertical, 4)
+        .onChange(of: selection) { _, _ in
+            B12ReminderScheduler.refreshIfEnabled()
         }
     }
 }

@@ -11,6 +11,11 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 ### Añadido
+- Recordatorio de B12: ahora eliges los días de la semana del aviso, por ejemplo lunes y jueves, en lugar de cada 1, 2, 3 o 7 días. Por defecto están marcados todos; si tenías un aviso semanal, conserva su día.
+
+## [2.0.0 (85)] - 2026-11-26
+
+### Añadido
 - Barra de navegación inferior con Escanear, Biblioteca (historial y favoritos), Compra y Ajustes, como en Android. Cada pestaña conserva sus pantallas al cambiar de una a otra.
 - Lista de la compra: muestra cuántos productos están guardados para usarlos sin conexión y tiene un botón para preparar el resto antes de ir a la tienda.
 - Comparar: alérgenos, trazas, ingredientes señalados y nutrición por 100 g, con un interruptor "Solo diferencias". Los medicamentos aparecen como no comparables.
