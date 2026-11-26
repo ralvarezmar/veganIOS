@@ -810,3 +810,9 @@
 "updates_changes_before" = "Antes";
 "updates_changes_after" = "En esta comprobación";
 "updates_changes_no_evidence" = "No hay detalles guardados que expliquen este veredicto.";
+"cc_draft_note" = "Este borrador es local. Elegir o tomar una foto no la publica.";
+"cc_review" = "Revisar la contribución";
+"cc_consent" = "Acepto que los cambios y las fotos pendientes que se muestran aquí sean públicos en %@. He comprobado que no contienen información personal.";
+"cc_publish" = "Publicar la contribución";
+"cc_fields_published" = "Cambios de texto publicados.";
+"cc_retry_note" = "Los elementos confirmados no se volverán a enviar. Si se perdió la conexión, comprueba la base de datos antes de reintentar.";

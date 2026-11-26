@@ -808,3 +808,9 @@
 "updates_changes_before" = "Avant";
 "updates_changes_after" = "Lors de cette vérification";
 "updates_changes_no_evidence" = "Aucun élément expliquant ce verdict n’a été enregistré.";
+"cc_draft_note" = "Ce brouillon reste sur votre appareil. Choisir ou prendre une photo ne la publie pas.";
+"cc_review" = "Vérifier la contribution";
+"cc_consent" = "J’accepte que les modifications et photos en attente affichées ici soient rendues publiques sur %@. J’ai vérifié qu’elles ne contiennent aucune information personnelle.";
+"cc_publish" = "Publier la contribution";
+"cc_fields_published" = "Modifications du texte publiées.";
+"cc_retry_note" = "Les éléments confirmés ne seront pas renvoyés. En cas de perte de connexion, vérifiez la base de données avant de réessayer.";

@@ -8,6 +8,19 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- Shopping list: shows how many products are saved for offline use, with a button to prepare the rest before going to the shop.
+- Compare: allergens, traces, flagged ingredients and nutrition per 100 g, with a "Differences only" switch. Medicines are shown as not comparable.
+- Favourites: new "What changed" screen with the verdict before and after each automatic check and the reason for each.
+
+### Changed
+- Contributions are a draft on the device. Nothing, not even photos, is published until you tick the consent box and tap "Publish contribution". Parts already sent are not sent again when retrying.
+- A product only counts as having verdict data when it has a vegan seal, a decisive Open Food Facts tag or ingredients with a known status. If a lookup is incomplete, the saved copy with verdict data is shown instead.
+- Automatic checks of favourites and recent scans retry unfinished checks every 15 minutes instead of waiting a day.
+
+### Fixed
+- Products in the shopping list and favourites are no longer removed from the offline cache.
+
 ## [1.27.2 (84)] - 2026-11-25
 
 ### Changed

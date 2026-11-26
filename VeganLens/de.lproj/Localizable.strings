@@ -808,3 +808,9 @@
 "updates_changes_before" = "Vorher";
 "updates_changes_after" = "Bei dieser Prüfung";
 "updates_changes_no_evidence" = "Für diese Bewertung wurden keine Belege gespeichert.";
+"cc_draft_note" = "Dieser Entwurf bleibt auf deinem Gerät. Durch Auswählen oder Aufnehmen eines Fotos wird es nicht veröffentlicht.";
+"cc_review" = "Beitrag prüfen";
+"cc_consent" = "Ich stimme zu, dass die hier gezeigten ausstehenden Änderungen und Fotos auf %@ öffentlich werden. Ich habe geprüft, dass sie keine personenbezogenen Daten enthalten.";
+"cc_publish" = "Beitrag veröffentlichen";
+"cc_fields_published" = "Textänderungen veröffentlicht.";
+"cc_retry_note" = "Bestätigte Elemente werden nicht erneut gesendet. Prüfe bei einem Verbindungsabbruch vor dem nächsten Versuch die Datenbank.";

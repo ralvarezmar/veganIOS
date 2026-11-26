@@ -808,3 +808,9 @@
 "updates_changes_before" = "Prima";
 "updates_changes_after" = "A questo controllo";
 "updates_changes_no_evidence" = "Non sono stati salvati dettagli che spieghino questo verdetto.";
+"cc_draft_note" = "La bozza resta sul dispositivo. Scegliere o scattare una foto non la pubblica.";
+"cc_review" = "Rivedi il contributo";
+"cc_consent" = "Acconsento a rendere pubbliche su %@ le modifiche e le foto in attesa mostrate qui. Ho verificato che non contengano dati personali.";
+"cc_publish" = "Pubblica il contributo";
+"cc_fields_published" = "Modifiche al testo pubblicate.";
+"cc_retry_note" = "Gli elementi confermati non saranno inviati di nuovo. Se la connessione si interrompe, controlla la banca dati prima di riprovare.";
