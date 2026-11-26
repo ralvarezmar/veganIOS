@@ -214,8 +214,8 @@ jobs:
         run: |
           if [ -f build/xcodebuild-unit-tests.log ]; then
             grep -Ei 'error:|failed|xctassert|assertion' build/xcodebuild-unit-tests.log |
-              grep -Evi 'passed' |
-              tail -30 |
+              grep -Evi 'passed|CoreData' |
+              head -n 10 |
               while IFS= read -r line; do
                 echo "::error title=iOS unit test failure::$line"
               done
