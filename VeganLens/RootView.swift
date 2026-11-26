@@ -127,6 +127,14 @@ struct RootView: View {
 
     private var navigationContent: some View {
         TabView(selection: $selectedTab) {
+            scanTab
+            libraryTab
+            shoppingTab
+            settingsTab
+        }
+    }
+
+    private var scanTab: some View {
         NavigationStack(path: $path) {
             ScannerView(
                 isScannerRunning: $scannerRunning,
@@ -170,6 +178,9 @@ struct RootView: View {
         }
         .tabItem { Label(L("nav_scan"), systemImage: "barcode.viewfinder") }
         .tag(MainTab.scan)
+    }
+
+    private var libraryTab: some View {
 
             NavigationStack(path: $libraryPath) {
                 libraryRoot
@@ -179,6 +190,9 @@ struct RootView: View {
             }
             .tabItem { Label(L("nav_library"), systemImage: "books.vertical") }
             .tag(MainTab.library)
+    }
+
+    private var shoppingTab: some View {
 
             NavigationStack(path: $shoppingPath) {
                 ShoppingListScreen { barcode in
@@ -190,6 +204,9 @@ struct RootView: View {
             }
             .tabItem { Label(L("nav_shopping"), systemImage: "cart") }
             .tag(MainTab.shopping)
+    }
+
+    private var settingsTab: some View {
 
             NavigationStack(path: $settingsPath) {
                 SettingsView()
@@ -199,7 +216,6 @@ struct RootView: View {
             }
             .tabItem { Label(L("nav_settings"), systemImage: "gearshape") }
             .tag(MainTab.settings)
-        }
     }
 
     private var libraryRoot: some View {
