@@ -825,3 +825,13 @@
 "nav_library" = "Library";
 "nav_shopping" = "Shopping";
 "nav_settings" = "Settings";
+
+"medicine_search_unavailable" = "Neither CIMA nor openFDA could be checked. Try again later.";
+"medicine_search_partial" = "Incomplete search: %1$@ could not be checked.";
+"medicine_leaflet_missing" = "The source provides no link to the leaflet.";
+"medicine_check_leaflet" = "Check the leaflet";
+"medicine_analysis_caution" = "This review of listed ingredients cannot confirm that the medicine is suitable for you. Check the leaflet and ask your doctor or pharmacist before starting, changing or stopping treatment.";
+"medicine_animal_ingredient" = "Animal-derived ingredient listed";
+"medicine_uncertain_ingredient" = "Listed ingredient of uncertain origin";
+"medicine_description_mentions" = "The description mentions: %1$@. This does not confirm their presence; check the leaflet.";
+"medicine_offline_search_error" = "You’re offline. Connect to search medicines.";

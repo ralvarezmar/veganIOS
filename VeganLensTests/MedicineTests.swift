@@ -92,11 +92,25 @@ final class MedicineAnalyzerTests: XCTestCase {
         XCTAssertEqual(analysis.glutenStatus, .unknown)
     }
 
-    func testFreeTextIsScannedWhenExcipientsAreMissing() {
+    func testDescriptionMentionsDoNotDecideVerdictWhenExcipientsAreMissing() {
         let analysis = analyzeMedicine(medicine(excipients: [], extraText: "Tablets contain gelatin, wheat starch and shellac"))
-        XCTAssertEqual(analysis.veganStatus, .notVegan)
-        XCTAssertEqual(analysis.animalItems, ["gelatin", "shellac"])
-        XCTAssertEqual(analysis.glutenStatus, .contains)
+        XCTAssertEqual(analysis.veganStatus, .unknown)
+        XCTAssertTrue(analysis.animalItems.isEmpty)
+        XCTAssertEqual(analysis.glutenStatus, .unknown)
+        XCTAssertFalse(analysis.hasExcipientData)
+        XCTAssertTrue(analysis.descriptionMentions.contains("gelatin"), "\(analysis.descriptionMentions)")
+        XCTAssertTrue(analysis.descriptionMentions.contains("shellac"), "\(analysis.descriptionMentions)")
+    }
+
+    func testDescriptionIsIgnoredWhenExcipientsAreListed() {
+        let analysis = analyzeMedicine(medicine(excipients: ["maize starch"], extraText: "Contains gelatin"))
+        XCTAssertEqual(analysis.veganStatus, .vegan)
+        XCTAssertTrue(analysis.descriptionMentions.isEmpty)
+    }
+
+    func testSourceQualifiedNameIncludesCountry() {
+        XCTAssertEqual(MedicineSource.cima.qualifiedName, "CIMA (AEMPS) · ES")
+        XCTAssertEqual(MedicineSource.openFDA.qualifiedName, "openFDA · US")
     }
 }
 
@@ -214,7 +228,13 @@ final class MedicineServiceTests: XCTestCase {
             return (200, #"{"results":[{"set_id":"abc","openfda":{"brand_name":["Advil"]}}]}"#)
         }
         let result = await makeService().searchByName(query: "advil")
-        XCTAssertEqual(result, .success([MedicineSearchItem(code: "fda-abc", name: "Advil", laboratory: nil, imageURL: nil, source: .openFDA)]))
+        XCTAssertEqual(
+            result,
+            .partial(
+                [MedicineSearchItem(code: "fda-abc", name: "Advil", laboratory: nil, imageURL: nil, source: .openFDA)],
+                unavailable: .cima
+            )
+        )
     }
 
     func testNameSearchEmptyAndTransportError() async {
@@ -223,9 +243,12 @@ final class MedicineServiceTests: XCTestCase {
         XCTAssertEqual(empty, .empty)
         let blank = await makeService().searchByName(query: "  ")
         XCTAssertEqual(blank, .empty)
-        MedicineURLProtocolStub.handler = nil
-        let failed = await makeService().searchByName(query: "x")
-        guard case .error = failed else { return XCTFail("Expected error, got \(failed)") }
+        MedicineURLProtocolStub.handler = { _ in (404, "") }
+        let notFound = await makeService().searchByName(query: "x")
+        XCTAssertEqual(notFound, .empty)
+        MedicineURLProtocolStub.handler = { _ in (503, "") }
+        let unavailable = await makeService().searchByName(query: "x")
+        XCTAssertEqual(unavailable, .unavailable)
     }
 
     func testSearchCodesOpenTheirSource() async {

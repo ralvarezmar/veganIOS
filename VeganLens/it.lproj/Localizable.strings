@@ -825,3 +825,13 @@
 "nav_library" = "Libreria";
 "nav_shopping" = "Spesa";
 "nav_settings" = "Impostazioni";
+
+"medicine_search_unavailable" = "Non è stato possibile consultare né CIMA né openFDA. Riprova più tardi.";
+"medicine_search_partial" = "Ricerca incompleta: non è stato possibile consultare %1$@.";
+"medicine_leaflet_missing" = "La fonte non fornisce un collegamento al foglietto illustrativo.";
+"medicine_check_leaflet" = "Leggi il foglietto illustrativo";
+"medicine_analysis_caution" = "L’esame degli ingredienti dichiarati non può confermare che il medicinale sia adatto a te. Leggi il foglietto illustrativo e consulta il medico o il farmacista prima di iniziare, modificare o interrompere il trattamento.";
+"medicine_animal_ingredient" = "Ingrediente di origine animale dichiarato";
+"medicine_uncertain_ingredient" = "Ingrediente dichiarato di origine incerta";
+"medicine_description_mentions" = "La descrizione menziona: %1$@. Questo non ne conferma la presenza. Leggi il foglietto illustrativo.";
+"medicine_offline_search_error" = "Sei offline. Connettiti per cercare farmaci.";

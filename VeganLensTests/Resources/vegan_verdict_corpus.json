@@ -2,6 +2,25 @@
   "__comment": "Shared byte-for-byte corpus for vegan verdict tests in veganAndroid and veganIOS. Any change must be applied identically in both repositories.",
   "cases": [
     {
+      "id": "text-animal-overrides-structured-positive-and-category",
+      "ingredientsText": "Water, milk. May contain egg.",
+      "ingredients": [{"text": "water", "vegan": "yes"}, {"text": "egg", "vegan": "no"}],
+      "categoriesTags": ["en:meat-alternatives"],
+      "expected": {"status": "notVegan", "reasonSource": "heuristicText", "culprits": ["Milk"]}
+    },
+    {
+      "id": "seal-conflicts-with-textual-negative",
+      "labelsTags": ["en:vegan-society"],
+      "ingredientsText": "Milk: powder, sugar",
+      "expected": {"status": "maybe", "reasonSource": "sealConflict", "culprits": ["Milk: Powder"]}
+    },
+    {
+      "id": "hyphenated-e-number-in-real-text",
+      "ingredientsText": "Ingredients: colour E-120, water",
+      "ingredientsAnalysisTags": ["en:vegan"],
+      "expected": {"status": "notVegan", "reasonSource": "additiveAnimal", "culprits": ["E120"]}
+    },
+    {
       "id": "structured-e120-cochineal",
       "rationale": "A structured Open Food Facts ingredient marked no must identify cochineal/E120 as the confirmed cause.",
       "ingredients": [{"text": "en:cochineal", "vegan": "no"}],
@@ -68,10 +87,10 @@
       "expected": {"status": "vegan", "reasonSource": "veganSeal", "culprits": []}
     },
     {
-      "id": "meat-substitute-category-resolves-unknown",
-      "rationale": "A meat-substitute category may resolve an otherwise unknown product.",
+      "id": "meat-substitute-category-is-not-evidence",
+      "rationale": "Meat substitutes can contain egg or milk; a category does not establish formulation.",
       "categoriesTags": ["en:plant-based-meat-substitutes"],
-      "expected": {"status": "vegan", "reasonSource": "meatAlternativeCategory", "culprits": []}
+      "expected": {"status": "unknown", "reasonSource": null, "culprits": []}
     },
     {
       "id": "vegan-seal-conflicts-with-animal-ingredient",

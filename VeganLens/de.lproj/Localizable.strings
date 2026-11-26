@@ -825,3 +825,13 @@
 "nav_library" = "Bibliothek";
 "nav_shopping" = "Einkauf";
 "nav_settings" = "Einstellungen";
+
+"medicine_search_unavailable" = "Weder CIMA noch openFDA konnten abgefragt werden. Bitte versuche es später erneut.";
+"medicine_search_partial" = "Suche unvollständig: %1$@ konnte nicht abgefragt werden.";
+"medicine_leaflet_missing" = "Die Quelle enthält keinen Link zur Packungsbeilage.";
+"medicine_check_leaflet" = "Packungsbeilage prüfen";
+"medicine_analysis_caution" = "Die Prüfung der angegebenen Bestandteile zeigt nicht, ob das Arzneimittel für dich geeignet ist. Lies die Packungsbeilage und lass dich ärztlich oder in der Apotheke beraten, bevor du eine Behandlung beginnst, änderst oder abbrichst.";
+"medicine_animal_ingredient" = "Tierischer Bestandteil angegeben";
+"medicine_uncertain_ingredient" = "Bestandteil unklarer Herkunft angegeben";
+"medicine_description_mentions" = "In der Beschreibung erwähnt: %1$@. Das belegt nicht, dass diese Stoffe enthalten sind. Prüfe die Packungsbeilage.";
+"medicine_offline_search_error" = "Du bist offline. Verbinde dich, um Arzneimittel zu suchen.";

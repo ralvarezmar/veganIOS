@@ -1279,7 +1279,9 @@ func normalizeAdditiveCode(_ rawCode: String) -> String {
     } else {
         codeOnly = trimmed
     }
-    return codeOnly.uppercased()
+    return codeOnly
+        .replacingOccurrences(of: #"[\s\p{Zs}-]+"#, with: "", options: .regularExpression)
+        .uppercased()
 }
 
 private func romanParentCode(for code: String) -> String? {

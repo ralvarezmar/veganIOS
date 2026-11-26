@@ -15,6 +15,7 @@ struct MedicineAnalysis: Equatable {
     /// Allergen key from `AllergenCatalog` to the excipients that triggered it.
     let allergenItems: [String: [String]]
     let hasExcipientData: Bool
+    var descriptionMentions: [String] = []
 
     var flaggedItems: Set<String> {
         Set(animalItems + doubtfulItems + glutenItems + allergenItems.values.flatMap { $0 })
@@ -94,18 +95,14 @@ private func uniqueOrdered(_ values: [String]) -> [String] {
 
 func analyzeMedicine(_ info: MedicineInfo) -> MedicineAnalysis {
     let items = uniqueOrdered(info.excipients + info.activeIngredients)
-    let freeText = info.excipients.isEmpty ? info.extraText.map(normalizeMedicineText) : nil
-    let hasData = !info.excipients.isEmpty || freeText != nil
+    let hasData = info.excipients.contains { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
 
-    func matching(_ terms: [String], _ predicate: ((String) -> Bool)? = nil) -> [String] {
-        let test = predicate ?? { matchesAny($0, terms) }
-        let fromItems = items.filter(test)
-        let fromText = freeText.map { text in terms.filter { containsTerm(text, $0) } } ?? []
-        return uniqueOrdered(fromItems + fromText)
+    func matching(_ terms: [String]) -> [String] {
+        items.filter { matchesAny($0, terms) }
     }
 
     let animal = matching(animalTerms)
-    let doubtful = matching(doubtfulTerms, isDoubtful).filter { !animal.contains($0) }
+    let doubtful = items.filter(isDoubtful).filter { !animal.contains($0) }
     let gluten = matching(glutenTerms)
     let allergens = allergenTerms
         .mapValues { matching($0) }
@@ -138,6 +135,11 @@ func analyzeMedicine(_ info: MedicineInfo) -> MedicineAnalysis {
         glutenStatus: glutenStatus,
         glutenItems: gluten,
         allergenItems: allergens,
-        hasExcipientData: hasData
+        hasExcipientData: hasData,
+        descriptionMentions: hasData ? [] : info.extraText.map { description in
+            let text = normalizeMedicineText(description)
+            return uniqueOrdered(animalTerms + doubtfulTerms + allergenTerms.values.flatMap { $0 })
+                .filter { containsTerm(text, $0) }
+        } ?? []
     )
 }

@@ -10,6 +10,15 @@ enum MedicineSource: String, Codable, CaseIterable {
         case .openFDA: return "openFDA"
         }
     }
+
+    var countryCode: String {
+        switch self {
+        case .cima: return "ES"
+        case .openFDA: return "US"
+        }
+    }
+
+    var qualifiedName: String { "\(displayName) · \(countryCode)" }
 }
 
 struct MedicineInfo: Codable, Equatable {
@@ -231,7 +240,7 @@ extension CimaMedicamento {
             dose: nonBlank(dosis),
             pharmaceuticalForm: nonBlank(formaFarmaceutica?.nombre),
             imageURL: photos.first { $0.tipo == "materialas" }?.url ?? photos.first?.url,
-            leafletURL: leaflet?.urlHtml ?? leaflet?.url,
+            leafletURL: nonBlankLeaflet(leaflet?.urlHtml) ?? nonBlankLeaflet(leaflet?.url),
             prescriptionRequired: receta
         )
     }
@@ -292,7 +301,7 @@ func splitIngredientList(_ text: String) -> [String] {
             while item.hasSuffix(".") { item.removeLast() }
             return item.trimmingCharacters(in: .whitespacesAndNewlines)
         }
-        .filter { (2...80).contains($0.count) }
+        .filter { !$0.isEmpty }
     return uniqued(parts)
 }
 
@@ -330,9 +339,14 @@ extension OpenFDALabel {
             excipients: uniqued((inactiveIngredient ?? []).flatMap(splitIngredientList)),
             laboratory: nonBlank(fields?.manufacturerName?.first),
             pharmaceuticalForm: nonBlank(fields?.dosageForm?.first),
-            leafletURL: setId.map { "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=\($0)" },
+            leafletURL: nonBlankLeaflet(setId).map { "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=\($0)" },
             prescriptionRequired: fields?.productType?.first.map { $0.localizedCaseInsensitiveContains("PRESCRIPTION") },
             extraText: nonBlank(extra)
         )
     }
+}
+
+private func nonBlankLeaflet(_ value: String?) -> String? {
+    guard let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines), !trimmed.isEmpty else { return nil }
+    return trimmed
 }
