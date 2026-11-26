@@ -20,6 +20,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 - Un producto solo cuenta como que tiene datos para el veredicto si tiene sello vegano, una etiqueta decisiva de Open Food Facts o ingredientes con estado conocido. Si una búsqueda queda incompleta, se muestra la copia guardada que sí tiene esos datos.
 - Las comprobaciones automáticas de favoritos y escaneos recientes reintentan cada 15 minutos lo que quedó sin terminar, en lugar de esperar un día.
 
+- Resultado del producto: la tarjeta de alérgenos separa los alérgenos declarados de las trazas ("puede contener") y recuerda que el veredicto vegano no descarta los alérgenos. La cabecera indica si los datos se han consultado en línea o son una copia guardada, y su antigüedad.
+
 ### Corregido
 - Los productos de la lista de la compra y de favoritos ya no se borran de la caché sin conexión.
 

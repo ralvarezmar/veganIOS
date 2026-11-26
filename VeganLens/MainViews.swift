@@ -1196,6 +1196,7 @@ struct ResultView: View {
                         AllergensCard(
                             title: L("allergens_title"),
                             values: allergenItems,
+                            traces: buildAllergenDisplayItems(tags: product.tracesTags ?? []),
                             highlightedKeys: Set(allergenMatches.compactMap(\.key))
                         )
                         SimpleSectionCard(
@@ -1959,15 +1960,12 @@ private struct VeganBannerView: View {
 
                 SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
 
-                if fromCache {
-                    SourceCapsule(text: L("offline_cache_badge"), foreground: spec.foreground)
-                    if let cachedAt {
-                        SourceCapsule(
-                            text: cacheAgeText(cachedAt),
-                            foreground: spec.foreground
-                        )
-                    }
-                }
+                SourceCapsule(
+                    text: fromCache
+                        ? cachedAt.map { LF("result_cached_age", cacheAgeText($0)) } ?? L("result_cached")
+                        : L("result_retrieved_online"),
+                    foreground: spec.foreground
+                )
 
                 Text(L("open_food_facts_attribution"))
                     .appFont(.caption2)
@@ -2451,23 +2449,29 @@ private struct WatchlistWarningCard: View {
 private struct AllergensCard: View {
     let title: String
     let values: [AllergenDisplayItem]
+    let traces: [AllergenDisplayItem]
     let highlightedKeys: Set<String>
 
     var body: some View {
         SimpleSectionCard(title: title) {
-            if values.isEmpty {
-                Text(L("not_available"))
-            } else {
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(values) { item in
-                        CapsuleChip(
-                            text: item.label,
-                            tint: highlightedKeys.contains(item.key ?? "") ? .red : .secondary
-                        )
-                    }
+            VStack(alignment: .leading, spacing: 8) {
+                Text(LF("result_declared", labels(values)))
+                ForEach(values) { item in
+                    CapsuleChip(
+                        text: item.label,
+                        tint: highlightedKeys.contains(item.key ?? "") ? .red : .secondary
+                    )
                 }
+                Text(LF("result_may_contain", labels(traces)))
+                Text(L("result_check_pack"))
+                    .appFont(.footnote)
+                    .foregroundStyle(.secondary)
             }
         }
+    }
+
+    private func labels(_ items: [AllergenDisplayItem]) -> String {
+        items.isEmpty ? L("result_no_data") : items.map(\.label).joined(separator: ", ")
     }
 }
 

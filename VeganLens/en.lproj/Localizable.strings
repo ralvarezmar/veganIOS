@@ -814,3 +814,10 @@
 "cc_publish" = "Publish contribution";
 "cc_fields_published" = "Text changes published.";
 "cc_retry_note" = "Confirmed items will not be sent again. If the connection was lost, check the database before retrying.";
+"result_retrieved_online" = "Retrieved online";
+"result_cached" = "Saved copy";
+"result_cached_age" = "Saved copy · %@";
+"result_declared" = "Declared allergens: %@";
+"result_may_contain" = "May contain traces of: %@";
+"result_no_data" = "no data";
+"result_check_pack" = "A vegan verdict does not rule out allergens. Check the packaging.";

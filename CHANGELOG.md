@@ -18,6 +18,8 @@ version so that App Store Connect can provide notes in both languages.
 - A product only counts as having verdict data when it has a vegan seal, a decisive Open Food Facts tag or ingredients with a known status. If a lookup is incomplete, the saved copy with verdict data is shown instead.
 - Automatic checks of favourites and recent scans retry unfinished checks every 15 minutes instead of waiting a day.
 
+- Product result: the allergens card separates declared allergens from "may contain" traces and reminds you that a vegan verdict does not rule out allergens. The header says whether the data was retrieved online or comes from a saved copy, and how old it is.
+
 ### Fixed
 - Products in the shopping list and favourites are no longer removed from the offline cache.
 

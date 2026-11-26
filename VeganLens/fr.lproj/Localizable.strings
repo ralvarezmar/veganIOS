@@ -814,3 +814,10 @@
 "cc_publish" = "Publier la contribution";
 "cc_fields_published" = "Modifications du texte publiées.";
 "cc_retry_note" = "Les éléments confirmés ne seront pas renvoyés. En cas de perte de connexion, vérifiez la base de données avant de réessayer.";
+"result_retrieved_online" = "Consulté en ligne";
+"result_cached" = "Copie enregistrée";
+"result_cached_age" = "Copie enregistrée · %@";
+"result_declared" = "Allergènes déclarés : %@";
+"result_may_contain" = "Peut contenir des traces de : %@";
+"result_no_data" = "aucune donnée";
+"result_check_pack" = "Un verdict végane n’exclut pas les allergènes. Vérifiez l’emballage.";

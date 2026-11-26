@@ -814,3 +814,10 @@
 "cc_publish" = "Publicar contribuição";
 "cc_fields_published" = "Alterações de texto publicadas.";
 "cc_retry_note" = "Os itens confirmados não serão enviados novamente. Se a ligação cair, verifique a base de dados antes de tentar novamente.";
+"result_retrieved_online" = "Consultado online";
+"result_cached" = "Cópia guardada";
+"result_cached_age" = "Cópia guardada · %@";
+"result_declared" = "Alergénios declarados: %@";
+"result_may_contain" = "Pode conter vestígios de: %@";
+"result_no_data" = "sem dados";
+"result_check_pack" = "Uma avaliação vegana não exclui alergénios. Verifique a embalagem.";
