@@ -12,6 +12,11 @@ struct RootView: View {
     @ObservedObject var quickActionRouter: QuickActionRouter
     @Environment(\.modelContext) private var modelContext
     @State private var path = NavigationPath()
+    @State private var libraryPath = NavigationPath()
+    @State private var shoppingPath = NavigationPath()
+    @State private var settingsPath = NavigationPath()
+    @State private var selectedTab = MainTab.scan
+    @State private var libraryShowsFavorites = false
 
     @State private var scannerRunning = false
     @StateObject private var chainSession = ChainScanSession()
@@ -29,11 +34,22 @@ struct RootView: View {
 
     private func resetToScanner() {
         path = NavigationPath()
+        selectedTab = .scan
         scannerRunning = !showingPortada
         showingOnboarding = false
     }
 
     var body: some View {
+        styledContent
+            .onAppear(perform: handleAppear)
+            .onChange(of: path.count) { _, _ in updateScannerRunning() }
+            .onChange(of: selectedTab) { _, _ in updateScannerRunning() }
+            .onChange(of: quickActionRouter.requestID) { resetToScanner() }
+            .onOpenURL(perform: handleOpenURL)
+    }
+
+    @ViewBuilder
+    private var styledContent: some View {
         Group {
             if let selectedTextSize = AccessibilityTextSize(rawValue: textSize),
                selectedTextSize != .normal {
@@ -44,32 +60,32 @@ struct RootView: View {
             }
         }
         .environment(\.highLegibilityFont, highLegibilityFont)
-        .onAppear {
-            configureChainScanQueue()
-            let didShowPortada = showPortadaIfNeeded()
-            if quickActionRouter.requestID > 0 {
-                resetToScanner()
-                scannerRunning = !didShowPortada
-            } else if !didShowPortada && !onboardingSeen {
-                showingOnboarding = true
-                scannerRunning = false
-            } else if !didShowPortada {
-                scannerRunning = true
-            }
-        }
-        .onChange(of: path.count) { _, newValue in
-            scannerRunning = !showingPortada && newValue == 0
-        }
-        .onChange(of: quickActionRouter.requestID) {
+    }
+
+    private func updateScannerRunning() {
+        scannerRunning = !showingPortada && !showingOnboarding && selectedTab == .scan && path.isEmpty
+    }
+
+    private func handleAppear() {
+        configureChainScanQueue()
+        let didShowPortada = showPortadaIfNeeded()
+        if quickActionRouter.requestID > 0 {
             resetToScanner()
+            scannerRunning = !didShowPortada
+        } else if !didShowPortada && !onboardingSeen {
+            showingOnboarding = true
+            scannerRunning = false
+        } else if !didShowPortada {
+            scannerRunning = true
         }
-        .onOpenURL { url in
-            guard url.scheme == "vcheck",
-                  url.host == "scan" || url.path == "/scan" else {
-                return
-            }
-            resetToScanner()
+    }
+
+    private func handleOpenURL(_ url: URL) {
+        guard url.scheme == "vcheck",
+              url.host == "scan" || url.path == "/scan" else {
+            return
         }
+        resetToScanner()
     }
 
     private var appContent: some View {
@@ -109,7 +125,7 @@ struct RootView: View {
 
     private func dismissPortada() {
         showingPortada = false
-        scannerRunning = path.isEmpty
+        scannerRunning = selectedTab == .scan && path.isEmpty
         if quickActionRouter.requestID == 0 && !onboardingSeen {
             showingOnboarding = true
             scannerRunning = false
@@ -117,6 +133,15 @@ struct RootView: View {
     }
 
     private var navigationContent: some View {
+        TabView(selection: $selectedTab) {
+            scanTab
+            libraryTab
+            shoppingTab
+            settingsTab
+        }
+    }
+
+    private var scanTab: some View {
         NavigationStack(path: $path) {
             ScannerView(
                 isScannerRunning: $scannerRunning,
@@ -155,107 +180,178 @@ struct RootView: View {
                 }
             }
             .navigationDestination(for: Route.self) { route in
+                destination(route, path: $path)
+            }
+        }
+        .tabItem { Label(L("nav_scan"), systemImage: "barcode.viewfinder") }
+        .tag(MainTab.scan)
+    }
+
+    private var libraryTab: some View {
+
+            NavigationStack(path: $libraryPath) {
+                libraryRoot
+                    .navigationDestination(for: Route.self) { route in
+                        destination(route, path: $libraryPath)
+                    }
+            }
+            .tabItem { Label(L("nav_library"), systemImage: "books.vertical") }
+            .tag(MainTab.library)
+    }
+
+    private var shoppingTab: some View {
+
+            NavigationStack(path: $shoppingPath) {
+                ShoppingListScreen { barcode in
+                    shoppingPath.append(Route.result(barcode))
+                }
+                .navigationDestination(for: Route.self) { route in
+                    destination(route, path: $shoppingPath)
+                }
+            }
+            .tabItem { Label(L("nav_shopping"), systemImage: "cart") }
+            .tag(MainTab.shopping)
+    }
+
+    private var settingsTab: some View {
+
+            NavigationStack(path: $settingsPath) {
+                SettingsView()
+                    .navigationDestination(for: Route.self) { route in
+                        destination(route, path: $settingsPath)
+                    }
+            }
+            .tabItem { Label(L("nav_settings"), systemImage: "gearshape") }
+            .tag(MainTab.settings)
+    }
+
+    private var libraryRoot: some View {
+        VStack(spacing: 0) {
+            Picker(L("nav_library"), selection: $libraryShowsFavorites) {
+                Text(L("history_action")).tag(false)
+                Text(L("favorites_title")).tag(true)
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .accessibilityIdentifier("library-picker")
+
+            if libraryShowsFavorites {
+                FavoritesScreen(
+                    onSelectBarcode: { barcode in libraryPath.append(Route.result(barcode)) },
+                    onScanProduct: { selectedTab = .scan },
+                    onOpenShoppingList: { selectedTab = .shopping }
+                )
+            } else {
+                HistoryView(
+                    onSelectBarcode: { barcode in libraryPath.append(Route.result(barcode)) },
+                    onScanProduct: { selectedTab = .scan }
+                )
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func destination(_ route: Route, path: Binding<NavigationPath>) -> some View {
                 switch route {
-                case .history:
-                    HistoryView(
-                        onSelectBarcode: { barcode in
-                            path.append(Route.result(barcode))
-                        },
-                        onScanProduct: {
-                            if !path.isEmpty {
-                                path.removeLast()
-                            }
+            case .history:
+                HistoryView(
+                    onSelectBarcode: { barcode in
+                        path.wrappedValue.append(Route.result(barcode))
+                    },
+                    onScanProduct: {
+                        if !path.wrappedValue.isEmpty {
+                            path.wrappedValue.removeLast()
                         }
-                    )
-                case .favorites:
-                    FavoritesScreen(
-                        onSelectBarcode: { barcode in
-                            path.append(Route.result(barcode))
-                        },
-                        onScanProduct: {
-                            if !path.isEmpty {
-                                path.removeLast()
-                            }
-                        },
-                        onOpenShoppingList: {
-                            path.append(Route.shoppingList)
+                    }
+                )
+            case .favorites:
+                FavoritesScreen(
+                    onSelectBarcode: { barcode in
+                        path.wrappedValue.append(Route.result(barcode))
+                    },
+                    onScanProduct: {
+                        if !path.wrappedValue.isEmpty {
+                            path.wrappedValue.removeLast()
                         }
-                    )
-                case .shoppingList:
-                    ShoppingListScreen { barcode in
-                        path.append(Route.result(barcode))
+                    },
+                    onOpenShoppingList: {
+                        path.wrappedValue.append(Route.shoppingList)
                     }
-                case .search:
-                    SearchScreen { barcode in
-                        path.append(Route.result(barcode))
-                    }
-                case .profile:
-                    ProfileScreen()
-                case .settings:
-                    SettingsView()
-                case .result(let barcode):
-                    ScanResultRouter(barcode: barcode) {
-                        ResultView(
-                            barcode: barcode,
-                            onContribute: { contributionBarcode, product, source in
-                                contributionProduct = product
-                                path.append(Route.contribution(contributionBarcode, source?.rawValue))
-                            },
-                            onSelectBarcode: { alternativeBarcode in
-                                path.append(Route.result(alternativeBarcode))
-                            },
-                            onBack: {
-                                if !path.isEmpty {
-                                    path.removeLast()
-                                }
-                            }
-                        )
-                    }
-                case .contribution(let barcode, let sourceName):
-                    ContributionView(
+                )
+            case .shoppingList:
+                ShoppingListScreen { barcode in
+                    path.wrappedValue.append(Route.result(barcode))
+                }
+            case .search:
+                SearchScreen { barcode in
+                    path.wrappedValue.append(Route.result(barcode))
+                }
+            case .profile:
+                ProfileScreen()
+            case .settings:
+                SettingsView()
+            case .result(let barcode):
+                ScanResultRouter(barcode: barcode) {
+                    ResultView(
                         barcode: barcode,
-                        initialSource: sourceName.flatMap(ProductSource.init(rawValue:)),
-                        product: contributionProduct,
-                        onBack: {
-                            if !path.isEmpty {
-                                path.removeLast()
-                            }
-                        }
-                    )
-                case .photoOCR:
-                    PhotoIngredientOCRView(
-                        onTextRecognized: { text in
-                            if !path.isEmpty {
-                                path.removeLast()
-                            }
-                            path.append(Route.photoResult(text))
+                        onContribute: { contributionBarcode, product, source in
+                            contributionProduct = product
+                            path.wrappedValue.append(Route.contribution(contributionBarcode, source?.rawValue))
+                        },
+                        onSelectBarcode: { alternativeBarcode in
+                            path.wrappedValue.append(Route.result(alternativeBarcode))
                         },
                         onBack: {
-                            if !path.isEmpty {
-                                path.removeLast()
-                            }
-                        }
-                    )
-                case .photoResult(let text):
-                    PhotoIngredientResultView(
-                        initialText: text,
-                        onBack: {
-                            if !path.isEmpty {
-                                path.removeLast()
-                            }
-                        }
-                    )
-                case .dishPhoto:
-                    DishPhotoView(
-                        onBack: {
-                            if !path.isEmpty {
-                                path.removeLast()
+                            if !path.wrappedValue.isEmpty {
+                                path.wrappedValue.removeLast()
                             }
                         }
                     )
                 }
+            case .contribution(let barcode, let sourceName):
+                ContributionView(
+                    barcode: barcode,
+                    initialSource: sourceName.flatMap(ProductSource.init(rawValue:)),
+                    product: contributionProduct,
+                    onBack: {
+                        if !path.wrappedValue.isEmpty {
+                            path.wrappedValue.removeLast()
+                        }
+                    }
+                )
+            case .photoOCR:
+                PhotoIngredientOCRView(
+                    onTextRecognized: { text in
+                        if !path.wrappedValue.isEmpty {
+                            path.wrappedValue.removeLast()
+                        }
+                        path.wrappedValue.append(Route.photoResult(text))
+                    },
+                    onBack: {
+                        if !path.wrappedValue.isEmpty {
+                            path.wrappedValue.removeLast()
+                        }
+                    }
+                )
+            case .photoResult(let text):
+                PhotoIngredientResultView(
+                    initialText: text,
+                    onBack: {
+                        if !path.wrappedValue.isEmpty {
+                            path.wrappedValue.removeLast()
+                        }
+                    }
+                )
+            case .dishPhoto:
+                DishPhotoView(
+                    onBack: {
+                        if !path.wrappedValue.isEmpty {
+                            path.wrappedValue.removeLast()
+                        }
+                    }
+                )
             }
-        }
     }
 
     private func resolveChainScan(_ barcode: String) {
@@ -332,30 +428,6 @@ struct RootView: View {
     @ToolbarContentBuilder
     private var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
-            Button(L("history_action")) {
-                path.append(Route.history)
-            }
-            .accessibilityIdentifier("history-button")
-        }
-        ToolbarItem(placement: .topBarTrailing) {
-            Button {
-                path.append(Route.settings)
-            } label: {
-                Image(systemName: "gearshape")
-            }
-            .accessibilityLabel(L("settings_action"))
-            .accessibilityIdentifier("settings-button")
-        }
-        ToolbarItem(placement: .topBarTrailing) {
-            Button {
-                path.append(Route.favorites)
-            } label: {
-                Image(systemName: "star")
-            }
-            .accessibilityLabel(L("favorites_action"))
-            .accessibilityIdentifier("favorites-button")
-        }
-        ToolbarItem(placement: .topBarTrailing) {
             Button {
                 path.append(Route.search)
             } label: {
@@ -374,6 +446,13 @@ struct RootView: View {
             .accessibilityIdentifier("profile-button")
         }
     }
+}
+
+private enum MainTab: Hashable {
+    case scan
+    case library
+    case shopping
+    case settings
 }
 
 private enum Route: Hashable {

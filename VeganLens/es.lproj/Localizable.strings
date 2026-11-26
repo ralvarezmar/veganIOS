@@ -823,6 +823,10 @@
 "result_may_contain" = "Puede contener trazas de: %@";
 "result_no_data" = "sin datos";
 "result_check_pack" = "El veredicto vegano no descarta los alérgenos. Comprueba el envase.";
+"nav_scan" = "Escanear";
+"nav_library" = "Biblioteca";
+"nav_shopping" = "Compra";
+"nav_settings" = "Ajustes";
 
 "medicine_search_unavailable" = "No se ha podido consultar CIMA ni openFDA. Inténtalo más tarde.";
 "medicine_search_partial" = "Búsqueda incompleta: no se ha podido consultar %1$@.";

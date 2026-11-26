@@ -821,6 +821,10 @@
 "result_may_contain" = "Kann Spuren enthalten von: %@";
 "result_no_data" = "keine Angaben";
 "result_check_pack" = "Eine vegane Einstufung schließt Allergene nicht aus. Prüfe die Verpackung.";
+"nav_scan" = "Scannen";
+"nav_library" = "Bibliothek";
+"nav_shopping" = "Einkauf";
+"nav_settings" = "Einstellungen";
 
 "medicine_search_unavailable" = "Weder CIMA noch openFDA konnten abgefragt werden. Bitte versuche es später erneut.";
 "medicine_search_partial" = "Suche unvollständig: %1$@ konnte nicht abgefragt werden.";

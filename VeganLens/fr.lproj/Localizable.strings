@@ -821,6 +821,10 @@
 "result_may_contain" = "Peut contenir des traces de : %@";
 "result_no_data" = "aucune donnée";
 "result_check_pack" = "Un verdict végane n’exclut pas les allergènes. Vérifiez l’emballage.";
+"nav_scan" = "Scanner";
+"nav_library" = "Bibliothèque";
+"nav_shopping" = "Courses";
+"nav_settings" = "Réglages";
 
 "medicine_search_unavailable" = "Impossible de consulter CIMA ou openFDA. Réessayez plus tard.";
 "medicine_search_partial" = "Recherche incomplète : impossible de consulter %1$@.";

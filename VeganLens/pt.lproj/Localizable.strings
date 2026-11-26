@@ -821,6 +821,10 @@
 "result_may_contain" = "Pode conter vestígios de: %@";
 "result_no_data" = "sem dados";
 "result_check_pack" = "Uma avaliação vegana não exclui alergénios. Verifique a embalagem.";
+"nav_scan" = "Ler código";
+"nav_library" = "Biblioteca";
+"nav_shopping" = "Compras";
+"nav_settings" = "Ajustes";
 
 "medicine_search_unavailable" = "Não foi possível consultar a CIMA nem a openFDA. Tente novamente mais tarde.";
 "medicine_search_partial" = "Pesquisa incompleta: não foi possível consultar %1$@.";

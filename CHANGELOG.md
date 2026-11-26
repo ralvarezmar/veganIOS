@@ -9,6 +9,7 @@ version so that App Store Connect can provide notes in both languages.
 ## [Unreleased]
 
 ### Added
+- Bottom navigation with Scan, Library (history and favourites), Shopping and Settings, as on Android. Each tab keeps its own screens when you switch.
 - Shopping list: shows how many products are saved for offline use, with a button to prepare the rest before going to the shop.
 - Compare: allergens, traces, flagged ingredients and nutrition per 100 g, with a "Differences only" switch. Medicines are shown as not comparable.
 - Favourites: new "What changed" screen with the verdict before and after each automatic check and the reason for each.
