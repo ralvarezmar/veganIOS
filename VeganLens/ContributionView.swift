@@ -21,6 +21,8 @@ struct ContributionView: View {
     @State private var showingIngredientScanner = false
     @State private var isRecognizingIngredients = false
     @State private var ocrMessageKey: String?
+    @State private var consentGiven = false
+    @State private var fieldsPublished = false
 
     private let service = ContributionService()
 
@@ -71,18 +73,35 @@ struct ContributionView: View {
 
                 photosSection
 
+                ContributionCard(title: L("cc_review")) {
+                    Toggle(isOn: $consentGiven) {
+                        Text(LF("cc_consent", source.displayName))
+                            .appFont(.footnote)
+                    }
+                    .accessibilityIdentifier("contribution-consent")
+                }
+
                 Button {
                     submitContribution()
                 } label: {
-                    Text(isSubmitting ? L("contribution_sending") : L("contribution_submit"))
+                    Text(isSubmitting ? L("contribution_sending") : L("cc_publish"))
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(isSubmitting)
+                .disabled(isSubmitting || !consentGiven)
 
+                if fieldsPublished && contributionResult != .success {
+                    Text(L("cc_fields_published"))
+                        .foregroundStyle(.green)
+                }
                 if let contributionResult {
                     Text(contributionMessage(contributionResult))
                         .foregroundStyle(contributionResult == .success ? .green : .red)
+                    if contributionResult != .success {
+                        Text(L("cc_retry_note"))
+                            .appFont(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
                 }
 
                 Button(L("cancel"), action: onBack)
@@ -187,6 +206,9 @@ struct ContributionView: View {
                 Text(L("contribution_photos_description"))
                     .appFont(.footnote)
                     .foregroundStyle(.secondary)
+                Text(L("cc_draft_note"))
+                    .appFont(.footnote)
+                    .foregroundStyle(.secondary)
                 ForEach(ProductImageType.allCases) { type in
                     ProductPhotoRow(
                         type: type,
@@ -201,9 +223,8 @@ struct ContributionView: View {
                             showingCamera = true
                         },
                         retry: {
-                            if let image = photoImages[type] {
-                                handleImage(image, type: type)
-                            }
+                            guard consentGiven else { return }
+                            Task { @MainActor in await uploadPhoto(type) }
                         }
                     )
                 }
@@ -211,42 +232,56 @@ struct ContributionView: View {
         }
     }
 
+    /// Nothing is published until the user consents; confirmed parts are not sent again on retry.
     private func submitContribution() {
+        guard consentGiven else { return }
         isSubmitting = true
         contributionResult = nil
-        Task {
-            let result = await service.contribute(barcode: barcode, source: source, form: form)
-            await MainActor.run {
-                isSubmitting = false
-                contributionResult = result
+        Task { @MainActor in
+            var result = ContributionResult.success
+            if !fieldsPublished {
+                result = await service.contribute(barcode: barcode, source: source, form: form)
+                if result == .success { fieldsPublished = true }
             }
+            if result == .success {
+                for type in ProductImageType.allCases where photoImages[type] != nil && photoStates[type] != .success {
+                    if let failure = await uploadPhoto(type) {
+                        result = failure
+                    }
+                }
+            }
+            isSubmitting = false
+            contributionResult = result
         }
     }
 
     private func handleImage(_ image: UIImage, type: ProductImageType) {
         photoImages[type] = image
-        photoStates[type] = .uploading
-        guard let data = compressedJPEGData(image) else {
+        photoStates[type] = .idle
+    }
+
+    @MainActor
+    @discardableResult
+    private func uploadPhoto(_ type: ProductImageType) async -> ContributionResult? {
+        guard let image = photoImages[type], let data = compressedJPEGData(image) else {
             photoStates[type] = .error(detail: nil)
-            return
+            return .networkError
         }
-        Task {
-            let result = await service.uploadImage(
-                barcode: barcode,
-                source: source,
-                type: type,
-                jpegData: data
-            )
-            await MainActor.run {
-                switch result {
-                case .success:
-                    photoStates[type] = .success
-                case .serverError(let detail):
-                    photoStates[type] = .error(detail: detail)
-                case .offline, .networkError:
-                    photoStates[type] = .error(detail: nil)
-                }
-            }
+        photoStates[type] = .uploading
+        let result = await service.uploadImage(barcode: barcode, source: source, type: type, jpegData: data)
+        switch result {
+        case .success:
+            photoStates[type] = .success
+            return nil
+        case .serverError(let detail):
+            photoStates[type] = .error(detail: detail)
+            return .serverError(detail: detail)
+        case .offline:
+            photoStates[type] = .error(detail: nil)
+            return .offline
+        case .networkError:
+            photoStates[type] = .error(detail: nil)
+            return .networkError
         }
     }
 

@@ -10,10 +10,20 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- Lista de la compra: muestra cuántos productos están guardados para usarlos sin conexión y tiene un botón para preparar el resto antes de ir a la tienda.
+- Comparar: alérgenos, trazas, ingredientes señalados y nutrición por 100 g, con un interruptor "Solo diferencias". Los medicamentos aparecen como no comparables.
+- Favoritos: nueva pantalla "Qué ha cambiado", con el veredicto antes y después de cada comprobación automática y el motivo de cada uno.
+
 ### Cambiado
+- Las contribuciones son un borrador en el dispositivo. No se publica nada, ni siquiera las fotos, hasta que marcas la casilla de consentimiento y pulsas "Publicar la contribución". Al reintentar, no se vuelve a enviar lo que ya se envió.
+- Un producto solo cuenta como que tiene datos para el veredicto si tiene sello vegano, una etiqueta decisiva de Open Food Facts o ingredientes con estado conocido. Si una búsqueda queda incompleta, se muestra la copia guardada que sí tiene esos datos.
+- Las comprobaciones automáticas de favoritos y escaneos recientes reintentan cada 15 minutos lo que quedó sin terminar, en lugar de esperar un día.
+- Resultado del producto: la tarjeta de alérgenos separa los alérgenos declarados de las trazas ("puede contener") y recuerda que el veredicto vegano no descarta los alérgenos. La cabecera indica si los datos se han consultado en línea o son una copia guardada, y su antigüedad.
 - Medicamentos: la búsqueda avisa cuando no ha podido consultar CIMA u openFDA, el veredicto solo usa los excipientes declarados (lo que aparece en la descripción se muestra como mención para revisar en el prospecto) y el resultado recuerda leer el prospecto y consultar al médico o farmacéutico.
 
 ### Corregido
+- Los productos de la lista de la compra y de favoritos ya no se borran de la caché sin conexión.
 - Un aviso "puede contener" entre paréntesis ya no convierte en trazas los ingredientes que van después, se reconocen los aditivos escritos como "E 120" o "E-120", y la categoría "sustituto de carne" ya no se toma como prueba de que un producto es vegano.
 
 ## [1.27.2 (84)] - 2026-11-25

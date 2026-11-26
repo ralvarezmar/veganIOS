@@ -3,6 +3,7 @@ import Foundation
 struct FetchedProduct {
     let product: Product
     let source: ProductSource
+    var incompleteLookup = false
 }
 
 enum OpenFactsFetchResult {
@@ -350,7 +351,8 @@ func resolveFetchOutcome(
     sawRateLimit: Bool = false,
     consultedSources: [ProductSource]
 ) -> OpenFactsFetchResult {
-    if let fallbackCandidate {
+    if var fallbackCandidate {
+        fallbackCandidate.incompleteLookup = sawFailure && !fallbackCandidate.product.hasVeganData
         return .success(fallbackCandidate)
     }
     if sawFailure {

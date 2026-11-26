@@ -743,6 +743,11 @@ extension Product {
         !(ingredientsText?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true) ||
         !(ingredients?.isEmpty ?? true) ||
         !(ingredientsAnalysisTags?.isEmpty ?? true) ||
+        !(categoriesTags?.isEmpty ?? true) ||
+        !(labelsTags?.isEmpty ?? true) ||
+        !(allergensTags?.isEmpty ?? true) ||
+        !(tracesTags?.isEmpty ?? true) ||
+        !(additivesTags?.isEmpty ?? true) ||
         nutriments != nil ||
         greenScoreGrade != nil ||
         greenScoreValue != nil ||
@@ -750,8 +755,12 @@ extension Product {
     }
 
     var hasVeganData: Bool {
-        !(ingredientsAnalysisTags?.isEmpty ?? true) ||
-        (ingredients?.contains(where: { !($0.vegan?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true) }) ?? false)
+        let decisiveTags: Set<String> = ["en:vegan", "en:non-vegan", "en:maybe-vegan"]
+        let ingredientStatuses = (ingredients ?? []).map { $0.vegan?.lowercased() }
+        return (labelsTags ?? []).contains(where: isVeganSealTag) ||
+            (ingredientsAnalysisTags ?? []).contains(where: decisiveTags.contains) ||
+            ingredientStatuses.contains { $0 == "no" || $0 == "maybe" } ||
+            (!ingredientStatuses.isEmpty && ingredientStatuses.allSatisfy { $0 == "yes" })
     }
 
     var greenScoreGrade: String? {
