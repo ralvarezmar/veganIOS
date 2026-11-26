@@ -638,11 +638,7 @@
 "favorite_update_notification_maybe" = "%@ has changed: it now has an ingredient of uncertain origin.";
 "favorite_update_notification_multiple" = "The verdict changed for %d of your favorites.";
 "b12_reminder_time" = "Time";
-"b12_reminder_frequency" = "How often";
-"b12_reminder_every_day" = "Every day";
-"b12_reminder_every_2_days" = "Every 2 days";
-"b12_reminder_every_3_days" = "Every 3 days";
-"b12_reminder_every_week" = "Every week";
+"b12_reminder_weekdays" = "Days of the week";
 
 "history_count_label" = "%d of %d scans saved";
 "filter_verdict_vegan" = "Suitable";

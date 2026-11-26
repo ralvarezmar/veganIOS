@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Añadido
+- Recordatorio de B12: ahora eliges los días de la semana del aviso, por ejemplo lunes y jueves, en lugar de cada 1, 2, 3 o 7 días. Por defecto están marcados todos; si tenías un aviso semanal, conserva su día.
+
 ## [2.0.0 (85)] - 2026-11-26
 
 ### Añadido

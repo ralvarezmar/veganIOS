@@ -8,6 +8,85 @@ final class B12ReminderTests: XCTestCase {
         return calendar
     }
 
+    func testWeeklyReminderKeepsItsWeekdayWhenMigrated() {
+        let suite = "B12ReminderTests.migration"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+        defaults.set(7, forKey: B12ReminderSettings.intervalDaysKey)
+
+        let weekdays = B12ReminderSettings.storedWeekdays(
+            defaults: defaults,
+            today: date("2026-03-10 10:00"),
+            calendar: calendar
+        )
+
+        XCTAssertEqual(weekdays, b12WeekdayBit(2))
+        XCTAssertEqual(defaults.integer(forKey: B12ReminderSettings.weekdaysKey), b12WeekdayBit(2))
+        defaults.removePersistentDomain(forName: suite)
+    }
+
+    func testOtherIntervalsMigrateToEveryDay() {
+        let suite = "B12ReminderTests.migrationDaily"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+        defaults.set(2, forKey: B12ReminderSettings.intervalDaysKey)
+
+        XCTAssertEqual(B12ReminderSettings.storedWeekdays(defaults: defaults), B12ReminderSettings.allWeekdays)
+        defaults.removePersistentDomain(forName: suite)
+    }
+
+    func testWeekdaysModeOnlyUsesSelectedDays() {
+        let tuesday = date("2026-03-10 10:00")
+
+        let dates = b12ReminderDates(
+            from: tuesday,
+            hour: 9,
+            minute: 30,
+            intervalDays: B12ReminderSettings.weekdaysMode,
+            weekdays: b12WeekdayBit(1) | b12WeekdayBit(4),
+            count: 3,
+            calendar: calendar
+        )
+
+        XCTAssertEqual(dates, [
+            date("2026-03-12 09:30"),
+            date("2026-03-16 09:30"),
+            date("2026-03-19 09:30"),
+        ])
+    }
+
+    func testWeekdaysModeUsesTodayWhenTimeIsStillAhead() {
+        let tuesdayMorning = date("2026-03-10 08:00")
+
+        let dates = b12ReminderDates(
+            from: tuesdayMorning,
+            hour: 9,
+            minute: 30,
+            intervalDays: B12ReminderSettings.weekdaysMode,
+            weekdays: b12WeekdayBit(2),
+            count: 1,
+            calendar: calendar
+        )
+
+        XCTAssertEqual(dates, [date("2026-03-10 09:30")])
+    }
+
+    func testWeekdaysModeWithoutDaysFallsBackToEveryDay() {
+        let tuesday = date("2026-03-10 10:00")
+
+        let dates = b12ReminderDates(
+            from: tuesday,
+            hour: 9,
+            minute: 30,
+            intervalDays: B12ReminderSettings.weekdaysMode,
+            weekdays: 0,
+            count: 2,
+            calendar: calendar
+        )
+
+        XCTAssertEqual(dates, [date("2026-03-11 09:30"), date("2026-03-12 09:30")])
+    }
+
     func testPastTimeUsesTomorrow() {
         let now = date("2026-03-10 10:00")
 

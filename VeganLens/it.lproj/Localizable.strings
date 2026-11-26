@@ -592,11 +592,7 @@
 "favorite_update_notification_maybe" = "%@ è cambiato: ora ha un ingrediente di origine incerta.";
 "favorite_update_notification_multiple" = "Il verdetto è cambiato per %d dei tuoi preferiti.";
 "b12_reminder_time" = "Ora";
-"b12_reminder_frequency" = "Frequenza";
-"b12_reminder_every_day" = "Ogni giorno";
-"b12_reminder_every_2_days" = "Ogni 2 giorni";
-"b12_reminder_every_3_days" = "Ogni 3 giorni";
-"b12_reminder_every_week" = "Ogni settimana";
+"b12_reminder_weekdays" = "Giorni della settimana";
 
 "history_count_label" = "%d scansioni salvate su %d";
 "filter_verdict_vegan" = "Adatti";
