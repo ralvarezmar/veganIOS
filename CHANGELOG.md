@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Changed
+- Medicines: the search says when CIMA or openFDA could not be checked, the verdict only uses the listed excipients (words in the description are shown as mentions to check in the leaflet), and the result reminds you to read the leaflet and ask your doctor or pharmacist.
+
 ### Fixed
 - A "may contain" warning in brackets no longer turns the following ingredients into traces, additives written as "E 120" or "E-120" are recognised, and a "meat substitute" category is no longer treated as proof that a product is vegan.
 
