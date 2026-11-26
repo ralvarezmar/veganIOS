@@ -592,11 +592,6 @@
 "favorite_update_notification_maybe" = "%@ mudou: agora tem um ingrediente de origem duvidosa.";
 "favorite_update_notification_multiple" = "O veredicto mudou em %d dos seus favoritos.";
 "b12_reminder_time" = "Hora";
-"b12_reminder_frequency" = "Frequência";
-"b12_reminder_every_day" = "Todos os dias";
-"b12_reminder_every_2_days" = "A cada 2 dias";
-"b12_reminder_every_3_days" = "A cada 3 dias";
-"b12_reminder_every_week" = "Todas as semanas";
 "b12_reminder_weekdays" = "Dias da semana";
 
 "history_count_label" = "%d de %d digitalizações guardadas";

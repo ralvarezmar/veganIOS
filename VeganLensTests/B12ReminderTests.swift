@@ -8,6 +8,33 @@ final class B12ReminderTests: XCTestCase {
         return calendar
     }
 
+    func testWeeklyReminderKeepsItsWeekdayWhenMigrated() {
+        let suite = "B12ReminderTests.migration"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+        defaults.set(7, forKey: B12ReminderSettings.intervalDaysKey)
+
+        let weekdays = B12ReminderSettings.storedWeekdays(
+            defaults: defaults,
+            today: date("2026-03-10 10:00"),
+            calendar: calendar
+        )
+
+        XCTAssertEqual(weekdays, b12WeekdayBit(2))
+        XCTAssertEqual(defaults.integer(forKey: B12ReminderSettings.weekdaysKey), b12WeekdayBit(2))
+        defaults.removePersistentDomain(forName: suite)
+    }
+
+    func testOtherIntervalsMigrateToEveryDay() {
+        let suite = "B12ReminderTests.migrationDaily"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+        defaults.set(2, forKey: B12ReminderSettings.intervalDaysKey)
+
+        XCTAssertEqual(B12ReminderSettings.storedWeekdays(defaults: defaults), B12ReminderSettings.allWeekdays)
+        defaults.removePersistentDomain(forName: suite)
+    }
+
     func testWeekdaysModeOnlyUsesSelectedDays() {
         let tuesday = date("2026-03-10 10:00")
 

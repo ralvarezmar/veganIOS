@@ -10,6 +10,20 @@ enum B12ReminderSettings {
     static let requestPrefix = "b12-reminder-"
     static let weekdaysMode = 0
     static let allWeekdays = 0b1111111
+
+    static func storedWeekdays(
+        defaults: UserDefaults = .standard,
+        today: Date = Date(),
+        calendar: Calendar = .current
+    ) -> Int {
+        if let stored = defaults.object(forKey: weekdaysKey) as? Int {
+            return stored
+        }
+        let wasWeekly = defaults.object(forKey: intervalDaysKey) as? Int == 7
+        let migrated = wasWeekly ? b12WeekdayBit(b12IsoWeekday(of: today, calendar: calendar)) : allWeekdays
+        defaults.set(migrated, forKey: weekdaysKey)
+        return migrated
+    }
 }
 
 func b12WeekdayBit(_ isoWeekday: Int) -> Int {
@@ -99,9 +113,8 @@ enum B12ReminderScheduler {
             from: Date(),
             hour: UserDefaults.standard.integer(forKey: B12ReminderSettings.hourKey),
             minute: UserDefaults.standard.integer(forKey: B12ReminderSettings.minuteKey),
-            intervalDays: UserDefaults.standard.integer(forKey: B12ReminderSettings.intervalDaysKey),
-            weekdays: UserDefaults.standard.object(forKey: B12ReminderSettings.weekdaysKey) as? Int
-                ?? B12ReminderSettings.allWeekdays,
+            intervalDays: B12ReminderSettings.weekdaysMode,
+            weekdays: B12ReminderSettings.storedWeekdays(),
             count: 30,
             calendar: calendar
         )

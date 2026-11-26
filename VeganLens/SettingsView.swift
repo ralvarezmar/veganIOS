@@ -23,8 +23,7 @@ struct SettingsView: View {
     @AppStorage(B12ReminderSettings.enabledKey) private var b12ReminderEnabled = false
     @AppStorage(B12ReminderSettings.hourKey) private var b12ReminderHour = 9
     @AppStorage(B12ReminderSettings.minuteKey) private var b12ReminderMinute = 0
-    @AppStorage(B12ReminderSettings.intervalDaysKey) private var b12ReminderIntervalDays = 7
-    @AppStorage(B12ReminderSettings.weekdaysKey) private var b12ReminderWeekdays = B12ReminderSettings.allWeekdays
+    @AppStorage(B12ReminderSettings.weekdaysKey) private var b12ReminderWeekdays = B12ReminderSettings.storedWeekdays()
 
     private let privacyURL = URL(string: "https://ralvarezmar.github.io/veganIOS/")!
 
@@ -102,16 +101,8 @@ struct SettingsView: View {
                     displayedComponents: [.hourAndMinute]
                 )
 
-                Picker(L("b12_reminder_frequency"), selection: $b12ReminderIntervalDays) {
-                    Text(L("b12_reminder_every_day")).tag(1)
-                    Text(L("b12_reminder_every_2_days")).tag(2)
-                    Text(L("b12_reminder_every_3_days")).tag(3)
-                    Text(L("b12_reminder_every_week")).tag(7)
-                    Text(L("b12_reminder_weekdays")).tag(B12ReminderSettings.weekdaysMode)
-                }
-                .pickerStyle(.menu)
-
-                if b12ReminderIntervalDays == B12ReminderSettings.weekdaysMode {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(L("b12_reminder_weekdays"))
                     B12WeekdayPicker(selection: $b12ReminderWeekdays)
                 }
             }
@@ -141,11 +132,6 @@ struct SettingsView: View {
                 }
             }
             .onChange(of: b12ReminderMinute) { _, _ in
-                if b12ReminderEnabled {
-                    B12ReminderScheduler.refreshIfEnabled()
-                }
-            }
-            .onChange(of: b12ReminderIntervalDays) { _, _ in
                 if b12ReminderEnabled {
                     B12ReminderScheduler.refreshIfEnabled()
                 }
