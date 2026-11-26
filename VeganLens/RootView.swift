@@ -40,6 +40,16 @@ struct RootView: View {
     }
 
     var body: some View {
+        styledContent
+            .onAppear(perform: handleAppear)
+            .onChange(of: path.count) { _, _ in updateScannerRunning() }
+            .onChange(of: selectedTab) { _, _ in updateScannerRunning() }
+            .onChange(of: quickActionRouter.requestID) { resetToScanner() }
+            .onOpenURL(perform: handleOpenURL)
+    }
+
+    @ViewBuilder
+    private var styledContent: some View {
         Group {
             if let selectedTextSize = AccessibilityTextSize(rawValue: textSize),
                selectedTextSize != .normal {
@@ -50,35 +60,32 @@ struct RootView: View {
             }
         }
         .environment(\.highLegibilityFont, highLegibilityFont)
-        .onAppear {
-            configureChainScanQueue()
-            let didShowPortada = showPortadaIfNeeded()
-            if quickActionRouter.requestID > 0 {
-                resetToScanner()
-                scannerRunning = !didShowPortada
-            } else if !didShowPortada && !onboardingSeen {
-                showingOnboarding = true
-                scannerRunning = false
-            } else if !didShowPortada {
-                scannerRunning = true
-            }
-        }
-        .onChange(of: path.count) { _, newValue in
-            scannerRunning = !showingPortada && selectedTab == .scan && newValue == 0
-        }
-        .onChange(of: selectedTab) { _, tab in
-            scannerRunning = !showingPortada && !showingOnboarding && tab == .scan && path.isEmpty
-        }
-        .onChange(of: quickActionRouter.requestID) {
+    }
+
+    private func updateScannerRunning() {
+        scannerRunning = !showingPortada && !showingOnboarding && selectedTab == .scan && path.isEmpty
+    }
+
+    private func handleAppear() {
+        configureChainScanQueue()
+        let didShowPortada = showPortadaIfNeeded()
+        if quickActionRouter.requestID > 0 {
             resetToScanner()
+            scannerRunning = !didShowPortada
+        } else if !didShowPortada && !onboardingSeen {
+            showingOnboarding = true
+            scannerRunning = false
+        } else if !didShowPortada {
+            scannerRunning = true
         }
-        .onOpenURL { url in
-            guard url.scheme == "vcheck",
-                  url.host == "scan" || url.path == "/scan" else {
-                return
-            }
-            resetToScanner()
+    }
+
+    private func handleOpenURL(_ url: URL) {
+        guard url.scheme == "vcheck",
+              url.host == "scan" || url.path == "/scan" else {
+            return
         }
+        resetToScanner()
     }
 
     private var appContent: some View {
