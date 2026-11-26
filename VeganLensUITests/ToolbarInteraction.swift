@@ -1,9 +1,6 @@
 import XCTest
 
 extension XCUIApplication {
-    /// Taps a navigation-bar button by coordinate: `tap()` first asks the element
-    /// to scroll itself visible, which a toolbar button cannot do while the
-    /// navigation bar is still settling.
     @discardableResult
     func tapTab(_ index: Int, timeout: TimeInterval = 5) -> Bool {
         let button = tabBars.buttons.element(boundBy: index)
@@ -12,6 +9,10 @@ extension XCUIApplication {
         return true
     }
 
+    /// Taps a navigation-bar button by coordinate: `tap()` first asks the element
+    /// to scroll itself visible, which a toolbar button cannot do while the
+    /// navigation bar is still settling.
+    @discardableResult
     func tapToolbarButton(_ identifier: String, timeout: TimeInterval = 5) -> Bool {
         let button = buttons[identifier]
         guard button.waitForExistence(timeout: timeout) else { return false }
