@@ -2,6 +2,26 @@ import XCTest
 @testable import VeganLens
 
 final class PhotoIngredientAnalyzerTests: XCTestCase {
+    func testReadsAdditiveSpellingsAndKeepsOtherAnimalEvidence() {
+        for spelling in ["E120", "E-120", "E 120"] {
+            let analysis = analyzePhotoIngredients("Ingredients: colour: \(spelling), water")
+            XCTAssertEqual(analysis.status, .notVegan, spelling)
+            XCTAssertEqual(analysis.culprits.map(\.label), ["E120"], spelling)
+            XCTAssertEqual(analysis.culprits.map(\.kind), [.animalAdditive], spelling)
+            XCTAssertTrue(analysis.unrecognizedSegments.isEmpty, spelling)
+        }
+        let mixed = analyzePhotoIngredients("Ingredients: milk E330, sugar")
+        XCTAssertEqual(mixed.culprits.map(\.label), ["Milk"])
+        XCTAssertEqual(mixed.culprits.map(\.kind), [.animalIngredient])
+    }
+
+    func testWrappedTraceListIsNotAnIngredientList() {
+        let analysis = analyzePhotoIngredients("Ingredients: sugar. May contain milk,\negg and E-120.")
+        XCTAssertEqual(analysis.status, .vegan)
+        XCTAssertTrue(analysis.traceWarning)
+        XCTAssertTrue(analysis.culprits.isEmpty)
+    }
+
     func testSelectsPreferredLanguageBlockAndKeepsTraceWarning() {
         let analysis = analyzePhotoIngredients(
             "Ingredientes: harina, azúcar. Puede contener leche. " +

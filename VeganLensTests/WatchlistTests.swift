@@ -2,6 +2,26 @@ import XCTest
 @testable import VeganLens
 
 final class WatchlistTests: XCTestCase {
+    func testWatchedAdditivesMatchIngredientTextAndNestedIngredientsWithoutTags() {
+        for spelling in ["E-120", "E 120", "e120"] {
+            let fromText = makeProduct(ingredientsText: "colour: \(spelling)", additivesTags: nil)
+            let fromNested = makeProduct(
+                ingredientsText: nil,
+                additivesTags: nil,
+                ingredients: [OffIngredient(ingredients: [OffIngredient(text: spelling)])]
+            )
+            for product in [fromText, fromNested] {
+                let matches = watchlistMatches(product: product, watchedAdditives: ["E120"], watchedKeywords: [])
+                XCTAssertEqual(matches.additives, ["E120"], spelling)
+            }
+        }
+        let unrelated = makeProduct(ingredientsText: "SKUe-120, E 1201", additivesTags: nil)
+        XCTAssertEqual(
+            watchlistMatches(product: unrelated, watchedAdditives: ["E120", "E1201"], watchedKeywords: []).additives,
+            ["E1201"]
+        )
+    }
+
     func testAdditiveMatchingNormalizesCaseSpacesAndPrefixes() {
         let product = makeProduct(
             ingredientsText: nil,
@@ -82,7 +102,8 @@ final class WatchlistTests: XCTestCase {
 
     private func makeProduct(
         ingredientsText: String?,
-        additivesTags: [String]?
+        additivesTags: [String]?,
+        ingredients: [OffIngredient]? = nil
     ) -> Product {
         Product(
             productName: nil,
@@ -92,7 +113,7 @@ final class WatchlistTests: XCTestCase {
             ingredientsAnalysisTags: nil,
             categoriesTags: nil,
             labelsTags: nil,
-            ingredients: nil,
+            ingredients: ingredients,
             additivesTags: additivesTags,
             allergensTags: nil,
             nutriments: nil,
