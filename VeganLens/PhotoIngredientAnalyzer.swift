@@ -44,14 +44,10 @@ func analyzePhotoIngredients(
         text,
         preferredLanguage: preferredLanguage ?? Locale.current.languageCode
     )
-    var traceWarning = containsTraceWarning("\(section.ingredientsText) \(section.trailingText)")
+    let parts = traceParts(section.ingredientsText)
+    let traceWarning = !parts.traces.isEmpty || containsTraceWarning(section.trailingText)
 
-    for rawSegment in ingredientSegments(section.ingredientsText) {
-        if containsTraceWarning(rawSegment) {
-            traceWarning = true
-            continue
-        }
-
+    for rawSegment in parts.real {
         guard let label = cleanPhotoIngredientLabel(rawSegment) else {
             continue
         }
@@ -74,17 +70,15 @@ func analyzePhotoIngredients(
                 }
             }
 
-            let withoutCodes = rawSegment.replacingOccurrences(
-                of: #"(?i)(?<![a-z0-9])e\s?-?\d{3,4}[a-z]*(?![a-z0-9])"#,
-                with: " ",
-                options: NSString.CompareOptions.regularExpression
-            )
+            let withoutCodes = replacingAdditiveCodes(in: rawSegment) { _ in " " }
             let remainder = cleanPhotoIngredientLabel(withoutCodes)
             let hasKnownNonAnimalAdditive = additiveCodes.contains {
                 guard let origin = additiveEntry(for: $0)?.info.origin else { return false }
                 return origin == .plant || origin == .synthetic
             }
-            if let remainder,
+            if let remainder, containsAnimalIngredient(remainder) {
+                appendUnique(remainder, to: &animalIngredients)
+            } else if let remainder,
                !(segmentHasNonPlantAdditive && isPhotoFunctionDescriptorOnly(remainder)),
                !isRecognizedPhotoPlantOrNeutral(
                 remainder,
@@ -163,7 +157,7 @@ private func extractPhotoIngredientSection(
     preferredLanguage: String?
 ) -> PhotoIngredientSection {
     let headerPattern = #"(?i)(?<!\p{L})(ingredientes|ingredients|ingrédients|ingredienti|zutaten|inhaltsstoffe|composición|composicion|composition|composizione|composição|composicao)(?!\p{L})\s*:?\s*"#
-    let markerPattern = #"(?i)(puede contener|pode conter|may contain|peut contenir|puo contenere|kann spuren|spuren von|trazas? de|traces? (?:of|de)|vestigios de|tracos de|informaci[oó]n nutricional|informa[cç][aã]o nutricional|valeurs? nutritionnelles?|n[aä]hrwerte|valori nutrizionali|nutrition information|nutrition facts|best before|conservar|consumir preferentemente|mindestens haltbar|zu verbrauchen bis|à consommer|a consommer|da consumarsi|validade|peso neto|poids net|net weight|nettogewicht|peso netto|\b\d+\s*(?:kj|kcal)\b)"#
+    let markerPattern = #"(?i)(informaci[oó]n nutricional|informa[cç][aã]o nutricional|valeurs? nutritionnelles?|n[aä]hrwerte|valori nutrizionali|nutrition information|nutrition facts|best before|conservar|consumir preferentemente|mindestens haltbar|zu verbrauchen bis|à consommer|a consommer|da consumarsi|validade|peso neto|poids net|net weight|nettogewicht|peso netto|\b\d+\s*(?:kj|kcal)\b)"#
     guard let headerRegex = try? NSRegularExpression(pattern: headerPattern),
           let markerRegex = try? NSRegularExpression(pattern: markerPattern) else {
         return PhotoIngredientSection(
@@ -343,7 +337,7 @@ private func cleanPhotoIngredientLabel(_ rawSegment: String) -> String? {
     return withoutQuantities.isEmpty ? nil : cleanFoodFactsLabel(withoutQuantities)
 }
 
-private func isRecognizedPhotoPlantOrNeutral(
+func isRecognizedPhotoPlantOrNeutral(
     _ label: String,
     hasKnownNonAnimalAdditive: Bool = false
 ) -> Bool {
@@ -396,11 +390,7 @@ private func photoPlantLexemeMode(_ lexeme: String) -> AnimalLexemeMatchMode {
 
 
 private func findPhotoAdditiveCodes(in text: String) -> [String] {
-    guard let regex = try? NSRegularExpression(
-        pattern: #"(?i)(?<![a-z0-9])e\s?-?\d{3,4}[a-z]*(?![a-z0-9])"#
-    ) else {
-        return []
-    }
+    let regex = additiveCodeInTextRegex
     let range = NSRange(text.startIndex..., in: text)
     var codes: [String] = []
     for match in regex.matches(in: text, range: range) {
