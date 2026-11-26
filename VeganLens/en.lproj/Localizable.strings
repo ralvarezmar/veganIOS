@@ -791,3 +791,15 @@
 "shopping_prepare" = "Prepare list for offline use";
 "shopping_preparing" = "Preparing list…";
 "shopping_retry_pending" = "Some products are not saved. Check your connection and try again.";
+"compare_traces" = "Possible traces";
+"compare_concerns" = "Animal-derived or doubtful ingredients";
+"compare_as_sold" = "Nutrition per 100 g (as sold)";
+"compare_details" = "Product differences";
+"compare_unreported" = "Not reported";
+"compare_none_listed" = "None listed";
+"compare_loading_details" = "Loading product details…";
+"compare_all" = "All products: %1$@";
+"compare_only_differences" = "Differences only";
+"compare_no_differences" = "No differences in the available data.";
+"compare_medicine_unavailable" = "%1$@: food comparison is unavailable for medicines.";
+"nutrition_carbohydrates" = "Carbohydrates";

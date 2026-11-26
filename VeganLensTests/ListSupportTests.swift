@@ -80,4 +80,32 @@ final class ListSupportTests: XCTestCase {
             category: { $0.category }
         )
     }
+
+    func testOnlyDifferencesHidesRowsWithIdenticalLoadedValues() {
+        XCTAssertTrue(showComparisonRow(onlyDifferences: false, values: [1.0, 1.0], loading: []))
+        XCTAssertFalse(showComparisonRow(onlyDifferences: true, values: [1.0, 1.0], loading: []))
+        XCTAssertTrue(showComparisonRow(onlyDifferences: true, values: [1.0, 2.0], loading: []))
+        XCTAssertFalse(showComparisonRow(onlyDifferences: true, values: [1.0, 2.0], loading: [1]))
+        XCTAssertTrue(showComparisonRow(onlyDifferences: true, values: [nil, 2.0] as [Double?], loading: []))
+    }
+
+    func testComparisonRowsUseSoldValuesAndConvertKilojoules() throws {
+        let product = try JSONDecoder().decode(
+            Product.self,
+            from: Data(#"{"nutriments":{"energy-kj_100g":418.4,"sugars_100g":5}}"#.utf8)
+        )
+        let rows = nutrientComparisons(products: [product, nil], basis: .asSold)
+        XCTAssertEqual(rows.map(\.titleKey), ["nutrition_energy", "nutrition_sugars"])
+        XCTAssertEqual(rows[0].values[0] ?? 0, 100, accuracy: 0.001)
+        XCTAssertNil(rows[0].values[1])
+        XCTAssertTrue(nutrientComparisons(products: [product], basis: .prepared).isEmpty)
+    }
+
+    func testLabelComparisonsKeepMissingDataDistinctFromEmptyLists() throws {
+        let listed = try JSONDecoder().decode(Product.self, from: Data(#"{"allergens_tags":[],"traces_tags":["en:milk"]}"#.utf8))
+        let rows = labelComparisons(products: [listed, nil]) { $0 }
+        XCTAssertEqual(rows[0].values[0], [])
+        XCTAssertEqual(rows[1].values[0], ["en:milk"])
+        XCTAssertNil(rows[0].values[1])
+    }
 }

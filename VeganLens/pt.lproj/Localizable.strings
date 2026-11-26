@@ -791,3 +791,15 @@
 "shopping_prepare" = "Preparar a lista para utilização offline";
 "shopping_preparing" = "A preparar a lista…";
 "shopping_retry_pending" = "Alguns produtos não foram guardados. Verifique a ligação e tente novamente.";
+"compare_traces" = "Possíveis vestígios";
+"compare_concerns" = "Ingredientes de origem animal ou duvidosa";
+"compare_as_sold" = "Informação nutricional por 100 g (tal como vendido)";
+"compare_details" = "Diferenças entre produtos";
+"compare_unreported" = "Sem dados";
+"compare_none_listed" = "Nenhum indicado";
+"compare_loading_details" = "A carregar dados dos produtos…";
+"compare_all" = "Todos os produtos: %1$@";
+"compare_only_differences" = "Só diferenças";
+"compare_no_differences" = "Não há diferenças nos dados disponíveis.";
+"compare_medicine_unavailable" = "%1$@: a comparação de alimentos não está disponível para medicamentos.";
+"nutrition_carbohydrates" = "Hidratos de carbono";
