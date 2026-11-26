@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Fixed
+- A "may contain" warning in brackets no longer turns the following ingredients into traces, additives written as "E 120" or "E-120" are recognised, and a "meat substitute" category is no longer treated as proof that a product is vegan.
+
 ## [1.27.2 (84)] - 2026-11-25
 
 ### Changed

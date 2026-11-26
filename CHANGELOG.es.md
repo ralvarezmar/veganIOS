@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Corregido
+- Un aviso "puede contener" entre paréntesis ya no convierte en trazas los ingredientes que van después, se reconocen los aditivos escritos como "E 120" o "E-120", y la categoría "sustituto de carne" ya no se toma como prueba de que un producto es vegano.
+
 ## [1.27.2 (84)] - 2026-11-25
 
 ### Cambiado

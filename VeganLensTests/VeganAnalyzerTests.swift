@@ -359,15 +359,37 @@ final class VeganAnalyzerTests: XCTestCase {
         XCTAssertEqual(analysis.reason?.source, .veganSeal)
     }
 
-    func testMeatAlternativeCategoryResolvesUnknownAndProvidesReason() {
+    func testMeatAlternativeCategoryIsNotVeganEvidence() {
         let analysis = analyzeVegan(
             ingredientsAnalysisTags: nil,
             ingredients: nil,
             categoriesTags: ["en:plant-based-meat-substitutes"]
         )
 
-        XCTAssertTrue(isStatus(analysis.status, .vegan))
-        XCTAssertEqual(analysis.reason?.source, .meatAlternativeCategory)
+        XCTAssertTrue(isStatus(analysis.status, .unknown))
+        XCTAssertNil(analysis.reason)
+    }
+
+    func testParentheticalTraceWarningDoesNotHideLaterMilk() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            ingredientsText: "Flour (may contain egg), milk."
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
+        XCTAssertEqual(analysis.nonVeganIngredients, ["Milk"])
+    }
+
+    func testSpacedAdditiveCodeIsDetected() {
+        let analysis = analyzeVegan(
+            ingredientsAnalysisTags: nil,
+            ingredients: nil,
+            ingredientsText: "Sugar, colour E 120."
+        )
+
+        XCTAssertTrue(isStatus(analysis.status, .notVegan))
+        XCTAssertEqual(analysis.reason?.source, .additiveAnimal)
     }
 
     func testVeganSealReportsStructuredConflictAsMaybe() {

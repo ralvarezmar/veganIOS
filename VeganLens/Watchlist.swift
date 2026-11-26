@@ -53,12 +53,19 @@ func watchlistMatches(
         .map(normalizeWatchedAdditive)
         .filter { !$0.isEmpty }
 
-    let additiveMatches = (product.additivesTags ?? [])
+    let rawIngredientText = cleanFoodFactsMarkup(
+        ([product.ingredientsText].compactMap { $0 } + flattenIngredients(product.ingredients).compactMap(\.text))
+            .joined(separator: "\n")
+    )
+    let textCodes = additiveCodeInTextRegex
+        .matches(in: rawIngredientText, range: NSRange(rawIngredientText.startIndex..., in: rawIngredientText))
+        .compactMap { Range($0.range, in: rawIngredientText).map { String(rawIngredientText[$0]) } }
+    let additiveMatches = ((product.additivesTags ?? []).map { cleanFoodFactsMarkup($0) } + textCodes)
         .map(normalizeWatchedAdditive)
         .filter { normalizedWatchedAdditives.contains($0) }
         .orderedUnique()
 
-    let ingredientsText = normalizeWatchedKeyword(product.ingredientsText ?? "")
+    let ingredientsText = normalizeWatchedKeyword(rawIngredientText)
     let keywordMatches = watchedKeywords
         .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
         .filter { !$0.isEmpty && ingredientsText.contains(normalizeWatchedKeyword($0)) }
