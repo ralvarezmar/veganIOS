@@ -787,3 +787,7 @@
 "medicine_from_cache" = "Données enregistrées (hors ligne)";
 "medicine_source" = "Source : %1$@";
 "medicine_mascot_description" = "Personnage pilule de VeganLens";
+"shopping_offline_count" = "Hors ligne : %1$d enregistrés · %2$d en attente";
+"shopping_prepare" = "Préparer la liste pour une utilisation hors ligne";
+"shopping_preparing" = "Préparation de la liste…";
+"shopping_retry_pending" = "Certains produits ne sont pas enregistrés. Vérifiez votre connexion et réessayez.";

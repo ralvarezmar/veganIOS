@@ -787,3 +787,7 @@
 "medicine_from_cache" = "Saved data (offline)";
 "medicine_source" = "Source: %1$@";
 "medicine_mascot_description" = "VeganLens pill character";
+"shopping_offline_count" = "Offline: %1$d saved · %2$d pending";
+"shopping_prepare" = "Prepare list for offline use";
+"shopping_preparing" = "Preparing list…";
+"shopping_retry_pending" = "Some products are not saved. Check your connection and try again.";

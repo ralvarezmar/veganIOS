@@ -787,3 +787,7 @@
 "medicine_from_cache" = "Dati salvati (offline)";
 "medicine_source" = "Fonte: %1$@";
 "medicine_mascot_description" = "Personaggio pillola di VeganLens";
+"shopping_offline_count" = "Offline: %1$d salvati · %2$d in attesa";
+"shopping_prepare" = "Prepara la lista per l’uso offline";
+"shopping_preparing" = "Preparazione della lista…";
+"shopping_retry_pending" = "Alcuni prodotti non sono stati salvati. Verifica la connessione e riprova.";

@@ -3,7 +3,11 @@ import SwiftData
 
 struct ShoppingListScreen: View {
     @Query(sort: [SortDescriptor(\ShoppingListItem.addedAt, order: .reverse)]) private var items: [ShoppingListItem]
+    @Query private var cachedProducts: [CachedProduct]
     @Environment(\.modelContext) private var modelContext
+    @State private var preparing = false
+    @State private var attemptedBarcodes: [String]?
+    private let service = OpenFactsService()
 
     let onSelectBarcode: (String) -> Void
 
@@ -21,6 +25,7 @@ struct ShoppingListScreen: View {
                 )
             } else {
                 List {
+                    offlineSection
                     ForEach(orderedItems) { item in
                         ShoppingListRow(
                             item: item,
@@ -56,6 +61,41 @@ struct ShoppingListScreen: View {
             }
         }
         .navigationTitle(L("shopping_list_title"))
+    }
+
+    private var pendingOfflineBarcodes: [String] {
+        let saved = savedShoppingSnapshotBarcodes(cachedProducts)
+        return items.map(\.barcode).filter { !saved.contains($0) }
+    }
+
+    private var offlineSection: some View {
+        let pending = pendingOfflineBarcodes
+        return Section {
+            Text(LF("shopping_offline_count", items.count - pending.count, pending.count))
+                .appFont(.subheadline)
+                .accessibilityIdentifier("shopping-offline-count")
+            Button {
+                prepareOffline(pending)
+            } label: {
+                Label(L(preparing ? "shopping_preparing" : "shopping_prepare"), systemImage: "arrow.down.circle")
+            }
+            .disabled(preparing || pending.isEmpty)
+            .accessibilityIdentifier("shopping-prepare-offline")
+            if !preparing, !pending.isEmpty, attemptedBarcodes == items.map(\.barcode) {
+                Text(L("shopping_retry_pending"))
+                    .appFont(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private func prepareOffline(_ pending: [String]) {
+        preparing = true
+        Task { @MainActor in
+            await prepareShoppingListOffline(barcodes: pending, service: service, in: modelContext)
+            preparing = false
+            attemptedBarcodes = items.map(\.barcode)
+        }
     }
 
     private var shareText: String {

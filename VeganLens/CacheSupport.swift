@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 
 struct CacheEntryMetadata: Equatable {
     let barcode: String
@@ -54,4 +55,46 @@ func cacheBarcodesToEvict(
             .prefix(excess)
             .map(\.barcode)
     )
+}
+
+@MainActor
+func storeCachedProduct(_ product: Product, source: ProductSource, barcode: String, in context: ModelContext) {
+    do {
+        let descriptor = FetchDescriptor<CachedProduct>(predicate: #Predicate { $0.barcode == barcode })
+        let encoded = try JSONEncoder().encode(product)
+        if let existing = try context.fetch(descriptor).first {
+            existing.productData = encoded
+            existing.sourceName = source.rawValue
+            existing.cachedAt = Date()
+        } else {
+            context.insert(CachedProduct(barcode: barcode, productData: encoded, sourceName: source.rawValue, cachedAt: Date()))
+        }
+        let entries = try context.fetch(FetchDescriptor<CachedProduct>())
+        let pinned = Set(try context.fetch(FetchDescriptor<FavoriteProduct>()).map(\.barcode))
+            .union(try context.fetch(FetchDescriptor<ShoppingListItem>()).map(\.barcode))
+        let evicted = cacheBarcodesToEvict(
+            entries: entries.map { CacheEntryMetadata(barcode: $0.barcode, cachedAt: $0.cachedAt) },
+            protectedBarcodes: pinned
+        )
+        entries.filter { evicted.contains($0.barcode) }.forEach(context.delete)
+        try context.save()
+    } catch {
+        print("No se pudo guardar la caché: \(error)")
+    }
+}
+
+/// Fetches and stores the shopping-list products that have no usable offline copy yet.
+@MainActor
+func prepareShoppingListOffline(barcodes: [String], service: OpenFactsService, in context: ModelContext) async {
+    var seen = Set<String>()
+    for barcode in barcodes where seen.insert(barcode).inserted {
+        guard !Task.isCancelled else { return }
+        if case .success(let fetched) = await service.fetchProduct(barcode: barcode) {
+            storeCachedProduct(fetched.product, source: fetched.source, barcode: barcode, in: context)
+        }
+    }
+}
+
+func savedShoppingSnapshotBarcodes(_ cached: [CachedProduct]) -> Set<String> {
+    Set(cached.filter { (try? JSONDecoder().decode(Product.self, from: $0.productData))?.hasUsefulData == true }.map(\.barcode))
 }

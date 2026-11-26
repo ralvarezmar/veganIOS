@@ -789,3 +789,7 @@
 "medicine_from_cache" = "Datos guardados (sin conexión)";
 "medicine_source" = "Fuente: %1$@";
 "medicine_mascot_description" = "Personaje píldora de VeganLens";
+"shopping_offline_count" = "Sin conexión: %1$d guardados · %2$d pendientes";
+"shopping_prepare" = "Preparar lista sin conexión";
+"shopping_preparing" = "Preparando la lista…";
+"shopping_retry_pending" = "Quedan productos sin guardar. Comprueba la conexión y vuelve a intentarlo.";

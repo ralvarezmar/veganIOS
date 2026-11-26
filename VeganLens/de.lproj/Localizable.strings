@@ -787,3 +787,7 @@
 "medicine_from_cache" = "Gespeicherte Daten (offline)";
 "medicine_source" = "Quelle: %1$@";
 "medicine_mascot_description" = "VeganLens-Pillenfigur";
+"shopping_offline_count" = "Offline: %1$d gespeichert · %2$d ausstehend";
+"shopping_prepare" = "Liste für die Offline-Nutzung vorbereiten";
+"shopping_preparing" = "Liste wird vorbereitet…";
+"shopping_retry_pending" = "Einige Produkte wurden nicht gespeichert. Prüfe die Verbindung und versuche es erneut.";

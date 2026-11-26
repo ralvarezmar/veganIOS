@@ -1313,26 +1313,7 @@ struct ResultView: View {
 
     @MainActor
     private func saveToCache(product: Product, source: ProductSource) {
-        do {
-            let descriptor = FetchDescriptor<CachedProduct>(predicate: #Predicate { $0.barcode == barcode })
-            let encoded = try JSONEncoder().encode(product)
-            if let existing = try modelContext.fetch(descriptor).first {
-                existing.productData = encoded
-                existing.sourceName = source.rawValue
-                existing.cachedAt = Date()
-            } else {
-                modelContext.insert(CachedProduct(
-                    barcode: barcode,
-                    productData: encoded,
-                    sourceName: source.rawValue,
-                    cachedAt: Date()
-                ))
-            }
-            try modelContext.save()
-            evictOldestCacheEntries()
-        } catch {
-            print("No se pudo guardar la caché: \(error)")
-        }
+        storeCachedProduct(product, source: source, barcode: barcode, in: modelContext)
     }
 
     private func loadCachedProduct() -> (product: Product, source: ProductSource, cachedAt: Date)? {
@@ -1347,30 +1328,6 @@ struct ResultView: View {
         } catch {
             print("No se pudo cargar la caché: \(error)")
             return nil
-        }
-    }
-
-    @MainActor
-    private func evictOldestCacheEntries() {
-        do {
-            let entries = try modelContext.fetch(FetchDescriptor<CachedProduct>())
-            let metadata = entries.map {
-                CacheEntryMetadata(barcode: $0.barcode, cachedAt: $0.cachedAt)
-            }
-            let favoriteBarcodes = Set(
-                try modelContext.fetch(FetchDescriptor<FavoriteProduct>())
-                    .map(\.barcode)
-            )
-            let barcodes = cacheBarcodesToEvict(
-                entries: metadata,
-                protectedBarcodes: favoriteBarcodes
-            )
-            entries.filter { barcodes.contains($0.barcode) }.forEach(modelContext.delete)
-            if !barcodes.isEmpty {
-                try modelContext.save()
-            }
-        } catch {
-            print("No se pudo limitar la caché: \(error)")
         }
     }
 

@@ -787,3 +787,7 @@
 "medicine_from_cache" = "Dados guardados (offline)";
 "medicine_source" = "Fonte: %1$@";
 "medicine_mascot_description" = "Personagem comprimido do VeganLens";
+"shopping_offline_count" = "Offline: %1$d guardados · %2$d pendentes";
+"shopping_prepare" = "Preparar a lista para utilização offline";
+"shopping_preparing" = "A preparar a lista…";
+"shopping_retry_pending" = "Alguns produtos não foram guardados. Verifique a ligação e tente novamente.";
