@@ -805,3 +805,8 @@
 "compare_no_differences" = "No hay diferencias en los datos disponibles.";
 "compare_medicine_unavailable" = "%1$@: la comparación de alimentos no está disponible para medicamentos.";
 "nutrition_carbohydrates" = "Hidratos de carbono";
+"updates_changes_title" = "Qué ha cambiado";
+"updates_changes_empty" = "Todavía no se han detectado cambios en las comprobaciones de tus favoritos o escaneos recientes.";
+"updates_changes_before" = "Antes";
+"updates_changes_after" = "En esta comprobación";
+"updates_changes_no_evidence" = "No hay detalles guardados que expliquen este veredicto.";

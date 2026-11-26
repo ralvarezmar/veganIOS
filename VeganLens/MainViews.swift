@@ -2126,7 +2126,7 @@ func reasonNeedsOriginHint(_ source: VeganReasonSource, evidenceCount: Int) -> B
     }
 }
 
-private func veganReasonText(_ reason: VeganReason?) -> String? {
+func veganReasonText(_ reason: VeganReason?) -> String? {
     guard let reason else { return nil }
     let visibleEvidence = Array(reason.evidence.prefix(3))
     let evidence = visibleEvidence.joined(separator: ", ")

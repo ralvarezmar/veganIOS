@@ -11,6 +11,7 @@ struct FavoritesScreen: View {
     @State private var showingClearConfirmation = false
     @State private var pendingUndo: DeletedFavoriteSnapshot?
     @State private var pendingUndoID: UUID?
+    @State private var showingChanges = false
 
     let onSelectBarcode: (String) -> Void
     let onScanProduct: () -> Void
@@ -99,6 +100,15 @@ struct FavoritesScreen: View {
                 .accessibilityIdentifier("shopping-list-button")
             }
             ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showingChanges = true
+                } label: {
+                    Image(systemName: "clock.arrow.circlepath")
+                }
+                .accessibilityLabel(L("updates_changes_title"))
+                .accessibilityIdentifier("product-changes-button")
+            }
+            ToolbarItem(placement: .topBarTrailing) {
                 sortMenu
             }
             ToolbarItem(placement: .topBarTrailing) {
@@ -125,6 +135,9 @@ struct FavoritesScreen: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color(.systemGroupedBackground))
+        .sheet(isPresented: $showingChanges) {
+            ProductChangesView(onSelectBarcode: onSelectBarcode)
+        }
         .navigationTitle(L("favorites_title"))
         .navigationBarTitleDisplayMode(.inline)
         .overlay(alignment: .bottom) {

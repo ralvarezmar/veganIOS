@@ -39,7 +39,7 @@ enum VeganConfidence: Equatable {
     case low
 }
 
-enum VeganReasonSource: Equatable {
+enum VeganReasonSource: Equatable, CaseIterable {
     case structuredNonVeganIngredient
     case structuredDoubtfulIngredient
     case flavourDairyName

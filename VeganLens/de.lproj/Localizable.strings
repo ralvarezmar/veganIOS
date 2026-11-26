@@ -803,3 +803,8 @@
 "compare_no_differences" = "Keine Unterschiede in den verfügbaren Daten.";
 "compare_medicine_unavailable" = "%1$@: Für Arzneimittel ist der Lebensmittelvergleich nicht verfügbar.";
 "nutrition_carbohydrates" = "Kohlenhydrate";
+"updates_changes_title" = "Was hat sich geändert?";
+"updates_changes_empty" = "Bei der Prüfung deiner Favoriten und letzten Scans wurden noch keine Änderungen festgestellt.";
+"updates_changes_before" = "Vorher";
+"updates_changes_after" = "Bei dieser Prüfung";
+"updates_changes_no_evidence" = "Für diese Bewertung wurden keine Belege gespeichert.";

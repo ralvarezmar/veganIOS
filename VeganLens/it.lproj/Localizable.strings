@@ -803,3 +803,8 @@
 "compare_no_differences" = "Nessuna differenza nei dati disponibili.";
 "compare_medicine_unavailable" = "%1$@: il confronto alimentare non è disponibile per i medicinali.";
 "nutrition_carbohydrates" = "Carboidrati";
+"updates_changes_title" = "Cosa è cambiato";
+"updates_changes_empty" = "I controlli dei preferiti e delle scansioni recenti non hanno ancora rilevato cambiamenti.";
+"updates_changes_before" = "Prima";
+"updates_changes_after" = "A questo controllo";
+"updates_changes_no_evidence" = "Non sono stati salvati dettagli che spieghino questo verdetto.";

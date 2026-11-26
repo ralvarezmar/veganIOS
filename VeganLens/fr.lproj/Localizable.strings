@@ -803,3 +803,8 @@
 "compare_no_differences" = "Aucune différence dans les données disponibles.";
 "compare_medicine_unavailable" = "%1$@ : la comparaison alimentaire ne s’applique pas aux médicaments.";
 "nutrition_carbohydrates" = "Glucides";
+"updates_changes_title" = "Ce qui a changé";
+"updates_changes_empty" = "La vérification de vos favoris et de vos scans récents n’a pas encore révélé de changement.";
+"updates_changes_before" = "Avant";
+"updates_changes_after" = "Lors de cette vérification";
+"updates_changes_no_evidence" = "Aucun élément expliquant ce verdict n’a été enregistré.";
