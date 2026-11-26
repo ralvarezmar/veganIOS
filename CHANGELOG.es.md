@@ -10,6 +10,8 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+## [2.0.0 (85)] - 2026-11-26
+
 ### Añadido
 - Barra de navegación inferior con Escanear, Biblioteca (historial y favoritos), Compra y Ajustes, como en Android. Cada pestaña conserva sus pantallas al cambiar de una a otra.
 - Lista de la compra: muestra cuántos productos están guardados para usarlos sin conexión y tiene un botón para preparar el resto antes de ir a la tienda.

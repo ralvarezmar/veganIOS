@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [2.0.0 (85)] - 2026-11-26
+
 ### Added
 - Bottom navigation with Scan, Library (history and favourites), Shopping and Settings, as on Android. Each tab keeps its own screens when you switch.
 - Shopping list: shows how many products are saved for offline use, with a button to prepare the rest before going to the shop.
