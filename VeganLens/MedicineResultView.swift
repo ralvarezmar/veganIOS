@@ -160,8 +160,8 @@ struct MedicineResultView: View {
 func medicineVerdictText(_ status: VeganStatus) -> String {
     switch status {
     case .vegan: return L("medicine_verdict_vegan")
-    case .notVegan: return L("medicine_verdict_not_vegan")
-    case .maybe: return L("medicine_verdict_maybe")
+    case .notVegan: return L("medicine_animal_ingredient")
+    case .maybe: return L("medicine_uncertain_ingredient")
     case .unknown: return L("medicine_verdict_unknown")
     }
 }
@@ -221,6 +221,10 @@ private struct MedicineDetailsView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(medicineBlue)
+                } else {
+                    Text(L("medicine_leaflet_missing"))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
             }
             .padding()
@@ -251,7 +255,7 @@ private struct MedicineDetailsView: View {
                         .background(Capsule().fill(.white))
                         .foregroundStyle(medicineBlue)
                 }
-                Text(LF("medicine_source", medicine.source.displayName) + (fromCache ? " · \(L("medicine_from_cache"))" : ""))
+                Text(LF("medicine_source", medicine.source.qualifiedName) + (fromCache ? " · \(L("medicine_from_cache"))" : ""))
                     .font(.caption)
                     .opacity(0.85)
             }
@@ -315,8 +319,13 @@ private struct MedicineDetailsView: View {
     private var excipientsCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(L("medicine_excipients")).font(.headline)
-            if medicine.excipients.isEmpty {
+            if !analysis.hasExcipientData {
                 Text(L("medicine_no_excipients")).font(.subheadline).foregroundStyle(.secondary)
+                if !analysis.descriptionMentions.isEmpty {
+                    Text(LF("medicine_description_mentions", analysis.descriptionMentions.joined(separator: ", ")))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             } else {
                 let flagged = analysis.flaggedItems
                 VerdictShareChipsLayout {
@@ -338,7 +347,7 @@ private struct MedicineDetailsView: View {
     }
 
     private var disclaimer: some View {
-        Label(L("medicine_disclaimer"), systemImage: "info.circle")
+        Label(L("medicine_analysis_caution"), systemImage: "info.circle")
             .font(.footnote)
             .foregroundStyle(medicineBlue)
             .padding(14)
@@ -366,7 +375,7 @@ struct MedicineShareCardContent {
         headline = medicineVerdictText(analysis.veganStatus)
         chips = [medicine.dose, medicine.pharmaceuticalForm].compactMap { $0 }.filter { !$0.isEmpty }
         notes = Array(medicineDietNotes(analysis).prefix(4))
-        sourceName = medicine.source.displayName
+        sourceName = LF("medicine_source", medicine.source.qualifiedName)
         status = analysis.veganStatus
         self.colorblindSafe = colorblindSafe
     }
@@ -493,7 +502,7 @@ struct MedicineShareCardView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(RoundedRectangle(cornerRadius: 12).fill(medicineBlueLight))
                             .padding(.trailing, 80)
-                        Text([L("share_card_tagline"), content.sourceName].joined(separator: " · "))
+                        Text([L("medicine_check_leaflet"), content.sourceName].joined(separator: " · "))
                             .font(.system(size: 15))
                             .foregroundStyle(Color(white: 0.42))
                             .lineLimit(2)

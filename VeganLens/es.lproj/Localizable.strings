@@ -789,3 +789,13 @@
 "medicine_from_cache" = "Datos guardados (sin conexión)";
 "medicine_source" = "Fuente: %1$@";
 "medicine_mascot_description" = "Personaje píldora de VeganLens";
+
+"medicine_search_unavailable" = "No se ha podido consultar CIMA ni openFDA. Inténtalo más tarde.";
+"medicine_search_partial" = "Búsqueda incompleta: no se ha podido consultar %1$@.";
+"medicine_leaflet_missing" = "La fuente no proporciona un enlace al prospecto.";
+"medicine_check_leaflet" = "Revisa el prospecto";
+"medicine_analysis_caution" = "Este análisis de los ingredientes declarados no confirma que el medicamento sea adecuado para ti. Revisa el prospecto y consulta a tu médico o farmacéutico antes de iniciar, cambiar o suspender el tratamiento.";
+"medicine_animal_ingredient" = "Ingrediente de origen animal declarado";
+"medicine_uncertain_ingredient" = "Ingrediente declarado de origen incierto";
+"medicine_description_mentions" = "La descripción menciona: %1$@. Esto no confirma su presencia; revisa el prospecto.";
+"medicine_offline_search_error" = "Sin conexión. Conéctate para buscar medicamentos.";

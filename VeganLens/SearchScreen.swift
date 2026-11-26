@@ -114,9 +114,16 @@ struct SearchScreen: View {
                     .padding(.bottom, 12)
                 }
             }
-        case .medicineSuccess(let items):
+        case .medicineSuccess(let items, let unavailable):
             ScrollView {
                 LazyVStack(spacing: 12) {
+                    if let unavailable {
+                        Label(LF("medicine_search_partial", unavailable.displayName), systemImage: "exclamationmark.triangle")
+                            .appFont(.footnote)
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .accessibilityIdentifier("medicine_search_partial")
+                    }
                     ForEach(items) { item in
                         Button {
                             onSelectBarcode(item.code)
@@ -168,11 +175,15 @@ struct SearchScreen: View {
             case .medicine:
                 switch await medicineService.searchByName(query: trimmedQuery) {
                 case .success(let items):
-                    newState = .medicineSuccess(items)
+                    newState = .medicineSuccess(items, unavailable: nil)
+                case .partial(let items, let unavailable):
+                    newState = .medicineSuccess(items, unavailable: unavailable)
                 case .empty:
                     newState = .empty(trimmedQuery)
-                case .error(let message):
-                    newState = .error(message, trimmedQuery)
+                case .offline:
+                    newState = .error(L("medicine_offline_search_error"), trimmedQuery)
+                case .unavailable:
+                    newState = .error(L("medicine_search_unavailable"), trimmedQuery)
                 }
             }
             guard !Task.isCancelled else { return }
@@ -466,7 +477,7 @@ private enum SearchUiState {
     case idle
     case loading
     case success([OpenFoodFactsSearchProduct])
-    case medicineSuccess([MedicineSearchItem])
+    case medicineSuccess([MedicineSearchItem], unavailable: MedicineSource?)
     case empty(String)
     case error(String, String)
 }

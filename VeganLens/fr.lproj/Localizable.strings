@@ -787,3 +787,13 @@
 "medicine_from_cache" = "Données enregistrées (hors ligne)";
 "medicine_source" = "Source : %1$@";
 "medicine_mascot_description" = "Personnage pilule de VeganLens";
+
+"medicine_search_unavailable" = "Impossible de consulter CIMA ou openFDA. Réessayez plus tard.";
+"medicine_search_partial" = "Recherche incomplète : impossible de consulter %1$@.";
+"medicine_leaflet_missing" = "La source ne fournit pas de lien vers la notice.";
+"medicine_check_leaflet" = "Consultez la notice";
+"medicine_analysis_caution" = "L’examen des ingrédients déclarés ne permet pas de confirmer que ce médicament vous convient. Lisez la notice et demandez conseil à votre médecin ou pharmacien avant de commencer, de modifier ou d’arrêter un traitement.";
+"medicine_animal_ingredient" = "Ingrédient d’origine animale déclaré";
+"medicine_uncertain_ingredient" = "Ingrédient déclaré d’origine incertaine";
+"medicine_description_mentions" = "La description mentionne : %1$@. Cela ne confirme pas leur présence. Consultez la notice.";
+"medicine_offline_search_error" = "Tu es hors ligne. Connecte-toi pour chercher des médicaments.";
