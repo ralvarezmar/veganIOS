@@ -1251,6 +1251,13 @@ struct ResultView: View {
         guard !Task.isCancelled else { return }
         switch result {
         case .success(let fetched):
+            if fetched.incompleteLookup, let cached = loadCachedProduct(), cached.product.hasVeganData {
+                let analysis = analyzeVegan(cached.product)
+                saveToHistory(product: cached.product, source: cached.source, verdict: analysis.status)
+                loadState = .success(cached.product, cached.source, true, cached.cachedAt)
+                await loadAlternatives(for: cached.product, source: cached.source)
+                return
+            }
             let analysis = analyzeVegan(fetched.product)
             saveToHistory(product: fetched.product, source: fetched.source, verdict: analysis.status)
             saveToCache(product: fetched.product, source: fetched.source)

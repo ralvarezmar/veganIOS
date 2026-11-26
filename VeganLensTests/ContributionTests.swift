@@ -163,4 +163,45 @@ final class ContributionTests: XCTestCase {
             XCTFail("Clean no-data responses must be reported as not found")
         }
     }
+
+    func testFetchOutcomeMarksProductWithoutVerdictDataAsIncompleteWhenASourceFailed() throws {
+        let product = try JSONDecoder().decode(Product.self, from: Data(#"{"product_name":"Galletas"}"#.utf8))
+        let result = resolveFetchOutcome(
+            fallbackCandidate: FetchedProduct(product: product, source: .openBeautyFacts),
+            sawCleanNoData: false,
+            sawFailure: true,
+            consultedSources: [.openBeautyFacts]
+        )
+
+        guard case .success(let fetched) = result else { return XCTFail("Expected the partial product") }
+        XCTAssertTrue(fetched.incompleteLookup)
+    }
+
+    func testFetchOutcomeKeepsVerdictProductCompleteEvenIfAnotherSourceFailed() throws {
+        let product = try JSONDecoder().decode(
+            Product.self,
+            from: Data(#"{"product_name":"Tofu","ingredients_analysis_tags":["en:vegan"]}"#.utf8)
+        )
+        let result = resolveFetchOutcome(
+            fallbackCandidate: FetchedProduct(product: product, source: .openFoodFacts),
+            sawCleanNoData: false,
+            sawFailure: true,
+            consultedSources: [.openFoodFacts]
+        )
+
+        guard case .success(let fetched) = result else { return XCTFail("Expected the product") }
+        XCTAssertFalse(fetched.incompleteLookup)
+    }
+
+    func testOnlyDecisiveVeganEvidenceCountsAsVeganData() throws {
+        func decode(_ json: String) throws -> Product {
+            try JSONDecoder().decode(Product.self, from: Data(json.utf8))
+        }
+        XCTAssertFalse(try decode(#"{"ingredients_analysis_tags":["en:vegan-status-unknown"]}"#).hasVeganData)
+        XCTAssertFalse(try decode(#"{"ingredients":[{"text":"sugar","vegan":"yes"},{"text":"aroma"}]}"#).hasVeganData)
+        XCTAssertTrue(try decode(#"{"ingredients":[{"text":"sugar","vegan":"yes"}]}"#).hasVeganData)
+        XCTAssertTrue(try decode(#"{"ingredients":[{"text":"honey","vegan":"no"},{"text":"aroma"}]}"#).hasVeganData)
+        XCTAssertTrue(try decode(#"{"labels_tags":["en:vegan"]}"#).hasVeganData)
+        XCTAssertTrue(try decode(#"{"categories_tags":["en:biscuits"]}"#).hasUsefulData)
+    }
 }
