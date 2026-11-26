@@ -28,7 +28,7 @@ final class VeganAnalyzerCorpusTests: XCTestCase {
             )
             XCTAssertEqual(
                 analysis.reason?.source,
-                reasonSource(for: testCase.expected.reasonSource),
+                testCase.expected.reasonSource.map(reasonSource(for:)),
                 "case \(testCase.id): reason source"
             )
             XCTAssertEqual(
@@ -100,6 +100,6 @@ private struct CorpusIngredient: Decodable {
 
 private struct CorpusExpected: Decodable {
     let status: String
-    let reasonSource: String
+    let reasonSource: String?
     let culprits: [String]
 }

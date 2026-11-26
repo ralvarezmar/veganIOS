@@ -8,6 +8,26 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- Bottom navigation with Scan, Library (history and favourites), Shopping and Settings, as on Android. Each tab keeps its own screens when you switch.
+- Shopping list: shows how many products are saved for offline use, with a button to prepare the rest before going to the shop.
+- Compare: allergens, traces, flagged ingredients and nutrition per 100 g, with a "Differences only" switch. Medicines are shown as not comparable.
+- Favourites: new "What changed" screen with the verdict before and after each automatic check and the reason for each.
+
+### Changed
+- Contributions are a draft on the device. Nothing, not even photos, is published until you tick the consent box and tap "Publish contribution". Parts already sent are not sent again when retrying.
+- A product only counts as having verdict data when it has a vegan seal, a decisive Open Food Facts tag or ingredients with a known status. If a lookup is incomplete, the saved copy with verdict data is shown instead.
+- Automatic checks of favourites and recent scans retry unfinished checks every 15 minutes instead of waiting a day.
+- Product result: the allergens card separates declared allergens from "may contain" traces and reminds you that a vegan verdict does not rule out allergens. The header says whether the data was retrieved online or comes from a saved copy, and how old it is.
+- Medicines: the search says when CIMA or openFDA could not be checked, the verdict only uses the listed excipients (words in the description are shown as mentions to check in the leaflet), and the result reminds you to read the leaflet and ask your doctor or pharmacist.
+
+### Fixed
+- Scanner: the card under the camera fits above the new bottom navigation, so it no longer scrolls on phones such as the iPhone 16.
+- Products in the shopping list and favourites are no longer removed from the offline cache.
+- A "may contain" warning in brackets no longer turns the following ingredients into traces, additives written as "E 120" or "E-120" are recognised, and a "meat substitute" category is no longer treated as proof that a product is vegan.
+
+## [1.27.2 (84)] - 2026-11-25
+
 ### Changed
 - The message sent when sharing a medicine is a single line, like for products, for example "Ibuprofen Cinfa 600 mg: Suitable ✅". The card does not change.
 

@@ -13,7 +13,7 @@ final class VeganLensUITests: XCTestCase {
     func testSettingsShowsPrivacyPolicyRow() {
         let app = launchApp()
 
-        XCTAssertTrue(app.tapToolbarButton("settings-button"))
+        XCTAssertTrue(app.tapTab(3))
 
         let privacyPolicyRow = app.descendants(matching: .any)["privacy-policy-row"]
         XCTAssertTrue(privacyPolicyRow.waitForExistence(timeout: 5), app.debugDescription)

@@ -358,7 +358,7 @@ private struct ScannerOverlayView: View {
                     .scrollBounceBehavior(.basedOnSize)
                     .frame(
                         height: helperCardContentHeight > 0
-                            ? min(helperCardContentHeight, proxy.size.height * 0.45)
+                            ? min(helperCardContentHeight, proxy.size.height * 0.55)
                             : nil
                     )
                     .padding(.horizontal, 20)
@@ -1196,6 +1196,7 @@ struct ResultView: View {
                         AllergensCard(
                             title: L("allergens_title"),
                             values: allergenItems,
+                            traces: buildAllergenDisplayItems(tags: product.tracesTags ?? []),
                             highlightedKeys: Set(allergenMatches.compactMap(\.key))
                         )
                         SimpleSectionCard(
@@ -1251,6 +1252,13 @@ struct ResultView: View {
         guard !Task.isCancelled else { return }
         switch result {
         case .success(let fetched):
+            if fetched.incompleteLookup, let cached = loadCachedProduct(), cached.product.hasVeganData {
+                let analysis = analyzeVegan(cached.product)
+                saveToHistory(product: cached.product, source: cached.source, verdict: analysis.status)
+                loadState = .success(cached.product, cached.source, true, cached.cachedAt)
+                await loadAlternatives(for: cached.product, source: cached.source)
+                return
+            }
             let analysis = analyzeVegan(fetched.product)
             saveToHistory(product: fetched.product, source: fetched.source, verdict: analysis.status)
             saveToCache(product: fetched.product, source: fetched.source)
@@ -1306,26 +1314,7 @@ struct ResultView: View {
 
     @MainActor
     private func saveToCache(product: Product, source: ProductSource) {
-        do {
-            let descriptor = FetchDescriptor<CachedProduct>(predicate: #Predicate { $0.barcode == barcode })
-            let encoded = try JSONEncoder().encode(product)
-            if let existing = try modelContext.fetch(descriptor).first {
-                existing.productData = encoded
-                existing.sourceName = source.rawValue
-                existing.cachedAt = Date()
-            } else {
-                modelContext.insert(CachedProduct(
-                    barcode: barcode,
-                    productData: encoded,
-                    sourceName: source.rawValue,
-                    cachedAt: Date()
-                ))
-            }
-            try modelContext.save()
-            evictOldestCacheEntries()
-        } catch {
-            print("No se pudo guardar la caché: \(error)")
-        }
+        storeCachedProduct(product, source: source, barcode: barcode, in: modelContext)
     }
 
     private func loadCachedProduct() -> (product: Product, source: ProductSource, cachedAt: Date)? {
@@ -1340,30 +1329,6 @@ struct ResultView: View {
         } catch {
             print("No se pudo cargar la caché: \(error)")
             return nil
-        }
-    }
-
-    @MainActor
-    private func evictOldestCacheEntries() {
-        do {
-            let entries = try modelContext.fetch(FetchDescriptor<CachedProduct>())
-            let metadata = entries.map {
-                CacheEntryMetadata(barcode: $0.barcode, cachedAt: $0.cachedAt)
-            }
-            let favoriteBarcodes = Set(
-                try modelContext.fetch(FetchDescriptor<FavoriteProduct>())
-                    .map(\.barcode)
-            )
-            let barcodes = cacheBarcodesToEvict(
-                entries: metadata,
-                protectedBarcodes: favoriteBarcodes
-            )
-            entries.filter { barcodes.contains($0.barcode) }.forEach(modelContext.delete)
-            if !barcodes.isEmpty {
-                try modelContext.save()
-            }
-        } catch {
-            print("No se pudo limitar la caché: \(error)")
         }
     }
 
@@ -1995,15 +1960,12 @@ private struct VeganBannerView: View {
 
                 SourceCapsule(text: LF("data_source_label_format", source.displayName), foreground: spec.foreground)
 
-                if fromCache {
-                    SourceCapsule(text: L("offline_cache_badge"), foreground: spec.foreground)
-                    if let cachedAt {
-                        SourceCapsule(
-                            text: cacheAgeText(cachedAt),
-                            foreground: spec.foreground
-                        )
-                    }
-                }
+                SourceCapsule(
+                    text: fromCache
+                        ? cachedAt.map { LF("result_cached_age", cacheAgeText($0)) } ?? L("result_cached")
+                        : L("result_retrieved_online"),
+                    foreground: spec.foreground
+                )
 
                 Text(L("open_food_facts_attribution"))
                     .appFont(.caption2)
@@ -2162,7 +2124,7 @@ func reasonNeedsOriginHint(_ source: VeganReasonSource, evidenceCount: Int) -> B
     }
 }
 
-private func veganReasonText(_ reason: VeganReason?) -> String? {
+func veganReasonText(_ reason: VeganReason?) -> String? {
     guard let reason else { return nil }
     let visibleEvidence = Array(reason.evidence.prefix(3))
     let evidence = visibleEvidence.joined(separator: ", ")
@@ -2487,23 +2449,29 @@ private struct WatchlistWarningCard: View {
 private struct AllergensCard: View {
     let title: String
     let values: [AllergenDisplayItem]
+    let traces: [AllergenDisplayItem]
     let highlightedKeys: Set<String>
 
     var body: some View {
         SimpleSectionCard(title: title) {
-            if values.isEmpty {
-                Text(L("not_available"))
-            } else {
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(values) { item in
-                        CapsuleChip(
-                            text: item.label,
-                            tint: highlightedKeys.contains(item.key ?? "") ? .red : .secondary
-                        )
-                    }
+            VStack(alignment: .leading, spacing: 8) {
+                Text(LF("result_declared", labels(values)))
+                ForEach(values) { item in
+                    CapsuleChip(
+                        text: item.label,
+                        tint: highlightedKeys.contains(item.key ?? "") ? .red : .secondary
+                    )
                 }
+                Text(LF("result_may_contain", labels(traces)))
+                Text(L("result_check_pack"))
+                    .appFont(.footnote)
+                    .foregroundStyle(.secondary)
             }
         }
+    }
+
+    private func labels(_ items: [AllergenDisplayItem]) -> String {
+        items.isEmpty ? L("result_no_data") : items.map(\.label).joined(separator: ", ")
     }
 }
 
