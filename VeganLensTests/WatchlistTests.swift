@@ -8,7 +8,7 @@ final class WatchlistTests: XCTestCase {
             let fromNested = makeProduct(
                 ingredientsText: nil,
                 additivesTags: nil,
-                ingredients: [OffIngredient(ingredients: [OffIngredient(text: spelling)])]
+                ingredients: [OffIngredient(text: nil, vegan: nil, vegetarian: nil, ingredients: [OffIngredient(text: spelling, vegan: nil, vegetarian: nil)])]
             )
             for product in [fromText, fromNested] {
                 let matches = watchlistMatches(product: product, watchedAdditives: ["E120"], watchedKeywords: [])
