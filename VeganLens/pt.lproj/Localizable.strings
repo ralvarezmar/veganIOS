@@ -821,3 +821,7 @@
 "result_may_contain" = "Pode conter vestígios de: %@";
 "result_no_data" = "sem dados";
 "result_check_pack" = "Uma avaliação vegana não exclui alergénios. Verifique a embalagem.";
+"nav_scan" = "Ler código";
+"nav_library" = "Biblioteca";
+"nav_shopping" = "Compras";
+"nav_settings" = "Ajustes";

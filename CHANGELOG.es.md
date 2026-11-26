@@ -11,6 +11,7 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 ## [Sin publicar]
 
 ### Añadido
+- Barra de navegación inferior con Escanear, Biblioteca (historial y favoritos), Compra y Ajustes, como en Android. Cada pestaña conserva sus pantallas al cambiar de una a otra.
 - Lista de la compra: muestra cuántos productos están guardados para usarlos sin conexión y tiene un botón para preparar el resto antes de ir a la tienda.
 - Comparar: alérgenos, trazas, ingredientes señalados y nutrición por 100 g, con un interruptor "Solo diferencias". Los medicamentos aparecen como no comparables.
 - Favoritos: nueva pantalla "Qué ha cambiado", con el veredicto antes y después de cada comprobación automática y el motivo de cada uno.

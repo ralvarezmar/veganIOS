@@ -14,15 +14,26 @@ final class ScreenshotUITests: XCTestCase {
         }
 
         capture(app, named: "scanner")
-        captureToolbarScreen(
-            app,
-            buttonIdentifier: "settings-button",
-            screenshotName: "settings-accessibility"
-        )
+        captureTab(app, index: 3, screenshotName: "settings-accessibility")
         captureToolbarScreen(app, buttonIdentifier: "profile-button", screenshotName: "profile")
-        captureToolbarScreen(app, buttonIdentifier: "history-button", screenshotName: "history-empty")
-        captureToolbarScreen(app, buttonIdentifier: "favorites-button", screenshotName: "favorites-empty")
+        captureTab(app, index: 1, screenshotName: "history-empty")
+        if app.tapTab(1) {
+            let favoritesSegment = app.segmentedControls.buttons.element(boundBy: 1)
+            if favoritesSegment.waitForExistence(timeout: 5) {
+                favoritesSegment.tap()
+                capture(app, named: "favorites-empty")
+                app.segmentedControls.buttons.element(boundBy: 0).tap()
+            }
+            app.tapTab(0)
+        }
         captureToolbarScreen(app, buttonIdentifier: "search-button", screenshotName: "search")
+    }
+
+    private func captureTab(_ app: XCUIApplication, index: Int, screenshotName: String) {
+        guard app.tapTab(index) else { return }
+        _ = app.navigationBars.element.waitForExistence(timeout: 5)
+        capture(app, named: screenshotName)
+        app.tapTab(0)
     }
 
     private func captureToolbarScreen(

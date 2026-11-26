@@ -821,3 +821,7 @@
 "result_may_contain" = "May contain traces of: %@";
 "result_no_data" = "no data";
 "result_check_pack" = "A vegan verdict does not rule out allergens. Check the packaging.";
+"nav_scan" = "Scan";
+"nav_library" = "Library";
+"nav_shopping" = "Shopping";
+"nav_settings" = "Settings";

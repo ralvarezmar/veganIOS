@@ -5,6 +5,14 @@ extension XCUIApplication {
     /// to scroll itself visible, which a toolbar button cannot do while the
     /// navigation bar is still settling.
     @discardableResult
+    @discardableResult
+    func tapTab(_ index: Int, timeout: TimeInterval = 5) -> Bool {
+        let button = tabBars.buttons.element(boundBy: index)
+        guard button.waitForExistence(timeout: timeout) else { return false }
+        button.tap()
+        return true
+    }
+
     func tapToolbarButton(_ identifier: String, timeout: TimeInterval = 5) -> Bool {
         let button = buttons[identifier]
         guard button.waitForExistence(timeout: timeout) else { return false }
