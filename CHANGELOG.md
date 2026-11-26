@@ -8,6 +8,9 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Added
+- B12 reminder: new "Days of the week" option to choose the weekdays when you want the reminder, for example Monday and Thursday.
+
 ## [2.0.0 (85)] - 2026-11-26
 
 ### Added

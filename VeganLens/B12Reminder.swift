@@ -6,7 +6,18 @@ enum B12ReminderSettings {
     static let hourKey = "b12_reminder_hour"
     static let minuteKey = "b12_reminder_minute"
     static let intervalDaysKey = "b12_reminder_interval_days"
+    static let weekdaysKey = "b12_reminder_weekdays"
     static let requestPrefix = "b12-reminder-"
+    static let weekdaysMode = 0
+    static let allWeekdays = 0b1111111
+}
+
+func b12WeekdayBit(_ isoWeekday: Int) -> Int {
+    1 << (isoWeekday - 1)
+}
+
+func b12IsoWeekday(of date: Date, calendar: Calendar) -> Int {
+    (calendar.component(.weekday, from: date) + 5) % 7 + 1
 }
 
 func b12ReminderDates(
@@ -14,6 +25,7 @@ func b12ReminderDates(
     hour: Int,
     minute: Int,
     intervalDays: Int,
+    weekdays: Int = B12ReminderSettings.allWeekdays,
     count: Int,
     calendar: Calendar
 ) -> [Date] {
@@ -33,6 +45,21 @@ func b12ReminderDates(
             return []
         }
         nextDate = tomorrow
+    }
+
+    if intervalDays == B12ReminderSettings.weekdaysMode {
+        let selected = weekdays & B12ReminderSettings.allWeekdays
+        let mask = selected == 0 ? B12ReminderSettings.allWeekdays : selected
+        var dates: [Date] = []
+        var day = nextDate
+        while dates.count < count {
+            if mask & b12WeekdayBit(b12IsoWeekday(of: day, calendar: calendar)) != 0 {
+                dates.append(day)
+            }
+            guard let following = calendar.date(byAdding: .day, value: 1, to: day) else { break }
+            day = following
+        }
+        return dates
     }
 
     let interval = max(intervalDays, 1)
@@ -73,6 +100,8 @@ enum B12ReminderScheduler {
             hour: UserDefaults.standard.integer(forKey: B12ReminderSettings.hourKey),
             minute: UserDefaults.standard.integer(forKey: B12ReminderSettings.minuteKey),
             intervalDays: UserDefaults.standard.integer(forKey: B12ReminderSettings.intervalDaysKey),
+            weekdays: UserDefaults.standard.object(forKey: B12ReminderSettings.weekdaysKey) as? Int
+                ?? B12ReminderSettings.allWeekdays,
             count: 30,
             calendar: calendar
         )

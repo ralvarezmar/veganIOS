@@ -643,6 +643,7 @@
 "b12_reminder_every_2_days" = "Every 2 days";
 "b12_reminder_every_3_days" = "Every 3 days";
 "b12_reminder_every_week" = "Every week";
+"b12_reminder_weekdays" = "Days of the week";
 
 "history_count_label" = "%d of %d scans saved";
 "filter_verdict_vegan" = "Suitable";

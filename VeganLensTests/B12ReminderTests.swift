@@ -8,6 +8,58 @@ final class B12ReminderTests: XCTestCase {
         return calendar
     }
 
+    func testWeekdaysModeOnlyUsesSelectedDays() {
+        let tuesday = date("2026-03-10 10:00")
+
+        let dates = b12ReminderDates(
+            from: tuesday,
+            hour: 9,
+            minute: 30,
+            intervalDays: B12ReminderSettings.weekdaysMode,
+            weekdays: b12WeekdayBit(1) | b12WeekdayBit(4),
+            count: 3,
+            calendar: calendar
+        )
+
+        XCTAssertEqual(dates, [
+            date("2026-03-12 09:30"),
+            date("2026-03-16 09:30"),
+            date("2026-03-19 09:30"),
+        ])
+    }
+
+    func testWeekdaysModeUsesTodayWhenTimeIsStillAhead() {
+        let tuesdayMorning = date("2026-03-10 08:00")
+
+        let dates = b12ReminderDates(
+            from: tuesdayMorning,
+            hour: 9,
+            minute: 30,
+            intervalDays: B12ReminderSettings.weekdaysMode,
+            weekdays: b12WeekdayBit(2),
+            count: 1,
+            calendar: calendar
+        )
+
+        XCTAssertEqual(dates, [date("2026-03-10 09:30")])
+    }
+
+    func testWeekdaysModeWithoutDaysFallsBackToEveryDay() {
+        let tuesday = date("2026-03-10 10:00")
+
+        let dates = b12ReminderDates(
+            from: tuesday,
+            hour: 9,
+            minute: 30,
+            intervalDays: B12ReminderSettings.weekdaysMode,
+            weekdays: 0,
+            count: 2,
+            calendar: calendar
+        )
+
+        XCTAssertEqual(dates, [date("2026-03-11 09:30"), date("2026-03-12 09:30")])
+    }
+
     func testPastTimeUsesTomorrow() {
         let now = date("2026-03-10 10:00")
 

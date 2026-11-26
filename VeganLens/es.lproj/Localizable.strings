@@ -645,6 +645,7 @@
 "b12_reminder_every_2_days" = "Cada 2 días";
 "b12_reminder_every_3_days" = "Cada 3 días";
 "b12_reminder_every_week" = "Cada semana";
+"b12_reminder_weekdays" = "Días de la semana";
 
 "history_count_label" = "%d de %d escaneos guardados";
 "filter_verdict_vegan" = "Aptos";
