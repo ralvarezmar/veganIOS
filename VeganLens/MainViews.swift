@@ -87,7 +87,6 @@ struct ScannerView: View {
                     zoomDeviceMin: zoomDeviceMin,
                     zoomDeviceMax: zoomDeviceMax
                 )
-                    .ignoresSafeArea()
             } else {
                 CameraPermissionView(
                     status: authorizationStatus,
@@ -270,6 +269,12 @@ private struct ScannerOverlayView: View {
             let gap: CGFloat = 24
             let minTop: CGFloat = 16
             let minFrameHeight: CGFloat = 96
+            let cardVerticalPadding: CGFloat = 24 + 20
+            let maxCardHeight = max(
+                proxy.size.height * 0.55,
+                proxy.size.height - minTop - minFrameHeight - 16 - gap - cardVerticalPadding
+            )
+            let insets = proxy.safeAreaInsets
             let availableHeight = max(0, proxy.size.height - helperCardHeight - gap)
             let frameHeight: CGFloat = {
                 guard helperCardHeight > 0 else {
@@ -303,7 +308,12 @@ private struct ScannerOverlayView: View {
 
             ZStack(alignment: .top) {
                 Path { path in
-                    path.addRect(CGRect(origin: .zero, size: proxy.size))
+                    path.addRect(CGRect(
+                        x: -insets.leading,
+                        y: -insets.top,
+                        width: proxy.size.width + insets.leading + insets.trailing,
+                        height: proxy.size.height + insets.top + insets.bottom
+                    ))
                     path.addRoundedRect(in: frameRect, cornerSize: CGSize(width: 28, height: 28))
                 }
                 .fill(Color.black.opacity(0.54), style: FillStyle(eoFill: true))
@@ -358,7 +368,7 @@ private struct ScannerOverlayView: View {
                     .scrollBounceBehavior(.basedOnSize)
                     .frame(
                         height: helperCardContentHeight > 0
-                            ? min(helperCardContentHeight, proxy.size.height * 0.55)
+                            ? min(helperCardContentHeight, maxCardHeight)
                             : nil
                     )
                     .padding(.horizontal, 20)
