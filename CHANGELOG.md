@@ -8,6 +8,8 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+## [2.0.2 (87)] - 2026-11-27
+
 ### Fixed
 - Scanner: the camera frame and the card under it are laid out between the top bar and the bottom navigation again, so the card is no longer partly hidden behind the tabs and the frame is centred in the visible area.
 
