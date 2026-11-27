@@ -8,6 +8,11 @@ version so that App Store Connect can provide notes in both languages.
 
 ## [Unreleased]
 
+### Fixed
+- Scanner: the camera frame and the card under it are laid out between the top bar and the bottom navigation again, so the card is no longer partly hidden behind the tabs and the frame is centred in the visible area.
+
+## [2.0.1 (86)] - 2026-11-26
+
 ### Added
 - B12 reminder: you now choose the days of the week for the reminder, for example Monday and Thursday, instead of every 1, 2, 3 or 7 days. All days are selected by default; a weekly reminder keeps its current day.
 
