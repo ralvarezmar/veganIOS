@@ -10,6 +10,9 @@ versión para que App Store Connect pueda ofrecer notas en los dos idiomas.
 
 ## [Sin publicar]
 
+### Corregido
+- Escáner: el recuadro de la cámara y la tarjeta de debajo vuelven a colocarse entre la barra superior y la navegación inferior, así que la tarjeta ya no queda medio tapada por las pestañas y el recuadro sale centrado en la zona visible.
+
 ## [2.0.1 (86)] - 2026-11-26
 
 ### Añadido
